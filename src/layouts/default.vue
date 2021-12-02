@@ -2,7 +2,11 @@
   <div class="layout-container">
     <!-- 左侧菜单 -->
     <div class="side-menu" :style="`width:${menuOpen ? '168' : '64'}px`">
-      <div class="logo-wrap">浙江云盾</div>
+      <div class="logo-wrap">
+        <img v-if="menuOpen" src="@/assets/img/menu/logo-big.png" alt="" class="img img1" />
+        <img v-else src="@/assets/img/menu/logo-small.png" alt="" class="img img2" />
+        浙江云盾
+      </div>
       <SideMenu />
     </div>
     <!-- 右侧主体 -->
@@ -84,6 +88,15 @@ export default {
       width: 100%;
       height: 56px;
       background-color: @primary-color;
+      text-indent: -99999px;
+      overflow: hidden;
+      position: relative;
+      .img {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+      }
     }
   }
   #layout-wrap {
