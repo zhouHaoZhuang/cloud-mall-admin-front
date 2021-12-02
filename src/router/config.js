@@ -50,29 +50,29 @@ const options = [
               {
                 path: "transfer",
                 name: "过户",
-                component: () => import("@/views/control/server/serverAdmin"),
+                component: RouteView,
                 meta: {},
                 children: [
                   {
                     path: "send",
                     name: "发送",
                     component: () =>
-                      import("@/views/control/server/serverAdmin"),
+                      import("@/views/control/server/send"),
                     meta: {}
                   },
                   {
                     path: "receive",
                     name: "接收",
                     component: () =>
-                      import("@/views/control/server/serverAdmin"),
+                      import("@/views/control/server/receive"),
                     meta: {}
                   }
                 ]
               },
               {
-                path: "trash ",
+                path: "trash",
                 name: "回收站",
-                component: () => import("@/views/control/server/serverAdmin"),
+                component: () => import("@/views/control/server/trash"),
                 meta: {}
               }
             ]

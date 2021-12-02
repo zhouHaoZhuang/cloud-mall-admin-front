@@ -58,7 +58,6 @@ export default {
     };
   },
   created() {
-    console.log("查看路由", this.menuData);
     this.menuList = this.menuData.map((ele) => {
       return {
         ...ele,
@@ -78,13 +77,12 @@ export default {
     // 菜单跳转
     goTo(item, ele) {
       this.selectItemPath = item.path + "/" + ele.path;
-      console.log(
-        item,
-        ele,
-        item.path + "/" + ele.path + "/" + ele.children[0].path
-      );
       const path = item.path + "/" + ele.path + "/" + ele.children[0].path;
       if (path !== this.$route.path) {
+        this.$store.dispatch(
+          "setting/changeBeforePath",
+          item.path + "/" + ele.path
+        );
         this.$store.dispatch("setting/setLeftMenu", ele);
         this.$router.push(path);
       }

@@ -42,7 +42,6 @@ export default {
       leftOpen: (state) => state.setting.leftOpen
     }),
     getLayoutPadding() {
-      console.log(this.menuOpen, this.leftOpen);
       if (!this.menuOpen && !this.leftOpen) {
         // 两个都关闭
         return 64;

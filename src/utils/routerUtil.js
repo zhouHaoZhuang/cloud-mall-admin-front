@@ -22,7 +22,6 @@ function loadRoutes() {
   const { router, store } = appOptions;
   // 初始化Admin后台菜单数据
   const rootRoute = router.options.routes.find((item) => item.path === "/");
-  console.log("加载路由", router, rootRoute);
   const menuRoutes = rootRoute.children.filter(
     (item) => item.path !== "/dashboard"
   );

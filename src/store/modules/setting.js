@@ -4,7 +4,8 @@ export default {
     menuOpen: true,
     leftOpen: true,
     menuData: [],
-    leftMenuData: {}
+    leftMenuData: {},
+    beforePath: ""
   },
   mutations: {
     setMenuData(state, menuData) {
@@ -18,6 +19,9 @@ export default {
     },
     setLeftMenuData(state, leftMenuData) {
       state.leftMenuData = leftMenuData;
+    },
+    setBeforePath(state, beforePath) {
+      state.beforePath = beforePath;
     }
   },
   actions: {
@@ -28,6 +32,10 @@ export default {
     // 折叠左侧二级菜单
     changeLeftOpenMenu({ commit, state }, data) {
       commit("setLeftOpen", data);
+    },
+    // 设置路由前缀，方便三级，四级菜单跳转
+    changeBeforePath({ commit, state }, data) {
+      commit("setBeforePath", data);
     },
     // 设置主体左侧菜单
     setLeftMenu({ commit, state }, data) {

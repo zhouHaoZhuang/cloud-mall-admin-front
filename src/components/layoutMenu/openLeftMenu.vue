@@ -22,7 +22,6 @@ export default {
   created() {},
   methods: {
     changeLeftMenuOpen() {
-      console.log(!this.menuOpen);
       this.$store.dispatch(
         "setting/changeLeftOpenMenu",
         this.leftOpen ? false : true

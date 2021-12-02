@@ -19,7 +19,6 @@ export default {
   created() {},
   methods: {
     changeMenuOpen() {
-      console.log(!this.menuOpen);
       this.$store.dispatch("setting/changeOpenMenu", this.menuOpen ? false : true);
     }
   }

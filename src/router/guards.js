@@ -48,6 +48,24 @@ const authorityGuard = (to, from, next, options) => {
 };
 
 /**
+ * 总览页守卫
+ * @param to
+ * @param form
+ * @param next
+ * @param options
+ */
+const dashboardGuard = (to, from, next, options) => {
+  const { store, message } = options;
+  if (to.path === "/dashboard" && store.state.setting.leftOpen) {
+    store.dispatch("setting/changeLeftOpenMenu", false);
+  }
+  if (to.path !== "/dashboard" && !store.state.setting.leftOpen) {
+    store.dispatch("setting/changeLeftOpenMenu", true);
+  }
+  next();
+};
+
+/**
  * 进度条结束
  * @param to
  * @param form
@@ -62,6 +80,6 @@ const progressDone = () => {
 };
 
 export default {
-  beforeEach: [progressStart, loginGuard, authorityGuard],
-  afterEach: [progressDone],
+  beforeEach: [progressStart, loginGuard, authorityGuard, dashboardGuard],
+  afterEach: [progressDone]
 };
