@@ -29,7 +29,9 @@
               selectItemPath === item.path + '/' + ele.path
                 ? ele.meta.iconAct
                 : ele.meta.icon
-            });margin-left:${menuOpen ? '24' : '0'}px`"
+            });margin-left:${
+              menuOpen ? '24' : '0'
+            }px;transform: rotateX(90deg)`"
           ></div>
           <div v-if="menuOpen" class="item-title">
             {{ ele.name }}
