@@ -56,11 +56,21 @@ const authorityGuard = (to, from, next, options) => {
  */
 const dashboardGuard = (to, from, next, options) => {
   const { store, message } = options;
+  // 设置主体左侧菜单展开还是关闭
   if (to.path === "/dashboard" && store.state.setting.leftOpen) {
     store.dispatch("setting/changeLeftOpenMenu", false);
   }
   if (to.path !== "/dashboard" && !store.state.setting.leftOpen) {
     store.dispatch("setting/changeLeftOpenMenu", true);
+  }
+  // 设置主体左侧菜单显示还是隐藏
+  if (
+    store.state.setting.filterList.indexOf(to.path) !== -1 &&
+    store.state.setting.leftOpenShow
+  ) {
+    store.dispatch("setting/changeLeftMenuShow", false);
+  } else {
+    store.dispatch("setting/changeLeftMenuShow", true);
   }
   next();
 };

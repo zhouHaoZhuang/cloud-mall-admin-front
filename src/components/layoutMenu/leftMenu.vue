@@ -1,5 +1,6 @@
 <template>
   <div
+    v-if="leftOpenShow"
     class="left-menu-container"
     :style="`width:${leftOpen ? '160' : '0'}px;left:${
       menuOpen ? '168' : '64'
@@ -68,7 +69,8 @@ export default {
       menuOpen: (state) => state.setting.menuOpen,
       leftOpen: (state) => state.setting.leftOpen,
       leftMenuData: (state) => state.setting.leftMenuData,
-      beforePath: (state) => state.setting.beforePath
+      beforePath: (state) => state.setting.beforePath,
+      leftOpenShow: (state) => state.setting.leftOpenShow
     })
   },
   data() {
@@ -80,14 +82,16 @@ export default {
   watch: {
     leftMenuData: {
       handler(newVal, oldVal) {
-        this.menuList = newVal.children.map((ele, idx) => {
-          return {
-            ...ele,
-            isTwoMenu: ele.children ? true : false,
-            isOpen: false
-          };
-        });
-        this.selectPath = this.menuList[0].path;
+        this.menuList =
+          newVal.children &&
+          newVal.children.map((ele, idx) => {
+            return {
+              ...ele,
+              isTwoMenu: ele.children ? true : false,
+              isOpen: false
+            };
+          });
+        this.selectPath = this.menuList && this.menuList[0].path;
       },
       immediate: true,
       deep: true

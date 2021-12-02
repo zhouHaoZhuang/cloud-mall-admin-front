@@ -23,7 +23,7 @@ function loadRoutes() {
   // 初始化Admin后台菜单数据
   const rootRoute = router.options.routes.find((item) => item.path === "/");
   const menuRoutes = rootRoute.children.filter(
-    (item) => item.path !== "/dashboard"
+    (item) => store.state.setting.filterList.indexOf(item.path) === -1
   );
   if (menuRoutes) {
     store.commit("setting/setMenuData", menuRoutes);

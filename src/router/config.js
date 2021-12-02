@@ -125,7 +125,7 @@ const options = [
             },
             children: [
               {
-                path: "server",
+                path: "cloud",
                 name: "云服务器",
                 component: () => import("@/views/control/server/serverAdmin"),
                 meta: {}

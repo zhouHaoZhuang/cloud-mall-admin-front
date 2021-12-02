@@ -48,13 +48,13 @@ export default {
     ...mapState({
       userInfo: (state) => state.user.userInfo,
       menuData: (state) => state.setting.menuData,
-      menuOpen: (state) => state.setting.menuOpen
+      menuOpen: (state) => state.setting.menuOpen,
+      selectItemPath: (state) => state.setting.selectItemPath
     })
   },
   data() {
     return {
-      menuList: [],
-      selectItemPath: ""
+      menuList: []
     };
   },
   created() {
@@ -76,7 +76,10 @@ export default {
     },
     // 菜单跳转
     goTo(item, ele) {
-      this.selectItemPath = item.path + "/" + ele.path;
+      this.$store.dispatch(
+        "setting/changeSelectPath",
+        item.path + "/" + ele.path
+      );
       const path = item.path + "/" + ele.path + "/" + ele.children[0].path;
       if (path !== this.$route.path) {
         this.$store.dispatch(

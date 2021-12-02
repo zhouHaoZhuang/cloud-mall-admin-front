@@ -40,7 +40,7 @@ export default {
   height: 56px;
   margin-top: -28px;
   cursor: pointer;
-  transition: left .3s;
+  transition: left 0.3s;
   .off,
   .open {
     width: 100%;

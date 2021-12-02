@@ -1,5 +1,5 @@
 <template>
-  <div class="container">云服务器管理</div>
+  <div class="container">云服务器管理服务器</div>
 </template>
 
 <script>
