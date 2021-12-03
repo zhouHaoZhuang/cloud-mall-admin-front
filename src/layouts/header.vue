@@ -1,24 +1,29 @@
 <template>
   <div class="header-container" :style="`left:${menuOpen ? '168' : '64'}px`">
+    <!-- 头部左侧 -->
     <div class="left">
       <!-- 折叠左侧菜单 -->
       <OpenMenu />
       <!-- 跳转总览 -->
       <div class="dashboard" @click="goTo('/dashboard')">总览</div>
       <!-- 产品与服务 -->
+      <Product />
     </div>
-    <div class="right">
-      <icon-font type="iconwuliuguanli" style="font-size: 30px"></icon-font>
-    </div>
+    <!-- 头部右侧 -->
+    <Right />
   </div>
 </template>
 
 <script>
 import { mapState } from "vuex";
 import OpenMenu from "@/components/layoutMenu/openMenu";
+import Product from "@/components/Header/left/product";
+import Right from "@/components/Header/right/index";
 export default {
   components: {
-    OpenMenu
+    OpenMenu,
+    Product,
+    Right
   },
   computed: {
     ...mapState({
@@ -44,6 +49,7 @@ export default {
 <style lang="less" scoped>
 .header-container {
   width: 100%;
+  min-width: 900px;
   height: 56px;
   background-color: @primary-color;
   flex-shrink: 0;
@@ -52,6 +58,8 @@ export default {
   transition: left 0.3s;
   display: flex;
   justify-content: space-between;
+  padding-right: 168px;
+  z-index: 1;
   .left {
     display: flex;
     .dashboard {
@@ -70,9 +78,6 @@ export default {
         background-color: #0099e5;
       }
     }
-  }
-  .right {
-    display: flex;
   }
 }
 </style>

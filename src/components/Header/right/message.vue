@@ -1,5 +1,5 @@
 <template>
-  <div class="container">总览页</div>
+  <div class="-container"></div>
 </template>
 
 <script>
@@ -7,20 +7,18 @@ import { mapState } from "vuex";
 export default {
   computed: {
     ...mapState({
-      userInfo: (state) => state.user.userInfo,
-    }),
+      menuOpen: (state) => state.setting.menuOpen
+    })
   },
   data() {
     return {};
   },
   created() {},
-  methods: {},
+  methods: {}
 };
 </script>
 
 <style lang="less" scoped>
 .container {
-  background: transparent;
-  color: red;
 }
 </style>

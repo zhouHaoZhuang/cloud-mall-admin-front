@@ -69,6 +69,7 @@ const dashboardGuard = (to, from, next, options) => {
     store.state.setting.leftOpenShow
   ) {
     store.dispatch("setting/changeLeftMenuShow", false);
+    store.dispatch("setting/changeSelectPath", "");
   } else {
     store.dispatch("setting/changeLeftMenuShow", true);
   }

@@ -9,7 +9,7 @@ const resolve = (dir) => {
 };
 
 const productionGzipExtensions = ["js", "css"];
-const isProd = process.env.NODE_ENV === "production";
+const isProd = process.env.VUE_APP_ENV === "production";
 
 const assetsCDN = {
   // webpack build externals
@@ -17,20 +17,20 @@ const assetsCDN = {
     vue: "Vue",
     "vue-router": "VueRouter",
     vuex: "Vuex",
-    axios: "axios",
+    axios: "axios"
   },
   css: [],
   js: [
     "//cdn.jsdelivr.net/npm/vue@2.6.11/dist/vue.min.js",
     "//cdn.jsdelivr.net/npm/vue-router@3.3.4/dist/vue-router.min.js",
     "//cdn.jsdelivr.net/npm/vuex@3.4.0/dist/vuex.min.js",
-    "//cdn.jsdelivr.net/npm/axios@0.19.2/dist/axios.min.js",
-  ],
+    "//cdn.jsdelivr.net/npm/axios@0.19.2/dist/axios.min.js"
+  ]
 };
 
 module.exports = {
   devServer: {
-    port: 8000, //自定义项目运行端口
+    port: 8000 //自定义项目运行端口
     // open: "true",  //自动打开浏览器
     // proxy: {
     //   '/api': { //此处要与 /services/api.js 中的 API_PROXY_PREFIX 值保持一致
@@ -45,7 +45,7 @@ module.exports = {
   configureWebpack: (config) => {
     config.entry.app = ["babel-polyfill", "whatwg-fetch", "./src/main.js"];
     config.performance = {
-      hints: false,
+      hints: false
     };
     // Ignore all locale files of moment.js
     config.plugins.push(new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/));
@@ -57,7 +57,7 @@ module.exports = {
           algorithm: "gzip",
           test: new RegExp("\\.(" + productionGzipExtensions.join("|") + ")$"),
           threshold: 10240,
-          minRatio: 0.8,
+          minRatio: 0.8
         })
       );
       // 清楚console
@@ -66,14 +66,14 @@ module.exports = {
           uglifyOptions: {
             output: {
               // 删除注释
-              comments: false,
+              comments: false
             },
             compress: {
-              drop_console: true, //清除console语句
+              drop_console: true //清除console语句
               // pure_funcs: ['console.log'] // 自定义去除函数
-            },
+            }
           },
-          sourceMap: false,
+          sourceMap: false
         })
       );
     }
@@ -115,16 +115,16 @@ module.exports = {
             "border-radius-base": "20px",
             "text-color-secondary": "#ACB3B9",
             "text-color": "#475666",
-            "table-row-hover-bg": "#edf2f6",
+            "table-row-hover-bg": "#edf2f6"
           },
-          javascriptEnabled: true,
-        },
-      },
-    },
+          javascriptEnabled: true
+        }
+      }
+    }
   },
   publicPath: "./",
   outputDir: "dist",
   assetsDir: "static",
   productionSourceMap: false,
-  lintOnSave: true,
+  lintOnSave: true
 };

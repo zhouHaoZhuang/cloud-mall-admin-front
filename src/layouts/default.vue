@@ -3,14 +3,24 @@
     <!-- 左侧菜单 -->
     <div class="side-menu" :style="`width:${menuOpen ? '168' : '64'}px`">
       <div class="logo-wrap">
-        <img v-if="menuOpen" src="@/assets/img/menu/logo-big.png" alt="" class="img img1" />
-        <img v-else src="@/assets/img/menu/logo-small.png" alt="" class="img img2" />
+        <img
+          v-if="menuOpen"
+          src="@/assets/img/menu/logo-big.png"
+          alt=""
+          class="img img1"
+        />
+        <img
+          v-else
+          src="@/assets/img/menu/logo-small.png"
+          alt=""
+          class="img img2"
+        />
         浙江云盾
       </div>
       <SideMenu />
     </div>
     <!-- 右侧主体 -->
-    <div id="layout-wrap" :style="`padding-left:${getLayoutPadding}px`">
+    <div class="layout-wrap" :style="`padding-left:${getLayoutPadding}px`">
       <!-- 头部 -->
       <Header />
       <!-- 右侧主体部分 -->
@@ -99,7 +109,7 @@ export default {
       }
     }
   }
-  #layout-wrap {
+  .layout-wrap {
     flex: 1;
     height: 100%;
     background: #fff;

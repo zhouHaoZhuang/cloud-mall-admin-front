@@ -7,7 +7,8 @@
         @click="changeMenu(index, item)"
       >
         <div v-if="menuOpen" class="title">{{ item.name }}</div>
-        <a-icon type="caret-right" class="icon" />
+        <a-icon v-if="item.open" type="caret-down" class="icon" />
+        <a-icon v-else type="caret-right" class="icon" />
         <div class="hover-tit">{{ item.name }}</div>
       </div>
       <div
@@ -29,9 +30,7 @@
               selectItemPath === item.path + '/' + ele.path
                 ? ele.meta.iconAct
                 : ele.meta.icon
-            });margin-left:${
-              menuOpen ? '24' : '0'
-            }px;transform: rotateX(90deg)`"
+            });margin-left:${menuOpen ? '24' : '0'}px`"
           ></div>
           <div v-if="menuOpen" class="item-title">
             {{ ele.name }}
