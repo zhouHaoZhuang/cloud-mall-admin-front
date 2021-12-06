@@ -56,15 +56,13 @@ const options = [
                   {
                     path: "send",
                     name: "发送",
-                    component: () =>
-                      import("@/views/control/server/send"),
+                    component: () => import("@/views/control/server/send"),
                     meta: {}
                   },
                   {
                     path: "receive",
                     name: "接收",
-                    component: () =>
-                      import("@/views/control/server/receive"),
+                    component: () => import("@/views/control/server/receive"),
                     meta: {}
                   }
                 ]
@@ -108,7 +106,7 @@ const options = [
                 meta: {}
               },
               {
-                path: "trash ",
+                path: "trash",
                 name: "订单管理",
                 component: () => import("@/views/finance/order/index.vue"),
                 meta: {}
@@ -160,13 +158,13 @@ const options = [
                 meta: {}
               },
               {
-                path: "address ",
+                path: "address",
                 name: "常用地址管理",
                 component: () => import("@/views/control/server/serverAdmin"),
                 meta: {}
               },
               {
-                path: "message ",
+                path: "message",
                 name: "短信通知",
                 component: () => import("@/views/control/server/serverAdmin"),
                 meta: {}
