@@ -1,10 +1,10 @@
 <template>
-  <div class="container">
-    <div class="clearfix">
+  <div class="income-container">
+    <div class="content">
       <div>
         <div class="ny-panel-title">收支明细</div>
       </div>
-      <div class="btnsh">
+      <div class="btns">
         <div class="btn1">
           <a-button type="primary">前往充值</a-button>
         </div>
@@ -115,9 +115,9 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.container {
+.income-container {
   background-color: #fff;
-  .clearfix {
+  .content {
     .ny-panel-title {
       display: inline-block;
       margin: 0;
@@ -126,7 +126,7 @@ export default {
       font-size: 22px;
       color: #272829;
     }
-    .btnsh {
+    .btns {
       padding-top: 15px;
       display: flex;
       // justify-content: space-between;

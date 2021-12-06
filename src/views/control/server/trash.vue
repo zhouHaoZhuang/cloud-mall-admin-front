@@ -1,9 +1,9 @@
 <template>
-  <div class="container">
-    <div class="clearfix">
+  <div class="cloud-container">
+    <div class="content">
       <div>
         <div class="ny-panel-title">云服务器回收站</div>
-        <div class="btns">
+        <div class="btn1">
           <div><a href="">云服务器帮助文档</a></div>
         </div>
       </div>
@@ -14,8 +14,8 @@
           show-icon
         />
       </div>
-      <div class="btnsh">
-        <div class="btn1">
+      <div class="btns">
+        <div class="btn2">
           <a-button type="primary" disabled>恢复</a-button>
         </div>
         <div class="btn3">
@@ -137,9 +137,9 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.container {
+.cloud-container {
   background-color: #fff;
-  .clearfix {
+  .content {
     .ny-panel-title {
       display: inline-block;
       margin: 0;
@@ -152,7 +152,7 @@ export default {
       display: inline-block;
       padding-left: 30px;
     }
-    .btns {
+    .btn1 {
       display: inline-block;
       font-size: 16px;
       padding-left: 780px;
@@ -160,11 +160,11 @@ export default {
     .hint {
       padding-top: 20px;
     }
-    .btnsh {
+    .btns {
       padding-top: 15px;
       display: flex;
       // justify-content: space-between;
-      .btn1 {
+      .btn2 {
         padding-right: 20px;
       }
       .btn3 {
