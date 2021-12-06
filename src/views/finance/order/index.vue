@@ -22,6 +22,45 @@
             />
           </a-input-group>
         </div>
+        <!-- 日历 -->
+        <div class="btn2">
+          <div class="btn4">
+            <a-date-picker
+              v-model="startValue"
+              :disabled-date="disabledStartDate"
+              show-time
+              format="YYYY-MM-DD HH:mm:ss"
+              placeholder="开始时间"
+              @openChange="handleStartOpenChange"
+            />
+          </div>
+          <span class="zhi">至</span>
+          <div class="btn4">
+            <a-date-picker
+              v-model="endValue"
+              :disabled-date="disabledEndDate"
+              show-time
+              format="YYYY-MM-DD HH:mm:ss"
+              placeholder="结束时间"
+              @openChange="handleEndOpenChange"
+            />
+          </div>
+        </div>
+        <div class="btn5">
+          <a-select
+            default-value="请选择"
+            style="width: 120px"
+            @change="handleChange"
+          >
+            <a-select-option value="jack"> 请选择 </a-select-option>
+            <a-select-option value="lucy"> 已支付 </a-select-option>
+            <a-select-option value="Yiminghe"> 未支付 </a-select-option>
+            <a-select-option value="Yiminghe"> 已失效 </a-select-option>
+          </a-select>
+        </div>
+        <div class="btn6">
+          <a-button type="primary">确定查询</a-button>
+        </div>
       </div>
       <!-- 表格 -->
       <div class="table">
@@ -49,7 +88,7 @@ export default {
           title: "订单编号",
           dataIndex: "id",
           key: "id",
-          width: 150,
+          width: 150
         },
         {
           title: "产品名称",
@@ -73,20 +112,22 @@ export default {
           title: "状态",
           dataIndex: "customerStatus",
           key: "customerStatus",
-          scopedSlots: { customRender: "customerStatus" },
+          scopedSlots: { customRender: "customerStatus" }
         },
         {
           title: "来源/用途",
           dataIndex: "",
           key: ""
         },
-         {
+        {
           title: "操作",
           dataIndex: "",
           key: ""
         }
       ],
-      data: []
+      data: [],
+      startValue: null,
+      endValue: null
     };
   },
   methods: {
@@ -96,6 +137,37 @@ export default {
     handleMenuClick() {},
     onSearch(value) {
       console.log(value);
+    },
+    disabledStartDate(startValue) {
+      const endValue = this.endValue;
+      if (!startValue || !endValue) {
+        return false;
+      }
+      return startValue.valueOf() > endValue.valueOf();
+    },
+    disabledEndDate(endValue) {
+      const startValue = this.startValue;
+      if (!endValue || !startValue) {
+        return false;
+      }
+      return startValue.valueOf() >= endValue.valueOf();
+    },
+    handleStartOpenChange(open) {
+      if (!open) {
+        this.endOpen = true;
+      }
+    },
+    handleEndOpenChange(open) {
+      this.endOpen = open;
+    },
+    changeKey(val) {
+      // console.log(val);
+      this.title = val;
+      if (this.title !== "createTime") {
+        this.isTime = true;
+      } else {
+        this.isTime = false;
+      }
     }
   }
 };
@@ -122,6 +194,21 @@ export default {
       }
       .btn3 {
         width: 400px;
+      }
+      .btn2 {
+        display: flex;
+        .btn4 {
+          width: 100px;
+          > span {
+            min-width: 100px !important;
+          }
+        }
+      }
+      .btn5{
+        padding-left: 20px;
+      }
+      .btn6{
+        padding-left: 20px;
       }
     }
     .table {
