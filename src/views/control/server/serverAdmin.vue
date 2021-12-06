@@ -1,6 +1,6 @@
 <template>
-  <div class="container">
-    <div class="clearfix">
+  <div class="cloud-container">
+    <div class="content">
       <!-- 云服务器管理 -->
       <div>
         <div class="ny-panel-title">云服务器管理</div>
@@ -20,7 +20,7 @@
         </div>
       </div>
       <!-- 新建 -->
-      <div class="btnsh">
+      <div class="btnss">
         <div class="btn1">
           <a-button type="primary">+新建</a-button>
         </div>
@@ -167,9 +167,9 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.container {
+.cloud-container {
   background-color: #fff;
-  .clearfix {
+  .content {
     .ny-panel-title {
       display: inline-block;
       margin: 0;
@@ -187,7 +187,7 @@ export default {
       font-size: 16px;
       padding-left: 650px;
     }
-    .btnsh {
+    .btnss {
       padding-top: 15px;
       display: flex;
       // justify-content: space-between;
