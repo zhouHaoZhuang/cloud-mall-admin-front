@@ -1,6 +1,6 @@
 <template>
-  <div class="record_content">
-    <p class="record_title">
+  <div class="record-content">
+    <p class="record-title">
       <span
         >温馨提示：线下汇款后，您的款项具体到账时间依赖于银行系统，请耐心等待。常见问题可查看 </span
       ><a>充值说明</a>
@@ -123,15 +123,15 @@ export default {
 .table-operations > button {
   margin-right: 8px;
 }
-.record_content {
-  > .record_title {
+.record-content {
+   .record-title {
     padding: 7px 22px 5px 37px;
-    background: rgb(255 243 235) url(https://www.ydidc.com/template/User/Zkeys/PC/Static/css/common/common/img/uc/tip_icon_warn_16.png) no-repeat 10px
+    background: #fff3eb url(https://www.ydidc.com/template/User/Zkeys/PC/Static/css/common/common/img/uc/tip_icon_warn_16.png) no-repeat 10px
       8px;
     min-height: 32px;
-    border: 1px solid rgb(255 218 194);
+    border: 1px solid #ffda95;
     border-radius: 2px;
-    color: rgb(255 102 0);
+    color: #ff6600;
     font-size: 12px;
   }
   .search {

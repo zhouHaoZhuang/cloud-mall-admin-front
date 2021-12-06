@@ -1,13 +1,13 @@
 <template>
-  <div class="offline_content">
-    <div class="offline_title">
+  <div class="offline-content">
+    <div class="offline-title">
       <p>
         温馨提示：建议您首先采用微信、支付宝、银行卡
         <a @click="change('online')">在线充值</a>
         ，金额可实时到账；线下汇款受银行系统影响，到账时间可能会存在延迟。
       </p>
     </div>
-    <div class="offline_steps">
+    <div class="offline-steps">
       <a-steps v-model="current" direction="vertical" disabled>
         <a-step disabled>
           <div slot="title" class="stepInfo">
@@ -161,23 +161,23 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.offline_content {
-  > .offline_title {
+.offline-content {
+   .offline-title {
     > p {
-      color: rgb(255 102 0);
+      color: #ff6600;
       font-size: 12px;
       height: 32px;
-      background: rgb(255 243 235)
+      background: #fff3eb
         url(https://www.ydidc.com/template/User/Zkeys/PC/Static/css/common/common/img/uc/tip_icon_warn_16.png)
         no-repeat 10px 8px;
       line-height: 32px;
       padding: 0px 22px 5px 37px;
       margin: 0;
-      border: 1px solid rgb(255 218 194);
+      border: 1px solid #ffdac2;
       border-radius: 2px;
     }
   }
-  > .offline_steps {
+   .offline-steps {
     margin-top: 30px;
     margin-left: 20px;
     .stepInfo {
@@ -185,7 +185,7 @@ export default {
         height: 32px;
         line-height: 32px;
         font-size: 16px;
-        color: rgb(38 40 41);
+        color: #262829;
       }
       > p:nth-child(2) {
         margin-top: 10px;
@@ -202,7 +202,7 @@ export default {
     }
     .uploadInfo{
       font-size: 12px;
-      color: rgb(153 153 153);
+      color: #999999;
       margin-left: 90px;
     }
   }

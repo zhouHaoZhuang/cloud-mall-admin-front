@@ -25,14 +25,14 @@ export default {
 <style lang="less" scoped>
 .online {
   margin-top: 20px;
-  > .warn {
+   .warn {
     padding: 7px 22px 5px 37px;
-    background: rgb(255 243 235)
+    background: #fff3eb
       url(https://www.ydidc.com/template/User/Zkeys/PC/Static/css/common/common/img/uc/tip_icon_warn_16.png)
       no-repeat 10px 8px;
-    border: 1px solid rgb(255 218 194);
+    border: 1px solid #ffdac2;
     border-radius: 2px;
-    color: rgb(255 102 0);
+    color: #ff660a;
     font-size: 12px;
     > p {
       margin-bottom: 10px;
@@ -60,7 +60,7 @@ export default {
       text-align: left;
       font-weight: bold;
       font-size: 16px;
-      color: rgb(255 102 0);
+      color: #ff6600;
     }
   }
   >p{
