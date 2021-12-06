@@ -15,7 +15,11 @@
             <p>线下汇款直接向浙江云盾的账户汇款，汇款账号如下：</p>
           </div>
           <div slot="description">
-            <div>表格</div>
+            <div>
+              <a-table bordered :columns="columns" :data-source="data">
+                <a slot="name" slot-scope="text">{{ text }}</a>
+              </a-table>
+            </div>
           </div>
         </a-step>
 
@@ -27,8 +31,51 @@
             </p>
           </div>
           <div slot="description">
-            <div>表单</div>
-            <button>提交汇款记录</button>
+            <div>
+              <a-form-model
+                ref="ruleForm"
+                :model="form"
+                :rules="rules"
+                :label-col="labelCol"
+                :wrapper-col="wrapperCol"
+              >
+                <a-form-model-item ref="name" label="汇款金额" prop="name">
+                  <span class="transfer"><a-input v-model="form.name" /></span
+                  >元
+                </a-form-model-item>
+                <a-form-model-item ref="name" label="汇款户名" prop="name">
+                  <span class="transfer420"
+                    ><a-input v-model="form.name"
+                  /></span>
+                </a-form-model-item>
+                <a-form-model-item ref="name" label="汇款账号" prop="name">
+                  <span class="transfer420"
+                    ><a-input v-model="form.name"
+                  /></span>
+                </a-form-model-item>
+                <a-form-model-item ref="name" label="汇款银行" prop="name">
+                  <span class="transfer420"
+                    ><a-input v-model="form.name"
+                  /></span>
+                </a-form-model-item>
+                <a-form-model-item ref="name" label="汇款凭证" prop="name">
+                  <a-upload
+                    list-type="picture"
+                    :default-file-list="fileList"
+                    class="upload-list-inline"
+                  >
+                    <a-button> <a-icon type="upload" /> 上传附件 </a-button>
+                  </a-upload>
+                </a-form-model-item>
+                <div class="uploadInfo">
+                  <p>彩色扫描件</p>
+                  <p>JPG或PNG格式，文件大小不超过1MB</p>
+                  <p>汇款凭证不能为空</p>
+                </div>
+
+                <a-button type="primary"> 提交汇款记录 </a-button>
+              </a-form-model>
+            </div>
           </div>
         </a-step>
         <a-step>
@@ -43,7 +90,52 @@
 export default {
   data() {
     return {
-      current: 0
+      current: 0,
+      data: [],
+      columns: [
+        {
+          title: "账户名称",
+          dataIndex: "name",
+          scopedSlots: { customRender: "name" }
+        },
+        {
+          title: "银行账号",
+          dataIndex: "age",
+          width: 150
+        },
+        {
+          title: "开户银行",
+          dataIndex: "back"
+        },
+        {
+          title: "汇款备注",
+          dataIndex: "remark"
+        }
+      ],
+      form: {
+        name: ""
+      },
+      fileList: [
+        // {
+        //   uid: "-1",
+        //   name: "xxx.png",
+        //   status: "done",
+        //   url: "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png",
+        //   thumbUrl:
+        //     "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
+        // }
+      ],
+      labelCol: { span: 2 },
+      wrapperCol: { span: 14 },
+      rules: {
+        name: [
+          {
+            required: true,
+            message: "Please input Activity name",
+            trigger: "blur"
+          }
+        ]
+      }
     };
   },
   props: ["change"],
@@ -51,6 +143,19 @@ export default {
     onChange(current) {
       console.log("onChange:", current);
       this.current = current;
+    },
+    submitForm(formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          alert("submit!");
+        } else {
+          console.log("error submit!!");
+          return false;
+        }
+      });
+    },
+    resetForm(formName) {
+      this.$refs[formName].resetFields();
     }
   }
 };
@@ -87,6 +192,19 @@ export default {
         margin-top: 10px;
         font-size: 12px;
       }
+    }
+    .transfer {
+      display: inline-block;
+      width: 200px;
+    }
+    .transfer420 {
+      display: inline-block;
+      width: 420px;
+    }
+    .uploadInfo{
+      font-size: 12px;
+      color: rgb(153 153 153);
+      margin-left: 90px;
     }
   }
 }
