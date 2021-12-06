@@ -108,7 +108,7 @@ const options = [
                 meta: {}
               },
               {
-                path: "trash ",
+                path: "trash",
                 name: "订单管理",
                 component: () => import("@/views/finance/order/index.vue"),
                 meta: {}

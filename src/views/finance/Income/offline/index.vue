@@ -72,7 +72,6 @@
                   <p>JPG或PNG格式，文件大小不超过1MB</p>
                   <p>汇款凭证不能为空</p>
                 </div>
-
                 <a-button type="primary"> 提交汇款记录 </a-button>
               </a-form-model>
             </div>
