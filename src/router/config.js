@@ -98,19 +98,19 @@ const options = [
               {
                 path: "recharge",
                 name: "充值中心",
-                component: () => import("@/views/control/server/serverAdmin"),
+                component: () => import("@/views/finance/Income/index.vue"),
                 meta: {}
               },
               {
                 path: "transfer",
                 name: "收支明细",
-                component: () => import("@/views/control/server/serverAdmin"),
+                component: () => import("@/views/finance/Recharge/index.vue"),
                 meta: {}
               },
               {
                 path: "trash ",
                 name: "订单管理",
-                component: () => import("@/views/control/server/serverAdmin"),
+                component: () => import("@/views/finance/order/index.vue"),
                 meta: {}
               }
             ]
