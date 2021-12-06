@@ -8,8 +8,8 @@
       </p>
     </div>
     <div>
-      <a-steps v-model="current" direction="vertical">
-        <a-step>
+      <a-steps v-model="current" direction="vertical" disabled>
+        <a-step disabled>
           <div slot="title" class="stepInfo">
             <p>汇款至浙江云盾银行账户</p>
             <p>线下汇款直接向浙江云盾的账户汇款，汇款账号如下：</p>
@@ -23,7 +23,7 @@
           </div>
         </a-step>
 
-        <a-step>
+        <a-step disabled>
           <div slot="title" class="stepInfo">
             <p>充值结果反馈</p>
             <p>
@@ -77,7 +77,7 @@
             </div>
           </div>
         </a-step>
-        <a-step>
+        <a-step disabled>
           <p slot="title">充值成功</p>
         </a-step>
       </a-steps>
