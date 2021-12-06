@@ -1,13 +1,13 @@
 <template>
-  <div class="offline">
-    <div>
+  <div class="offline_content">
+    <div class="offline_title">
       <p>
         温馨提示：建议您首先采用微信、支付宝、银行卡
         <a @click="change('online')">在线充值</a>
         ，金额可实时到账；线下汇款受银行系统影响，到账时间可能会存在延迟。
       </p>
     </div>
-    <div>
+    <div class="offline_steps">
       <a-steps v-model="current" direction="vertical" disabled>
         <a-step disabled>
           <div slot="title" class="stepInfo">
@@ -161,8 +161,8 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.offline {
-  > div:nth-child(1) {
+.offline_content {
+  > .offline_title {
     > p {
       color: rgb(255 102 0);
       font-size: 12px;
@@ -177,7 +177,7 @@ export default {
       border-radius: 2px;
     }
   }
-  > div:nth-child(2) {
+  > .offline_steps {
     margin-top: 30px;
     margin-left: 20px;
     .stepInfo {
