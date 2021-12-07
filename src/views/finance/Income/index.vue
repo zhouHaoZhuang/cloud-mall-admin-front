@@ -45,11 +45,11 @@ export default {
     font-size: 22px;
   }
   > ul {
-    color: rgb(77, 77, 77);
+    color: #4d4d4d;
     list-style: none;
     display: flex;
     padding: 0;
-    background-color: rgb(240, 243, 245);
+    background-color: #f0f3f5;
     > li {
       width: 132px;
       height: 38px;
@@ -58,11 +58,11 @@ export default {
       border-top: 3px solid transparent;
     }
     .buleTop {
-      border-top: 3px solid rgb(0, 170, 255);
-      background-color: rgb(255, 255, 255);
-      border-left: 1px solid rgb(238 238 238);
-      border-right: 1px solid rgb(238 238 238);
-      color: rgb(0 170 255);
+      border-top: 3px solid #00aaff;
+      background-color: #fff;
+      border-left: 1px solid #eeeeee;
+      border-right: 1px solid #eeeeee;
+      color: #00aaff;
     }
   }
   > div {
