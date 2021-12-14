@@ -176,8 +176,21 @@ const options = [
     ]
   },
   {
-    path: "/404",
-    component: () => import("@/views/exception/404")
+    path: "/exception",
+    name: "exception",
+    component: CommonLayout,
+    children: [
+      {
+        path: "not",
+        name: "notLogin",
+        component: () => import("@/views/exception/notLogin")
+      },
+      {
+        path: "404",
+        name: "404",
+        component: () => import("@/views/exception/404")
+      }
+    ]
   }
 ];
 

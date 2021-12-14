@@ -4,7 +4,7 @@ import store from "@/store";
 import { initRouter } from "@/router";
 import bootstrap from "@/bootstrap";
 // ui组件
-import Antd, { Icon } from "ant-design-vue";
+import Antd, { Icon, message } from "ant-design-vue";
 import "ant-design-vue/dist/antd.css";
 // 自定义指令+过滤器
 import * as Directives from "@/utils/directives/index";
@@ -14,7 +14,7 @@ Vue.config.productionTip = false;
 
 // ui组件按需导入
 Vue.use(Antd);
-Vue.prototype.$message = Antd.message;
+Vue.prototype.$message = message;
 // 全局字体图标组件---使用iconfont图标
 const IconFont = Icon.createFromIconfontCN({
   scriptUrl: "//at.alicdn.com/t/font_2985384_syah0lk535.js"

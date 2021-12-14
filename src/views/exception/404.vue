@@ -21,5 +21,6 @@ export default {
 <style lang="less" scoped>
 .container {
   background: transparent;
+  color: red;
 }
 </style>

@@ -1,5 +1,7 @@
 <template>
-  <div class="container">公共页面</div>
+  <div class="container">
+    <router-view />
+  </div>
 </template>
 
 <script>
@@ -7,14 +9,14 @@ import { mapState } from "vuex";
 export default {
   computed: {
     ...mapState({
-      userInfo: (state) => state.user.userInfo,
-    }),
+      userInfo: (state) => state.user.userInfo
+    })
   },
   data() {
     return {};
   },
   created() {},
-  methods: {},
+  methods: {}
 };
 </script>
 
