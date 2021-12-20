@@ -46,33 +46,33 @@ const options = [
                 name: "云服务器管理",
                 component: () => import("@/views/control/server/serverAdmin"),
                 meta: {}
-              },
-              {
-                path: "transfer",
-                name: "过户",
-                component: RouteView,
-                meta: {},
-                children: [
-                  {
-                    path: "send",
-                    name: "发送",
-                    component: () => import("@/views/control/server/send"),
-                    meta: {}
-                  },
-                  {
-                    path: "receive",
-                    name: "接收",
-                    component: () => import("@/views/control/server/receive"),
-                    meta: {}
-                  }
-                ]
-              },
-              {
-                path: "trash",
-                name: "回收站",
-                component: () => import("@/views/control/server/trash"),
-                meta: {}
               }
+              // {
+              //   path: "transfer",
+              //   name: "过户",
+              //   component: RouteView,
+              //   meta: {},
+              //   children: [
+              //     {
+              //       path: "send",
+              //       name: "发送",
+              //       component: () => import("@/views/control/server/send"),
+              //       meta: {}
+              //     },
+              //     {
+              //       path: "receive",
+              //       name: "接收",
+              //       component: () => import("@/views/control/server/receive"),
+              //       meta: {}
+              //     }
+              //   ]
+              // },
+              // {
+              //   path: "trash",
+              //   name: "回收站",
+              //   component: () => import("@/views/control/server/trash"),
+              //   meta: {}
+              // }
             ]
           }
         ]

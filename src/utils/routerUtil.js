@@ -28,6 +28,7 @@ function loadRoutes() {
   if (menuRoutes) {
     store.commit("setting/setMenuData", menuRoutes);
   }
+  // console.log("执行了加载路由", menuRoutes);
 }
 
 /**

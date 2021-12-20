@@ -12,7 +12,7 @@ import * as Filters from "@/utils/filters/index";
 
 Vue.config.productionTip = false;
 
-// ui组件按需导入
+// ui组件
 Vue.use(Antd);
 Vue.prototype.$message = message;
 // 全局字体图标组件---使用iconfont图标
