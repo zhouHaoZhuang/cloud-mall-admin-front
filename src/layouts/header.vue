@@ -51,6 +51,7 @@ export default {
   width: 100%;
   min-width: 900px;
   height: 56px;
+  color: #fff;
   background-color: @primary-color;
   flex-shrink: 0;
   position: fixed;

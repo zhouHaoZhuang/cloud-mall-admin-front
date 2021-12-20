@@ -112,7 +112,7 @@ module.exports = {
             "primary-color-2": "#46A1FF",
             "success-color": "#05BF69",
             "error-color": "#FF5330",
-            "border-radius-base": "20px",
+            "border-radius-base": "4px",
             "text-color-secondary": "#ACB3B9",
             "text-color": "#475666",
             "table-row-hover-bg": "#edf2f6"

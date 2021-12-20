@@ -46,6 +46,14 @@ const options = [
                 name: "云服务器管理",
                 component: () => import("@/views/control/server/serverAdmin"),
                 meta: {}
+              },
+              {
+                path: "detail",
+                name: "云服务器详情",
+                component: () => import("@/views/control/server/serverDetail"),
+                meta: {
+                  hiddenMenu: true
+                }
               }
               // {
               //   path: "transfer",
