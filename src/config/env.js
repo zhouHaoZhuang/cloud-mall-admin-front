@@ -27,5 +27,5 @@ const domains = {
 export default {
   VUE_APP_BASE_URL,
   MALL_URL: cloudMallUrl[process.env.VUE_APP_ENV],
-  DOMAIN_URL: domains[process.env.NODE_ENV]
+  DOMAIN_URL: domains[process.env.VUE_APP_ENV]
 };
