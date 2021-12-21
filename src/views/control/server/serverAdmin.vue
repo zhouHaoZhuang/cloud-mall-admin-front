@@ -5,14 +5,20 @@
       <div class="left">
         <div class="title">云服务器管理</div>
         <a-select
+          v-model="listQuery.regionId"
           class="select"
           placeholder="全部线路"
-          style="width: 120px"
+          style="width: 150px"
           @change="handleAddressChange"
         >
-          <a-select-option value="jack"> Jack </a-select-option>
-          <a-select-option value="lucy"> Lucy </a-select-option>
-          <a-select-option value="Yiminghe"> yiminghe </a-select-option>
+          <a-select-option value="all"> 全部线路 </a-select-option>
+          <a-select-option
+            v-for="item in addressList"
+            :key="item.regionId"
+            :value="item.regionId"
+          >
+            {{ item.localName }}
+          </a-select-option>
         </a-select>
       </div>
       <div class="help">
@@ -50,12 +56,13 @@
             </a-menu>
             <a-button> 更多操作 <a-icon type="down" /> </a-button>
           </a-dropdown>
-          <a-input-group compact>
-            <a-select default-value="IP地址" style="width: 80px">
-              <a-select-option value="IP地址"> IP地址 </a-select-option>
-              <a-select-option value="实例名称"> 实例名称 </a-select-option>
+          <a-input-group style="width: 400px" compact>
+            <a-select v-model="listQuery.key" style="width: 100px">
+              <a-select-option value="ip"> IP地址 </a-select-option>
+              <a-select-option value="instanceName"> 实例名称 </a-select-option>
             </a-select>
             <a-input-search
+              v-model="listQuery.search"
               style="width: 70%"
               placeholder="请输入搜索关键词"
               enter-button
@@ -92,19 +99,25 @@
           style="cursor: pointer"
         >
           <div>
-            状态(全部)
+            状态({{ columnsStatusTxt }})
             <a-icon type="caret-down" />
           </div>
           <a-menu slot="overlay">
-            <a-menu-item :key="4">全部</a-menu-item>
-            <a-menu-item v-for="(value, key) in runningStatusEnum" :key="key">
+            <a-menu-item :key="4" @click="handleStatusFilter(4)">
+              全部
+            </a-menu-item>
+            <a-menu-item
+              v-for="(value, key) in runningStatusEnum"
+              :key="key"
+              @click="handleStatusFilter(key)"
+            >
               {{ value }}
             </a-menu-item>
           </a-menu>
         </a-dropdown>
         <!-- 实例名称 -->
-        <div class="" slot="" slot-scope="text, record">
-          {{ text }}{{ record }}
+        <div slot="instanceName" slot-scope="text">
+          {{ text }}
         </div>
         <!-- 监控 -->
         <div slot="monitor" slot-scope="text, record">
@@ -116,45 +129,72 @@
         </div>
         <!-- IP地址 -->
         <div slot="ip" slot-scope="text, record">
-          <div>{{ record.outIp }} (公)</div>
-          <div>{{ record.innerIp }} (私)</div>
+          <div>
+            {{ record.outIp }} (公)
+            <a-icon
+              class="copy-icon"
+              type="copy"
+              @click="handleCopy(record.outIp)"
+            />
+          </div>
+          <div>
+            {{ record.innerIp }} (私)
+            <a-icon
+              class="copy-icon"
+              type="copy"
+              @click="handleCopy(record.innerIp)"
+            />
+          </div>
         </div>
         <!-- 状态 -->
-        <div class="" slot="" slot-scope="text, record">
-          {{ text }}{{ record }}
+        <div slot="runningStatus" slot-scope="text">
+          <div :class="getStatusClassName(text)">
+            <div class="dot"></div>
+            {{ runningStatusEnum[text] }}
+          </div>
         </div>
         <!-- 配置 -->
-        <div class="" slot="" slot-scope="text, record">
-          <div>{{ record }}</div>
-          <div>{{ record }}</div>
+        <div slot="setting" slot-scope="text, record">
+          <div>规格：{{ record.cpu }}核{{ record.memory }}G</div>
+          <div>带宽：{{ record.internetMaxBandwidthOut }}Mbps</div>
         </div>
         <!-- 类型/到期时间 -->
         <div slot="endTimeStr" slot-scope="text, record">
-          <div>{{ record }}</div>
+          <div>{{ record.tradeCode }}</div>
           <div>{{ text }}</div>
         </div>
         <!-- 自动续费/周期 -->
         <div slot="autoRenew" slot-scope="text, record">
           <span v-if="text === 0" style="color: red">未开通</span>
-          <span v-else>{{ record.renewPeriod }}</span>
+          <span v-else>{{ record.renewPeriod }}{{ record.durationUnit }}</span>
         </div>
         <!-- 操作 -->
         <div slot="action" slot-scope="text, record">
           <div>
-            <a-button type="link" @click="handleAdminCloud(record)">
+            <a-button
+              type="link"
+              size="small"
+              @click="handleAdminCloud(record)"
+            >
               管理
             </a-button>
-            <a-button type="link">登录</a-button>
+            <a-button type="link" size="small">登录</a-button>
           </div>
           <div>
-            <a-button type="link">升级</a-button>
-            <a-button type="link" @click="handleRenew">续费</a-button>
+            <a-button type="link" size="small">升级</a-button>
+            <a-button type="link" size="small" @click="handleRenew">
+              续费
+            </a-button>
             <a-dropdown :trigger="['click']">
-              <a-button type="link" @click="(e) => e.preventDefault()">
+              <a-button
+                type="link"
+                size="small"
+                @click="(e) => e.preventDefault()"
+              >
                 更多
                 <a-icon type="down" style="margin-left: 2px" />
               </a-button>
-              <a-menu slot="overlay">
+              <a-menu class="table-dropdown" slot="overlay">
                 <a-menu-item key="1" @click="handleCloudAction('restart')">
                   重启
                 </a-menu-item>
@@ -205,27 +245,46 @@ export default {
     CustomColumnsModal
   },
   computed: {
+    // 按钮是否禁用
     disabledBtn() {
       return this.selectedRowKeys.length === 0;
+    },
+    // 返回表格状态类名
+    getStatusClassName() {
+      return function (status) {
+        if (status === 0) {
+          return "status hole";
+        }
+        if (status === 1) {
+          return "status start";
+        }
+        if (status === 2) {
+          return "status stop";
+        }
+        if (status === 3) {
+          return "status overdue";
+        }
+      };
     }
   },
   data() {
     return {
       runningStatusEnum,
       listQuery: {
+        key: "ip",
+        search: "",
+        regionId: undefined,
         currentPage: 1,
         pageSize: 10,
         total: 0
       },
-      data: [{}],
+      data: [],
       columns: [
         {
           title: "实例名称",
-          dataIndex: "id",
+          dataIndex: "instanceName",
           width: 150,
-          onFilter: (value, record) => record.name.includes(value),
-          sorter: (a, b) => a.name.length - b.name.length,
-          scopedSlots: { customRender: "addressProject" },
+          scopedSlots: { customRender: "instanceName" },
           select: true
         },
         {
@@ -236,7 +295,7 @@ export default {
         },
         {
           title: "地域",
-          dataIndex: "shortName",
+          dataIndex: "regionId",
           select: true
         },
         {
@@ -257,22 +316,20 @@ export default {
         {
           title: "配置",
           dataIndex: "setting",
-          scopedSlots: { customRender: "addressProject" },
+          scopedSlots: { customRender: "setting" },
           select: true
         },
         {
           title: "类型/到期日期",
           dataIndex: "endTimeStr",
-          onFilter: (value, record) => record.name.includes(value),
-          sorter: (a, b) => a.name.length - b.name.length,
+          sorter: (a, b) => a.endTimeStr - b.endTimeStr,
           scopedSlots: { customRender: "endTimeStr" },
           select: true
         },
         {
           title: "自动续费/周期",
           dataIndex: "autoRenew",
-          onFilter: (value, record) => record.name.includes(value),
-          sorter: (a, b) => a.name.length - b.name.length,
+          sorter: (a, b) => a.renewPeriod - b.renewPeriod,
           scopedSlots: { customRender: "autoRenew" },
           select: true
         },
@@ -284,6 +341,7 @@ export default {
         }
       ],
       newColumns: [],
+      columnsStatusTxt: "全部",
       paginationProps: {
         showSizeChanger: true,
         total: 1,
@@ -308,29 +366,52 @@ export default {
       // 启动服务器
       startLoading: false,
       // 自定义名称弹窗
-      customColumnsVisible: false
+      customColumnsVisible: false,
       // 弹窗相关------end
+      addressList: []
     };
   },
   created() {
     // 动态设置表格列显示/隐藏
     this.newColumns = this.columns.filter((ele) => ele.select);
+    this.getAddressList();
     this.getList();
   },
   methods: {
-    // 获取服务器列表
-    getList() {
-      this.$store.dispatch("cloud/cloudList", this.listQuery).then((res) => {
-        console.log(res);
+    // 获取地域列表
+    getAddressList() {
+      this.$store.dispatch("cloud/addressList").then((res) => {
+        this.addressList = [...res.data];
       });
+    },
+    // 获取服务器列表
+    getList(status) {
+      this.tableLoading = true;
+      this.$getList("cloud/cloudList", this.listQuery)
+        .then((res) => {
+          if (status) {
+            const newData = res.data.list.filter(
+              (ele) => ele.runningStatus === status * 1
+            );
+            this.data = [...newData];
+          } else {
+            this.data = [...res.data.list];
+          }
+        })
+        .finally(() => {
+          this.tableLoading = false;
+        });
     },
     // 头部线路切换
     handleAddressChange(value) {
-      console.log(`selected ${value}`);
+      if (value === "all") {
+        this.listQuery.regionId = undefined;
+      }
+      this.getList();
     },
     // 点击搜索
-    handleSearch(value) {
-      console.log(value);
+    handleSearch() {
+      this.getList();
     },
     // 表格多选
     onSelectChange(selectedRowKeys) {
@@ -341,7 +422,12 @@ export default {
     handleMonitor(record) {},
     // 跳转服务器实例详情管理
     handleAdminCloud(record) {
-      this.$router.push("/control/server/detail");
+      this.$router.push({
+        path: "/control/server/detail",
+        query: {
+          id: record.id
+        }
+      });
     },
     // 弹窗相关------start
     // 点击修改实例名称
@@ -392,8 +478,28 @@ export default {
         });
       });
       this.newColumns = this.columns.filter((ele) => ele.select);
-    }
+    },
     // 弹窗相关------end
+    // 点击复制
+    handleCopy(txt) {
+      this.$copyText(txt)
+        .then(() => {
+          this.$message.success("已成功复制到剪切板");
+        })
+        .catch(() => {
+          this.$message.warning("复制失败");
+        });
+    },
+    // 表格头部状态筛选
+    handleStatusFilter(status) {
+      if (status !== 4) {
+        this.columnsStatusTxt = this.runningStatusEnum[status];
+        this.getList(status);
+      } else {
+        this.columnsStatusTxt = "全部";
+        this.getList();
+      }
+    }
   }
 };
 </script>
@@ -448,6 +554,46 @@ export default {
   }
   .table {
     color: #4d4d4d;
+    .copy-icon {
+      color: #00aaff;
+      cursor: pointer;
+    }
+    .status {
+      color: #29cc7a;
+      display: flex;
+      align-items: center;
+      .dot {
+        width: 14px;
+        height: 14px;
+        border-radius: 50%;
+        background: #29cc7a;
+        margin-right: 5px;
+      }
+    }
+    .start {
+      color: #29cc7a;
+      .dot {
+        background: #29cc7a;
+      }
+    }
+    .stop {
+      color: red;
+      .dot {
+        background: red;
+      }
+    }
+    .hole {
+      color: #000;
+      .dot {
+        background: #000;
+      }
+    }
+    .overdue {
+      color: #666;
+      .dot {
+        background: #666;
+      }
+    }
   }
 }
 </style>

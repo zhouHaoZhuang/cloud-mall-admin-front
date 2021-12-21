@@ -8,7 +8,8 @@ export default {
     beforePath: "",
     filterList: ["/dashboard"],
     leftOpenShow: true,
-    selectItemPath: ""
+    selectItemPath: "",
+    selectLeftPath: ""
   },
   mutations: {
     // 设置左侧side菜单数据
@@ -38,6 +39,10 @@ export default {
     // side左侧菜单点击后保存点击后的路径实现选中功能
     setMenuSelectPath(state, selectItemPath) {
       state.selectItemPath = selectItemPath;
+    },
+    // 左侧三级菜单点击后保存点击后的路径实现选中功能
+    setLeftMenuSelectPath(state, selectLeftPath) {
+      state.selectLeftPath = selectLeftPath;
     }
   },
   actions: {
