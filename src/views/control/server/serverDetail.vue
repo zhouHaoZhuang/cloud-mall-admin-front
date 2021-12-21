@@ -25,9 +25,13 @@
         </div>
         <div class="btns">
           <a-space>
-            <a-button>启动</a-button>
-            <a-button type="primary">重启</a-button>
-            <a-button type="primary">关机</a-button>
+            <a-button @click="handleStart">启动</a-button>
+            <a-button type="primary" @click="handleCloudAction('restart')">
+              重启
+            </a-button>
+            <a-button type="primary" @click="handleCloudAction('stop')">
+              关机
+            </a-button>
             <a-button type="primary" disabled>VNC连接</a-button>
             <a-button type="primary">同步</a-button>
             <a-dropdown :trigger="['click']">
@@ -36,7 +40,9 @@
                 <a-icon type="caret-down" />
               </a-button>
               <a-menu slot="overlay">
-                <a-menu-item key="1">重设密码</a-menu-item>
+                <a-menu-item key="1" @click="handleResetPwd">
+                  重设密码
+                </a-menu-item>
                 <a-menu-item key="2" disabled>重装系统</a-menu-item>
                 <a-menu-item key="3" disabled>PUSH</a-menu-item>
                 <a-menu-item key="4" disabled>创建快照</a-menu-item>
@@ -60,17 +66,34 @@
         <a-tab-pane key="4" tab="操作日志"></a-tab-pane>
       </a-tabs>
     </div>
+    <!-- 弹窗相关-----start -->
+    <!-- 重置密码弹窗 -->
+    <UpdatePwdModal v-model="updatePwdVisible" />
+    <!-- 重启/关机弹窗 -->
+    <CloudActionModal v-model="cloudActionVisible" :type="cloudActionType" />
+    <!-- 弹窗相关-----end -->
   </div>
 </template>
 
 <script>
 import { runningStatusEnum } from "@/utils/enum";
 import CloudDetail from "@/components/Cloud/cloudDetail";
+import UpdatePwdModal from "@/components/Cloud/CloudModal/updatePwdModal";
+import CloudActionModal from "@/components/Cloud/CloudModal/cloudActionModal";
 export default {
-  components: { CloudDetail },
+  components: { CloudDetail, UpdatePwdModal, CloudActionModal },
   data() {
     return {
-      runningStatusEnum
+      runningStatusEnum,
+      // 弹窗相关----------start
+      // 重置密码弹窗
+      updatePwdVisible: false,
+      // 重启/关机弹窗
+      cloudActionVisible: false,
+      cloudActionType: "",
+      // 启动服务器
+      startLoading: false
+      // 弹窗相关----------end
     };
   },
   created() {},
@@ -80,7 +103,45 @@ export default {
     // tabs切换回调
     tabsCallback(key) {
       console.log(key);
+    },
+    // 弹窗相关----------start
+    // 重设密码第一步弹窗
+    handleResetPwd() {
+      this.$confirm({
+        width: "500px",
+        centered: true,
+        title: "你所选的1台云服务器将执行重置密码操作，是否确定该操作？",
+        content:
+          "重设云服务器密码后不影响VNC连接密码，如需修改VNC密码请单独修改；请提前保存好云服务器数据，重设密码会使云服务器自动重启生效。",
+        onOk: () => {
+          return new Promise((resolve, reject) => {
+            this.updatePwdVisible = true;
+            resolve();
+          });
+        }
+      });
+    },
+    // 重启/关机弹窗
+    handleCloudAction(type) {
+      this.cloudActionType = type;
+      this.cloudActionVisible = true;
+    },
+    // 启动服务器
+    handleStart() {
+      this.$confirm({
+        width: "500px",
+        centered: true,
+        title: "你所选的1台云服务器将执行启动操作。",
+        content: "是否确定启动？",
+        confirmLoading: this.startLoading,
+        onOk: () => {
+          return new Promise((resolve, reject) => {
+            resolve();
+          });
+        }
+      });
     }
+    // 弹窗相关----------end
   }
 };
 </script>

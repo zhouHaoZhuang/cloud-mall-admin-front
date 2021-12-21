@@ -5,7 +5,10 @@
       <div class="public-list">
         <div class="public-item">
           <div class="public-label">名称</div>
-          <div class="public-value" @click="handleUpdateName">服务器名称</div>
+          <div class="public-value">
+            服务器名称
+            <a-icon class="icon-edit" type="edit" @click="handleUpdateName" />
+          </div>
         </div>
         <div class="public-item">
           <div class="public-label">地域</div>
@@ -204,6 +207,12 @@ export default {
             background-color: #ff6600;
             border-radius: 4px;
             color: #fff;
+          }
+          .icon-edit {
+            font-size: 16px;
+            margin-left: 5px;
+            color: #00aaff;
+            cursor: pointer;
           }
         }
       }

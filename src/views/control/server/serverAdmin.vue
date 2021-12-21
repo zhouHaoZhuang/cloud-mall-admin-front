@@ -25,11 +25,25 @@
       <div class="left">
         <a-space>
           <a-button type="primary">+新建</a-button>
-          <a-button type="primary" :disabled="disabledBtn"> 启动 </a-button>
+          <a-button type="primary" :disabled="disabledBtn" @click="handleStart">
+            启动
+          </a-button>
           <a-dropdown>
             <a-menu slot="overlay">
-              <a-menu-item key="1" :disabled="disabledBtn"> 关机 </a-menu-item>
-              <a-menu-item key="2" :disabled="disabledBtn"> 重启 </a-menu-item>
+              <a-menu-item
+                key="1"
+                :disabled="disabledBtn"
+                @click="handleCloudAction('stop')"
+              >
+                关机
+              </a-menu-item>
+              <a-menu-item
+                key="2"
+                :disabled="disabledBtn"
+                @click="handleCloudAction('restart')"
+              >
+                重启
+              </a-menu-item>
               <a-menu-item key="3" :disabled="disabledBtn">
                 批量续费
               </a-menu-item>
@@ -54,7 +68,7 @@
         <div class="icon-btn">
           <a-icon type="sync" />
         </div>
-        <div class="icon-btn">
+        <div class="icon-btn" @click="handleCustomColumns">
           <a-icon type="setting" />
         </div>
       </div>
@@ -63,7 +77,7 @@
       <a-table
         rowKey="id"
         :loading="tableLoading"
-        :columns="columns"
+        :columns="newColumns"
         :data-source="data"
         :pagination="paginationProps"
         :row-selection="{
@@ -134,28 +148,62 @@
           </div>
           <div>
             <a-button type="link">升级</a-button>
-            <a-button type="link">续费</a-button>
+            <a-button type="link" @click="handleRenew">续费</a-button>
             <a-dropdown :trigger="['click']">
               <a-button type="link" @click="(e) => e.preventDefault()">
                 更多
                 <a-icon type="down" style="margin-left: 2px" />
               </a-button>
               <a-menu slot="overlay">
-                <a-menu-item key="3">重启</a-menu-item>
-                <a-menu-item key="3">修改信息</a-menu-item>
-                <a-menu-item key="3">自动续费</a-menu-item>
+                <a-menu-item key="1" @click="handleCloudAction('restart')">
+                  重启
+                </a-menu-item>
+                <a-menu-item key="2" @click="handleUpdateName">
+                  修改信息
+                </a-menu-item>
+                <a-menu-item key="3" @click="handleAutoRenew">
+                  自动续费
+                </a-menu-item>
               </a-menu>
             </a-dropdown>
           </div>
         </div>
       </a-table>
     </div>
+    <!-- 弹窗相关--------start -->
+    <!-- 修改实例名称弹窗 -->
+    <UpdateNameModal v-model="updateNameVisible" />
+    <!-- 产品续费弹窗 -->
+    <RenewModal v-model="renewVisible" />
+    <!-- 自动产品续费弹窗 -->
+    <AutoRenewModal v-model="autoRenewVisible" />
+    <!-- 重启/关机弹窗 -->
+    <CloudActionModal v-model="cloudActionVisible" :type="cloudActionType" />
+    <!-- 自定义列表项弹窗 -->
+    <CustomColumnsModal
+      v-model="customColumnsVisible"
+      :list="columns"
+      @change="customColumnsChange"
+    />
+    <!-- 弹窗相关--------end -->
   </div>
 </template>
 
 <script>
 import { runningStatusEnum } from "@/utils/enum";
+import UpdateNameModal from "@/components/Cloud/CloudModal/updateNameModal";
+import RenewModal from "@/components/Cloud/CloudModal/renewModal";
+import AutoRenewModal from "@/components/Cloud/CloudModal/autoRenewModal";
+import CloudActionModal from "@/components/Cloud/CloudModal/cloudActionModal";
+import CustomColumnsModal from "@/components/Cloud/CloudModal/customColumnsModal";
 export default {
+  components: {
+    UpdateNameModal,
+    RenewModal,
+    AutoRenewModal,
+    CloudActionModal,
+    CustomColumnsModal
+  },
   computed: {
     disabledBtn() {
       return this.selectedRowKeys.length === 0;
@@ -177,21 +225,25 @@ export default {
           width: 150,
           onFilter: (value, record) => record.name.includes(value),
           sorter: (a, b) => a.name.length - b.name.length,
-          scopedSlots: { customRender: "addressProject" }
+          scopedSlots: { customRender: "addressProject" },
+          select: true
         },
         {
           title: "监控",
           dataIndex: "monitor",
-          scopedSlots: { customRender: "monitor" }
+          scopedSlots: { customRender: "monitor" },
+          select: true
         },
         {
           title: "地域",
-          dataIndex: "shortName"
+          dataIndex: "shortName",
+          select: true
         },
         {
           title: "IP地址",
           dataIndex: "ip",
-          scopedSlots: { customRender: "ip" }
+          scopedSlots: { customRender: "ip" },
+          select: true
         },
         // 状态，头部在上边自定义的
         {
@@ -199,33 +251,39 @@ export default {
           scopedSlots: {
             title: "statusTitle",
             customRender: "runningStatus"
-          }
+          },
+          select: true
         },
         {
           title: "配置",
-          dataIndex: "",
-          scopedSlots: { customRender: "addressProject" }
+          dataIndex: "setting",
+          scopedSlots: { customRender: "addressProject" },
+          select: true
         },
         {
           title: "类型/到期日期",
           dataIndex: "endTimeStr",
           onFilter: (value, record) => record.name.includes(value),
           sorter: (a, b) => a.name.length - b.name.length,
-          scopedSlots: { customRender: "endTimeStr" }
+          scopedSlots: { customRender: "endTimeStr" },
+          select: true
         },
         {
           title: "自动续费/周期",
           dataIndex: "autoRenew",
           onFilter: (value, record) => record.name.includes(value),
           sorter: (a, b) => a.name.length - b.name.length,
-          scopedSlots: { customRender: "autoRenew" }
+          scopedSlots: { customRender: "autoRenew" },
+          select: true
         },
         {
           title: "操作",
           dataIndex: "action",
-          scopedSlots: { customRender: "action" }
+          scopedSlots: { customRender: "action" },
+          select: true
         }
       ],
+      newColumns: [],
       paginationProps: {
         showSizeChanger: true,
         total: 1,
@@ -236,13 +294,36 @@ export default {
         onShowSizeChange: this.onShowSizeChange
       },
       tableLoading: false,
-      selectedRowKeys: []
+      selectedRowKeys: [],
+      // 弹窗相关------start
+      // 修改实例名称弹窗
+      updateNameVisible: false,
+      // 产品续费弹窗
+      renewVisible: false,
+      // 自动产品续费弹窗
+      autoRenewVisible: false,
+      // 重启/关机弹窗
+      cloudActionVisible: false,
+      cloudActionType: "",
+      // 启动服务器
+      startLoading: false,
+      // 自定义名称弹窗
+      customColumnsVisible: false
+      // 弹窗相关------end
     };
   },
-  created() {},
+  created() {
+    // 动态设置表格列显示/隐藏
+    this.newColumns = this.columns.filter((ele) => ele.select);
+    this.getList();
+  },
   methods: {
     // 获取服务器列表
-    getList() {},
+    getList() {
+      this.$store.dispatch("cloud/cloudList", this.listQuery).then((res) => {
+        console.log(res);
+      });
+    },
     // 头部线路切换
     handleAddressChange(value) {
       console.log(`selected ${value}`);
@@ -261,7 +342,58 @@ export default {
     // 跳转服务器实例详情管理
     handleAdminCloud(record) {
       this.$router.push("/control/server/detail");
+    },
+    // 弹窗相关------start
+    // 点击修改实例名称
+    handleUpdateName() {
+      this.updateNameVisible = true;
+    },
+    // 点击产品续费
+    handleRenew() {
+      this.renewVisible = true;
+    },
+    // 点击自动产品续费
+    handleAutoRenew() {
+      this.autoRenewVisible = true;
+    },
+    // 重启/关机弹窗
+    handleCloudAction(type) {
+      this.cloudActionType = type;
+      this.cloudActionVisible = true;
+    },
+    // 启动服务器
+    handleStart() {
+      this.$confirm({
+        width: "500px",
+        centered: true,
+        title: "你所选的1台云服务器将执行启动操作。",
+        content: "是否确定启动？",
+        confirmLoading: this.startLoading,
+        onOk: () => {
+          return new Promise((resolve, reject) => {
+            resolve();
+          });
+        }
+      });
+    },
+    // 点击自定义列表项
+    handleCustomColumns() {
+      this.customColumnsVisible = true;
+    },
+    // 自定义列表项change事件
+    customColumnsChange(value) {
+      value.forEach((item) => {
+        const index = this.columns.findIndex(
+          (ele) => ele.dataIndex === item.dataIndex
+        );
+        this.columns.splice(index, 1, {
+          ...this.columns[index],
+          select: item.select
+        });
+      });
+      this.newColumns = this.columns.filter((ele) => ele.select);
     }
+    // 弹窗相关------end
   }
 };
 </script>
@@ -310,6 +442,7 @@ export default {
         display: flex;
         align-items: center;
         justify-content: center;
+        cursor: pointer;
       }
     }
   }
