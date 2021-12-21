@@ -110,6 +110,16 @@ const options = [
                 name: "订单管理",
                 component: () => import("@/views/finance/order/index.vue"),
                 meta: {}
+              },
+              {
+                path: "orderdetails",
+                name: "订单详情",
+                component: () =>
+                  import("@/views/finance/order/orderdetails.vue"),
+                meta: {
+                  invisible: true, // 不显示在左侧菜单
+                  back: true // 后退
+                }
               }
             ]
           },

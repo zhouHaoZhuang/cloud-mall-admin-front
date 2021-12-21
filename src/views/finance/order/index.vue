@@ -18,6 +18,7 @@
               style="width: 70%"
               placeholder="请输入搜索关键词"
               enter-button
+              v-model="listQuery.search"
               @search="onSearch"
             />
           </a-input-group>
@@ -64,8 +65,27 @@
       </div>
       <!-- 表格 -->
       <div class="table">
-        <a-table :columns="columns" :data-source="data">
+        <a-table
+          :columns="columns"
+          :data-source="data"
+          rowKey="id"
+          :pagination="paginationProps"
+          :scroll="{ x: 1400 }"
+          @change="handleChange"
+        >
           <a slot="name" slot-scope="text">{{ text }}</a>
+          <div slot="action" slot-scope="text">
+            <a-button type="link" @click="selectPool(text)">
+              查看
+            </a-button>
+          </div>
+           <div
+            :class="{ green: text === 1, blue: text !== 1 }"
+            slot="payStatus"
+            slot-scope="text"
+          >
+            {{ text === 1 ? "已支付" : "未支付" }}
+          </div>
         </a-table>
       </div>
     </div>
@@ -204,10 +224,10 @@ export default {
           }
         }
       }
-      .btn5{
+      .btn5 {
         padding-left: 20px;
       }
-      .btn6{
+      .btn6 {
         padding-left: 20px;
       }
     }
