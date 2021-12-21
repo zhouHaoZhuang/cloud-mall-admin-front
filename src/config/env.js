@@ -8,7 +8,15 @@ if (process.env.VUE_APP_ENV === "dev") {
 } else if (process.env.VUE_APP_ENV === "prod") {
   VUE_APP_BASE_URL = "https://api.chadian.com";
 }
+// 跳转控制台地址
+const cloudMallUrl = {
+  dev: "http://localhost:3000"
+  // test: 'http://test.com',
+  // preprod: 'http://preprod.com',
+  // prod: 'http://prod.com'
+};
 
 export default {
   VUE_APP_BASE_URL,
+  MALL_URL: cloudMallUrl[process.env.VUE_APP_ENV]
 };

@@ -3,16 +3,16 @@ import env from "@/config/env";
 import message from "ant-design-vue/es/message";
 import store from "@/store";
 const axiosSource = axios.CancelToken.source();
-// const { AuthenticationClient } = require("authing-js-sdk");
-// const authenticationClient = new AuthenticationClient({
-//   appId: env.appId,
-//   appHost: env.appHost,
-// });
+const { AuthenticationClient } = require("authing-js-sdk");
+const authenticationClient = new AuthenticationClient({
+  appId: env.appId,
+  appHost: env.appHost
+});
 // 创建 axios 实例
 const request = axios.create({
   // API 请求的默认前缀
   baseURL: env.VUE_APP_BASE_URL,
-  timeout: 3000, // 请求超时时间
+  timeout: 3000 // 请求超时时间
 });
 const downloadUrl = [];
 
@@ -28,12 +28,12 @@ request.interceptors.request.use(async (config) => {
   const token = store.state.user.token;
   // 每次请求时需要判断登录状态，未登录直接跳转登录页，并且取消本次请求
   if (config.url !== "/user/loginByUsername") {
-    // const data = await authenticationClient.checkLoginStatus(token);
-    // if (data.code !== 200) {
-    //   axiosSource.cancel("取消请求");
-    //   store.dispatch("user/logout");
-    //   window.location.replace("/");
-    // }
+    const data = await authenticationClient.checkLoginStatus(token);
+    if (data.code !== 200) {
+      axiosSource.cancel("取消请求");
+      store.dispatch("user/logout");
+      window.location.replace("/");
+    }
   }
   if (token) {
     // 让每个请求携带token-- ['token']为自定义key 请根据实际情况自行修改
