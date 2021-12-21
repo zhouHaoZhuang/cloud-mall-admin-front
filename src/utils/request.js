@@ -2,6 +2,7 @@ import axios from "axios";
 import env from "@/config/env";
 import message from "ant-design-vue/es/message";
 import store from "@/store";
+import { getDomainUrl } from "@/utils/index";
 const axiosSource = axios.CancelToken.source();
 const { AuthenticationClient } = require("authing-js-sdk");
 const authenticationClient = new AuthenticationClient({
@@ -14,6 +15,7 @@ const request = axios.create({
   baseURL: env.VUE_APP_BASE_URL,
   timeout: 3000 // 请求超时时间
 });
+// 下载的请求地址
 const downloadUrl = [];
 
 // 异常拦截处理器
@@ -39,6 +41,8 @@ request.interceptors.request.use(async (config) => {
     // 让每个请求携带token-- ['token']为自定义key 请根据实际情况自行修改
     config.headers["token"] = token;
   }
+  // 携带domain
+  config.headers.domain = getDomainUrl();
   // 头部携带ip
   const ip = localStorage.getItem("Ip");
   config.headers["ip"] = ip;

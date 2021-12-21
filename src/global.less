@@ -1,1 +1,19 @@
 // 全局样式
+body {
+  color: #333;
+}
+// 全局分页样式修改
+.ant-table-pagination {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  & > li:first-child {
+    position: absolute;
+    left: 0;
+  }
+}
+// 全局按钮颜色修改
+.ant-btn-primary {
+  background: #00aaff;
+  border-color: #00aaff;
+}
