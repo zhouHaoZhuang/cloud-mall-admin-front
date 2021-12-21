@@ -81,6 +81,7 @@ export default {
 
 <style lang="less" scoped>
 .product-container {
+  color: #fff;
   line-height: 56px;
   position: relative;
   padding-right: 50px;

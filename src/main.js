@@ -6,6 +6,8 @@ import bootstrap from "@/bootstrap";
 // ui组件
 import Antd, { Icon, message } from "ant-design-vue";
 import "ant-design-vue/dist/antd.css";
+// 全局样式
+import "./global.less"; // global style
 // 自定义指令+过滤器
 import * as Directives from "@/utils/directives/index";
 import * as Filters from "@/utils/filters/index";

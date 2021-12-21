@@ -84,13 +84,15 @@ export default {
       handler(newVal, oldVal) {
         this.menuList =
           newVal.children &&
-          newVal.children.map((ele, idx) => {
-            return {
-              ...ele,
-              isTwoMenu: ele.children ? true : false,
-              isOpen: false
-            };
-          });
+          newVal.children
+            .map((ele, idx) => {
+              return {
+                ...ele,
+                isTwoMenu: ele.children ? true : false,
+                isOpen: false
+              };
+            })
+            .filter((ele) => !ele.meta.hiddenMenu);
         this.selectPath = this.menuList && this.menuList[0].path;
       },
       immediate: true,
