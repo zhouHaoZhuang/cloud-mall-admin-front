@@ -6,7 +6,7 @@ const income = {
     // 获取收支明细列表
     getList({ commit, state}, data) {
       return request({
-				url: "/user/loginByUsername",
+				url: "/custpmerAccountlog",
 				method: "get",
 				data,
 			})
