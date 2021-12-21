@@ -77,12 +77,22 @@
           <div slot="action" slot-scope="text">
             <a-button type="link" @click="selectPool(text)"> 查看 </a-button>
           </div>
+          <div slot="createTime" slot-scope="text">
+            {{ text | formatDate }}
+          </div>
+          <div slot="tradeType" slot-scope="text">
+            <span v-if="text === 1">云服务新购</span>
+            <span v-if="text === 5">升配</span>
+            <span v-if="text === 10">降配</span>
+            <span v-if="text === 15">云服务续费</span>
+            <span v-if="text === 20">退费</span>
+          </div>
           <div
             :class="{ green: text === 1, blue: text !== 1 }"
             slot="payStatus"
             slot-scope="text"
           >
-            {{ text === 1 ? "已支付" : "未支付" }}
+            {{ text === 1 ? "已支付" : "已失效" }}
           </div>
         </a-table>
       </div>
@@ -112,37 +122,42 @@ export default {
         },
         {
           title: "产品名称",
-          dataIndex: "cutomerName",
-          key: "cutomerName"
+          dataIndex: "productName",
+          key: "productName"
         },
         {
           title: "金额",
-          dataIndex: "shortName",
-          key: "shortName"
+          dataIndex: "actualPrice",
+          key: "actualPrice"
         },
         {
           title: "创建时间",
-          dataIndex: "addressProject",
-          key: "addressProject",
-          scopedSlots: { customRender: "addressProject" },
-          onFilter: (value, record) => record.name.includes(value),
-          sorter: (a, b) => a.name.length - b.name.length
+          dataIndex: "createTime",
+          key: "createTime",
+          width: 190,
+          scopedSlots: { customRender: "createTime" },
+          sorter: true,
+          sortDirections: ["ascend", "descend"]
         },
         {
           title: "状态",
-          dataIndex: "customerStatus",
-          key: "customerStatus",
-          scopedSlots: { customRender: "customerStatus" }
+          dataIndex: "payStatus",
+          key: "payStatus",
+          width: 100,
+          scopedSlots: { customRender: "payStatus" }
         },
         {
           title: "来源/用途",
-          dataIndex: "",
-          key: ""
+          dataIndex: "tradeType",
+          key: "tradeType",
+          scopedSlots: { customRender: "tradeType" }
         },
         {
           title: "操作",
-          dataIndex: "",
-          key: ""
+          key: "action",
+          dataIndex: "orderNo",
+          fixed: "right",
+          scopedSlots: { customRender: "action" }
         }
       ],
       data: [],
@@ -168,32 +183,46 @@ export default {
       isTime: true
     };
   },
-  created(){
+  created() {
     this.getList();
-    console.log(8989);
   },
   methods: {
     //查询数据表格
     getList() {
-      this.$store.dispatch("finance/getList").then(res => {
+      this.$store.dispatch("finance/getList").then((res) => {
         console.log(res);
         this.data = [...res.data.list];
       });
-      // this.$getList("banner/getList",this.listQuery)
-      // .then(res=>{
-      //   this.data = [...res.data.list];
-      //   this.paginationProps.total = res.data.totalCount * 1;
-      // })
-      // .finally(() =>{
-
-      // })
     },
-    handleChange(value) {
-      console.log(`selected ${value}`);
+    //查看
+    selectPool(text, i) {
+      console.log(text);
+      this.$router.push({
+        path: "/user/finance/orderdetails",
+        query: {
+          id: text
+        }
+      });
     },
+    //排序
+    handleChange(pagination, filters, sorter) {
+      if (sorter && sorter.order) {
+        if (sorter.columnKey === "createTime") {
+          this.listQuery.createTimeSort = sorter.order.replace("end", "");
+        } else if (sorter.columnKey === "corporationCode") {
+          this.listQuery.corporationCodeSort = sorter.order.replace("end", "");
+        }
+        this.getList();
+      }
+    },
+    // handleChange(value) {
+    //   console.log(`selected ${value}`);
+    // },
     handleMenuClick() {},
-    onSearch(value) {
-      console.log(value);
+    //查询
+    onSearch() {
+      this.listQuery.currentPage = 1;
+      this.getList();
     },
     disabledStartDate(startValue) {
       const endValue = this.endValue;
@@ -225,6 +254,17 @@ export default {
       } else {
         this.isTime = false;
       }
+    },
+    changepage(current, pageSize) {
+      this.paginationProps.current = current;
+      this.paginationProps.pageSize = pageSize;
+      this.getList();
+    },
+    onShowSizeChange(current, pageSize) {
+      // console.log("改变了分页的大小", current, pageSize);
+      this.paginationProps.current = current;
+      this.paginationProps.pageSize = pageSize;
+      this.getList();
     }
   }
 };
@@ -260,6 +300,9 @@ export default {
             min-width: 100px !important;
           }
         }
+        .zhi {
+          margin: 5px;
+        }
       }
       .btn5 {
         padding-left: 20px;
@@ -270,6 +313,26 @@ export default {
     }
     .table {
       padding-top: 20px;
+      .green {
+        background-color: rgb(115, 209, 61);
+        color: rgb(255, 255, 255);
+        font-size: 12px;
+        width: 52px;
+        height: 20px;
+        text-align: center;
+        line-height: 20px;
+        border-radius: 2px;
+      }
+      .blue {
+        background-color: rgb(64, 169, 255);
+        color: rgb(255, 255, 255);
+        font-size: 12px;
+        width: 52px;
+        height: 20px;
+        text-align: center;
+        line-height: 20px;
+        border-radius: 2px;
+      }
     }
   }
 }

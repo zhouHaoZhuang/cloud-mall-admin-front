@@ -13,9 +13,14 @@
           <span>{{ orderInfo.tradeType === 1 ? "新购" : "销售" }} </span>
         </li>
         <li>
+          <span>关联订单:</span>
+          <span>--</span>
+        </li>
+        <li>
           <span>创建时间:</span>
           <span>{{ orderInfo.createTime | formatDate }}</span>
         </li>
+
         <li>
           <span>状态:</span>
           <span
@@ -23,16 +28,12 @@
               green: orderInfo.payStatus === 1,
               blue: orderInfo.payStatus !== 1
             }"
-            >{{ orderInfo.payStatus === 1 ? "已支付" : "未支付" }}</span
+            >{{ orderInfo.payStatus === 1 ? "已支付" : "已失效" }}</span
           >
-        </li>
-        <li>
-          <span>支付时间:</span>
-          <span>{{ orderInfo.payTime | formatDate }}</span>
         </li>
       </ul>
       <div class="config">
-        <div>
+        <!-- <div>
           <span>价格备注:</span>
           <span>{{ orderInfo.priceRemark }}</span>
         </div>
@@ -42,7 +43,7 @@
         </div>
         <div>
           <span>配置信息</span>
-        </div>
+        </div> -->
         <a-table
           :columns="columns"
           :data-source="data"
@@ -58,22 +59,21 @@
             <span v-if="text === 20">退费</span>
           </div>
           <div slot="productConfig" slot-scope="text">
+            <div>线路:{{ text.regionId }}</div>
             <div>CPU:{{ text.cpu }}</div>
             <div>内存:{{ text.memory }}</div>
-            <div>磁盘:{{ text.disk }}</div>
             <div>带宽:{{ text.internetMaxBandwidthOut }}</div>
             <div>防御:{{ "20G" }}</div>
-            <div>操作系统:{{ text.osName }}</div>
-            <div>所在区:{{ text.regionId }}</div>
-          </div>
-          <div slot="">
-
+            <div>镜像:{{ text.osName }}</div>
+            <div>系统盘:{{text.dataDiskSize}}</div>
+            <div>数据盘:{{text.systemDiskSize}}</div>
+            <div>自动续费:否</div>
           </div>
         </a-table>
       </div>
     </div>
     <!-- 用户信息 -->
-    <div class="channel">
+    <!-- <div class="channel">
       <p>用户信息</p>
       <ul>
         <li>
@@ -101,9 +101,9 @@
           <span>{{ data[0].qq }}</span>
         </li>
       </ul>
-    </div>
+    </div> -->
     <!-- 业务信息 -->
-    <div class="channel">
+    <!-- <div class="channel">
       <p>业务信息</p>
       <ul>
         <li>
@@ -127,7 +127,7 @@
           <span>{{ data[0].stockEndTime | formatDate }}</span>
         </li>
       </ul>
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -156,57 +156,28 @@ export default {
           scopedSlots: { customRender: "productConfig" }
         },
         {
+          title: "时长",
+          dataIndex: "",
+          key: ""
+        },
+        {
           title: "数量",
           dataIndex: "quantity",
           key: "quantity"
         },
         {
-          title: "付费方式",
-          dataIndex: "chargeModel",
-          key: "chargeModel"
-        },
-        {
-          title: "原价",
+          title: "费用",
           dataIndex: "originAmount",
           key: "originAmount"
-        },
-        {
-          title: "订单金额",
-          dataIndex: "actualAmount",
-          key: "actualAmount"
-        },
-        {
-          title: "推广优惠",
-          key: "promotionPreference",
-          dataIndex: "promotionPreference"
-        },
-        {
-          title: "代金券抵扣",
-          key: "deduction",
-          dataIndex: "deduction"
-        },
-        {
-          title: "现金实付",
-          key: "cashActualPay",
-          dataIndex: "cashActualPay"
         }
       ]
     };
   },
-  activated() {
+  created() {
     let id = this.$route.query.id;
-    // console.log(id);
-    this.$store.dispatch("financialOrder/getOne", id).then(res => {
+    console.log(id);
+    this.$store.dispatch("finance/getOne", id).then((res) => {
       console.log(res);
-      // let dataDisk = res.data.ecsPrice.dataDisk;
-      // let dataDiskSize = 0;
-      // if (dataDisk) {
-      //   for (let index = 0; index < dataDisk.length; index++) {
-      //     dataDiskSize += dataDisk[index].size;
-      //   }
-      //   res.data.ecsPrice.dataDiskSize = dataDiskSize;
-      // }
-      // console.log(dataDisk);
       this.orderInfo = res.data;
       this.data = [res.data];
     });
