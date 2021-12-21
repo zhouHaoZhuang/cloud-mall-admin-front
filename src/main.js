@@ -3,9 +3,13 @@ import App from "@/App.vue";
 import store from "@/store";
 import { initRouter } from "@/router";
 import bootstrap from "@/bootstrap";
+import * as utilsFun from "@/utils/index";
 // ui组件
 import Antd, { Icon, message } from "ant-design-vue";
 import "ant-design-vue/dist/antd.css";
+// 复制文本插件
+import VueClipboard from "vue-clipboard2";
+Vue.use(VueClipboard);
 // 全局样式
 import "./global.less"; // global style
 // 自定义指令+过滤器
@@ -22,6 +26,9 @@ const IconFont = Icon.createFromIconfontCN({
   scriptUrl: "//at.alicdn.com/t/font_2985384_syah0lk535.js"
 });
 Vue.component("icon-font", IconFont);
+
+// 全局挂载请求列表兼容方法---请求列表通过此方法走筛选
+Vue.prototype.$getList = utilsFun.getList;
 
 // 初始化router
 const router = initRouter();

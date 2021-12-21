@@ -6,29 +6,29 @@
         <div class="public-item">
           <div class="public-label">名称</div>
           <div class="public-value">
-            服务器名称
-            <a-icon class="icon-edit" type="edit" @click="handleUpdateName" />
+            {{ detail.instanceName }}
+            <!-- <a-icon class="icon-edit" type="edit" @click="handleUpdateName" /> -->
           </div>
         </div>
         <div class="public-item">
           <div class="public-label">地域</div>
-          <div class="public-value">中国大连</div>
+          <div class="public-value">{{ detail.regionId }}</div>
         </div>
         <div class="public-item">
           <div class="public-label">登录账号</div>
-          <div class="public-value">adminssssssss</div>
+          <div class="public-value">{{ detail.instanceName }}</div>
         </div>
         <div class="public-item">
           <div class="public-label">操作系统</div>
-          <div class="public-value">Windows Server 2008 R2 64位 企业版</div>
+          <div class="public-value">{{ detail.osName }}</div>
         </div>
         <div class="public-item">
           <div class="public-label">公网IP</div>
-          <div class="public-value">43.226.39.91:3389</div>
+          <div class="public-value">{{ detail.outIp }}</div>
         </div>
         <div class="public-item">
           <div class="public-label">私有IP</div>
-          <div class="public-value">43.226.39.91:3389</div>
+          <div class="public-value">{{ detail.innerIp }}</div>
         </div>
       </div>
     </div>
@@ -37,27 +37,32 @@
       <div class="public-list">
         <div class="public-item">
           <div class="public-label">付费方式</div>
-          <div class="public-value">服务器名称</div>
+          <div class="public-value">{{ detail.instanceName }}</div>
         </div>
         <div class="public-item">
           <div class="public-label">关联订单</div>
           <div class="public-value">
-            <span class="color-blue">100020</span>
+            <span class="color-blue"> {{ detail.orderNo }}</span>
             [购买]
           </div>
         </div>
         <div class="public-item"></div>
         <div class="public-item">
           <div class="public-label">创建时间</div>
-          <div class="public-value">Windows Server 2008 R2 64位 企业版</div>
+          <div class="public-value">{{ detail.instanceName }}</div>
         </div>
         <div class="public-item">
           <div class="public-label">到期时间</div>
-          <div class="public-value">43.226.39.91:3389</div>
+          <div class="public-value">{{ detail.endTimeStr }}</div>
         </div>
         <div class="public-item">
           <div class="public-label">自动续费</div>
-          <div class="public-value">43.226.39.91:3389</div>
+          <div class="public-value">
+            <span v-if="detail.autoRenew === 0" class="auto-txt color-red">
+              未开通
+            </span>
+            <span v-else class="auto-txt"> 已开通 </span>
+          </div>
         </div>
         <div class="public-item public-item-row">
           <div class="public-label">操作</div>
@@ -79,24 +84,25 @@
       <div class="public-list">
         <div class="public-item">
           <div class="public-label">实例规格</div>
-          <div class="public-value">服务器名称</div>
+          <div class="public-value">{{ detail.cpu }}核{{ detail.memory }}G</div>
         </div>
         <div class="public-item">
           <div class="public-label">SSD系统盘</div>
-          <div class="public-value">中国大连</div>
+          <div class="public-value">{{ detail.systemSize }}G</div>
         </div>
         <div class="public-item">
           <div class="public-label">SSD数据盘</div>
-          <div class="public-value">adminssssssss</div>
+          <div class="public-value">{{ detail.instanceName }}</div>
         </div>
         <div class="public-item">
           <div class="public-label">公网带宽</div>
-          <div class="public-value">Windows Server 2008 R2 64位 企业版</div>
+          <div class="public-value">{{ detail.internetMaxBandwidthOut }}M</div>
         </div>
-        <div class="public-item">
+        <div class="public-item"></div>
+        <!-- <div class="public-item">
           <div class="public-label">防御峰值</div>
-          <div class="public-value">43.226.39.91:3389</div>
-        </div>
+          <div class="public-value">{{ detail.instanceName }}</div>
+        </div> -->
         <div class="public-item"></div>
         <div class="public-item public-item-row">
           <div class="public-label">操作</div>
@@ -124,6 +130,13 @@ import UpdateNameModal from "@/components/Cloud/CloudModal/updateNameModal";
 import RenewModal from "@/components/Cloud/CloudModal/renewModal";
 import AutoRenewModal from "@/components/Cloud/CloudModal/autoRenewModal";
 export default {
+  props: {
+    // 实例详情
+    detail: {
+      type: Object,
+      default: () => {}
+    }
+  },
   components: {
     UpdateNameModal,
     RenewModal,
@@ -201,6 +214,9 @@ export default {
           text-overflow: ellipsis;
           .color-blue {
             color: #00aaff;
+          }
+          .color-red {
+            color: red;
           }
           .color-btn {
             border: 1px solid #eb5e00;

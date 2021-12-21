@@ -81,6 +81,7 @@ export default {
         "setting/changeSelectPath",
         item.path + "/" + ele.path
       );
+      this.$store.commit("setting/setLeftMenuSelectPath", ele.children[0].path);
       const path = item.path + "/" + ele.path + "/" + ele.children[0].path;
       if (path !== this.$route.path) {
         this.$store.dispatch(
