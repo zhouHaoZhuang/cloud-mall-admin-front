@@ -75,11 +75,9 @@
         >
           <a slot="name" slot-scope="text">{{ text }}</a>
           <div slot="action" slot-scope="text">
-            <a-button type="link" @click="selectPool(text)">
-              查看
-            </a-button>
+            <a-button type="link" @click="selectPool(text)"> 查看 </a-button>
           </div>
-           <div
+          <div
             :class="{ green: text === 1, blue: text !== 1 }"
             slot="payStatus"
             slot-scope="text"
@@ -96,18 +94,20 @@
 export default {
   data() {
     return {
+      title: "orderNO",
       listQuery: {
         key: undefined,
         search: "",
         currentPage: 1,
         pageSize: 10,
-        total: 0
+        total: 0,
+        sorter: ""
       },
       columns: [
         {
           title: "订单编号",
-          dataIndex: "id",
-          key: "id",
+          dataIndex: "orderNo",
+          key: "orderNo",
           width: 150
         },
         {
@@ -147,10 +147,47 @@ export default {
       ],
       data: [],
       startValue: null,
-      endValue: null
+      endValue: null,
+      // 表格分页器配置
+      paginationProps: {
+        showQuickJumper: true,
+        showSizeChanger: true,
+        pageSizeOptions: ["5", "10", "20", "30"],
+        total: 0,
+        current: 1, //当前页
+        pageSize: 5, //每页显示数量
+        showTotal: (total, range) =>
+          `共 ${total} 条记录 第 ${this.paginationProps.current} / ${Math.ceil(
+            this.paginationProps.total / this.paginationProps.pageSize
+          )}  页`,
+        onChange: this.changepage,
+        onShowSizeChange: this.onShowSizeChange
+      },
+      num: "",
+      endOpen: false,
+      isTime: true
     };
   },
+  created(){
+    this.getList();
+    console.log(8989);
+  },
   methods: {
+    //查询数据表格
+    getList() {
+      this.$store.dispatch("finance/getList").then(res => {
+        console.log(res);
+        this.data = [...res.data.list];
+      });
+      // this.$getList("banner/getList",this.listQuery)
+      // .then(res=>{
+      //   this.data = [...res.data.list];
+      //   this.paginationProps.total = res.data.totalCount * 1;
+      // })
+      // .finally(() =>{
+
+      // })
+    },
     handleChange(value) {
       console.log(`selected ${value}`);
     },
