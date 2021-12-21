@@ -17,7 +17,7 @@
           class="left-item"
         >
           <div
-            :class="selectPath === item.path ? 'name active' : 'name'"
+            :class="selectLeftPath === item.path ? 'name active' : 'name'"
             @click="goTo(item, undefined, index)"
           >
             {{ item.name }}
@@ -41,7 +41,7 @@
               v-for="ele in item.children"
               :key="ele.path"
               :class="
-                selectPath === ele.path ? 'inner-item active' : 'inner-item'
+                selectLeftPath === ele.path ? 'inner-item active' : 'inner-item'
               "
               @click="goTo(item, ele)"
             >
@@ -70,13 +70,13 @@ export default {
       leftOpen: (state) => state.setting.leftOpen,
       leftMenuData: (state) => state.setting.leftMenuData,
       beforePath: (state) => state.setting.beforePath,
-      leftOpenShow: (state) => state.setting.leftOpenShow
+      leftOpenShow: (state) => state.setting.leftOpenShow,
+      selectLeftPath: (state) => state.setting.selectLeftPath
     })
   },
   data() {
     return {
-      menuList: [],
-      selectPath: ""
+      menuList: []
     };
   },
   watch: {
@@ -93,7 +93,6 @@ export default {
               };
             })
             .filter((ele) => !ele.meta.hiddenMenu);
-        this.selectPath = this.menuList && this.menuList[0].path;
       },
       immediate: true,
       deep: true
@@ -113,10 +112,10 @@ export default {
         let path = "";
         if (ele && JSON.stringify(ele) !== "{}") {
           path = `${this.beforePath}/${item.path}/${ele.path}`;
-          this.selectPath = ele.path;
+          this.$store.commit("setting/setLeftMenuSelectPath", ele.path);
         } else {
           path = `${this.beforePath}/${item.path}`;
-          this.selectPath = item.path;
+          this.$store.commit("setting/setLeftMenuSelectPath", item.path);
         }
         if (path !== this.$route.path) {
           this.$router.push(path);
@@ -135,6 +134,7 @@ export default {
   background: #f0f3f5;
   border-right: 1px solid #e1e4e6;
   transition: all 0.3s;
+  z-index: 99;
   .top-title {
     border-bottom: 1px solid #e1e4e6;
     height: 40px;

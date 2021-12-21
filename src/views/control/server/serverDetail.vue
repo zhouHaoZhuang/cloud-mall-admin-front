@@ -2,7 +2,7 @@
   <div class="cloud-detail-container">
     <div class="header">
       <div class="box">
-        <a-icon type="left" />
+        <a-icon type="left" @click="$router.back()" />
       </div>
       <span>云服务器详情</span>
     </div>
@@ -10,17 +10,19 @@
       <img class="left-img" src="../../../assets/img/cloud/windows.png" />
       <div class="right-con">
         <div class="title-box">
-          <div>server_DGlAg9s8</div>
-          <div class="status">
+          <div>{{ detail.instanceName }}</div>
+          <div :class="getStatusClassName(detail.runningStatus)">
             <div class="dot"></div>
-            运行中
+            {{ runningStatusEnum[detail.runningStatus] }}
           </div>
         </div>
         <div class="info">
-          <span class="ip">公网IP：43.226.39.91:3389</span>
+          <span class="ip">公网IP：{{ detail.outIp }}</span>
           <div>
-            到期时间：2022-01-02 09:16:31
-            <span class="red"> (12天后到期) </span>
+            到期时间：{{ detail.endTimeStr }}
+            <span class="red">
+              ({{ getEndTimeDay(detail.endTimeStr) }}天后到期)
+            </span>
           </div>
         </div>
         <div class="btns">
@@ -59,7 +61,7 @@
     <div class="detail">
       <a-tabs default-active-key="1" @change="tabsCallback">
         <a-tab-pane key="1" tab="实例详情">
-          <CloudDetail />
+          <CloudDetail :detail="detail" />
         </a-tab-pane>
         <a-tab-pane key="2" tab="性能监控"></a-tab-pane>
         <a-tab-pane key="3" tab="备案白名单"></a-tab-pane>
@@ -76,15 +78,42 @@
 </template>
 
 <script>
+import moment from "moment";
 import { runningStatusEnum } from "@/utils/enum";
 import CloudDetail from "@/components/Cloud/cloudDetail";
 import UpdatePwdModal from "@/components/Cloud/CloudModal/updatePwdModal";
 import CloudActionModal from "@/components/Cloud/CloudModal/cloudActionModal";
 export default {
   components: { CloudDetail, UpdatePwdModal, CloudActionModal },
+  computed: {
+    // 返回表格状态类名
+    getStatusClassName() {
+      return function (status) {
+        if (status === 0) {
+          return "status hole";
+        }
+        if (status === 1) {
+          return "status start";
+        }
+        if (status === 2) {
+          return "status stop";
+        }
+        if (status === 3) {
+          return "status overdue";
+        }
+      };
+    },
+    // 返回还有多久过期的天数
+    getEndTimeDay() {
+      return function (time) {
+        return moment(time).diff(moment(new Date()), "days");
+      };
+    }
+  },
   data() {
     return {
       runningStatusEnum,
+      detail: {},
       // 弹窗相关----------start
       // 重置密码弹窗
       updatePwdVisible: false,
@@ -96,10 +125,18 @@ export default {
       // 弹窗相关----------end
     };
   },
-  created() {},
+  created() {
+    this.getDetail();
+  },
   methods: {
     // 获取服务器实例详情
-    getDetail() {},
+    getDetail() {
+      this.$store
+        .dispatch("cloud/cloudDetail", { id: this.$route.query.id })
+        .then((res) => {
+          this.detail = { ...res.data };
+        });
+    },
     // tabs切换回调
     tabsCallback(key) {
       console.log(key);
@@ -165,6 +202,7 @@ export default {
       margin-right: 15px;
       font-weight: 400;
       color: #ccc;
+      cursor: pointer;
     }
   }
   .cloud-action {
@@ -196,6 +234,27 @@ export default {
         }
         .start {
           color: #29cc7a;
+          .dot {
+            background: #29cc7a;
+          }
+        }
+        .stop {
+          color: red;
+          .dot {
+            background: red;
+          }
+        }
+        .hole {
+          color: #000;
+          .dot {
+            background: #000;
+          }
+        }
+        .overdue {
+          color: #666;
+          .dot {
+            background: #666;
+          }
         }
       }
       .info {

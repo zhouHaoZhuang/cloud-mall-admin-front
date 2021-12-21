@@ -71,7 +71,7 @@ export default {
       columns: [
         {
           title: "实例名称",
-          dataIndex: "id",
+          dataIndex: "instanceName",
           disabled: true,
           select: true
         },
@@ -83,7 +83,7 @@ export default {
         },
         {
           title: "地域",
-          dataIndex: "shortName",
+          dataIndex: "regionId",
           disabled: false,
           select: true
         },
