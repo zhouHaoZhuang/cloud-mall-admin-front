@@ -12,8 +12,12 @@
         <div class="title-box">
           <div>{{ detail.instanceName }}</div>
           <div :class="getStatusClassName(detail.runningStatus)">
-            <div class="dot"></div>
-            {{ runningStatusEnum[detail.runningStatus] }}
+            <div v-if="!isHaveAction" class="dot"></div>
+            <a-icon v-else type="loading" style="margin-right:6px" />
+            <span v-if="!isHaveAction">
+              {{ runningStatusEnum[detail.runningStatus] }}
+            </span>
+            <span v-else>{{ actionsTxt }}</span>
           </div>
         </div>
         <div class="info">
@@ -28,10 +32,10 @@
         <div class="btns">
           <a-space>
             <a-button @click="handleStart">启动</a-button>
-            <a-button type="primary" @click="handleCloudAction('restart')">
+            <a-button type="primary" @click="handleCloudActionModal('restart')">
               重启
             </a-button>
-            <a-button type="primary" @click="handleCloudAction('stop')">
+            <a-button type="primary" @click="handleCloudActionModal('stop')">
               关机
             </a-button>
             <a-button type="primary" disabled>VNC连接</a-button>
@@ -42,7 +46,7 @@
                 <a-icon type="caret-down" />
               </a-button>
               <a-menu slot="overlay">
-                <a-menu-item key="1" @click="handleResetPwd">
+                <a-menu-item key="1" @click="handleResetPwdModal">
                   重设密码
                 </a-menu-item>
                 <a-menu-item key="2" disabled>重装系统</a-menu-item>
@@ -70,9 +74,14 @@
     </div>
     <!-- 弹窗相关-----start -->
     <!-- 重置密码弹窗 -->
-    <UpdatePwdModal v-model="updatePwdVisible" />
+    <UpdatePwdModal v-model="updatePwdVisible" :detail="detail" />
     <!-- 重启/关机弹窗 -->
-    <CloudActionModal v-model="cloudActionVisible" :type="cloudActionType" />
+    <CloudActionModal
+      v-model="cloudActionVisible"
+      :type="cloudActionType"
+      :list="cloudActionList"
+      @success="cloudActionsSuccess"
+    />
     <!-- 弹窗相关-----end -->
   </div>
 </template>
@@ -120,9 +129,17 @@ export default {
       // 重启/关机弹窗
       cloudActionVisible: false,
       cloudActionType: "",
+      cloudActionList: [],
       // 启动服务器
-      startLoading: false
+      startLoading: false,
       // 弹窗相关----------end
+      // 服务器操作后回调所需数据----------start
+      actionsLoading: false,
+      isHaveAction: false,
+      actionsTxt: "",
+      actionsTime: null,
+      actionsTimeStep: 60 // 单位：秒
+      // 服务器操作后回调所需数据----------end
     };
   },
   created() {
@@ -135,6 +152,8 @@ export default {
         .dispatch("cloud/cloudDetail", { id: this.$route.query.id })
         .then((res) => {
           this.detail = { ...res.data };
+          // 开启轮询查询服务器状态
+          // this.startTime(false);
         });
     },
     // tabs切换回调
@@ -143,7 +162,7 @@ export default {
     },
     // 弹窗相关----------start
     // 重设密码第一步弹窗
-    handleResetPwd() {
+    handleResetPwdModal() {
       this.$confirm({
         width: "500px",
         centered: true,
@@ -159,7 +178,8 @@ export default {
       });
     },
     // 重启/关机弹窗
-    handleCloudAction(type) {
+    handleCloudActionModal(type) {
+      this.cloudActionList = [{ ...this.detail }];
       this.cloudActionType = type;
       this.cloudActionVisible = true;
     },
@@ -173,12 +193,94 @@ export default {
         confirmLoading: this.startLoading,
         onOk: () => {
           return new Promise((resolve, reject) => {
-            resolve();
+            this.cloudActionType = "start";
+            this.startLoading = true;
+            const newList = [{ ...this.detail }].map((ele) => {
+              return {
+                instanceId: ele.instanceId,
+                regionId: ele.regionId
+              };
+            });
+            const data = {
+              instanceQueryReqDtoList: [...newList],
+              type: "start"
+            };
+            this.$store
+              .dispatch("cloud/cloudActions", data)
+              .then((res) => {
+                resolve();
+              })
+              .finally(() => {
+                this.startLoading = false;
+              });
           });
         }
       });
-    }
+    },
     // 弹窗相关----------end
+    // 服务器操作后回调所需数据----------start
+    // 服务器操作成功后的回调
+    cloudActionsSuccess() {
+      this.isHaveAction = true;
+      this.startTime(true);
+    },
+    // 根据操作类型返回操作后应显示的文本
+    getActionsTxt(type) {
+      if (type === "start") {
+        return "启动中";
+      }
+      if (type === "restart") {
+        return "重启中";
+      }
+      if (type === "stop") {
+        return "关机中";
+      }
+    },
+    // 计时器结束后要做的事情
+    timeEnd(isHaveAction) {
+      clearInterval(this.actionsTime);
+      this.actionsLoading = false;
+      this.isHaveAction = isHaveAction;
+      this.actionsTxt = "";
+    },
+    // 获取服务器实例状态
+    getCloudRunStatus() {
+      const data = {
+        instanceId: this.detail.instanceId,
+        regionId: this.detail.regionId
+      };
+      this.$store.dispatch("cloud/getCloudRunStatus", data).then((res) => {
+        // if (this.isHaveAction) {
+        //   if (res.data) {
+        //     this.timeEnd(false);
+        //     this.startTime(false);
+        //   }
+        // }
+        // this.detail.runningStatus = res.data.status;
+      });
+    },
+    // 有过操作后开启定时器和没操作开启，间隔时间不同
+    startTime(isHaveAction) {
+      // 如果之前有定时器在开启，先行清除定时器
+      if (this.actionsTime !== null) {
+        this.timeEnd(isHaveAction);
+      }
+      // 防止多次点击
+      if (this.actionsLoading) return;
+      this.actionsLoading = true;
+      // 设置定时器不同时间
+      if (this.isHaveAction) {
+        this.actionsTimeStep = 3;
+        this.actionsTxt = this.getActionsTxt(this.cloudActionType);
+      } else {
+        this.actionsTimeStep = 6;
+      }
+      this.actionsTime = setInterval(() => {
+        this.getCloudRunStatus();
+      }, this.actionsTimeStep * 1000);
+      console.log("查看当前定时器", this.actionsTime);
+    }
+    // 服务器操作后回调所需数据----------end
   }
 };
 </script>

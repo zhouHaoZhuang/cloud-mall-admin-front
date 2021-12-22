@@ -28,6 +28,54 @@ const cloud = {
         url: "/index/query/region",
         method: "get"
       });
+    },
+    // 产品续费时询价
+    cloudRenewPrice({ commit, state }, data) {
+      return request({
+        url: "/scEcsStock/renew/selectInstance",
+        method: "post",
+        data
+      });
+    },
+    // 产品续费提交
+    cloudRenew({ commit, state }, data) {
+      return request({
+        url: "/scEcsStock/renew/instance",
+        method: "post",
+        data
+      });
+    },
+    // 产品自动续费提交
+    cloudAutoRenew({ commit, state }, data) {
+      return request({
+        url: `/corporation/ecsStock/automatic/${data.id}`,
+        method: "patch",
+        data
+      });
+    },
+    // 服务器实例操作-启动-关机-重启
+    cloudActions({ commit, state }, data) {
+      return request({
+        url: "/aliEcs/operateEcs",
+        method: "post",
+        data
+      });
+    },
+    // 修改服务器实例信息-主机名-密码-实例名称
+    updateCloudInfo({ commit, state }, data) {
+      return request({
+        url: "/aliEcs/modifyInstanceAttribute",
+        method: "post",
+        data
+      });
+    },
+    // 获取服务器实例运行状态
+    getCloudRunStatus({ commit, state }, data) {
+      return request({
+        url: "/aliEcs/queryEcsStatus",
+        method: "post",
+        data
+      });
     }
   }
 };
