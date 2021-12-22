@@ -2,7 +2,7 @@ let VUE_APP_BASE_URL = "";
 
 if (process.env.VUE_APP_ENV === "dev") {
   VUE_APP_BASE_URL = "http://ims.dev.ydidc.com";
-  // VUE_APP_BASE_URL = "http://127.0.0.1:8080";
+  // VUE_APP_BASE_URL = "http://192.168.0.40:8083";
 } else if (process.env.VUE_APP_ENV === "test") {
   VUE_APP_BASE_URL = "http://ims.dev.ydidc.com";
 } else if (process.env.VUE_APP_ENV === "prod") {
