@@ -37,7 +37,7 @@
       <div class="public-list">
         <div class="public-item">
           <div class="public-label">付费方式</div>
-          <div class="public-value">{{ detail.instanceName }}</div>
+          <div class="public-value">包年包月</div>
         </div>
         <div class="public-item">
           <div class="public-label">关联订单</div>
@@ -49,7 +49,7 @@
         <div class="public-item"></div>
         <div class="public-item">
           <div class="public-label">创建时间</div>
-          <div class="public-value">{{ detail.instanceName }}</div>
+          <div class="public-value">{{ detail.createTimeStr }}</div>
         </div>
         <div class="public-item">
           <div class="public-label">到期时间</div>
@@ -118,9 +118,13 @@
     <!-- 修改实例名称弹窗 -->
     <UpdateNameModal v-model="updateNameVisible" />
     <!-- 产品续费弹窗 -->
-    <RenewModal v-model="renewVisible" />
+    <RenewModal v-model="renewVisible" :detail="detail" />
     <!-- 自动产品续费弹窗 -->
-    <AutoRenewModal v-model="autoRenewVisible" />
+    <AutoRenewModal
+      v-model="autoRenewVisible"
+      :detail="detail"
+      @success="autoRenewSuccess"
+    />
   </div>
 </template>
 
@@ -166,6 +170,10 @@ export default {
     // 点击自动产品续费
     handleAutoRenew() {
       this.autoRenewVisible = true;
+    },
+    // 自动续费成功回调
+    autoRenewSuccess(autoRenew) {
+      this.detail.autoRenew = autoRenew;
     }
   }
 };

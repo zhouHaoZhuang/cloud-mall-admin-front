@@ -18,7 +18,7 @@ export const getList = (request, listQuery) => {
               ...listQuery,
               [`qp-${listQuery.key}-${
                 filterList.indexOf(listQuery.key) !== -1 ? "eq" : "like"
-              }`]: listQuery.search,
+              }`]: listQuery.search
             }
           : listQuery
       )
@@ -32,7 +32,7 @@ export const getList = (request, listQuery) => {
 };
 
 // 处理浏览器地址栏地址，截取地址中段,不需要http:// or https://和com后地址
-export const getWindowUrl = url => {
+export const getWindowUrl = (url) => {
   const newUrl = url.includes("http://")
     ? url.replace("http://", "")
     : url.replace("https://", "");
@@ -44,4 +44,19 @@ export const getDomainUrl = () => {
   return process.env.VUE_APP_ENV === "dev"
     ? env.DOMAIN_URL
     : getWindowUrl(window.location.href);
+};
+
+// 处理服务器询价或者其他操作时，时长+单位的字段
+export const setBuyTimeData = (time) => {
+  if (time <= 9) {
+    return {
+      period: time,
+      priceUnit: "Month"
+    };
+  } else {
+    return {
+      period: time / 12,
+      priceUnit: "Year"
+    };
+  }
 };

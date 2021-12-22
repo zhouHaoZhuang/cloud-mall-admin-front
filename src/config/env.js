@@ -1,13 +1,17 @@
-let VUE_APP_BASE_URL = "";
-
-if (process.env.VUE_APP_ENV === "dev") {
-  VUE_APP_BASE_URL = "http://ims.dev.ydidc.com";
-  // VUE_APP_BASE_URL = "http://127.0.0.1:8080";
-} else if (process.env.VUE_APP_ENV === "test") {
-  VUE_APP_BASE_URL = "http://ims.dev.ydidc.com";
-} else if (process.env.VUE_APP_ENV === "prod") {
-  VUE_APP_BASE_URL = "http://ims.dev.ydidc.com";
-}
+// 默认请求地址
+const baseUrl = {
+  dev: "http://ims.dev.ydidc.com",
+  test: "http://ims.dev.ydidc.com",
+  preprod: "http://ims.dev.ydidc.com",
+  prod: "http://ims.dev.ydidc.com"
+};
+// 支付相关请求地址
+const payBaseUrl = {
+  dev: "http://pay.dev.ydidc.com",
+  test: "http://pay.dev.ydidc.com",
+  preprod: "http://pay.dev.ydidc.com",
+  prod: "http://pay.dev.ydidc.com"
+};
 // 跳转控制台地址
 const cloudMallUrl = {
   dev: "http://localhost:3000"
@@ -25,7 +29,8 @@ const domains = {
 };
 
 export default {
-  VUE_APP_BASE_URL,
+  BASE_URL: baseUrl[process.env.VUE_APP_ENV],
+  PAY_BASE_URL: payBaseUrl[process.env.VUE_APP_ENV],
   MALL_URL: cloudMallUrl[process.env.VUE_APP_ENV],
   DOMAIN_URL: domains[process.env.VUE_APP_ENV]
 };
