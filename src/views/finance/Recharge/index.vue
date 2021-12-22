@@ -12,23 +12,24 @@
         <div class="btn3">
           <a-input-group compact>
             <a-select default-value="paymentLineId">
-              <a-select-option value="paymentLineId"> 流水单号 </a-select-option>
+              <a-select-option value="paymentLineId">
+                流水单号
+              </a-select-option>
               <!-- <a-select-option value="来源/用途"> 来源/用途 </a-select-option> -->
             </a-select>
-            <a-input-search style="width: 70%"
-                            placeholder="请输入搜索关键词"
-                            enter-button
-                            @search="onSearch" />
+            <a-input-search
+              style="width: 70%"
+              placeholder="请输入搜索关键词"
+              enter-button
+              @search="onSearch"
+            />
           </a-input-group>
         </div>
       </div>
       <!-- 表格 -->
       <div class="table">
-        <a-table :columns="columns"
-                 :data-source="data"
-                 @click="">
-          <a slot="name"
-             slot-scope="text">{{ text }}</a>
+        <a-table :columns="columns" :data-source="data">
+          <a slot="name" slot-scope="text">{{ text }}</a>
         </a-table>
       </div>
     </div>
@@ -38,7 +39,7 @@
 <script>
 export default {
   computed: {},
-  data () {
+  data() {
     return {
       listQuery: {
         key: undefined,
@@ -85,7 +86,7 @@ export default {
         },
         {
           title: "来源用途",
-          dataIndex: "org",
+          dataIndex: "org"
         }
       ],
       data: [],
@@ -104,25 +105,27 @@ export default {
     };
   },
   methods: {
-    handleChange (value) {
+    handleChange(value) {
       console.log(`selected ${value}`);
     },
-    quickJump (current) {
+    quickJump(current) {
       this.listQuery.currentPage = current;
       this.getList();
     },
-    onShowSizeChange (current, pageSize) {
+    onShowSizeChange(current, pageSize) {
       this.listQuery.pageSize = pageSize;
       this.listQuery.currentPage = current;
       this.getList();
     },
-    getList () {
-      this.$store.dispatch("finance/getRechargeList", this.listQuery).then(res => {
-        this.data = res.data.data;
-        this.paginationProps.total = res.data.total;
-      });
+    getList() {
+      this.$store
+        .dispatch("finance/getRechargeList", this.listQuery)
+        .then((res) => {
+          this.data = res.data.data;
+          this.paginationProps.total = res.data.total;
+        });
     },
-    onSearch (value) {
+    onSearch(value) {
       console.log(value);
     }
   }
