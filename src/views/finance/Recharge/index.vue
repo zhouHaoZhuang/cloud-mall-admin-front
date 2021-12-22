@@ -157,7 +157,7 @@ export default {
       });
     },
     onSearch (value) {
-      this.listQuery.key = title;
+      this.listQuery.key = this.title;
       this.listQuery.search = value;
       console.log(value, this.listQuery.key);
       this.getList();
