@@ -11,7 +11,7 @@
         <!-- 按钮 -->
         <div class="btn3">
           <a-input-group compact>
-            <a-select default-value="paymentLineId">
+            <a-select v-model="listQuery.key">
               <a-select-option value="paymentLineId"> 流水单号 </a-select-option>
               <!-- <a-select-option value="来源/用途"> 来源/用途 </a-select-option> -->
             </a-select>
@@ -41,7 +41,7 @@ export default {
   data () {
     return {
       listQuery: {
-        key: undefined,
+        key: 'paymentLineId',
         search: "",
         currentPage: 1,
         pageSize: 10,
@@ -104,9 +104,6 @@ export default {
     };
   },
   methods: {
-    handleChange (value) {
-      console.log(`selected ${value}`);
-    },
     quickJump (current) {
       this.listQuery.currentPage = current;
       this.getList();
@@ -118,12 +115,14 @@ export default {
     },
     getList () {
       this.$store.dispatch("finance/getRechargeList", this.listQuery).then(res => {
-        this.data = res.data.data;
+        this.data = res.data.list;
         this.paginationProps.total = res.data.total;
       });
     },
     onSearch (value) {
-      console.log(value);
+      this.listQuery.search = value;
+      console.log(value, this.listQuery.key);
+      this.getList();
     }
   }
 };
