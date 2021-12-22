@@ -11,22 +11,14 @@
         <!-- 按钮 -->
         <div class="btn3">
           <a-input-group compact>
-            <<<<<<< HEAD
-                    <a-select
-                    v-model="listQuery.key">
+            <a-select v-model="listQuery.key">
               <a-select-option value="paymentLineId"> 流水单号 </a-select-option>
-              =======
-              <a-select default-value="paymentLineId">
-                <a-select-option value="paymentLineId">
-                  流水单号
-                </a-select-option>
-                >>>>>>> develop
-                <!-- <a-select-option value="来源/用途"> 来源/用途 </a-select-option> -->
-              </a-select>
-              <a-input-search style="width: 70%"
-                              placeholder="请输入搜索关键词"
-                              enter-button
-                              @search="onSearch" />
+              <!-- <a-select-option value="来源/用途"> 来源/用途 </a-select-option> -->
+            </a-select>
+            <a-input-search style="width: 70%"
+                            placeholder="请输入搜索关键词"
+                            enter-button
+                            @search="onSearch" />
           </a-input-group>
         </div>
       </div>
