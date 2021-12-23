@@ -6,7 +6,7 @@ const user = {
   namespaced: true,
   state: {
     token: "",
-    userInfo: {},
+    userInfo: {}
   },
 
   mutations: {
@@ -15,7 +15,7 @@ const user = {
     },
     SET_USERINFO: (state, userInfo) => {
       state.userInfo = { ...userInfo };
-    },
+    }
   },
 
   actions: {
@@ -25,7 +25,7 @@ const user = {
         request({
           url: "/user/loginByUsername",
           method: "post",
-          data,
+          data
         })
           .then((res) => {
             const token = res.data.token;
@@ -45,7 +45,7 @@ const user = {
         const authenticationClient = new AuthenticationClient({
           appId: env.appId,
           appHost: env.appHost,
-          token: state.token,
+          token: state.token
         });
         authenticationClient.logout();
         resolve();
@@ -53,16 +53,18 @@ const user = {
     },
     // 获取用户信息
     getUserInfo({ commit, state }) {
+      console.log(state.token);
       const authenticationClient = new AuthenticationClient({
         appId: env.appId,
         appHost: env.appHost,
-        token: state.token,
+        token: state.token
       });
       authenticationClient.getCurrentUser().then((user) => {
+        console.log("查看信息", user);
         commit("SET_USERINFO", user);
       });
-    },
-  },
+    }
+  }
 };
 
 export default user;

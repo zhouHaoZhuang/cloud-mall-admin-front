@@ -1,3 +1,5 @@
+let appId = "619c93dc69a93fbb8a1faf8c";
+let appHost = "https://resource-poor.authing.cn";
 // 默认请求地址
 const baseUrl = {
   dev: "http://ims.dev.ydidc.com",
@@ -29,6 +31,8 @@ const domains = {
 };
 
 export default {
+  appId,
+  appHost,
   BASE_URL: baseUrl[process.env.VUE_APP_ENV],
   PAY_BASE_URL: payBaseUrl[process.env.VUE_APP_ENV],
   MALL_URL: cloudMallUrl[process.env.VUE_APP_ENV],

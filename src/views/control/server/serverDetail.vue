@@ -10,10 +10,14 @@
       <img class="left-img" src="../../../assets/img/cloud/windows.png" />
       <div class="right-con">
         <div class="title-box">
-          <div>{{ detail.instanceName }}</div>
+          <div style="margin-right: 25px">{{ detail.instanceName }}</div>
           <div :class="getStatusClassName(detail.runningStatus)">
             <div v-if="!isHaveAction" class="dot"></div>
-            <a-icon v-else type="loading" style="margin-right:6px" />
+            <a-icon
+              v-else
+              type="loading"
+              style="margin-right: 6px; font-size: 18px"
+            />
             <span v-if="!isHaveAction">
               {{ runningStatusEnum[detail.runningStatus] }}
             </span>
@@ -31,11 +35,21 @@
         </div>
         <div class="btns">
           <a-space>
-            <a-button @click="handleStart">启动</a-button>
-            <a-button type="primary" @click="handleCloudActionModal('restart')">
+            <a-button @click="handleStart" :disabled="startBtnDisable"
+              >启动</a-button
+            >
+            <a-button
+              type="primary"
+              @click="handleCloudActionModal('restart')"
+              :disabled="restartBtnDisable"
+            >
               重启
             </a-button>
-            <a-button type="primary" @click="handleCloudActionModal('stop')">
+            <a-button
+              type="primary"
+              @click="handleCloudActionModal('stop')"
+              :disabled="stopBtnDisable"
+            >
               关机
             </a-button>
             <a-button type="primary" disabled>VNC连接</a-button>
@@ -117,6 +131,40 @@ export default {
       return function (time) {
         return moment(time).diff(moment(new Date()), "days");
       };
+    },
+    // 操作按钮是否禁用
+    // 启动
+    startBtnDisable() {
+      if (this.actionsBtnDisable) {
+        return true;
+      }
+      if (this.detail.runningStatus !== 2) {
+        return true;
+      } else {
+        return false;
+      }
+    },
+    // 重启
+    restartBtnDisable() {
+      if (this.actionsBtnDisable) {
+        return true;
+      }
+      if (this.detail.runningStatus !== 1) {
+        return true;
+      } else {
+        return false;
+      }
+    },
+    // 关机
+    stopBtnDisable() {
+      if (this.actionsBtnDisable) {
+        return true;
+      }
+      if (this.detail.runningStatus !== 1) {
+        return true;
+      } else {
+        return false;
+      }
     }
   },
   data() {
@@ -135,6 +183,7 @@ export default {
       // 弹窗相关----------end
       // 服务器操作后回调所需数据----------start
       actionsLoading: false,
+      actionsBtnDisable: false,
       isHaveAction: false,
       actionsTxt: "",
       actionsTime: null,
@@ -145,6 +194,9 @@ export default {
   created() {
     this.getDetail();
   },
+  beforeDestroy() {
+    clearInterval(this.actionsTime);
+  },
   methods: {
     // 获取服务器实例详情
     getDetail() {
@@ -153,7 +205,7 @@ export default {
         .then((res) => {
           this.detail = { ...res.data };
           // 开启轮询查询服务器状态
-          // this.startTime(false);
+          this.startTime(false);
         });
     },
     // tabs切换回调
@@ -208,6 +260,9 @@ export default {
             this.$store
               .dispatch("cloud/cloudActions", data)
               .then((res) => {
+                this.isHaveAction = true;
+                this.actionsBtnDisable = true;
+                this.startTime(true);
                 resolve();
               })
               .finally(() => {
@@ -222,19 +277,8 @@ export default {
     // 服务器操作成功后的回调
     cloudActionsSuccess() {
       this.isHaveAction = true;
+      this.actionsBtnDisable = true;
       this.startTime(true);
-    },
-    // 根据操作类型返回操作后应显示的文本
-    getActionsTxt(type) {
-      if (type === "start") {
-        return "启动中";
-      }
-      if (type === "restart") {
-        return "重启中";
-      }
-      if (type === "stop") {
-        return "关机中";
-      }
     },
     // 计时器结束后要做的事情
     timeEnd(isHaveAction) {
@@ -243,6 +287,18 @@ export default {
       this.isHaveAction = isHaveAction;
       this.actionsTxt = "";
     },
+    // 根据返回的状态判断操作是否结束，然后需要让计时器慢下来
+    getActionsIsEnd(status) {
+      if (
+        this.cloudActionType === "start" ||
+        this.cloudActionType === "restart"
+      ) {
+        return status === 1;
+      }
+      if (this.cloudActionType === "stop") {
+        return status === 2;
+      }
+    },
     // 获取服务器实例状态
     getCloudRunStatus() {
       const data = {
@@ -250,13 +306,15 @@ export default {
         regionId: this.detail.regionId
       };
       this.$store.dispatch("cloud/getCloudRunStatus", data).then((res) => {
-        // if (this.isHaveAction) {
-        //   if (res.data) {
-        //     this.timeEnd(false);
-        //     this.startTime(false);
-        //   }
-        // }
-        // this.detail.runningStatus = res.data.status;
+        this.actionsTxt = res.data.name;
+        if (this.isHaveAction) {
+          this.detail.runningStatus = res.data.code * 1;
+          if (this.getActionsIsEnd(res.data.code * 1)) {
+            this.timeEnd(false);
+            this.actionsBtnDisable = false;
+            this.startTime(false);
+          }
+        }
       });
     },
     // 有过操作后开启定时器和没操作开启，间隔时间不同
@@ -268,17 +326,19 @@ export default {
       // 防止多次点击
       if (this.actionsLoading) return;
       this.actionsLoading = true;
+      // 先开启一次性定时器直接查状态
+      setTimeout(() => {
+        this.getCloudRunStatus();
+      }, 0);
       // 设置定时器不同时间
       if (this.isHaveAction) {
         this.actionsTimeStep = 3;
-        this.actionsTxt = this.getActionsTxt(this.cloudActionType);
       } else {
         this.actionsTimeStep = 6;
       }
       this.actionsTime = setInterval(() => {
         this.getCloudRunStatus();
       }, this.actionsTimeStep * 1000);
-      console.log("查看当前定时器", this.actionsTime);
     }
     // 服务器操作后回调所需数据----------end
   }
@@ -323,7 +383,6 @@ export default {
         .status {
           color: #29cc7a;
           font-size: 12px;
-          margin-left: 25px;
           display: flex;
           align-items: center;
           .dot {

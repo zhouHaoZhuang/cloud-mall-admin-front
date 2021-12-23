@@ -98,14 +98,15 @@ export default {
       this.loading = true;
       const data = {
         id: this.detail.id,
-        ...setBuyTimeData(this.form.period),
+        renewPeriod: setBuyTimeData(this.form.period).period,
+        renewUnit: setBuyTimeData(this.form.period).priceUnit,
         autoRenew: this.form.autoRenew ? 1 : 0
       };
       this.$store
         .dispatch("cloud/cloudAutoRenew", data)
         .then((res) => {
           this.$message.success("设置自动续费成功");
-          this.$emit("success", res.data.autoRenew);
+          this.$emit("success", res.data);
           this.handleCancel();
         })
         .finally(() => {

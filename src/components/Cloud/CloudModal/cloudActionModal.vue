@@ -91,33 +91,32 @@ export default {
     // 弹窗提交
     // 操作服务器状态--启动/关机/重启
     handleCloudAction() {
-      this.$message.success("操作成功");
-      this.$emit("success");
-      this.handleCancel();
-      // if (this.form.actionType === 2 && !this.confrimSelect) {
-      //   this.$message.warning("请先勾选是否同意");
-      //   return;
-      // }
-      // this.loading = true;
-      // const newList = this.list.map((ele) => {
-      //   return {
-      //     instanceId: ele.instanceId,
-      //     regionId: ele.regionId
-      //   };
-      // });
-      // const data = {
-      //   instanceQueryReqDtoList: [...newList],
-      //   type: this.type,
-      //   forceStop: !this.confrimSelect ? undefined : true
-      // };
-      // this.$store
-      //   .dispatch("cloud/cloudActions", data)
-      //   .then((res) => {
-      //     this.$emit("success");
-      //   })
-      //   .finally(() => {
-      //     this.loading = false;
-      //   });
+      if (this.form.actionType === 2 && !this.confrimSelect) {
+        this.$message.warning("请先勾选是否同意");
+        return;
+      }
+      this.loading = true;
+      const newList = this.list.map((ele) => {
+        return {
+          instanceId: ele.instanceId,
+          regionId: ele.regionId
+        };
+      });
+      const data = {
+        instanceQueryReqDtoList: [...newList],
+        type: this.type,
+        forceStop: !this.confrimSelect ? undefined : true
+      };
+      this.$store
+        .dispatch("cloud/cloudActions", data)
+        .then((res) => {
+          this.$message.success("操作成功");
+          this.$emit("success");
+          this.handleCancel();
+        })
+        .finally(() => {
+          this.loading = false;
+        });
     }
   }
 };
