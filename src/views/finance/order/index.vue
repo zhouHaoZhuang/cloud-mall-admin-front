@@ -172,7 +172,7 @@ export default {
         pageSize: 5, //每页显示数量
         showTotal: (total, range) =>
           `共 ${total} 条记录 第 ${this.paginationProps.current} / ${Math.ceil(
-            this.paginationProps.total / this.paginationProps.pageSize
+            total / this.paginationProps.pageSize
           )}  页`,
         onChange: this.changepage,
         onShowSizeChange: this.onShowSizeChange
@@ -190,7 +190,7 @@ export default {
     getList() {
       this.$getList("income/getList", this.listQuery).then((res) => {
         this.data = res.data.list;
-        this.paginationProps.total = res.data.total * 1;
+        this.paginationProps.total = res.data.totalCount * 1;
       });
     },
     //查看
@@ -236,15 +236,15 @@ export default {
         .toLocaleString("chinese", { hour12: false })
         .replaceAll("/", "-");
       // console.log(this.title, this.search, startTime, endTime);
-      startTime = startTime + ".0";
-      endTime = endTime + ".0";
       this.$store
         .dispatch("income/getList", {
           startTime,
           endTime
         })
-        .then((val) => {
-          console.log(val, "时间请求结果");
+        .then((res) => {
+          console.log(res, "时间请求结果");
+           this.data = res.data.list;
+        this.paginationProps.total = res.data.total * 1;
           // this.paginationProps.total = val.data.totalCount * 1;
           // this.paginationProps.current = val.data.currentPage * 1;
           // this.dataAll = val.data.list;
