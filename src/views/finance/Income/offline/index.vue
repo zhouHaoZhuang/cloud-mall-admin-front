@@ -8,23 +8,30 @@
       </p>
     </div>
     <div class="offline-steps">
-      <a-steps v-model="current" direction="vertical" disabled>
+      <a-steps v-model="current"
+               direction="vertical"
+               disabled>
         <a-step disabled>
-          <div slot="title" class="stepInfo">
+          <div slot="title"
+               class="stepInfo">
             <p>汇款至浙江云盾银行账户</p>
             <p>线下汇款直接向浙江云盾的账户汇款，汇款账号如下：</p>
           </div>
           <div slot="description">
             <div>
-              <a-table bordered :columns="columns" :data-source="data">
-                <a slot="name" slot-scope="text">{{ text }}</a>
+              <a-table bordered
+                       :columns="columns"
+                       :data-source="data">
+                <a slot="name"
+                   slot-scope="text">{{ text }}</a>
               </a-table>
             </div>
           </div>
         </a-step>
 
         <a-step disabled>
-          <div slot="title" class="stepInfo">
+          <div slot="title"
+               class="stepInfo">
             <p>充值结果反馈</p>
             <p>
               汇款成功后请详细填写与您汇款账号关联的汇款凭据，我司将会核实您的汇款信息；到账时间取决于您的银行系统，请您耐心等待。
@@ -32,39 +39,48 @@
           </div>
           <div slot="description">
             <div>
-              <a-form-model
-                ref="ruleForm"
-                :model="form"
-                :rules="rules"
-                :label-col="labelCol"
-                :wrapper-col="wrapperCol"
-              >
-                <a-form-model-item ref="name" label="汇款金额" prop="name">
-                  <span class="transfer"><a-input v-model="form.name" /></span
-                  >元
+              <a-form-model ref="ruleForm"
+                            :model="form"
+                            :rules="rules"
+                            :label-col="labelCol"
+                            :wrapper-col="wrapperCol">
+                <a-form-model-item ref="name"
+                                   label="汇款金额"
+                                   prop="name">
+                  <span class="transfer">
+                    <a-input v-model="form.name" />
+                  </span>元
                 </a-form-model-item>
-                <a-form-model-item ref="name" label="汇款户名" prop="name">
-                  <span class="transfer420"
-                    ><a-input v-model="form.name"
-                  /></span>
+                <a-form-model-item ref="name"
+                                   label="汇款户名"
+                                   prop="name">
+                  <span class="transfer420">
+                    <a-input v-model="form.name" />
+                  </span>
                 </a-form-model-item>
-                <a-form-model-item ref="name" label="汇款账号" prop="name">
-                  <span class="transfer420"
-                    ><a-input v-model="form.name"
-                  /></span>
+                <a-form-model-item ref="name"
+                                   label="汇款账号"
+                                   prop="name">
+                  <span class="transfer420">
+                    <a-input v-model="form.name" />
+                  </span>
                 </a-form-model-item>
-                <a-form-model-item ref="name" label="汇款银行" prop="name">
-                  <span class="transfer420"
-                    ><a-input v-model="form.name"
-                  /></span>
+                <a-form-model-item ref="name"
+                                   label="汇款银行"
+                                   prop="name">
+                  <span class="transfer420">
+                    <a-input v-model="form.name" />
+                  </span>
                 </a-form-model-item>
-                <a-form-model-item ref="name" label="汇款凭证" prop="name">
-                  <a-upload
-                    list-type="picture"
-                    :default-file-list="fileList"
-                    class="upload-list-inline"
-                  >
-                    <a-button> <a-icon type="upload" /> 上传附件 </a-button>
+                <a-form-model-item ref="name"
+                                   label="汇款凭证"
+                                   prop="name">
+                  <a-upload list-type="picture"
+                            :default-file-list="fileList"
+                            class="upload-list-inline">
+                    <a-button>
+                      <a-icon type="upload" /> 上传附件
+                    </a-button>
                   </a-upload>
                 </a-form-model-item>
                 <div class="uploadInfo">
@@ -87,7 +103,7 @@
 
 <script>
 export default {
-  data() {
+  data () {
     return {
       current: 0,
       data: [],
@@ -139,11 +155,11 @@ export default {
   },
   props: ["change"],
   methods: {
-    onChange(current) {
+    onChange (current) {
       console.log("onChange:", current);
       this.current = current;
     },
-    submitForm(formName) {
+    submitForm (formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
           alert("submit!");
@@ -153,7 +169,7 @@ export default {
         }
       });
     },
-    resetForm(formName) {
+    resetForm (formName) {
       this.$refs[formName].resetFields();
     }
   }
@@ -162,13 +178,12 @@ export default {
 
 <style lang="less" scoped>
 .offline-content {
-   .offline-title {
+  .offline-title {
     > p {
       color: #ff6600;
       font-size: 12px;
       height: 32px;
-      background: #fff3eb
-        url(https://www.ydidc.com/template/User/Zkeys/PC/Static/css/common/common/img/uc/tip_icon_warn_16.png)
+      background: #fff3eb url(../../../../assets/img/pay/ExclamationMark.png)
         no-repeat 10px 8px;
       line-height: 32px;
       padding: 0px 22px 5px 37px;
@@ -177,7 +192,7 @@ export default {
       border-radius: 2px;
     }
   }
-   .offline-steps {
+  .offline-steps {
     margin-top: 30px;
     margin-left: 20px;
     .stepInfo {
@@ -200,7 +215,7 @@ export default {
       display: inline-block;
       width: 420px;
     }
-    .uploadInfo{
+    .uploadInfo {
       font-size: 12px;
       color: #999999;
       margin-left: 90px;

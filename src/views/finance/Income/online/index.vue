@@ -8,13 +8,35 @@
       <p>3、如充值后款项没有到账，请联系在线客服帮助处理，或提交工单</p>
     </div>
     <h1><span>账户余额：</span><span>184.00 元</span></h1>
-    <p>暂未开启充值</p>
+    <!-- <p>暂未开启充值</p> -->
+    <div>
+      <span>
+        充值金额：
+      </span>
+      <a-input style="width:180px"
+               placeholder="请输入充值金额" />
+    </div>
+    <div class="paymentMethod">
+      <span class="paymentMethod-type">支付方式：</span>
+      <div class="WeChatply Alipay"><img width="30px"
+             src="@/assets/img/pay/WeChat.png" />
+        <span>微信支付</span>
+      </div>
+      <div class="WeChatply "><img width="40px"
+             src="@/assets/img/pay/Alipay.png"
+             alt=""><span>支付宝支付</span></div>
+    </div>
+    <a-button type="primary"
+              style="margin-top: 20px;">
+      充值</a-button>
+
+  </div>
   </div>
 </template>
 
 <script>
 export default {
-  data() {
+  data () {
     return {
       //
     };
@@ -25,10 +47,9 @@ export default {
 <style lang="less" scoped>
 .online {
   margin-top: 20px;
-   .warn {
+  .warn {
     padding: 7px 22px 5px 37px;
-    background: #fff3eb
-      url(https://www.ydidc.com/template/User/Zkeys/PC/Static/css/common/common/img/uc/tip_icon_warn_16.png)
+    background: #fff3eb url(../../../../assets/img/pay/ExclamationMark.png)
       no-repeat 10px 8px;
     border: 1px solid #ffdac2;
     border-radius: 2px;
@@ -63,8 +84,28 @@ export default {
       color: #ff6600;
     }
   }
-  >p{
+  > p {
     font-size: 12px;
+  }
+  .paymentMethod {
+    display: flex;
+    margin-top: 10px;
+  }
+  .paymentMethod-type {
+    display: inline-block;
+    margin-right: 5px;
+    line-height: 36px;
+  }
+  .WeChatply {
+    border: 1px solid #e6e6e6;
+    display: flex;
+    align-items: center;
+    border-radius: 3px;
+    margin-right: 10px;
+    padding: 2px;
+  }
+  .Alipay {
+    border-color: #0af;
   }
 }
 </style>
