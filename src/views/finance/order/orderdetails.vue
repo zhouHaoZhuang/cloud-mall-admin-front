@@ -33,17 +33,6 @@
         </li>
       </ul>
       <div class="config">
-        <!-- <div>
-          <span>价格备注:</span>
-          <span>{{ orderInfo.priceRemark }}</span>
-        </div>
-        <div>
-          <span>订单备注:</span>
-          <span>{{ orderInfo.orderRemarks }}</span>
-        </div>
-        <div>
-          <span>配置信息</span>
-        </div> -->
         <a-table
           :columns="columns"
           :data-source="data"
@@ -157,8 +146,8 @@ export default {
         },
         {
           title: "时长",
-          dataIndex: "",
-          key: ""
+          dataIndex: "period",
+          key: "period"
         },
         {
           title: "数量",
@@ -176,7 +165,7 @@ export default {
   created() {
     let id = this.$route.query.id;
     console.log(id);
-    this.$store.dispatch("finance/getOne", id).then((res) => {
+    this.$store.dispatch("income/getOne", id).then((res) => {
       console.log(res);
       this.orderInfo = res.data;
       this.data = [res.data];
