@@ -27,11 +27,11 @@
         <div class="btn2">
           <div class="btn4">
             <a-date-picker
-              v-model="startValue"
               :disabled-date="disabledStartDate"
               show-time
               format="YYYY-MM-DD HH:mm:ss"
               placeholder="开始时间"
+              @change="dateOnChange"
               @openChange="handleStartOpenChange"
             />
           </div>
@@ -43,15 +43,13 @@
               show-time
               format="YYYY-MM-DD HH:mm:ss"
               placeholder="结束时间"
+              @change="dateAnChange"
               @openChange="handleEndOpenChange"
             />
           </div>
         </div>
         <div class="btn5">
-          <a-select
-            default-value="请选择"
-            style="width: 120px"
-          >
+          <a-select default-value="请选择" style="width: 120px">
             <a-select-option value="jack"> 请选择 </a-select-option>
             <a-select-option value="lucy"> 已支付 </a-select-option>
             <a-select-option value="Yiminghe"> 未支付 </a-select-option>
@@ -160,7 +158,7 @@ export default {
         }
       ],
       data: [],
-      startValue: null,
+      startValue: "",
       endValue: null,
       // 表格分页器配置
       paginationProps: {
@@ -227,24 +225,27 @@ export default {
         this.getList();
       });
     },
+    // 日期组件change
+    dateOnChange(date, dateString) {
+      this.startValue = dateString;
+    },
+    dateAnChange(date, dateString) {
+      this.endValue = dateString;
+    },
     //确定查询
     inquire() {
-      let startTime = this.startValue._d
-        .toLocaleString("chinese", { hour12: false })
-        .replaceAll("/", "-");
-      let endTime = this.endValue._d
-        .toLocaleString("chinese", { hour12: false })
-        .replaceAll("/", "-");
-      // console.log(this.title, this.search, startTime, endTime);
+      console.log("time", this.startValue);
+ 
+      console.log(this.title, this.search);
       this.$store
         .dispatch("income/getList", {
-          startTime,
-          endTime
+          startTime:this.startValue,
+          endTime:this.endValue
         })
         .then((res) => {
           console.log(res, "时间请求结果");
-           this.data = res.data.list;
-        this.paginationProps.total = res.data.total * 1;
+          this.data = res.data.list;
+          this.paginationProps.total = res.data.total * 1;
           // this.paginationProps.total = val.data.totalCount * 1;
           // this.paginationProps.current = val.data.currentPage * 1;
           // this.dataAll = val.data.list;
