@@ -14,20 +14,22 @@
         充值金额：
       </span>
       <a-input style="width:180px"
+               v-model="totalAmount"
                placeholder="请输入充值金额" />
     </div>
     <div class="paymentMethod">
       <span class="paymentMethod-type">支付方式：</span>
-      <div class="WeChatply Alipay"><img width="30px"
+      <div class="WeChatply "><img width="30px"
              src="@/assets/img/pay/WeChat.png" />
         <span>微信支付</span>
       </div>
-      <div class="WeChatply "><img width="40px"
+      <div class="WeChatply Alipay"><img width="40px"
              src="@/assets/img/pay/Alipay.png"
              alt=""><span>支付宝支付</span></div>
     </div>
     <a-button type="primary"
-              style="margin-top: 20px;">
+              style="margin-top: 20px;"
+              @click="pay">
       充值</a-button>
   </div>
 </template>
@@ -36,8 +38,21 @@ export default {
   data () {
     return {
       //
+      payType: ['ali'],
+      totalAmount: '',
     };
-  }
+  },
+  methods: {
+    pay () {
+      this.$store.dispatch('pay/getVal', {
+        payType: this.payType,
+        totalAmount: this.totalAmount,
+      }).then(res => {
+        console.log(res);
+        this.$message.success('充值成功');
+      });
+    }
+  },
 };
 </script>
 
