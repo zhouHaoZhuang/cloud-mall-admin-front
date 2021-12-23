@@ -31,31 +31,7 @@
       <div class="left">
         <a-space>
           <a-button type="primary">+新建</a-button>
-          <a-button type="primary" :disabled="disabledBtn" @click="handleStart">
-            启动
-          </a-button>
-          <a-dropdown>
-            <a-menu slot="overlay">
-              <a-menu-item
-                key="1"
-                :disabled="disabledBtn"
-                @click="handleCloudAction('stop')"
-              >
-                关机
-              </a-menu-item>
-              <a-menu-item
-                key="2"
-                :disabled="disabledBtn"
-                @click="handleCloudAction('restart')"
-              >
-                重启
-              </a-menu-item>
-              <a-menu-item key="3" :disabled="disabledBtn">
-                批量续费
-              </a-menu-item>
-            </a-menu>
-            <a-button> 更多操作 <a-icon type="down" /> </a-button>
-          </a-dropdown>
+          <a-button :disabled="disabledBtn">批量续费</a-button>
           <a-input-group style="width: 400px" compact>
             <a-select v-model="listQuery.key" style="width: 100px">
               <a-select-option value="ip"> IP地址 </a-select-option>
@@ -72,7 +48,7 @@
         </a-space>
       </div>
       <div class="right">
-        <div class="icon-btn">
+        <div class="icon-btn" @click="getList()">
           <a-icon type="sync" />
         </div>
         <div class="icon-btn" @click="handleCustomColumns">
@@ -103,11 +79,11 @@
             <a-icon type="caret-down" />
           </div>
           <a-menu slot="overlay">
-            <a-menu-item :key="4" @click="handleStatusFilter(4)">
+            <a-menu-item key="all" @click="handleStatusFilter('all')">
               全部
             </a-menu-item>
             <a-menu-item
-              v-for="(value, key) in runningStatusEnum"
+              v-for="(value, key) in runningStatusSelect"
               :key="key"
               @click="handleStatusFilter(key)"
             >
@@ -147,10 +123,17 @@
           </div>
         </div>
         <!-- 状态 -->
-        <div slot="runningStatus" slot-scope="text">
-          <div :class="getStatusClassName(text)">
-            <div class="dot"></div>
-            {{ runningStatusEnum[text] }}
+        <div slot="runningStatus" slot-scope="text, record">
+          <div :class="getStatusClassName(record.runningStatus)">
+            <div v-if="!record.actionsLoading" class="dot"></div>
+            <a-icon
+              v-else
+              type="loading"
+              style="margin-right: 6px; font-size: 18px"
+            />
+            <span>
+              {{ runningStatusEnum[record.runningStatus] }}
+            </span>
           </div>
         </div>
         <!-- 配置 -->
@@ -166,7 +149,10 @@
         <!-- 自动续费/周期 -->
         <div slot="autoRenew" slot-scope="text, record">
           <span v-if="text === 0" style="color: red">未开通</span>
-          <span v-else>{{ record.renewPeriod }}{{ record.durationUnit }}</span>
+          <span v-if="text === 1" style="color: #2bbe22">已开通</span>
+          <span v-if="text === 1">
+            /{{ record.renewPeriod }}{{ getAutoRenewUnit(record.renewUnit) }}
+          </span>
         </div>
         <!-- 操作 -->
         <div slot="action" slot-scope="text, record">
@@ -195,13 +181,31 @@
                 <a-icon type="down" style="margin-left: 2px" />
               </a-button>
               <a-menu class="table-dropdown" slot="overlay">
-                <a-menu-item key="1" @click="handleCloudAction('restart')">
+                <a-menu-item
+                  key="1"
+                  :disabled="startBtnDisable(record)"
+                  @click="handleStart(record)"
+                >
+                  启动
+                </a-menu-item>
+                <a-menu-item
+                  key="2"
+                  :disabled="stopBtnDisable(record)"
+                  @click="handleCloudAction('stop', record)"
+                >
+                  关机
+                </a-menu-item>
+                <a-menu-item
+                  key="3"
+                  :disabled="restartBtnDisable(record)"
+                  @click="handleCloudAction('restart', record)"
+                >
                   重启
                 </a-menu-item>
-                <a-menu-item key="2" @click="handleUpdateName">
+                <a-menu-item key="4" @click="handleUpdateName">
                   修改信息
                 </a-menu-item>
-                <a-menu-item key="3" @click="handleAutoRenew(record)">
+                <a-menu-item key="5" @click="handleAutoRenew(record)">
                   自动续费
                 </a-menu-item>
               </a-menu>
@@ -222,7 +226,12 @@
       @success="autoRenewSuccess"
     />
     <!-- 重启/关机弹窗 -->
-    <CloudActionModal v-model="cloudActionVisible" :type="cloudActionType" />
+    <CloudActionModal
+      v-model="cloudActionVisible"
+      :type="tempRecord.cloudActionType"
+      :list="[tempRecord]"
+      @success="cloudActionsSuccess"
+    />
     <!-- 自定义列表项弹窗 -->
     <CustomColumnsModal
       v-model="customColumnsVisible"
@@ -234,7 +243,7 @@
 </template>
 
 <script>
-import { runningStatusEnum } from "@/utils/enum";
+import { runningStatusEnum, runningStatusSelect } from "@/utils/enum";
 import UpdateNameModal from "@/components/Cloud/CloudModal/updateNameModal";
 import RenewModal from "@/components/Cloud/CloudModal/renewModal";
 import AutoRenewModal from "@/components/Cloud/CloudModal/autoRenewModal";
@@ -269,11 +278,63 @@ export default {
           return "status overdue";
         }
       };
+    },
+    // 操作按钮是否禁用
+    // 启动
+    startBtnDisable() {
+      return function (record) {
+        if (record.actionsBtnDisable) {
+          return true;
+        }
+        if (record.runningStatus !== 2) {
+          return true;
+        } else {
+          return false;
+        }
+      };
+    },
+    // 重启
+    restartBtnDisable() {
+      return function (record) {
+        if (record.actionsBtnDisable) {
+          return true;
+        }
+        if (record.runningStatus !== 1) {
+          return true;
+        } else {
+          return false;
+        }
+      };
+    },
+    // 关机
+    stopBtnDisable() {
+      return function (record) {
+        if (record.actionsBtnDisable) {
+          return true;
+        }
+        if (record.runningStatus !== 1) {
+          return true;
+        } else {
+          return false;
+        }
+      };
+    },
+    // 根据自动续费周期的单位返回文字
+    getAutoRenewUnit() {
+      return function (unit) {
+        if (unit === "Month") {
+          return "个月";
+        }
+        if (unit === "Year") {
+          return "年";
+        }
+      };
     }
   },
   data() {
     return {
       runningStatusEnum,
+      runningStatusSelect,
       listQuery: {
         key: "ip",
         search: "",
@@ -367,7 +428,7 @@ export default {
       modalDetail: {},
       // 重启/关机弹窗
       cloudActionVisible: false,
-      cloudActionType: "",
+      tempRecord: {},
       // 启动服务器
       startLoading: false,
       // 自定义名称弹窗
@@ -382,6 +443,9 @@ export default {
     this.getAddressList();
     this.getList();
   },
+  activated() {
+    this.getList();
+  },
   methods: {
     // 获取地域列表
     getAddressList() {
@@ -392,16 +456,33 @@ export default {
     // 获取服务器列表
     getList(status) {
       this.tableLoading = true;
-      this.$getList("cloud/cloudList", this.listQuery)
+      this.$store
+        .dispatch("cloud/cloudList", {
+          ...this.listQuery,
+          [this.listQuery.key]: this.listQuery.search
+        })
         .then((res) => {
+          let newData = [];
           if (status) {
-            const newData = res.data.list.filter(
+            newData = res.data.list.filter(
               (ele) => ele.runningStatus === status * 1
             );
-            this.data = [...newData];
           } else {
-            this.data = [...res.data.list];
+            newData = res.data.list;
           }
+          this.data = newData.map((ele) => {
+            return {
+              ...ele,
+              // 服务器操作后回调所需数据----------start
+              startLoading: false,
+              cloudActionType: "",
+              actionsLoading: false,
+              actionsBtnDisable: false,
+              actionsTime: null,
+              actionsTimeStep: 3 // 单位：秒
+              // 服务器操作后回调所需数据----------end
+            };
+          });
         })
         .finally(() => {
           this.tableLoading = false;
@@ -450,25 +531,49 @@ export default {
       this.autoRenewVisible = true;
     },
     // 自动续费成功回调
-    autoRenewSuccess(autoRenew) {
-      this.modalDetail.autoRenew = autoRenew;
+    autoRenewSuccess(data) {
+      this.modalDetail.autoRenew = data.autoRenew;
+      this.modalDetail.renewPeriod = data.renewPeriod;
+      this.modalDetail.renewUnit = data.renewUnit;
     },
     // 重启/关机弹窗
-    handleCloudAction(type) {
-      this.cloudActionType = type;
+    handleCloudAction(type, record) {
+      this.tempRecord = record;
+      record.cloudActionType = type;
       this.cloudActionVisible = true;
     },
     // 启动服务器
-    handleStart() {
+    handleStart(record) {
       this.$confirm({
         width: "500px",
         centered: true,
-        title: "你所选的1台云服务器将执行启动操作。",
+        title: `你所选的1台云服务器将执行启动操作。`,
         content: "是否确定启动？",
-        confirmLoading: this.startLoading,
+        confirmLoading: record.startLoading,
         onOk: () => {
           return new Promise((resolve, reject) => {
-            resolve();
+            record.cloudActionType = "start";
+            record.startLoading = true;
+            const newList = [{ ...record }].map((ele) => {
+              return {
+                instanceId: ele.instanceId,
+                regionId: ele.regionId
+              };
+            });
+            const data = {
+              instanceQueryReqDtoList: [...newList],
+              type: "start"
+            };
+            this.$store
+              .dispatch("cloud/cloudActions", data)
+              .then((res) => {
+                record.actionsBtnDisable = true;
+                this.startTime(record);
+                resolve();
+              })
+              .finally(() => {
+                record.startLoading = false;
+              });
           });
         }
       });
@@ -491,6 +596,62 @@ export default {
       this.newColumns = this.columns.filter((ele) => ele.select);
     },
     // 弹窗相关------end
+    // 服务器操作后回调所需数据----------start
+    // 服务器操作成功后的回调
+    cloudActionsSuccess() {
+      this.tempRecord.actionsBtnDisable = true;
+      this.startTime(this.tempRecord);
+    },
+    // 计时器结束后要做的事情
+    timeEnd(record) {
+      clearInterval(record.actionsTime);
+      record.actionsLoading = false;
+    },
+    // 根据返回的状态判断操作是否结束
+    getActionsIsEnd(status, record) {
+      if (
+        record.cloudActionType === "start" ||
+        record.cloudActionType === "restart"
+      ) {
+        return status === 1;
+      }
+      if (record.cloudActionType === "stop") {
+        return status === 2;
+      }
+    },
+    // 获取服务器实例状态
+    getCloudRunStatus(record) {
+      const data = {
+        instanceId: record.instanceId,
+        regionId: record.regionId
+      };
+      this.$store.dispatch("cloud/getCloudRunStatus", data).then((res) => {
+        record.runningStatus = res.data.code * 1;
+        if (this.getActionsIsEnd(res.data.code * 1, record)) {
+          this.timeEnd(record);
+          record.actionsBtnDisable = false;
+        }
+      });
+    },
+    // 有过操作后开启定时器和没操作开启，间隔时间不同
+    startTime(record) {
+      // 如果之前有定时器在开启，先行清除定时器
+      if (record.actionsTime !== null) {
+        this.timeEnd(record);
+      }
+      // 防止多次点击
+      if (record.actionsLoading) return;
+      record.actionsLoading = true;
+      // 先开启一次性定时器直接查状态
+      setTimeout(() => {
+        this.getCloudRunStatus(record);
+      }, 0);
+      // 开启定时器
+      record.actionsTime = setInterval(() => {
+        this.getCloudRunStatus(record);
+      }, record.actionsTimeStep * 1000);
+    },
+    // 服务器操作后回调所需数据----------end
     // 点击复制
     handleCopy(txt) {
       this.$copyText(txt)
@@ -503,7 +664,7 @@ export default {
     },
     // 表格头部状态筛选
     handleStatusFilter(status) {
-      if (status !== 4) {
+      if (status !== "all") {
         this.columnsStatusTxt = this.runningStatusEnum[status];
         this.getList(status);
       } else {

@@ -102,13 +102,19 @@ export default {
     // 询价
     getPrice() {
       this.price = "价格计算中...";
+      this.loading = true;
       this.$store
         .dispatch("cloud/cloudRenewPrice", this.getRequestData())
-        .then((res) => {});
+        .then((res) => {
+          this.price = res.data.discountPrice + "元";
+        })
+        .finally(() => {
+          this.loading = false;
+        });
     },
     // 时间选择
     periodChange(val) {
-      console.log(val);
+      this.getPrice();
     },
     // 关闭弹窗
     handleCancel() {
@@ -119,7 +125,10 @@ export default {
       this.loading = true;
       this.$store
         .dispatch("cloud/cloudRenew", this.getRequestData())
-        .then((res) => {})
+        .then((res) => {
+          this.$message.success("提交续费订单成功");
+          this.handleCancel();
+        })
         .finally(() => {
           this.loading = false;
         });

@@ -25,7 +25,7 @@
         <a-input v-model="form.user" style="width: 280px" disabled />
       </a-form-model-item>
       <a-form-model-item label="新登录密码" prop="password">
-        <a-input v-model="form.password" style="width: 280px" />
+        <a-input v-model="form.password" type="password" style="width: 280px" />
         <div class="txt">
           1、8-30个字符，必须同时包含下面四项中的三项：大写字母、小写字母、数字、和特殊字符
         </div>
@@ -36,7 +36,11 @@
         </div>
       </a-form-model-item>
       <a-form-model-item label="确认登录密码" prop="confirmPassword">
-        <a-input v-model="form.confirmPassword" style="width: 280px" />
+        <a-input
+          v-model="form.confirmPassword"
+          type="password"
+          style="width: 280px"
+        />
       </a-form-model-item>
     </a-form-model>
   </a-modal>

@@ -16,7 +16,7 @@
         </div>
         <div class="public-item">
           <div class="public-label">登录账号</div>
-          <div class="public-value">{{ detail.instanceName }}</div>
+          <div class="public-value">{{ userInfo.username }}</div>
         </div>
         <div class="public-item">
           <div class="public-label">操作系统</div>
@@ -92,7 +92,7 @@
         </div>
         <div class="public-item">
           <div class="public-label">SSD数据盘</div>
-          <div class="public-value">{{ detail.instanceName }}</div>
+          <div class="public-value">{{ getDataSidkNum }}G</div>
         </div>
         <div class="public-item">
           <div class="public-label">公网带宽</div>
@@ -129,6 +129,7 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
 import { runningStatusEnum } from "@/utils/enum";
 import UpdateNameModal from "@/components/Cloud/CloudModal/updateNameModal";
 import RenewModal from "@/components/Cloud/CloudModal/renewModal";
@@ -145,6 +146,19 @@ export default {
     UpdateNameModal,
     RenewModal,
     AutoRenewModal
+  },
+  computed: {
+    ...mapState({
+      userInfo: (state) => state.user.userInfo
+    }),
+    // 返回数据盘大小
+    getDataSidkNum() {
+      let sum = 0;
+      this.detail.dataDisk?.forEach((ele) => {
+        sum += ele.size;
+      });
+      return sum;
+    }
   },
   data() {
     return {

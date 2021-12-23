@@ -15,9 +15,18 @@ export const corporationStatusEnum = {
 };
 // 控制台-云服务器-状态
 export const runningStatusEnum = {
-  0: "黑洞中",
+  0: "创建中",
   1: "运行中",
-  2: "已关机",
+  2: "已停止",
+  3: "已过期",
+  4: "停止中",
+  5: "启动中"
+};
+// 用于下拉选择的渲染
+export const runningStatusSelect = {
+  0: "创建中",
+  1: "运行中",
+  2: "已停止",
   3: "已过期"
 };
 // 云服务器-购买时长
