@@ -3,11 +3,11 @@
     :visible="value"
     width="680px"
     centered
-    title="实例名称"
-    wrapClassName="updateName-modal-container"
+    title="重设密码"
+    wrapClassName="updatePwd-modal-container"
     okText="确定"
     :confirmLoading="loading"
-    @ok="handleOk"
+    @ok="handleResetPwd"
     @cancel="handleCancel"
   >
     <div class="info-box">
@@ -22,19 +22,21 @@
       :wrapper-col="wrapperCol"
     >
       <a-form-model-item label="用户名">
-        <a-input style="width: 280px" value="adminssss" disabled />
+        <a-input v-model="form.user" style="width: 280px" disabled />
       </a-form-model-item>
-      <a-form-model-item label="新登录密码" props="password">
-        <a-input style="width: 280px" />
+      <a-form-model-item label="新登录密码" prop="password">
+        <a-input v-model="form.password" style="width: 280px" />
         <div class="txt">
-          1、密码长度8-30位，由英文字母、数字和特殊符号组成，且必须包含字母及数字
+          1、8-30个字符，必须同时包含下面四项中的三项：大写字母、小写字母、数字、和特殊字符
         </div>
         <div class="txt">
-          2、特殊符号支持如下_ ( ) ` ~ ! @ # $ % ^ * - + = { } [ ] : ; , . ? /
+          2、 （仅支持下列特殊字符： ( ) ` ~ ! @ # $ % ^ {{ "&" }} * - _ + = | {
+          } [ ] : ; ' > <span v-text="'<'"></span> , . ? / ）。其中，Windows
+          实例不能以斜线号（/）为密码首字符。
         </div>
       </a-form-model-item>
-      <a-form-model-item label="确认登录密码" props="confirmPassword">
-        <a-input style="width: 280px" />
+      <a-form-model-item label="确认登录密码" prop="confirmPassword">
+        <a-input v-model="form.confirmPassword" style="width: 280px" />
       </a-form-model-item>
     </a-form-model>
   </a-modal>
@@ -52,6 +54,11 @@ export default {
     value: {
       type: Boolean,
       default: false
+    },
+    // 实例详情
+    detail: {
+      type: Object,
+      default: () => {}
     }
   },
   data() {
@@ -59,7 +66,14 @@ export default {
       if (value === "") {
         callback(new Error("请输入密码"));
       } else {
-        if (!this.pwdReg.test(value)) {
+        if (
+          !(
+            this.pwdReg1.test(value) ||
+            this.pwdReg2.test(value) ||
+            this.pwdReg3.test(value) ||
+            this.pwdReg4.test(value)
+          )
+        ) {
           callback(new Error("密码格式不正确"));
         }
         callback();
@@ -78,8 +92,25 @@ export default {
       labelCol: { span: 7 },
       wrapperCol: { span: 17 },
       loading: false,
-      pwdReg: /(?=.*[0-9])(?=.*[a-z]).{8,30}/,
-      form: {},
+      // 必须包含大写字母，小写字母，数字，特殊字符
+      pwdReg:
+        /^.*(?=.{8,})(?=.*\d)(?=.*[A-Z])(?=.*[a-z])(?=.*[()`~!@#$%^&*-_+=|{}][:;'><,.?/]).*$/,
+      // 必须包含大写字母，小写字母，数字
+      pwdReg1: /^.*(?=.{8,})(?=.*\d)(?=.*[A-Z])(?=.*[a-z]).*$/,
+      // 必须包含大写字母，小写字母，特殊字符
+      pwdReg2:
+        /^.*(?=.{8,})(?=.*[A-Z])(?=.*[a-z])(?=.*[()`~!@#$%^&*-_+=|{}][:;'><,.?/]).*$/,
+      // 必须包含大写字母，数字，特殊字符
+      pwdReg3:
+        /^.*(?=.{8,})(?=.*\d)(?=.*[A-Z])(?=.*[()`~!@#$%^&*-_+=|{}][:;'><,.?/]).*$/,
+      // 必须包含小写字母，数字，特殊字符
+      pwdReg4:
+        /^.*(?=.{8,})(?=.*\d)(?=.*[a-z])(?=.*[()`~!@#$%^&*-_+=|{}][:;'><,.?/]).*$/,
+      form: {
+        user: "root (Linux) / administrator (Windows)",
+        password: "",
+        confirmPassword: ""
+      },
       rules: {
         password: [{ validator: validatePass, trigger: ["blur", "change"] }],
         confirmPassword: [
@@ -95,10 +126,25 @@ export default {
       this.$emit("changeVisible", false);
     },
     // 弹窗提交
-    handleOk() {
+    // 重置服务器密码
+    handleResetPwd() {
       this.$refs.ruleForm.validate((valid) => {
         if (valid) {
-          alert("submit!");
+          this.loading = true;
+          const data = {
+            instanceId: this.detail.instanceId,
+            regionId: this.detail.regionId,
+            password: this.form.password
+          };
+          this.$store
+            .dispatch("cloud/updateCloudInfo", data)
+            .then((res) => {
+              this.$message.success("修改实例密码成功");
+              this.$emit("changeVisible", false);
+            })
+            .finally(() => {
+              this.loading = false;
+            });
         }
       });
     }
@@ -107,7 +153,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.updateName-modal-container {
+.updatePwd-modal-container {
   background: #fff;
   .info-box {
     display: flex;

@@ -6,28 +6,48 @@
       </div>
       <div class="btns">
         <div class="btn1">
-          <a-button type="primary">前往充值</a-button>
+          <a-button type="primary"
+                    @click="goRecharge">前往充值</a-button>
         </div>
         <!-- 按钮 -->
         <div class="btn3">
           <a-input-group compact>
-            <a-select default-value="流水单号">
-              <a-select-option value="流水单号"> 流水单号 </a-select-option>
-              <a-select-option value="来源/用途"> 来源/用途 </a-select-option>
+            <a-select v-model="title">
+              <a-select-option value="paymentLineId"> 流水单号 </a-select-option>
+              <!-- <a-select-option value="来源/用途"> 来源/用途 </a-select-option> -->
             </a-select>
-            <a-input-search
-              style="width: 70%"
-              placeholder="请输入搜索关键词"
-              enter-button
-              @search="onSearch"
-            />
+            <a-input-search style="width: 70%"
+                            placeholder="请输入搜索关键词"
+                            enter-button
+                            @search="onSearch" />
           </a-input-group>
         </div>
+        <span class="refresh"
+              @click="$router.go(0)">
+          <a-icon type="redo" />
+        </span>
       </div>
       <!-- 表格 -->
       <div class="table">
-        <a-table :columns="columns" :data-source="data">
-          <a slot="name" slot-scope="text">{{ text }}</a>
+        <a-table :columns="columns"
+                 :data-source="data"
+                 row-key="id"
+                 :pagination="paginationProps"
+                 @change="sortDirections">
+          <div slot="income"
+               slot-scope="text">
+            <span>{{text.type==='I'?text.dealAmount:'--'}}</span>
+          </div>
+          <div slot="expenditure"
+               slot-scope="text">
+            <span>{{text.type==='O'?text.dealAmount:'--'}}</span>
+          </div>
+          <a slot="name"
+             slot-scope="text">{{ text }}</a>
+          <div slot="createTime"
+               slot-scope="text">
+            {{text | formatDate}}
+          </div>
         </a-table>
       </div>
     </div>
@@ -37,54 +57,53 @@
 <script>
 export default {
   computed: {},
-  data() {
+  data () {
     return {
+      title: 'paymentLineId',
       listQuery: {
-        key: undefined,
+        key: '',
         search: "",
         currentPage: 1,
         pageSize: 10,
-        total: 0
+        total: 0,
+        sorter: '',
       },
       columns: [
         {
           title: "流水单号",
-          dataIndex: "id",
+          dataIndex: "paymentLineId",
           key: "id",
           width: 150,
-          onFilter: (value, record) => record.name.includes(value),
-          sorter: (a, b) => a.name.length - b.name.length
+          sorter: (a, b) => a.id - b.id
         },
         {
           title: "收入(+)",
-          dataIndex: "cutomerName",
-          key: "cutomerName"
+          key: "income",
+          scopedSlots: { customRender: "income" },
         },
+        // type=O支出 i收入
+        // dealAmount金额
         {
           title: "支出(-)",
-          dataIndex: "shortName",
-          key: "shortName"
+          key: "expenditure",
+          scopedSlots: { customRender: "expenditure" },
         },
         {
           title: "余额",
-          dataIndex: "addressProject",
-          key: "addressProject",
+          dataIndex: "afterAmount",
           scopedSlots: { customRender: "addressProject" },
-          onFilter: (value, record) => record.name.includes(value),
-          sorter: (a, b) => a.name.length - b.name.length
+          sorter: (a, b) => a.afterAmount - b.afterAmount
         },
         {
           title: "交易日期",
-          dataIndex: "customerStatus",
-          key: "customerStatus",
-          scopedSlots: { customRender: "customerStatus" },
-          onFilter: (value, record) => record.name.includes(value),
-          sorter: (a, b) => a.name.length - b.name.length
+          dataIndex: "createTime",
+          key: "createTime",
+          scopedSlots: { customRender: "createTime" },
+          sorter: (a, b) => a - b
         },
         {
           title: "来源用途",
-          dataIndex: "",
-          key: ""
+          dataIndex: "org"
         }
       ],
       data: [],
@@ -102,13 +121,46 @@ export default {
       tableLoading: false
     };
   },
+  created () {
+    this.getList();
+  },
   methods: {
-    handleChange(value) {
+    handleChange (value) {
       console.log(`selected ${value}`);
     },
-    handleMenuClick() {},
-    onSearch(value) {
-      console.log(value);
+    sortDirections (pagination, filters, sorter) {
+      if (sorter && sorter.order) {
+        this.listQuery.key = sorter.columnKey;
+        this.listQuery.sorter = sorter.order.replace('end', '') + `-${sorter.columnKey}`;
+        this.getList();
+        // console.log("排序被点击了", sorter.columnKey);
+      }
+    },
+    quickJump (current) {
+      this.listQuery.currentPage = current;
+      this.getList();
+    },
+    onShowSizeChange (current, pageSize) {
+      this.listQuery.pageSize = pageSize;
+      this.listQuery.currentPage = current;
+      this.getList();
+    },
+    goRecharge () {
+      this.$router.push({
+        path: "/user/finance/recharge"
+      });
+    },
+    getList () {
+      this.$getList("finance/getList", this.listQuery).then(res => {
+        this.data = res.data.list;
+        this.paginationProps.total = res.data.total * 1;
+      });
+    },
+    onSearch (value) {
+      this.listQuery.key = this.title;
+      this.listQuery.search = value;
+      console.log(value, this.listQuery.key);
+      this.getList();
     }
   }
 };
@@ -129,6 +181,8 @@ export default {
     .btns {
       padding-top: 15px;
       display: flex;
+      width: 100%;
+      position: relative;
       // justify-content: space-between;
       .btn1 {
         padding-right: 20px;
@@ -139,6 +193,19 @@ export default {
     }
     .table {
       padding-top: 20px;
+    }
+    .refresh {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 32px;
+      height: 32px;
+      display: inline-block;
+      text-align: center;
+      font-size: 19px;
+      line-height: 32px;
+      transform: rotate(-90deg);
+      border: 1px solid #ddd;
     }
   }
 }

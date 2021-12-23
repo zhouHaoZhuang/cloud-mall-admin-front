@@ -159,8 +159,8 @@
           <div>带宽：{{ record.internetMaxBandwidthOut }}Mbps</div>
         </div>
         <!-- 类型/到期时间 -->
-        <div slot="endTimeStr" slot-scope="text, record">
-          <div>{{ record.tradeCode }}</div>
+        <div slot="endTimeStr" slot-scope="text">
+          <div>包年包月</div>
           <div>{{ text }}</div>
         </div>
         <!-- 自动续费/周期 -->
@@ -182,7 +182,7 @@
           </div>
           <div>
             <a-button type="link" size="small">升级</a-button>
-            <a-button type="link" size="small" @click="handleRenew">
+            <a-button type="link" size="small" @click="handleRenew(record)">
               续费
             </a-button>
             <a-dropdown :trigger="['click']">
@@ -201,7 +201,7 @@
                 <a-menu-item key="2" @click="handleUpdateName">
                   修改信息
                 </a-menu-item>
-                <a-menu-item key="3" @click="handleAutoRenew">
+                <a-menu-item key="3" @click="handleAutoRenew(record)">
                   自动续费
                 </a-menu-item>
               </a-menu>
@@ -214,9 +214,13 @@
     <!-- 修改实例名称弹窗 -->
     <UpdateNameModal v-model="updateNameVisible" />
     <!-- 产品续费弹窗 -->
-    <RenewModal v-model="renewVisible" />
+    <RenewModal v-model="renewVisible" :detail="modalDetail" />
     <!-- 自动产品续费弹窗 -->
-    <AutoRenewModal v-model="autoRenewVisible" />
+    <AutoRenewModal
+      v-model="autoRenewVisible"
+      :detail="modalDetail"
+      @success="autoRenewSuccess"
+    />
     <!-- 重启/关机弹窗 -->
     <CloudActionModal v-model="cloudActionVisible" :type="cloudActionType" />
     <!-- 自定义列表项弹窗 -->
@@ -360,6 +364,7 @@ export default {
       renewVisible: false,
       // 自动产品续费弹窗
       autoRenewVisible: false,
+      modalDetail: {},
       // 重启/关机弹窗
       cloudActionVisible: false,
       cloudActionType: "",
@@ -435,12 +440,18 @@ export default {
       this.updateNameVisible = true;
     },
     // 点击产品续费
-    handleRenew() {
+    handleRenew(record) {
+      this.modalDetail = record;
       this.renewVisible = true;
     },
     // 点击自动产品续费
-    handleAutoRenew() {
+    handleAutoRenew(record) {
+      this.modalDetail = record;
       this.autoRenewVisible = true;
+    },
+    // 自动续费成功回调
+    autoRenewSuccess(autoRenew) {
+      this.modalDetail.autoRenew = autoRenew;
     },
     // 重启/关机弹窗
     handleCloudAction(type) {

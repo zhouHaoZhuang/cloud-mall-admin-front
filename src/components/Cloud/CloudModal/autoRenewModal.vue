@@ -23,10 +23,10 @@
     </div>
     <a-form-model :model="form" :label-col="labelCol" :wrapper-col="wrapperCol">
       <a-form-model-item label="开启自动续费">
-        <a-switch />
+        <a-switch v-model="form.autoRenew" />
       </a-form-model-item>
       <a-form-model-item label="续费时长">
-        <a-select>
+        <a-select v-model="form.period">
           <a-select-option
             v-for="(value, key) in regionEnum"
             :key="key"
@@ -42,6 +42,7 @@
 
 <script>
 import { regionEnum } from "@/utils/enum";
+import { setBuyTimeData } from "@/utils/index";
 export default {
   // 双向绑定
   model: {
@@ -53,6 +54,11 @@ export default {
     value: {
       type: Boolean,
       default: false
+    },
+    // 实例详情
+    detail: {
+      type: Object,
+      default: () => {}
     }
   },
   data() {
@@ -61,17 +67,51 @@ export default {
       labelCol: { span: 9 },
       wrapperCol: { span: 10 },
       loading: false,
-      form: {}
+      form: {
+        autoRenew: undefined,
+        period: "1"
+      }
     };
+  },
+  watch: {
+    value: {
+      handler(newVal) {
+        if (newVal) {
+          this.form.autoRenew = Boolean({ ...this.detail }.autoRenew);
+        }
+      },
+      immediate: true
+    }
   },
   created() {},
   methods: {
     // 关闭弹窗
     handleCancel() {
+      this.form = {
+        autoRenew: false,
+        period: "1"
+      };
       this.$emit("changeVisible", false);
     },
     // 弹窗提交
-    handleOk() {}
+    handleOk() {
+      this.loading = true;
+      const data = {
+        id: this.detail.id,
+        ...setBuyTimeData(this.form.period),
+        autoRenew: this.form.autoRenew ? 1 : 0
+      };
+      this.$store
+        .dispatch("cloud/cloudAutoRenew", data)
+        .then((res) => {
+          this.$message.success("设置自动续费成功");
+          this.$emit("success", res.data.autoRenew);
+          this.handleCancel();
+        })
+        .finally(() => {
+          this.loading = false;
+        });
+    }
   }
 };
 </script>

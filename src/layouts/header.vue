@@ -7,7 +7,7 @@
       <!-- 跳转总览 -->
       <div class="dashboard" @click="goTo('/dashboard')">总览</div>
       <!-- 产品与服务 -->
-      <Product />
+      <!-- <Product /> -->
     </div>
     <!-- 头部右侧 -->
     <Right />
@@ -22,7 +22,7 @@ import Right from "@/components/Header/right/index";
 export default {
   components: {
     OpenMenu,
-    Product,
+    // Product,
     Right
   },
   computed: {

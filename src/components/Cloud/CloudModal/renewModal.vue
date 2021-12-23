@@ -11,10 +11,12 @@
     @cancel="handleCancel"
   >
     <a-form-model :model="form" :label-col="labelCol" :wrapper-col="wrapperCol">
-      <a-form-model-item label="IP地址"> 43.226.39.91:3389 </a-form-model-item>
-      <a-form-model-item label="到期时间"> 2022年02月01日 </a-form-model-item>
+      <a-form-model-item label="IP地址"> {{ detail.outIp }} </a-form-model-item>
+      <a-form-model-item label="到期时间">
+        {{ detail.endTimeStr }}
+      </a-form-model-item>
       <a-form-model-item label="续费时长">
-        <a-select>
+        <a-select v-model="form.period" @change="periodChange">
           <a-select-option
             v-for="(value, key) in regionEnum"
             :key="key"
@@ -25,17 +27,19 @@
         </a-select>
       </a-form-model-item>
       <a-form-model-item label="续费后到期时间">
-        2022年02月01日
+        {{ getRenewEndTime }}
       </a-form-model-item>
       <a-form-model-item label="费用">
-        <div class="price">48.70元</div>
+        <div class="price">{{ price }}</div>
       </a-form-model-item>
     </a-form-model>
   </a-modal>
 </template>
 
 <script>
+import moment from "moment";
 import { regionEnum } from "@/utils/enum";
+import { setBuyTimeData } from "@/utils/index";
 export default {
   // 双向绑定
   model: {
@@ -47,6 +51,19 @@ export default {
     value: {
       type: Boolean,
       default: false
+    },
+    // 实例详情
+    detail: {
+      type: Object,
+      default: () => {}
+    }
+  },
+  computed: {
+    // 返回续费后到期时间
+    getRenewEndTime() {
+      return moment(this.detail.endTimeStr)
+        .add(this.form.period * 1, "months")
+        .format("YYYY-MM-DD HH:mm:ss");
     }
   },
   data() {
@@ -55,17 +72,58 @@ export default {
       labelCol: { span: 9 },
       wrapperCol: { span: 10 },
       loading: false,
-      form: {}
+      form: {
+        period: "1"
+      },
+      price: "0.00"
     };
   },
-  created() {},
+  watch: {
+    value: {
+      handler(newVal) {
+        if (newVal) {
+          this.getPrice();
+        }
+      },
+      immediate: true
+    }
+  },
   methods: {
+    // 处理询价和提交续费的参数
+    getRequestData() {
+      return {
+        ...this.form,
+        id: this.detail.id,
+        regionId: this.detail.regionId,
+        productCode: this.detail.productCode,
+        ...setBuyTimeData(this.form.period)
+      };
+    },
+    // 询价
+    getPrice() {
+      this.price = "价格计算中...";
+      this.$store
+        .dispatch("cloud/cloudRenewPrice", this.getRequestData())
+        .then((res) => {});
+    },
+    // 时间选择
+    periodChange(val) {
+      console.log(val);
+    },
     // 关闭弹窗
     handleCancel() {
       this.$emit("changeVisible", false);
     },
     // 弹窗提交
-    handleOk() {}
+    handleOk() {
+      this.loading = true;
+      this.$store
+        .dispatch("cloud/cloudRenew", this.getRequestData())
+        .then((res) => {})
+        .finally(() => {
+          this.loading = false;
+        });
+    }
   }
 };
 </script>
