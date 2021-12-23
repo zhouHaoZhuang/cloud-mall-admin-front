@@ -11,8 +11,8 @@
         <!-- 按钮输入框组 -->
         <div class="btn3">
           <a-input-group compact>
-            <a-select default-value="订单编号">
-              <a-select-option value="订单标号"> 订单标号 </a-select-option>
+            <a-select v-model="title">
+              <a-select-option value="orderNo"> 订单编号 </a-select-option>
             </a-select>
             <a-input-search
               style="width: 70%"
@@ -27,11 +27,11 @@
         <div class="btn2">
           <div class="btn4">
             <a-date-picker
-              v-model="startValue"
               :disabled-date="disabledStartDate"
               show-time
               format="YYYY-MM-DD HH:mm:ss"
               placeholder="开始时间"
+              @change="dateOnChange"
               @openChange="handleStartOpenChange"
             />
           </div>
@@ -43,24 +43,21 @@
               show-time
               format="YYYY-MM-DD HH:mm:ss"
               placeholder="结束时间"
+              @change="dateAnChange"
               @openChange="handleEndOpenChange"
             />
           </div>
         </div>
         <div class="btn5">
-          <a-select
-            default-value="请选择"
-            style="width: 120px"
-            @change="handleChange"
-          >
+          <a-select default-value="请选择" style="width: 120px">
             <a-select-option value="jack"> 请选择 </a-select-option>
             <a-select-option value="lucy"> 已支付 </a-select-option>
             <a-select-option value="Yiminghe"> 未支付 </a-select-option>
-            <a-select-option value="Yiminghe"> 已失效 </a-select-option>
+            <a-select-option value="Yiminghe1"> 已失效 </a-select-option>
           </a-select>
         </div>
         <div class="btn6">
-          <a-button type="primary">确定查询</a-button>
+          <a-button type="primary" @click="inquire">确定查询</a-button>
         </div>
       </div>
       <!-- 表格 -->
@@ -104,9 +101,9 @@
 export default {
   data() {
     return {
-      title: "orderNO",
+      title: "orderNo",
       listQuery: {
-        key: undefined,
+        key: "",
         search: "",
         currentPage: 1,
         pageSize: 10,
@@ -161,7 +158,7 @@ export default {
         }
       ],
       data: [],
-      startValue: null,
+      startValue: "",
       endValue: null,
       // 表格分页器配置
       paginationProps: {
@@ -173,7 +170,7 @@ export default {
         pageSize: 5, //每页显示数量
         showTotal: (total, range) =>
           `共 ${total} 条记录 第 ${this.paginationProps.current} / ${Math.ceil(
-            this.paginationProps.total / this.paginationProps.pageSize
+            total / this.paginationProps.pageSize
           )}  页`,
         onChange: this.changepage,
         onShowSizeChange: this.onShowSizeChange
@@ -189,9 +186,9 @@ export default {
   methods: {
     //查询数据表格
     getList() {
-      this.$store.dispatch("finance/getList").then((res) => {
-        console.log(res);
-        this.data = [...res.data.list];
+      this.$getList("income/getList", this.listQuery).then((res) => {
+        this.data = res.data.list;
+        this.paginationProps.total = res.data.totalCount * 1;
       });
     },
     //查看
@@ -220,9 +217,40 @@ export default {
     // },
     handleMenuClick() {},
     //查询
-    onSearch() {
-      this.listQuery.currentPage = 1;
-      this.getList();
+    onSearch(val) {
+      console.log(val);
+      this.listQuery[this.title] = val;
+      this.$store.dispatch("income/getList", this.listQuery).then((res) => {
+        console.log(res);
+        this.getList();
+      });
+    },
+    // 日期组件change
+    dateOnChange(date, dateString) {
+      this.startValue = dateString;
+    },
+    dateAnChange(date, dateString) {
+      this.endValue = dateString;
+    },
+    //确定查询
+    inquire() {
+      console.log("time", this.startValue);
+ 
+      console.log(this.title, this.search);
+      this.$store
+        .dispatch("income/getList", {
+          startTime:this.startValue,
+          endTime:this.endValue
+        })
+        .then((res) => {
+          console.log(res, "时间请求结果");
+          this.data = res.data.list;
+          this.paginationProps.total = res.data.total * 1;
+          // this.paginationProps.total = val.data.totalCount * 1;
+          // this.paginationProps.current = val.data.currentPage * 1;
+          // this.dataAll = val.data.list;
+          // this.data = this.dataAll.slice(0, this.paginationProps.pageSize);
+        });
     },
     disabledStartDate(startValue) {
       const endValue = this.endValue;
