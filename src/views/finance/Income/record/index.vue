@@ -1,30 +1,31 @@
 <template>
   <div class="record">
     <div class="search">
-      <a-input-group compact enterButton="true">
+      <a-input-group compact
+                     enterButton="true">
         <a-select default-value="充值方式">
           <a-select-option value="充值方式"> 充值方式 </a-select-option>
         </a-select>
-        <a-input-search
-          style="width: 250px"
-          placeholder="请输入搜索关键词"
-          enter-button
-          @search="onSearch"
-        />
+        <a-input-search style="width: 250px"
+                        placeholder="请输入搜索关键词"
+                        enter-button
+                        @search="onSearch" />
         <span class="refresh">
           <a-icon type="reload" />
         </span>
       </a-input-group>
     </div>
     <div>
-      <a-table :columns="columns" :data-source="data" @change="handleChange" />
+      <a-table :columns="columns"
+               :data-source="data"
+               @change="handleChange" />
     </div>
   </div>
 </template>
 
 <script>
 export default {
-  data() {
+  data () {
     return {
       data: [
         {
@@ -40,56 +41,45 @@ export default {
           address: "London No. 1 Lake Park"
         }
       ],
-      sortedInfo: null
-    };
-  },
-  computed: {
-    columns() {
-      let { sortedInfo } = this;
-      sortedInfo = sortedInfo || {};
-      const columns = [
+      columns: [
         {
           title: "充值金额",
           dataIndex: "name",
           key: "name",
           sorter: (a, b) => a.name.length - b.name.length,
-          sortOrder: sortedInfo.columnKey === "name" && sortedInfo.order
         },
         {
           title: "充值方式",
           dataIndex: "age",
           key: "age",
           sorter: (a, b) => a.age - b.age,
-          sortOrder: sortedInfo.columnKey === "age" && sortedInfo.order
         },
         {
           title: "充值日期",
           dataIndex: "address",
           key: "address",
           sorter: (a, b) => a.address.length - b.address.length,
-          sortOrder: sortedInfo.columnKey === "address" && sortedInfo.order
         }
-      ];
-      return columns;
-    }
+      ]
+    };
   },
   methods: {
-    onSearch(value) {
+    onSearch (value) {
       console.log(value);
     },
-    handleChange(pagination, filters, sorter) {
+    handleChange (pagination, filters, sorter) {
       console.log("Various parameters", pagination, filters, sorter);
       this.filteredInfo = filters;
       this.sortedInfo = sorter;
     },
-    clearFilters() {
+    clearFilters () {
       this.filteredInfo = null;
     },
-    clearAll() {
+    clearAll () {
       this.filteredInfo = null;
       this.sortedInfo = null;
     },
-    setAgeSort() {
+    setAgeSort () {
       this.sortedInfo = {
         order: "descend",
         columnKey: "age"
@@ -111,7 +101,7 @@ export default {
   .search {
     margin-bottom: 20px;
   }
-  .refresh{
+  .refresh {
     float: right;
     width: 32px;
     height: 32px;

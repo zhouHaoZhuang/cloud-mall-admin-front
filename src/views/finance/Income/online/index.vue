@@ -49,8 +49,7 @@ export default {
   margin-top: 20px;
   .warn {
     padding: 7px 22px 5px 37px;
-    background: #fff3eb
-      url(https://www.ydidc.com/template/User/Zkeys/PC/Static/css/common/common/img/uc/tip_icon_warn_16.png)
+    background: #fff3eb url(../../../../assets/img/pay/ExclamationMark.png)
       no-repeat 10px 8px;
     border: 1px solid #ffdac2;
     border-radius: 2px;
