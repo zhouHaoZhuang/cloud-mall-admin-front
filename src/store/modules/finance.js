@@ -21,8 +21,7 @@ const finance = {
         url: `customerAccountLog`,
         method: "get",
         params,
-        pay:true
-
+        // pay:true
       });
     },
   
@@ -31,7 +30,7 @@ const finance = {
         url: `/customerAccountLog?key=createTime&search=${params.startTime}&currentPage=1&pageSize=10&total=0&qp-createTime-gt=${params.startTime}&qp-createTime-lt=${params.endTime}`,
         method: "get",
         params,
-        pay:true
+        // pay:true
       });
     },
   }
