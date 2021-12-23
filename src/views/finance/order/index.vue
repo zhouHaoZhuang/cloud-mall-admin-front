@@ -11,8 +11,8 @@
         <!-- 按钮输入框组 -->
         <div class="btn3">
           <a-input-group compact>
-            <a-select default-value="订单编号">
-              <a-select-option value="订单标号"> 订单标号 </a-select-option>
+            <a-select v-model="title">
+              <a-select-option value="orderNo"> 订单编号 </a-select-option>
             </a-select>
             <a-input-search
               style="width: 70%"
@@ -51,16 +51,15 @@
           <a-select
             default-value="请选择"
             style="width: 120px"
-            @change="handleChange"
           >
             <a-select-option value="jack"> 请选择 </a-select-option>
             <a-select-option value="lucy"> 已支付 </a-select-option>
             <a-select-option value="Yiminghe"> 未支付 </a-select-option>
-            <a-select-option value="Yiminghe"> 已失效 </a-select-option>
+            <a-select-option value="Yiminghe1"> 已失效 </a-select-option>
           </a-select>
         </div>
         <div class="btn6">
-          <a-button type="primary">确定查询</a-button>
+          <a-button type="primary" @click="inquire">确定查询</a-button>
         </div>
       </div>
       <!-- 表格 -->
@@ -104,9 +103,9 @@
 export default {
   data() {
     return {
-      title: "orderNO",
+      title: "orderNo",
       listQuery: {
-        key: undefined,
+        key: "",
         search: "",
         currentPage: 1,
         pageSize: 10,
@@ -189,9 +188,9 @@ export default {
   methods: {
     //查询数据表格
     getList() {
-      this.$store.dispatch("finance/getList").then((res) => {
-        console.log(res);
-        this.data = [...res.data.list];
+      this.$getList("income/getList", this.listQuery).then((res) => {
+        this.data = res.data.list;
+        this.paginationProps.total = res.data.total * 1;
       });
     },
     //查看
@@ -220,11 +219,38 @@ export default {
     // },
     handleMenuClick() {},
     //查询
-    onSearch() {
-     
+    onSearch(val) {
+      console.log(val);
+      this.listQuery[this.title] = val;
+      this.$store.dispatch("income/getList", this.listQuery).then((res) => {
+        console.log(res);
+        this.getList();
+      });
     },
-
-
+    //确定查询
+    inquire() {
+      let startTime = this.startValue._d
+        .toLocaleString("chinese", { hour12: false })
+        .replaceAll("/", "-");
+      let endTime = this.endValue._d
+        .toLocaleString("chinese", { hour12: false })
+        .replaceAll("/", "-");
+      // console.log(this.title, this.search, startTime, endTime);
+      startTime = startTime + ".0";
+      endTime = endTime + ".0";
+      this.$store
+        .dispatch("income/getList", {
+          startTime,
+          endTime
+        })
+        .then((val) => {
+          console.log(val, "时间请求结果");
+          // this.paginationProps.total = val.data.totalCount * 1;
+          // this.paginationProps.current = val.data.currentPage * 1;
+          // this.dataAll = val.data.list;
+          // this.data = this.dataAll.slice(0, this.paginationProps.pageSize);
+        });
+    },
     disabledStartDate(startValue) {
       const endValue = this.endValue;
       if (!startValue || !endValue) {
