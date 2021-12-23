@@ -29,11 +29,8 @@
     <a-button type="primary"
               style="margin-top: 20px;">
       充值</a-button>
-
-  </div>
   </div>
 </template>
-
 <script>
 export default {
   data () {
