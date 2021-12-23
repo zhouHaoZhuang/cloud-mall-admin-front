@@ -76,20 +76,7 @@ export default {
   data () {
     return {
       isinfo: false,
-      data: [
-        {
-          key: "1",
-          name: "John Brown",
-          age: 32,
-          address: "New York No. 1 Lake Park"
-        },
-        {
-          key: "2",
-          name: "Jim Green",
-          age: 42,
-          address: "London No. 1 Lake Park"
-        }
-      ],
+      data: [],
       columns: [
         {
           title: "汇款账户",
@@ -134,6 +121,7 @@ export default {
     seeDetails () {
       this.isinfo = true;
     },
+    // 排序的回调
     handleChange (pagination, filters, sorter) {
       console.log("Various parameters", pagination, filters, sorter);
       this.filteredInfo = filters;

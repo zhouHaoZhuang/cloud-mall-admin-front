@@ -3,8 +3,8 @@
     <div class="search">
       <a-input-group compact
                      enterButton="true">
-        <a-select default-value="充值方式">
-          <a-select-option value="充值方式"> 充值方式 </a-select-option>
+        <a-select v-model="title">
+          <a-select-option value="memo"> 充值方式 </a-select-option>
         </a-select>
         <a-input-search style="width: 250px"
                         placeholder="请输入搜索关键词"
@@ -18,7 +18,9 @@
     <div>
       <a-table :columns="columns"
                :data-source="data"
-               @change="handleChange" />
+               @change="handleChange"
+               row-key="id"
+               :pagination="paginationProps" />
     </div>
   </div>
 </template>
@@ -27,64 +29,72 @@
 export default {
   data () {
     return {
-      data: [
-        {
-          key: "1",
-          name: "John Brown",
-          age: 32,
-          address: "New York No. 1 Lake Park"
-        },
-        {
-          key: "2",
-          name: "Jim Green",
-          age: 42,
-          address: "London No. 1 Lake Park"
-        }
-      ],
+      data: [],
       columns: [
         {
           title: "充值金额",
-          dataIndex: "name",
-          key: "name",
-          sorter: (a, b) => a.name.length - b.name.length,
+          dataIndex: "amount",
+          key: "amount",
+          sorter: (a, b) => a.amount - b.amount,
         },
         {
           title: "充值方式",
-          dataIndex: "age",
-          key: "age",
+          dataIndex: "memo",
+          key: "memo",
           sorter: (a, b) => a.age - b.age,
         },
         {
           title: "充值日期",
-          dataIndex: "address",
-          key: "address",
-          sorter: (a, b) => a.address.length - b.address.length,
+          dataIndex: "payTime",
+          key: "payTime",
+          sorter: (a, b) => a.payTime - b.payTime,
         }
-      ]
+      ],
+      title: 'memo',
+      listQuery: {
+        key: '',
+        search: "",
+        currentPage: 1,
+        pageSize: 10,
+        total: 0,
+        sorter: '',
+      },
+      paginationProps: {
+        showQuickJumper: true,
+        showSizeChanger: true,
+        total: 1,
+        showTotal: (total, range) =>
+          `共 ${total} 条记录 第 ${this.listQuery.currentPage} / ${Math.ceil(
+            total / this.listQuery.pageSize
+          )} 页`,
+        onChange: this.quickJump,
+        onShowSizeChange: this.onShowSizeChange
+      },
     };
   },
   methods: {
     onSearch (value) {
       console.log(value);
     },
-    handleChange (pagination, filters, sorter) {
-      console.log("Various parameters", pagination, filters, sorter);
-      this.filteredInfo = filters;
-      this.sortedInfo = sorter;
+    // 排序的回调
+    handleChange (value) {
+      console.log(value);
     },
-    clearFilters () {
-      this.filteredInfo = null;
+    getList () {
+      this.$getList("finance/getList", this.listQuery).then(res => {
+        this.data = res.data.list;
+        this.paginationProps.total = res.data.total * 1;
+      });
     },
-    clearAll () {
-      this.filteredInfo = null;
-      this.sortedInfo = null;
+    quickJump (current) {
+      this.listQuery.currentPage = current;
+      this.getList();
     },
-    setAgeSort () {
-      this.sortedInfo = {
-        order: "descend",
-        columnKey: "age"
-      };
-    }
+    onShowSizeChange (current, pageSize) {
+      this.listQuery.pageSize = pageSize;
+      this.listQuery.currentPage = current;
+      this.getList();
+    },
   }
 };
 </script>
