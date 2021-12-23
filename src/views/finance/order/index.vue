@@ -221,9 +221,10 @@ export default {
     handleMenuClick() {},
     //查询
     onSearch() {
-      this.listQuery.currentPage = 1;
-      this.getList();
+     
     },
+
+
     disabledStartDate(startValue) {
       const endValue = this.endValue;
       if (!startValue || !endValue) {
