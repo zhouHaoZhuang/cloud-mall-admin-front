@@ -1,11 +1,17 @@
 <template>
-  <a-button type="primary">充值</a-button>
+  <a-button type="primary" :loading="loading">充值</a-button>
 </template>
 
 <script>
 import { openAlipayPay } from "@/utils/index";
 export default {
-  props: {},
+  props: {
+    // 充值参数
+    form: {
+      type: Object,
+      default: () => {}
+    }
+  },
   data() {
     return {
       loading: false
@@ -14,12 +20,17 @@ export default {
   methods: {
     // 充值按钮点击
     handleRecharge() {
-      this.$store.dispatch("finance/recharge").then((res) => {
-        // 打开支付宝支付
-        openAlipayPay(res);
-      });
+      this.loading = true;
+      this.$store
+        .dispatch("finance/recharge", this.form)
+        .then((res) => {
+          // 打开支付宝支付
+          openAlipayPay(res);
+        })
+        .finally(() => {
+          this.loading = false;
+        });
     }
-    // 查询支付状态
   }
 };
 </script>
