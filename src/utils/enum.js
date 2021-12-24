@@ -44,3 +44,10 @@ export const regionEnum = {
   24: "2年",
   36: "3年"
 };
+// 支付状态
+export const payStatusEnum = {
+  0: "待支付",
+  1: "已取消",
+  2: "支付失败",
+  9: "支付完成"
+};
