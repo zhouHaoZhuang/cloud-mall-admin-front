@@ -35,8 +35,23 @@ const finance = {
       return request({
         url: "/pay/onlineTopUp",
         method: "post",
-        data,
-        pay: true
+        data
+      });
+    },
+    // 支付前查询余额和价格
+    getUserBalance({ commit, state }, data) {
+      return request({
+        url: "/tcMergeOrder/queryPayBalanceDetail",
+        method: "post",
+        data
+      });
+    },
+    // 支付宝支付
+    aliPay({ commit, state }, data) {
+      return request({
+        url: "/tcOrder/saveOrderHavePay",
+        method: "post",
+        data
       });
     }
   }

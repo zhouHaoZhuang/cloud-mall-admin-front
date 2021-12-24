@@ -57,7 +57,12 @@
         余额不足，无法支付该订单，请先
         <a-button type="link" size="small" @click="handleJump">充值</a-button>
       </div>
-      <a-button class="btn" type="primary" :disabled="!agreeFlag">
+      <a-button
+        class="btn"
+        type="primary"
+        :disabled="!agreeFlag"
+        @click="handlePay"
+      >
         确定支付
       </a-button>
     </div>
@@ -65,12 +70,29 @@
 </template>
 
 <script>
+import { openAlipayPay } from "@/utils/index";
 export default {
+  props: {
+    // 订单详情
+    detail: {
+      type: Object,
+      default: () => {}
+    }
+  },
   data() {
     return {
+      loading: false,
       pannelOpen: false,
       agreeFlag: false,
-      payType: "ali"
+      userBalance: {},
+      payType: "",
+      balanceForm: {
+        totalAmount: 0,
+        useAliPay: false,
+        useBalance: false,
+        useVoucher: false,
+        useWechatPay: false
+      }
     };
   },
   methods: {
@@ -81,6 +103,45 @@ export default {
     // 跳转充值
     handleJump() {
       this.$router.push("/user/finance/recharge");
+    },
+    // 根据支付方式返回后端所需参数
+    getRequest() {
+      if (this.payType === "ali") {
+        this.balanceForm.useAliPay = true;
+      }
+    },
+    // 查询余额
+    getUserBalance() {
+      // 设置请求参数
+      this.getRequest();
+      this.$store
+        .dispatch("finance/getUserBalance", {
+          ...this.balanceForm,
+          totalAmount: 0
+        })
+        .then((res) => {})
+        .finally(() => {
+          this.balanceForm = {
+            totalAmount: 0,
+            useAliPay: false,
+            useBalance: false,
+            useVoucher: false,
+            useWechatPay: false
+          };
+        });
+    },
+    // 确认支付
+    handlePay() {
+      this.loading = true;
+      this.$store
+        .dispatch("finance/aliPay")
+        .then((res) => {
+          // 打开支付宝支付
+          openAlipayPay(res);
+        })
+        .finally(() => {
+          this.loading = false;
+        });
     }
   }
 };

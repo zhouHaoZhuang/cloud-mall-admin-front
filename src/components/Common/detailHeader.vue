@@ -1,7 +1,7 @@
 <template>
   <div class="detail-header-container">
     <div class="box">
-      <a-icon type="left" @click="$router.back()" />
+      <a-icon type="left" @click="handleBack" />
     </div>
     <span>{{ title }}</span>
   </div>
@@ -13,6 +13,20 @@ export default {
     title: {
       type: String,
       default: ""
+    },
+    back: {
+      type: String,
+      default: ""
+    }
+  },
+  methods: {
+    // 点击返回
+    handleBack() {
+      if (this.back) {
+        this.$router.replace(this.back);
+      } else {
+        this.$router.back();
+      }
     }
   }
 };

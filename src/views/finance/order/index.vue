@@ -11,15 +11,15 @@
         <!-- 按钮输入框组 -->
         <div class="btn3">
           <a-input-group compact>
-            <a-select v-model="title">
+            <a-select v-model="listQuery.key" style="width: 100px">
               <a-select-option value="orderNo"> 订单编号 </a-select-option>
             </a-select>
             <a-input-search
-              style="width: 70%"
+              style="width: 260px"
               placeholder="请输入搜索关键词"
               enter-button
               v-model="listQuery.search"
-              @search="onSearch"
+              @search="handleSearch"
             />
           </a-input-group>
         </div>
@@ -31,65 +31,66 @@
               show-time
               format="YYYY-MM-DD HH:mm:ss"
               placeholder="开始时间"
-              @change="dateOnChange"
-              @openChange="handleStartOpenChange"
+              @change="startDateChange"
             />
           </div>
           <span class="zhi">至</span>
           <div class="btn4">
             <a-date-picker
-              v-model="endValue"
               :disabled-date="disabledEndDate"
               show-time
               format="YYYY-MM-DD HH:mm:ss"
               placeholder="结束时间"
-              @change="dateAnChange"
-              @openChange="handleEndOpenChange"
+              @change="endDateChange"
             />
           </div>
         </div>
         <div class="btn5">
-          <a-select default-value="请选择" style="width: 120px">
-            <a-select-option value="jack"> 请选择 </a-select-option>
-            <a-select-option value="lucy"> 已支付 </a-select-option>
-            <a-select-option value="Yiminghe"> 未支付 </a-select-option>
-            <a-select-option value="Yiminghe1"> 已失效 </a-select-option>
+          <a-select
+            v-model="listQuery.payStatus"
+            placeholder="请选择"
+            style="width: 120px"
+          >
+            <a-select-option
+              v-for="(value, key) in payStatusEnum"
+              :key="key"
+              :value="key"
+            >
+              {{ value }}
+            </a-select-option>
           </a-select>
         </div>
         <div class="btn6">
-          <a-button type="primary" @click="inquire">确定查询</a-button>
+          <a-button type="primary" @click="handleSearch">确定查询</a-button>
         </div>
       </div>
       <!-- 表格 -->
       <div class="table">
         <a-table
+          rowKey="id"
+          :loading="loading"
           :columns="columns"
           :data-source="data"
-          rowKey="id"
           :pagination="paginationProps"
-          :scroll="{ x: 1400 }"
+          :scroll="{ x: 900 }"
           @change="handleChange"
         >
           <a slot="name" slot-scope="text">{{ text }}</a>
-          <div slot="action" slot-scope="text">
-            <a-button type="link" @click="selectPool(text)"> 查看 </a-button>
+          <div slot="action" slot-scope="text, record">
+            <a-button type="link" @click="selectPool(record)"> 查看 </a-button>
           </div>
           <div slot="createTime" slot-scope="text">
             {{ text | formatDate }}
           </div>
           <div slot="tradeType" slot-scope="text">
-            <span v-if="text === 1">云服务新购</span>
-            <span v-if="text === 5">升配</span>
-            <span v-if="text === 10">降配</span>
-            <span v-if="text === 15">云服务续费</span>
-            <span v-if="text === 20">退费</span>
+            {{ tradeTypeEnum[text] }}
           </div>
           <div
             :class="{ green: text === 1, blue: text !== 1 }"
             slot="payStatus"
             slot-scope="text"
           >
-            {{ text === 1 ? "已支付" : "已失效" }}
+            {{ payStatusEnum[text] }}
           </div>
         </a-table>
       </div>
@@ -98,39 +99,39 @@
 </template>
 
 <script>
+import { payStatusEnum, tradeTypeEnum } from "@/utils/enum";
 export default {
   data() {
     return {
-      title: "orderNo",
+      payStatusEnum,
+      tradeTypeEnum,
       listQuery: {
-        key: "",
+        key: "orderNo",
         search: "",
+        startTime: "",
+        endTime: "",
+        payStatus: undefined,
         currentPage: 1,
         pageSize: 10,
-        total: 0,
-        sorter: ""
+        total: 0
       },
       columns: [
         {
           title: "订单编号",
           dataIndex: "orderNo",
-          key: "orderNo",
           width: 150
         },
         {
           title: "产品名称",
-          dataIndex: "productName",
-          key: "productName"
+          dataIndex: "productName"
         },
         {
           title: "金额",
-          dataIndex: "actualPrice",
-          key: "actualPrice"
+          dataIndex: "actualPrice"
         },
         {
           title: "创建时间",
           dataIndex: "createTime",
-          key: "createTime",
           width: 190,
           scopedSlots: { customRender: "createTime" },
           sorter: true,
@@ -139,45 +140,34 @@ export default {
         {
           title: "状态",
           dataIndex: "payStatus",
-          key: "payStatus",
           width: 100,
           scopedSlots: { customRender: "payStatus" }
         },
         {
           title: "来源/用途",
           dataIndex: "tradeType",
-          key: "tradeType",
           scopedSlots: { customRender: "tradeType" }
         },
         {
           title: "操作",
-          key: "action",
-          dataIndex: "orderNo",
+          dataIndex: "action",
           fixed: "right",
           scopedSlots: { customRender: "action" }
         }
       ],
       data: [],
-      startValue: "",
-      endValue: null,
+      loading: false,
       // 表格分页器配置
       paginationProps: {
-        showQuickJumper: true,
         showSizeChanger: true,
-        pageSizeOptions: ["5", "10", "20", "30"],
-        total: 0,
-        current: 1, //当前页
-        pageSize: 5, //每页显示数量
+        total: 1,
         showTotal: (total, range) =>
-          `共 ${total} 条记录 第 ${this.paginationProps.current} / ${Math.ceil(
-            total / this.paginationProps.pageSize
-          )}  页`,
-        onChange: this.changepage,
+          `共 ${total} 条记录 第 ${this.listQuery.currentPage} / ${Math.ceil(
+            total / this.listQuery.pageSize
+          )} 页`,
+        onChange: this.quickJump,
         onShowSizeChange: this.onShowSizeChange
-      },
-      num: "",
-      endOpen: false,
-      isTime: true
+      }
     };
   },
   created() {
@@ -186,18 +176,23 @@ export default {
   methods: {
     //查询数据表格
     getList() {
-      this.$getList("income/getList", this.listQuery).then((res) => {
-        this.data = res.data.list;
-        this.paginationProps.total = res.data.totalCount * 1;
-      });
+      this.loading = true;
+      this.$store
+        .dispatch("income/getList", this.listQuery)
+        .then((res) => {
+          this.data = res.data.list;
+          this.paginationProps.total = res.data.totalCount * 1;
+        })
+        .finally(() => {
+          this.loading = false;
+        });
     },
     //查看
-    selectPool(text, i) {
-      console.log(text);
+    selectPool(record) {
       this.$router.push({
         path: "/user/finance/orderdetails",
         query: {
-          id: text
+          id: record.orderNo
         }
       });
     },
@@ -212,45 +207,16 @@ export default {
         this.getList();
       }
     },
-    // handleChange(value) {
-    //   console.log(`selected ${value}`);
-    // },
-    handleMenuClick() {},
     //查询
-    onSearch(val) {
-      console.log(val);
-      this.listQuery[this.title] = val;
-      this.$store.dispatch("income/getList", this.listQuery).then((res) => {
-        console.log(res);
-        this.getList();
-      });
+    handleSearch() {
+      this.getList();
     },
     // 日期组件change
-    dateOnChange(date, dateString) {
-      this.startValue = dateString;
+    startDateChange(date, dateString) {
+      this.listQuery.startTime = dateString;
     },
-    dateAnChange(date, dateString) {
-      this.endValue = dateString;
-    },
-    //确定查询
-    inquire() {
-      console.log("time", this.startValue);
- 
-      console.log(this.title, this.search);
-      this.$store
-        .dispatch("income/getList", {
-          startTime:this.startValue,
-          endTime:this.endValue
-        })
-        .then((res) => {
-          console.log(res, "时间请求结果");
-          this.data = res.data.list;
-          this.paginationProps.total = res.data.total * 1;
-          // this.paginationProps.total = val.data.totalCount * 1;
-          // this.paginationProps.current = val.data.currentPage * 1;
-          // this.dataAll = val.data.list;
-          // this.data = this.dataAll.slice(0, this.paginationProps.pageSize);
-        });
+    endDateChange(date, dateString) {
+      this.listQuery.endTime = dateString;
     },
     disabledStartDate(startValue) {
       const endValue = this.endValue;
@@ -266,32 +232,14 @@ export default {
       }
       return startValue.valueOf() >= endValue.valueOf();
     },
-    handleStartOpenChange(open) {
-      if (!open) {
-        this.endOpen = true;
-      }
-    },
-    handleEndOpenChange(open) {
-      this.endOpen = open;
-    },
-    changeKey(val) {
-      // console.log(val);
-      this.title = val;
-      if (this.title !== "createTime") {
-        this.isTime = true;
-      } else {
-        this.isTime = false;
-      }
-    },
-    changepage(current, pageSize) {
-      this.paginationProps.current = current;
-      this.paginationProps.pageSize = pageSize;
+    // 表格分页快速跳转n页
+    quickJump(currentPage) {
+      this.listQuery.currentPage = currentPage;
       this.getList();
     },
     onShowSizeChange(current, pageSize) {
-      // console.log("改变了分页的大小", current, pageSize);
-      this.paginationProps.current = current;
-      this.paginationProps.pageSize = pageSize;
+      this.listQuery.currentPage = current;
+      this.listQuery.pageSize = pageSize;
       this.getList();
     }
   }

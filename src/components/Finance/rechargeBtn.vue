@@ -1,5 +1,7 @@
 <template>
-  <a-button type="primary" :loading="loading">充值</a-button>
+  <a-button type="primary" :loading="loading" @click="handleRecharge">
+    充值
+  </a-button>
 </template>
 
 <script>
@@ -20,9 +22,16 @@ export default {
   methods: {
     // 充值按钮点击
     handleRecharge() {
+      if (this.form.totalAmount === "") {
+        this.$message.warning("请输入充值金额");
+        return;
+      }
       this.loading = true;
       this.$store
-        .dispatch("finance/recharge", this.form)
+        .dispatch("finance/recharge", {
+          ...this.form,
+          totalAmount: this.form.totalAmount * 1
+        })
         .then((res) => {
           // 打开支付宝支付
           openAlipayPay(res);

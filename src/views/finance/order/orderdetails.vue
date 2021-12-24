@@ -1,13 +1,15 @@
 <template>
-  <div class="orderInfo" v-if="data[0]">
+  <div class="orderInfo">
     <!-- 订单信息 -->
     <div v-if="orderInfo" class="channel">
-      <DetailHeader title="订单信息" />
+      <DetailHeader title="订单信息" back="/user/finance/trash" />
       <!-- 状态为未支付时的提示文字 -->
       <div v-if="orderInfo.payStatus === 0" class="unpaid-box">
         <a-icon class="icon" type="exclamation-circle" />
         请于
-        <span class="time"> 2021-12-23 18:43:36 </span>
+        <span class="time">
+          {{ endTime }}
+        </span>
         前完成订单。若未及时支付，系统将自动取消订单，该订单将无法再次发起支付。
       </div>
       <ul class="detail-box">
@@ -25,7 +27,7 @@
         </li>
         <li>
           <span>创建时间:</span>
-          <span>{{ orderInfo.createTime | formatDate }}</span>
+          <span>{{ orderInfo.orderCreateTime | formatDate }}</span>
         </li>
         <li>
           <span>支付剩余时间:</span>
@@ -129,7 +131,7 @@
       </ul>
     </div> -->
     <!-- 订单支付模块 -->
-    <PaySelect />
+    <PaySelect :detail="orderInfo" />
   </div>
 </template>
 
@@ -181,7 +183,8 @@ export default {
         }
       ],
       countDownTime: "--时--分--秒",
-      time: null
+      time: null,
+      endTime: ""
     };
   },
   created() {
@@ -196,20 +199,21 @@ export default {
       this.$store
         .dispatch("income/getOne", this.$route.query.id)
         .then((res) => {
-          this.orderInfo = res.data;
-          this.data = [res.data];
-          console.log(res.data);
+          this.orderInfo = { ...res.data };
+          this.data = [{ ...res.data }];
           if (res.data.payStatus === 0) {
-            // this.startCountDown();
+            this.startCountDown(res.data.orderCreateTime);
           }
         });
     },
     // 开启倒计时计算支付剩余时间
-    startCountDown() {
+    startCountDown(createTime) {
       this.time && clearInterval(this.time);
-      const endTime = moment(this.orderInfo.orderCreateTime).add(30, "m");
+      this.endTime = moment(createTime)
+        .add(30, "m")
+        .format("YYYY-MM-DD HH:mm:ss");
       this.time = setInterval(() => {
-        const diff = moment(endTime).diff(moment(), "ms");
+        const diff = moment(this.endTime).diff(moment(), "ms");
         if (diff < 0) {
           clearInterval(this.time);
           this.$router.back();

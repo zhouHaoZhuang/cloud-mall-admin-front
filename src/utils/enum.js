@@ -51,3 +51,11 @@ export const payStatusEnum = {
   2: "支付失败",
   9: "支付完成"
 };
+// 订单来源/用途
+export const tradeTypeEnum = {
+  1: "云服务新购",
+  5: "升配",
+  10: "降配",
+  15: "云服务续费",
+  20: "退费"
+};
