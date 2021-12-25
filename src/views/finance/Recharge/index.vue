@@ -12,7 +12,7 @@
         <!-- 按钮 -->
         <div class="btn3">
           <a-input-group compact>
-            <a-select v-model="title">
+            <a-select v-model="listQuery.key">
               <a-select-option value="paymentLineId"> 流水单号 </a-select-option>
               <!-- <a-select-option value="来源/用途"> 来源/用途 </a-select-option> -->
             </a-select>
@@ -59,14 +59,14 @@ export default {
   computed: {},
   data () {
     return {
-      title: 'paymentLineId',
       listQuery: {
-        key: '',
+        key: 'paymentLineId',
         search: "",
         currentPage: 1,
         pageSize: 10,
         total: 0,
         sorter: '',
+        paymentLineId: '',
       },
       columns: [
         {
@@ -151,15 +151,14 @@ export default {
       });
     },
     getList () {
-      this.$getList("finance/getList", this.listQuery).then(res => {
+      this.$store.dispatch("finance/getList", this.listQuery).then(res => {
         this.data = res.data.list;
         this.paginationProps.total = res.data.total * 1;
       });
     },
     onSearch (value) {
-      this.listQuery.key = this.title;
-      this.listQuery.search = value;
-      console.log(value, this.listQuery.key);
+      this.listQuery.paymentLineId = value;
+      // console.log(value, this.listQuery.key);
       this.getList();
     }
   }

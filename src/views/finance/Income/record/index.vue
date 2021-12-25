@@ -1,36 +1,33 @@
 <template>
   <div class="record">
     <div class="search">
-      <a-input-group compact enterButton="true">
-        <a-select v-model="title">
+      <a-input-group compact
+                     enterButton="true">
+        <a-select v-model="listQuery.key">
           <a-select-option value="memo"> 充值方式 </a-select-option>
         </a-select>
-        <a-input-search
-          style="width: 250px"
-          placeholder="请输入搜索关键词"
-          enter-button
-          @search="onSearch"
-        />
+        <a-input-search style="width: 250px"
+                        placeholder="请输入搜索关键词"
+                        enter-button
+                        @search="onSearch" />
         <span class="refresh">
           <a-icon type="reload" />
         </span>
       </a-input-group>
     </div>
     <div>
-      <a-table
-        :columns="columns"
-        :data-source="data"
-        @change="handleChange"
-        row-key="id"
-        :pagination="paginationProps"
-      />
+      <a-table :columns="columns"
+               :data-source="data"
+               @change="handleChange"
+               row-key="id"
+               :pagination="paginationProps" />
     </div>
   </div>
 </template>
 
 <script>
 export default {
-  data() {
+  data () {
     return {
       data: [],
       columns: [
@@ -50,17 +47,17 @@ export default {
           title: "充值日期",
           dataIndex: "payTime",
           key: "payTime",
-          sorter: (a, b) => a.payTime - b.payTime
+          sorter: (a, b) => a - b
         }
       ],
-      title: "memo",
       listQuery: {
-        key: "",
+        key: "memo",
         search: "",
         currentPage: 1,
         pageSize: 10,
         total: 0,
-        sorter: ""
+        sorter: "",
+        memo: "",
       },
       paginationProps: {
         showQuickJumper: true,
@@ -75,25 +72,30 @@ export default {
       }
     };
   },
+  created () {
+    this.getList();
+  },
   methods: {
-    onSearch(value) {
-      console.log(value);
+    onSearch (value) {
+      // console.log(value);
+      this.listQuery.memo = value;
+      this.getList();
     },
     // 排序的回调
-    handleChange(value) {
+    handleChange (value) {
       console.log(value);
     },
-    getList() {
-      this.$getList("finance/getList", this.listQuery).then((res) => {
+    getList () {
+      this.$store.dispatch("pay/getList", this.listQuery).then(res => {
         this.data = res.data.list;
         this.paginationProps.total = res.data.total * 1;
       });
     },
-    quickJump(current) {
+    quickJump (current) {
       this.listQuery.currentPage = current;
       this.getList();
     },
-    onShowSizeChange(current, pageSize) {
+    onShowSizeChange (current, pageSize) {
       this.listQuery.pageSize = pageSize;
       this.listQuery.currentPage = current;
       this.getList();
