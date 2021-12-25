@@ -16,11 +16,12 @@ const finance = {
 
   actions: {
     // 获取列表
-    getList({ commit, state }, params) {
+    getList({ commit, state }, data) {
       return request({
-        url: `customerAccountLog`,
-        method: "get",
-        params
+        url: `/customerAccountLog/qu`,
+        method: "post",
+        data
+        // pay:true
       });
     },
     selectList({ commit, state }, params) {
@@ -48,6 +49,14 @@ const finance = {
     },
     // 支付宝支付
     aliPay({ commit, state }, data) {
+      return request({
+        url: "/tcOrder/confirmOrderAndPay",
+        method: "post",
+        data
+      });
+    },
+    // 查询支付宝支付状态
+    getAliPayStatus({ commit, state }, data) {
       return request({
         url: "/tcOrder/confirmOrderAndPay",
         method: "post",

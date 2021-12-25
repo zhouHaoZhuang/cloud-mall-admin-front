@@ -6,7 +6,7 @@
       </div>
       <div class="btns">
         <div class="btn1">
-          <a-button type="primary">购买产品</a-button>
+          <a-button type="primary" @click="handleJumpCloudPay">购买产品</a-button>
         </div>
         <!-- 按钮输入框组 -->
         <div class="btn3">
@@ -53,6 +53,7 @@
             v-model="listQuery.payStatus"
             placeholder="请选择"
             style="width: 120px"
+            allowClear
           >
             <a-select-option
               v-for="(value, key) in payStatusEnum"
@@ -101,6 +102,7 @@
 </template>
 
 <script>
+import { jumpCloudMall } from "@/utils/index";
 import { payStatusEnum, tradeTypeEnum } from "@/utils/enum";
 export default {
   data() {
@@ -112,7 +114,7 @@ export default {
         search: "",
         startTime: "",
         endTime: "",
-        sorter: "asc",
+        createTimeSort: "desc",
         payStatus: undefined,
         currentPage: 1,
         pageSize: 10,
@@ -126,16 +128,18 @@ export default {
         },
         {
           title: "产品名称",
-          dataIndex: "productName"
+          dataIndex: "productName",
+          width: 150
         },
         {
           title: "金额",
-          dataIndex: "discountAmount"
+          dataIndex: "discountAmount",
+          width: 80
         },
         {
           title: "创建时间",
           dataIndex: "createTime",
-          width: 190,
+          width: 160,
           scopedSlots: { customRender: "createTime" },
           sorter: true,
           sortDirections: ["ascend", "descend"]
@@ -149,12 +153,13 @@ export default {
         {
           title: "来源/用途",
           dataIndex: "tradeType",
+          width: 100,
           scopedSlots: { customRender: "tradeType" }
         },
         {
           title: "操作",
           dataIndex: "action",
-          fixed: "right",
+          width: 120,
           scopedSlots: { customRender: "action" }
         }
       ],
@@ -243,6 +248,10 @@ export default {
       this.listQuery.currentPage = current;
       this.listQuery.pageSize = pageSize;
       this.getList();
+    },
+    // 跳转云商城服务器购买页面
+    handleJumpCloudPay() {
+      jumpCloudMall("/pc/cloud-price", true);
     }
   }
 };
