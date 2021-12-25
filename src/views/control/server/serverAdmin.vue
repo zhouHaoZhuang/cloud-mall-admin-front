@@ -30,7 +30,7 @@
     <div class="btns">
       <div class="left">
         <a-space>
-          <a-button type="primary">+新建</a-button>
+          <a-button type="primary" @click="handleJumpCloudPay">+新建</a-button>
           <a-button :disabled="disabledBtn">批量续费</a-button>
           <a-input-group style="width: 400px" compact>
             <a-select v-model="listQuery.key" style="width: 100px">
@@ -244,12 +244,14 @@
 </template>
 
 <script>
+import { jumpCloudMall } from "@/utils/index";
 import { runningStatusEnum, runningStatusSelect } from "@/utils/enum";
 import UpdateNameModal from "@/components/Cloud/CloudModal/updateNameModal";
 import RenewModal from "@/components/Cloud/CloudModal/renewModal";
 import AutoRenewModal from "@/components/Cloud/CloudModal/autoRenewModal";
 import CloudActionModal from "@/components/Cloud/CloudModal/cloudActionModal";
 import CustomColumnsModal from "@/components/Cloud/CloudModal/customColumnsModal";
+import moment from "moment";
 export default {
   components: {
     UpdateNameModal,
@@ -394,7 +396,7 @@ export default {
           title: "类型/到期日期",
           dataIndex: "endTimeStr",
           width: 150,
-          sorter: (a, b) => a.endTimeStr - b.endTimeStr,
+          sorter: (a, b) => moment(a.endTimeStr) - moment(b.endTimeStr),
           scopedSlots: { customRender: "endTimeStr" },
           select: true
         },
@@ -681,6 +683,10 @@ export default {
         this.columnsStatusTxt = "全部";
         this.getList();
       }
+    },
+    // 跳转云商城服务器购买页面
+    handleJumpCloudPay() {
+      jumpCloudMall("/pc/cloud-price", true);
     }
   }
 };

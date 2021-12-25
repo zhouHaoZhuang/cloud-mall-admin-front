@@ -19,17 +19,17 @@
         </li>
         <li>
           <span>订单类型:</span>
-          <span>{{ orderInfo.tradeType === 1 ? "新购" : "销售" }} </span>
+          <span>{{ tradeTypeEnum[orderInfo.tradeType] }} </span>
         </li>
         <li>
           <span>关联订单:</span>
-          <span>--</span>
+          <span>{{ orderInfo.mergeOrderNo || "--" }}</span>
         </li>
         <li>
           <span>创建时间:</span>
           <span>{{ orderInfo.orderCreateTime | formatDate }}</span>
         </li>
-        <li>
+        <li v-if="orderInfo.payStatus === 0">
           <span>支付剩余时间:</span>
           <span class="strong">{{ countDownTime }}</span>
         </li>
@@ -50,16 +50,11 @@
           :columns="columns"
           :data-source="data"
           rowKey="corporationCode"
-          :scroll="{ x: 1300 }"
-        
+          :pagination="false"
         >
           <a slot="name" slot-scope="text">{{ text }}</a>
           <div slot="tradeType" slot-scope="text">
-            <span v-if="text === 1">新购</span>
-            <span v-if="text === 5">升配</span>
-            <span v-if="text === 10">降配</span>
-            <span v-if="text === 15">续费</span>
-            <span v-if="text === 20">退费</span>
+            {{ tradeTypeEnum[text] }}
           </div>
           <div slot="productConfig" slot-scope="text">
             <div>线路:{{ text.regionId }}</div>
@@ -132,7 +127,7 @@
       </ul>
     </div> -->
     <!-- 订单支付模块 -->
-    <PaySelect :detail="orderInfo" />
+    <PaySelect v-if="orderInfo.payStatus === 0" :detail="orderInfo" />
   </div>
 </template>
 
@@ -141,12 +136,13 @@ import moment from "moment";
 import DetailHeader from "@/components/Common/detailHeader";
 import PaySelect from "@/components/Finance/paySelect";
 import { useLeftTime } from "@/utils/index";
-import { payStatusEnum } from "@/utils/enum";
+import { payStatusEnum, tradeTypeEnum } from "@/utils/enum";
 export default {
   components: { DetailHeader, PaySelect },
   data() {
     return {
       payStatusEnum,
+      tradeTypeEnum,
       orderInfo: {},
       data: [],
       columns: [
@@ -239,7 +235,7 @@ export default {
     border-radius: 2px;
     color: #ff6600;
     font-size: 12px;
-    margin: 20px 0;
+    margin-top: 20px;
     display: flex;
     align-items: center;
     .icon {
@@ -271,10 +267,13 @@ export default {
       background-color: #f7f9fa;
       border: 1px solid #ebeced;
       font-size: 12px;
+      margin-top: 20px;
       li {
         list-style: none;
         width: 33.33%;
         margin-bottom: 20px;
+        display: flex;
+        align-items: center;
         > span:nth-child(1) {
           display: inline-block;
           width: 100px;
@@ -312,23 +311,22 @@ export default {
       color: rgb(255, 255, 255);
       display: inline-block;
       font-size: 12px;
-      width: 52px;
       height: 20px;
       text-align: center;
       line-height: 20px;
       border-radius: 2px;
+      padding: 0 4px;
     }
     .blue {
       display: inline-block;
-
       background-color: rgb(64, 169, 255);
       color: rgb(255, 255, 255);
       font-size: 12px;
-      width: 52px;
       height: 20px;
       text-align: center;
       line-height: 20px;
       border-radius: 2px;
+      padding: 0 4px;
     }
   }
 }

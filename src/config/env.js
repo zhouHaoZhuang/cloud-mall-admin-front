@@ -16,7 +16,7 @@ const payBaseUrl = {
 };
 // 跳转控制台地址
 const cloudMallUrl = {
-  dev: "http://localhost:3000"
+  dev: "http://192.168.0.7:3000"
   // test: 'http://test.com',
   // preprod: 'http://preprod.com',
   // prod: 'http://prod.com'

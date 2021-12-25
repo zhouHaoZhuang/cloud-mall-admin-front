@@ -118,3 +118,8 @@ export const openAlipayPay = (res) => {
   document.querySelector("body").innerHTML = res.data;
   document.forms[0].submit();
 };
+
+// 跳转云商城
+export const jumpCloudMall = (url, type) => {
+  window.open(env.MALL_URL + url, type ? "_blank" : "_self");
+};

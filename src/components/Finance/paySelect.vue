@@ -196,7 +196,10 @@ export default {
       }
       this.loading = true;
       const data = {
-        tcMergeOrderReqDto: { ...this.balanceData },
+        tcMergeOrderReqDto: {
+          ...this.balanceData,
+          mergeOrderNo: this.detail.mergeOrderNo
+        },
         tcOrderReqDtoList: [
           {
             orderNo: this.detail.orderNo

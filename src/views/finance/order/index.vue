@@ -15,6 +15,7 @@
               <a-select-option value="orderNo"> 订单编号 </a-select-option>
             </a-select>
             <a-input-search
+              allowClear
               style="width: 260px"
               placeholder="请输入搜索关键词"
               enter-button
@@ -27,6 +28,7 @@
         <div class="btn2">
           <div class="btn4">
             <a-date-picker
+              style="width: 170px"
               :disabled-date="disabledStartDate"
               show-time
               format="YYYY-MM-DD HH:mm:ss"
@@ -37,6 +39,7 @@
           <span class="zhi">至</span>
           <div class="btn4">
             <a-date-picker
+              style="width: 170px"
               :disabled-date="disabledEndDate"
               show-time
               format="YYYY-MM-DD HH:mm:ss"
@@ -72,7 +75,6 @@
           :columns="columns"
           :data-source="data"
           :pagination="paginationProps"
-          :scroll="{ x: 900 }"
           @change="handleChange"
         >
           <a slot="name" slot-scope="text">{{ text }}</a>
@@ -110,6 +112,7 @@ export default {
         search: "",
         startTime: "",
         endTime: "",
+        sorter: "asc",
         payStatus: undefined,
         currentPage: 1,
         pageSize: 10,
@@ -127,7 +130,7 @@ export default {
         },
         {
           title: "金额",
-          dataIndex: "actualPrice"
+          dataIndex: "discountAmount"
         },
         {
           title: "创建时间",
@@ -177,10 +180,9 @@ export default {
     //查询数据表格
     getList() {
       this.loading = true;
-      this.$store
-        .dispatch("income/getList", this.listQuery)
+      this.$getList("income/getList", this.listQuery)
         .then((res) => {
-          this.data = res.data.list;
+          this.data = [...res.data.list];
           this.paginationProps.total = res.data.totalCount * 1;
         })
         .finally(() => {
@@ -271,7 +273,7 @@ export default {
       .btn2 {
         display: flex;
         .btn4 {
-          width: 100px;
+          width: 170px;
           > span {
             min-width: 100px !important;
           }
@@ -293,21 +295,21 @@ export default {
         background-color: rgb(115, 209, 61);
         color: rgb(255, 255, 255);
         font-size: 12px;
-        width: 52px;
         height: 20px;
         text-align: center;
         line-height: 20px;
         border-radius: 2px;
+        padding: 0 4px;
       }
       .blue {
         background-color: rgb(64, 169, 255);
         color: rgb(255, 255, 255);
         font-size: 12px;
-        width: 52px;
         height: 20px;
         text-align: center;
         line-height: 20px;
         border-radius: 2px;
+        padding: 0 4px;
       }
     }
   }
