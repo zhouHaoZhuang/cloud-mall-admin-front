@@ -20,7 +20,7 @@ const finance = {
       return request({
         url: `/customerAccountLog/qu`,
         method: "post",
-        data,
+        data
         // pay:true
       });
     },
@@ -49,6 +49,14 @@ const finance = {
     },
     // 支付宝支付
     aliPay({ commit, state }, data) {
+      return request({
+        url: "/tcOrder/confirmOrderAndPay",
+        method: "post",
+        data
+      });
+    },
+    // 查询支付宝支付状态
+    getAliPayStatus({ commit, state }, data) {
       return request({
         url: "/tcOrder/confirmOrderAndPay",
         method: "post",

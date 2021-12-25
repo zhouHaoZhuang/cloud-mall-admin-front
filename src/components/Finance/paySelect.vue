@@ -123,7 +123,8 @@ export default {
       },
       balanceData: {},
       // 支付所需参数
-      payForm: {}
+      payForm: {},
+      time: null
     };
   },
   watch: {
@@ -140,6 +141,9 @@ export default {
       console.log(this.balanceData.userAmount, this.detail.discountAmount);
       return this.balanceData.userAmount >= this.detail.discountAmount;
     }
+  },
+  beforeDestroy() {
+    this.time && clearInterval(this.time);
   },
   methods: {
     // 折叠面板点击
@@ -210,12 +214,25 @@ export default {
       this.$store
         .dispatch("finance/aliPay", data)
         .then((res) => {
+          this.$message.success("余额支付成功");
           // 打开支付宝支付
-          // openAlipayPay(res);
+          openAlipayPay(res);
+          // this.startTime();
         })
         .finally(() => {
           this.loading = false;
         });
+    },
+    // 轮询查询支付状态
+    startTime() {
+      this.time && clearInterval(this.time);
+      this.time = setInterval(() => {
+        this.$store.dispatch("finance/getAliPayStatus").then((res) => {
+          if (res.data === 1) {
+            clearInterval(this.time);
+          }
+        });
+      }, 3000);
     }
   }
 };
