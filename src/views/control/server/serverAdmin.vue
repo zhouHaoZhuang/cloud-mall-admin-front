@@ -62,6 +62,7 @@
         :loading="tableLoading"
         :columns="newColumns"
         :data-source="data"
+        :scroll="{ x: 1000 }"
         :pagination="paginationProps"
         :row-selection="{
           selectedRowKeys: selectedRowKeys,
@@ -355,23 +356,27 @@ export default {
         {
           title: "监控",
           dataIndex: "monitor",
+          width: 60,
           scopedSlots: { customRender: "monitor" },
           select: true
         },
         {
           title: "地域",
           dataIndex: "regionId",
+          width: 100,
           select: true
         },
         {
           title: "IP地址",
           dataIndex: "ip",
+          width: 150,
           scopedSlots: { customRender: "ip" },
           select: true
         },
         // 状态，头部在上边自定义的
         {
           dataIndex: "runningStatus",
+          width: 110,
           scopedSlots: {
             title: "statusTitle",
             customRender: "runningStatus"
@@ -381,12 +386,14 @@ export default {
         {
           title: "配置",
           dataIndex: "setting",
+          width: 120,
           scopedSlots: { customRender: "setting" },
           select: true
         },
         {
           title: "类型/到期日期",
           dataIndex: "endTimeStr",
+          width: 150,
           sorter: (a, b) => a.endTimeStr - b.endTimeStr,
           scopedSlots: { customRender: "endTimeStr" },
           select: true
@@ -394,6 +401,7 @@ export default {
         {
           title: "自动续费/周期",
           dataIndex: "autoRenew",
+          width: 130,
           sorter: (a, b) => a.renewPeriod - b.renewPeriod,
           scopedSlots: { customRender: "autoRenew" },
           select: true
@@ -401,6 +409,8 @@ export default {
         {
           title: "操作",
           dataIndex: "action",
+          width: 170,
+          fixed: "right",
           scopedSlots: { customRender: "action" },
           select: true
         }

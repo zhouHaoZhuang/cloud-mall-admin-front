@@ -1,10 +1,7 @@
 <template>
   <div class="cloud-detail-container">
     <div class="header">
-      <div class="box">
-        <a-icon type="left" @click="$router.back()" />
-      </div>
-      <span>云服务器详情</span>
+      <DetailHeader title="云服务器详情" />
     </div>
     <div class="cloud-action">
       <img class="left-img" src="../../../assets/img/cloud/windows.png" />
@@ -103,11 +100,12 @@
 <script>
 import moment from "moment";
 import { runningStatusEnum } from "@/utils/enum";
+import DetailHeader from "@/components/Common/detailHeader";
 import CloudDetail from "@/components/Cloud/cloudDetail";
 import UpdatePwdModal from "@/components/Cloud/CloudModal/updatePwdModal";
 import CloudActionModal from "@/components/Cloud/CloudModal/cloudActionModal";
 export default {
-  components: { CloudDetail, UpdatePwdModal, CloudActionModal },
+  components: { DetailHeader, CloudDetail, UpdatePwdModal, CloudActionModal },
   computed: {
     // 返回表格状态类名
     getStatusClassName() {
@@ -353,19 +351,6 @@ export default {
     font-weight: 500;
     font-size: 22px;
     color: #272829;
-    .box {
-      width: 40px;
-      height: 32px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      border: 1px solid #ddd;
-      font-size: 18px;
-      margin-right: 15px;
-      font-weight: 400;
-      color: #ccc;
-      cursor: pointer;
-    }
   }
   .cloud-action {
     margin: 18px 0 30px;

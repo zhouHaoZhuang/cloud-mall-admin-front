@@ -1,9 +1,18 @@
 <template>
-  <div class="orderInfo" v-if="data[0]">
+  <div class="orderInfo">
     <!-- 订单信息 -->
     <div v-if="orderInfo" class="channel">
-      <p>订单信息</p>
-      <ul>
+      <DetailHeader title="订单信息" back="/user/finance/trash" />
+      <!-- 状态为未支付时的提示文字 -->
+      <div v-if="orderInfo.payStatus === 0" class="unpaid-box">
+        <a-icon class="icon" type="exclamation-circle" />
+        请于
+        <span class="time">
+          {{ endTime }}
+        </span>
+        前完成订单。若未及时支付，系统将自动取消订单，该订单将无法再次发起支付。
+      </div>
+      <ul class="detail-box">
         <li>
           <span>订单ID:</span>
           <span>{{ orderInfo.orderNo }}</span>
@@ -18,18 +27,22 @@
         </li>
         <li>
           <span>创建时间:</span>
-          <span>{{ orderInfo.createTime | formatDate }}</span>
+          <span>{{ orderInfo.orderCreateTime | formatDate }}</span>
         </li>
-
         <li>
-          <span>状态:</span>
+          <span>支付剩余时间:</span>
+          <span class="strong">{{ countDownTime }}</span>
+        </li>
+        <li>
+          <span>支付状态:</span>
           <span
             :class="{
               green: orderInfo.payStatus === 1,
               blue: orderInfo.payStatus !== 1
             }"
-            >{{ orderInfo.payStatus === 1 ? "已支付" : "已失效" }}</span
           >
+            {{ payStatusEnum[orderInfo.payStatus] }}
+          </span>
         </li>
       </ul>
       <div class="config">
@@ -54,8 +67,8 @@
             <div>带宽:{{ text.internetMaxBandwidthOut }}</div>
             <div>防御:{{ "20G" }}</div>
             <div>镜像:{{ text.osName }}</div>
-            <div>系统盘:{{text.dataDiskSize}}</div>
-            <div>数据盘:{{text.systemDiskSize}}</div>
+            <div>系统盘:{{ text.dataDiskSize }}</div>
+            <div>数据盘:{{ text.systemDiskSize }}</div>
             <div>自动续费:否</div>
           </div>
         </a-table>
@@ -117,14 +130,23 @@
         </li>
       </ul>
     </div> -->
+    <!-- 订单支付模块 -->
+    <PaySelect :detail="orderInfo" />
   </div>
 </template>
 
 <script>
+import moment from "moment";
+import DetailHeader from "@/components/Common/detailHeader";
+import PaySelect from "@/components/Finance/paySelect";
+import { useLeftTime } from "@/utils/index";
+import { payStatusEnum } from "@/utils/enum";
 export default {
+  components: { DetailHeader, PaySelect },
   data() {
     return {
-      orderInfo: null,
+      payStatusEnum,
+      orderInfo: {},
       data: [],
       columns: [
         {
@@ -159,26 +181,74 @@ export default {
           dataIndex: "originAmount",
           key: "originAmount"
         }
-      ]
+      ],
+      countDownTime: "--时--分--秒",
+      time: null,
+      endTime: ""
     };
   },
   created() {
-    let id = this.$route.query.id;
-    console.log(id);
-    this.$store.dispatch("income/getOne", id).then((res) => {
-      console.log(res);
-      this.orderInfo = res.data;
-      this.data = [res.data];
-    });
+    this.getDetail();
+  },
+  beforeDestroy() {
+    this.time && clearInterval(this.time);
+  },
+  methods: {
+    // 获取详情
+    getDetail() {
+      this.$store
+        .dispatch("income/getOne", this.$route.query.id)
+        .then((res) => {
+          this.orderInfo = { ...res.data };
+          this.data = [{ ...res.data }];
+          if (res.data.payStatus === 0) {
+            this.startCountDown(res.data.orderCreateTime);
+          }
+        });
+    },
+    // 开启倒计时计算支付剩余时间
+    startCountDown(createTime) {
+      this.time && clearInterval(this.time);
+      this.endTime = moment(createTime)
+        .add(30, "m")
+        .format("YYYY-MM-DD HH:mm:ss");
+      this.time = setInterval(() => {
+        const diff = moment(this.endTime).diff(moment(), "ms");
+        if (diff < 0) {
+          clearInterval(this.time);
+          this.$router.back();
+          return;
+        }
+        const [HH, mm, ss] = useLeftTime(diff);
+        this.countDownTime = `${HH}时${mm}分${ss}秒`;
+      }, 1000);
+    }
   }
 };
 </script>
 
 <style lang="less" scoped>
 .orderInfo {
-  // background-color: #fff;
   margin: 0 24px;
-  // padding: 16px;
+  .unpaid-box {
+    padding: 7px 22px 5px 37px;
+    background: #fff3eb;
+    min-height: 32px;
+    border: 1px solid #ffdac2;
+    border-radius: 2px;
+    color: #ff6600;
+    font-size: 12px;
+    margin: 20px 0;
+    display: flex;
+    align-items: center;
+    .icon {
+      font-size: 20px;
+      margin-right: 10px;
+    }
+    .time {
+      color: #00aaff;
+    }
+  }
   .channel {
     margin-bottom: 20px;
     background-color: #fff;
@@ -191,23 +261,30 @@ export default {
       color: rgba(0, 0, 0, 0.847);
       border-bottom: 1px solid rgb(233, 233, 233);
     }
-    > ul {
+    .detail-box {
       display: flex;
       flex-wrap: wrap;
       width: 100%;
-      padding-left: 10px;
-      > li {
+      padding: 20px;
+      padding-bottom: 0;
+      background-color: #f7f9fa;
+      border: 1px solid #ebeced;
+      font-size: 12px;
+      li {
         list-style: none;
-        width: 32%;
+        width: 33.33%;
+        margin-bottom: 20px;
         > span:nth-child(1) {
           display: inline-block;
-          width: 80px;
+          width: 100px;
           text-align: right;
           padding-right: 8px;
           font-size: 14px;
           font-weight: 400;
-          line-height: 65px;
-          color: rgba(0, 0, 0, 0.847);
+          color: #a0a2a3;
+        }
+        .strong {
+          color: #ff6600;
         }
       }
     }
