@@ -11,8 +11,10 @@
     <!-- <p>暂未开启充值</p> -->
     <div>
       <span> 充值金额： </span>
-      <a-input style="width: 180px" v-number-evolution="{ value: 2, min: 0, max: 9999999 }"
-        v-model="rechargeBtnForm.totalAmount" placeholder="请输入充值金额" />
+      <a-input style="width: 180px"
+               v-number-evolution="{ value: 2, min: 0, max: 9999999 }"
+               v-model="rechargeBtnForm.totalAmount"
+               placeholder="请输入充值金额" />
     </div>
     <div class="paymentMethod">
       <span class="paymentMethod-type">支付方式：</span>
@@ -21,7 +23,8 @@
         <span>微信支付</span>
       </div> -->
       <div class="WeChatply Alipay">
-        <img width="40px" src="@/assets/img/pay/Alipay.png" alt="" />
+        <img width="40px"
+             src="@/assets/img/pay/Alipay.png" />
         <span>支付宝支付</span>
       </div>
     </div>
@@ -29,109 +32,109 @@
   </div>
 </template>
 <script>
-  import RechargeBtn from "@/components/Finance/rechargeBtn";
-  export default {
-    components: {
-      RechargeBtn
+import RechargeBtn from "@/components/Finance/rechargeBtn";
+export default {
+  components: {
+    RechargeBtn
+  },
+  data () {
+    return {
+      Amount: '',
+      rechargeBtnForm: {
+        totalAmount: "",
+        payType: ["ali"]
+      }
+    };
+  },
+  created () {
+    this.getBalance();
+  },
+  methods: {
+    getBalance () {
+      this.$store.dispatch("pay/getList").then(res => {
+        // console.log(res, 'gshasgah');
+        this.Amount = res.data.list[0].balance;
+      });
     },
-    data() {
-      return {
-        Amount: '',
-        rechargeBtnForm: {
-          totalAmount: "",
-          payType: ["ali"]
-        }
-      };
-    },
-    created() {
-      this.getBalance();
-    },
-    methods: {
-      getBalance() {
-        this.$getList("pay/getList").then(res => {
-          console.log(res, 'gshasgah');
-          this.Amount = res.data.balance;
-        });
-      },
-    }
-
-  };
+  }
+};
 </script>
 
 <style lang="less" scoped>
-  .online {
-    margin-top: 20px;
+.online {
+  margin-top: 20px;
 
-    .warn {
-      padding: 7px 22px 5px 37px;
-      background: #fff3eb url(../../../../assets/img/pay/ExclamationMark.png) no-repeat 10px 8px;
-      border: 1px solid #ffdac2;
-      border-radius: 2px;
-      color: #ff660a;
-      font-size: 12px;
+  .warn {
+    padding: 7px 22px 5px 37px;
+    background: #fff3eb url(../../../../assets/img/pay/ExclamationMark.png)
+      no-repeat 10px 8px;
+    border: 1px solid #ffdac2;
+    border-radius: 2px;
+    color: #ff660a;
+    font-size: 12px;
 
-      >p {
-        margin-bottom: 10px;
-      }
-
-      >p:last-child {
-        margin-bottom: 0;
-      }
+    > p {
+      margin-bottom: 10px;
     }
 
-    >h1 {
-      margin: 20px 0 30px 0;
-
-      >span {
-        display: inline-block;
-      }
-
-      >span:first-child {
-        width: 135px;
-        height: 30px;
-        text-align: right;
-        font-size: 12px;
-        padding-right: 10px;
-      }
-
-      >span:last-child {
-        width: 100px;
-        height: 30px;
-        line-height: 30px;
-        text-align: left;
-        font-weight: bold;
-        font-size: 16px;
-        color: #ff6600;
-      }
-    }
-
-    >p {
-      font-size: 12px;
-    }
-
-    .paymentMethod {
-      display: flex;
-      margin-top: 10px;
-      margin-bottom: 20px;
-    }
-
-    .paymentMethod-type {
-      display: inline-block;
-      margin-right: 5px;
-      line-height: 36px;
-    }
-
-    .WeChatply {
-      border: 1px solid #e6e6e6;
-      display: flex;
-      align-items: center;
-      border-radius: 3px;
-      margin-right: 10px;
-      padding: 2px;
-    }
-
-    .Alipay {
-      border-color: #0af;
+    > p:last-child {
+      margin-bottom: 0;
     }
   }
+
+  > h1 {
+    margin: 20px 0 30px 0;
+
+    > span {
+      display: inline-block;
+    }
+
+    > span:first-child {
+      width: 135px;
+      height: 30px;
+      text-align: right;
+      font-size: 12px;
+      padding-right: 10px;
+    }
+
+    > span:last-child {
+      width: 100px;
+      height: 30px;
+      line-height: 30px;
+      text-align: left;
+      font-weight: bold;
+      font-size: 16px;
+      color: #ff6600;
+    }
+  }
+
+  > p {
+    font-size: 12px;
+  }
+
+  .paymentMethod {
+    display: flex;
+    margin-top: 10px;
+    margin-bottom: 20px;
+  }
+
+  .paymentMethod-type {
+    display: inline-block;
+    margin-right: 5px;
+    line-height: 36px;
+  }
+
+  .WeChatply {
+    border: 1px solid #e6e6e6;
+    display: flex;
+    align-items: center;
+    border-radius: 3px;
+    margin-right: 10px;
+    padding: 2px;
+  }
+
+  .Alipay {
+    border-color: #0af;
+  }
+}
 </style>
