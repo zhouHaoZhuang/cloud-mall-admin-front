@@ -11,6 +11,23 @@
       <div class="left">
         <a-space>
           <a-button :disabled="disabledBtn">批量续费</a-button>
+          <span>到期时间:</span>
+          <a-select
+            v-model="listQuery.regionId"
+            class="select"
+            placeholder="30天"
+            style="width: 150px"
+            @change="handleAddressChange"
+          >
+            <a-select-option value="all"> 全部 </a-select-option>
+            <a-select-option
+              v-for="item in addressList"
+              :key="item.regionId"
+              :value="item.regionId"
+            >
+              {{ item.localName }}
+            </a-select-option>
+          </a-select>
           <a-input-group style="width: 400px" compact>
             <a-select v-model="listQuery.key" style="width: 100px">
               <a-select-option value="ip"> IP地址 </a-select-option>
