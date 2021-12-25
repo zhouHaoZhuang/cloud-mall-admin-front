@@ -20,19 +20,40 @@ const finance = {
       return request({
         url: `customerAccountLog`,
         method: "get",
-        params,
-        // pay:true
+        params
       });
     },
-  
-    selectList({ commit, state }, params){
+    selectList({ commit, state }, params) {
       return request({
         url: `/customerAccountLog?key=createTime&search=${params.startTime}&currentPage=1&pageSize=10&total=0&qp-createTime-gt=${params.startTime}&qp-createTime-lt=${params.endTime}`,
         method: "get",
-        params,
-        // pay:true
+        params
       });
     },
+    // 充值
+    recharge({ commit, state }, data) {
+      return request({
+        url: "/pay/onlineTopUp",
+        method: "post",
+        data
+      });
+    },
+    // 支付前查询余额和价格
+    getUserBalance({ commit, state }, data) {
+      return request({
+        url: "/tcMergeOrder/queryPayBalanceDetail",
+        method: "post",
+        data
+      });
+    },
+    // 支付宝支付
+    aliPay({ commit, state }, data) {
+      return request({
+        url: "/tcOrder/saveOrderHavePay",
+        method: "post",
+        data
+      });
+    }
   }
 };
 

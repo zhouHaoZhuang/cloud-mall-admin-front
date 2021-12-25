@@ -10,49 +10,43 @@
     <h1><span>账户余额：</span><span>184.00 元</span></h1>
     <!-- <p>暂未开启充值</p> -->
     <div>
-      <span>
-        充值金额：
-      </span>
-      <a-input style="width:180px"
-               v-model="totalAmount"
-               placeholder="请输入充值金额" />
+      <span> 充值金额： </span>
+      <a-input
+        style="width: 180px"
+        v-number-evolution="{ value: 2, min: 0, max: 9999999 }"
+        v-model="rechargeBtnForm.totalAmount"
+        placeholder="请输入充值金额"
+      />
     </div>
     <div class="paymentMethod">
       <span class="paymentMethod-type">支付方式：</span>
-      <div class="WeChatply "><img width="30px"
-             src="@/assets/img/pay/WeChat.png" />
+      <!-- <div class="WeChatply">
+        <img width="30px" src="@/assets/img/pay/WeChat.png" />
         <span>微信支付</span>
+      </div> -->
+      <div class="WeChatply Alipay">
+        <img width="40px" src="@/assets/img/pay/Alipay.png" alt="" />
+        <span>支付宝支付</span>
       </div>
-      <div class="WeChatply Alipay"><img width="40px"
-             src="@/assets/img/pay/Alipay.png"
-             alt=""><span>支付宝支付</span></div>
     </div>
-    <a-button type="primary"
-              style="margin-top: 20px;"
-              @click="pay">
-      充值</a-button>
+    <RechargeBtn :form="rechargeBtnForm" />
   </div>
 </template>
 <script>
+import RechargeBtn from "@/components/Finance/rechargeBtn";
 export default {
-  data () {
+  components: {
+    RechargeBtn
+  },
+  data() {
     return {
-      //
-      payType: ['ali'],
-      totalAmount: '',
+      rechargeBtnForm: {
+        totalAmount: "",
+        payType: ["ali"]
+      }
     };
   },
-  methods: {
-    pay () {
-      this.$store.dispatch('pay/getVal', {
-        payType: this.payType,
-        totalAmount: this.totalAmount,
-      }).then(res => {
-        console.log(res);
-        this.$message.success('充值成功');
-      });
-    }
-  },
+  methods: {}
 };
 </script>
 
@@ -102,6 +96,7 @@ export default {
   .paymentMethod {
     display: flex;
     margin-top: 10px;
+    margin-bottom: 20px;
   }
   .paymentMethod-type {
     display: inline-block;
