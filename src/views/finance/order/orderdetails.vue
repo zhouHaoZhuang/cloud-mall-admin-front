@@ -51,6 +51,7 @@
           :data-source="data"
           rowKey="corporationCode"
           :scroll="{ x: 1300 }"
+        
         >
           <a slot="name" slot-scope="text">{{ text }}</a>
           <div slot="tradeType" slot-scope="text">
@@ -178,8 +179,8 @@ export default {
         },
         {
           title: "费用",
-          dataIndex: "originAmount",
-          key: "originAmount"
+          dataIndex: "discountAmount",
+          key: "discountAmount"
         }
       ],
       countDownTime: "--时--分--秒",

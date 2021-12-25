@@ -49,7 +49,7 @@ const finance = {
     // 支付宝支付
     aliPay({ commit, state }, data) {
       return request({
-        url: "/tcOrder/saveOrderHavePay",
+        url: "/tcOrder/confirmOrderAndPay",
         method: "post",
         data
       });

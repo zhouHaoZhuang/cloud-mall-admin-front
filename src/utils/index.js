@@ -7,7 +7,31 @@ export const getArrOnceData = (id, arr) => {
 // 请求列表时前端要替后端做适配，并且有点多，封装请求列表时带有搜索的接口
 // request: 调用vuex的actions名   listQuery: 传递给后端的参数
 // 设置需要处理为精确查询的名单
-const filterList = ["id"];
+// const filterList = ["id"];
+// 做后端qp-eq查询
+// export const getList = (request, listQuery) => {
+//   return new Promise((resolve, reject) => {
+//     store
+//       .dispatch(
+//         request,
+//         listQuery.key
+//           ? {
+//               ...listQuery,
+//               [`qp-${listQuery.key}-${
+//                 filterList.indexOf(listQuery.key) !== -1 ? "eq" : "like"
+//               }`]: listQuery.search
+//             }
+//           : listQuery
+//       )
+//       .then((res) => {
+//         resolve(res);
+//       })
+//       .catch((err) => {
+//         reject(err);
+//       });
+//   });
+// };
+// 不做后端qp-eq查询
 export const getList = (request, listQuery) => {
   return new Promise((resolve, reject) => {
     store
@@ -16,9 +40,7 @@ export const getList = (request, listQuery) => {
         listQuery.key
           ? {
               ...listQuery,
-              [`qp-${listQuery.key}-${
-                filterList.indexOf(listQuery.key) !== -1 ? "eq" : "like"
-              }`]: listQuery.search
+              [`${listQuery.key}`]: listQuery.search
             }
           : listQuery
       )

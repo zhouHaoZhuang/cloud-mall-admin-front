@@ -20,23 +20,32 @@
     <!-- 账户余额 -->
     <div class="item-select">
       <div class="left">
-        <a-checkbox />
+        <a-checkbox v-model="balanceForm.useBalance" @change="checkOnChange" />
         <span class="txt">账户余额</span>
         <div class="price">
-          <span class="price-txt"> 可用余额：7.30元 </span>
+          <span class="price-txt">
+            可用余额：{{ balanceData.userAmount }}元
+          </span>
           <div class="btn" @click="handleJump">充值</div>
         </div>
       </div>
       <div class="right">
         余额支付
-        <span class="strong">7.3</span>
+        <span class="strong">{{ balanceData.userAmount }}</span>
         元
       </div>
     </div>
     <!-- 其他方式支付 -->
     <div class="others">
       <div class="title">其他方式支付</div>
-      <a-radio-group v-model="payType" style="margin-left: 24px">
+      <a-radio-group
+        v-model="balanceForm.payType"
+        style="margin-left: 24px"
+        @change="radioOnChange"
+      >
+        <a-radio value="none">
+          <div class="box">不使用第三方支付</div>
+        </a-radio>
         <a-radio value="ali">
           <div class="box">
             支付宝
@@ -53,9 +62,28 @@
     </div>
     <!-- 支付按钮 -->
     <div class="pay-btn">
-      <div class="txt">
+      <div
+        v-if="!getTotalAmountIsPay && balanceForm.payType === 'none'"
+        class="txt"
+      >
         余额不足，无法支付该订单，请先
         <a-button type="link" size="small" @click="handleJump">充值</a-button>
+      </div>
+      <div class="txt-box">
+        <div v-if="balanceData.balanceAmonut" class="once">
+          余额支付：
+          <span class="strong">
+            {{ balanceData.balanceAmonut }}
+          </span>
+          元
+        </div>
+        <div v-if="balanceData.onlineAmount" class="once">
+          第三方支付：
+          <span class="strong">
+            {{ balanceData.onlineAmount }}
+          </span>
+          元
+        </div>
       </div>
       <a-button
         class="btn"
@@ -84,16 +112,33 @@ export default {
       loading: false,
       pannelOpen: false,
       agreeFlag: false,
-      userBalance: {},
-      payType: "",
+      // 查询余额相关所需参数
       balanceForm: {
+        payType: "none",
         totalAmount: 0,
         useAliPay: false,
-        useBalance: false,
+        useBalance: true,
         useVoucher: false,
         useWechatPay: false
-      }
+      },
+      balanceData: {},
+      // 支付所需参数
+      payForm: {}
     };
+  },
+  watch: {
+    detail: {
+      handler(newVal) {
+        this.getUserBalance();
+      }
+    }
+  },
+  computed: {
+    // 判断账户余额是否足够支付当前订单
+    getTotalAmountIsPay() {
+      console.log(this.balanceData.userAmount, this.detail.discountAmount);
+      return this.balanceData.userAmount >= this.detail.discountAmount;
+    }
   },
   methods: {
     // 折叠面板点击
@@ -106,7 +151,12 @@ export default {
     },
     // 根据支付方式返回后端所需参数
     getRequest() {
-      if (this.payType === "ali") {
+      if (this.balanceForm.payType === "none") {
+        this.balanceForm.useAliPay = false;
+        this.balanceForm.useVoucher = false;
+        this.balanceForm.useWechatPay = false;
+      }
+      if (this.balanceForm.payType === "ali") {
         this.balanceForm.useAliPay = true;
       }
     },
@@ -117,27 +167,47 @@ export default {
       this.$store
         .dispatch("finance/getUserBalance", {
           ...this.balanceForm,
-          totalAmount: 0
+          totalAmount: this.detail.discountAmount
         })
-        .then((res) => {})
-        .finally(() => {
-          this.balanceForm = {
-            totalAmount: 0,
-            useAliPay: false,
-            useBalance: false,
-            useVoucher: false,
-            useWechatPay: false
-          };
+        .then((res) => {
+          this.balanceData = { ...res.data };
         });
+    },
+    // 账户余额change
+    checkOnChange() {
+      this.getUserBalance();
+    },
+    // 支付方式选择
+    radioOnChange() {
+      this.getUserBalance();
     },
     // 确认支付
     handlePay() {
+      if (
+        !this.balanceForm.useBalance &&
+        !this.balanceForm.payType === "none"
+      ) {
+        this.$message.warning("请选择支付方式");
+        return;
+      }
+      if (!this.getTotalAmountIsPay && this.balanceForm.payType === "none") {
+        this.$message.warning("余额不足，请充值或组合第三方支付");
+        return;
+      }
       this.loading = true;
+      const data = {
+        tcMergeOrderReqDto: { ...this.balanceData },
+        tcOrderReqDtoList: [
+          {
+            orderNo: this.detail.orderNo
+          }
+        ]
+      };
       this.$store
-        .dispatch("finance/aliPay")
+        .dispatch("finance/aliPay", data)
         .then((res) => {
           // 打开支付宝支付
-          openAlipayPay(res);
+          // openAlipayPay(res);
         })
         .finally(() => {
           this.loading = false;
@@ -244,6 +314,17 @@ export default {
     justify-content: flex-end;
     align-items: center;
     margin-top: 15px;
+    .txt-box {
+      display: flex;
+      .once {
+        margin-left: 15px;
+      }
+      .strong {
+        font-weight: bold;
+        font-size: 16px;
+        color: #ff6600;
+      }
+    }
     .btn {
       margin-left: 10px;
       width: 130px;
