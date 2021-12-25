@@ -130,7 +130,8 @@ export default {
     detail: {
       handler(newVal) {
         this.getUserBalance();
-      }
+      },
+      immediate: true
     }
   },
   computed: {

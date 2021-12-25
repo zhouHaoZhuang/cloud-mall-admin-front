@@ -112,7 +112,6 @@ export default {
         search: "",
         startTime: "",
         endTime: "",
-        sorter: "asc",
         payStatus: undefined,
         currentPage: 1,
         pageSize: 10,
