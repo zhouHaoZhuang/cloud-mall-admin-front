@@ -47,15 +47,6 @@
       this.getBalance();
     },
     methods: {
-      pay() {
-        this.$store.dispatch('pay/getVal', {
-          payType: this.payType,
-          totalAmount: this.totalAmount,
-        }).then(res => {
-          console.log(res);
-          this.$message.success('充值成功');
-        });
-      },
       getBalance() {
         this.$getList("pay/getList").then(res => {
           console.log(res, 'gshasgah');
