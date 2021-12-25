@@ -3,8 +3,8 @@
     <!-- 云服务器管理 -->
     <div class="cloud-top">
       <div class="left">
-        <div class="title">云服务器续费管理</div>
-        <!-- <a-select
+        <div class="title">云服务器管理</div>
+        <a-select
           v-model="listQuery.regionId"
           class="select"
           placeholder="全部线路"
@@ -19,7 +19,7 @@
           >
             {{ item.localName }}
           </a-select-option>
-        </a-select> -->
+        </a-select>
       </div>
       <div class="help">
         <a-icon type="folder-open" class="icon" />
@@ -30,14 +30,12 @@
     <div class="btns">
       <div class="left">
         <a-space>
-          <!-- <a-button type="primary">+新建</a-button> -->
+          <a-button type="primary">+新建</a-button>
           <a-button :disabled="disabledBtn">批量续费</a-button>
-
           <a-input-group style="width: 400px" compact>
             <a-select v-model="listQuery.key" style="width: 100px">
               <a-select-option value="ip"> IP地址 </a-select-option>
               <a-select-option value="instanceName"> 实例名称 </a-select-option>
-              <a-select-option value="instanceName"> 到期时间 </a-select-option>
             </a-select>
             <a-input-search
               v-model="listQuery.search"
@@ -355,6 +353,12 @@ export default {
           select: true
         },
         {
+          title: "监控",
+          dataIndex: "monitor",
+          scopedSlots: { customRender: "monitor" },
+          select: true
+        },
+        {
           title: "地域",
           dataIndex: "regionId",
           select: true
@@ -366,16 +370,16 @@ export default {
           select: true
         },
         // 状态，头部在上边自定义的
-        // {
-        //   dataIndex: "runningStatus",
-        //   scopedSlots: {
-        //     title: "statusTitle",
-        //     customRender: "runningStatus"
-        //   },
-        //   select: true
-        // },
         {
-          title: "计费方式",
+          dataIndex: "runningStatus",
+          scopedSlots: {
+            title: "statusTitle",
+            customRender: "runningStatus"
+          },
+          select: true
+        },
+        {
+          title: "配置",
           dataIndex: "setting",
           scopedSlots: { customRender: "setting" },
           select: true
@@ -385,11 +389,6 @@ export default {
           dataIndex: "endTimeStr",
           sorter: (a, b) => a.endTimeStr - b.endTimeStr,
           scopedSlots: { customRender: "endTimeStr" },
-          select: true
-        },
-        {
-          title:"倒计时",
-          dataIndex:"",
           select: true
         },
         {
