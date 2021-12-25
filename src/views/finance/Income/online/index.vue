@@ -7,7 +7,7 @@
       </p>
       <p>3、如充值后款项没有到账，请联系在线客服帮助处理，或提交工单</p>
     </div>
-    <h1><span>账户余额：</span><span>184.00 元</span></h1>
+    <h1><span>账户余额：</span><span>{{Amount}} 元</span></h1>
     <!-- <p>暂未开启充值</p> -->
     <div>
       <span>
@@ -40,7 +40,11 @@ export default {
       //
       payType: ['ali'],
       totalAmount: '',
+      Amount: '',
     };
+  },
+  created () {
+    this.getBalance();
   },
   methods: {
     pay () {
@@ -51,8 +55,15 @@ export default {
         console.log(res);
         this.$message.success('充值成功');
       });
-    }
-  },
+    },
+    getBalance () {
+      this.$getList("pay/getList").then(res => {
+        console.log(res, 'gshasgah');
+        this.Amount = res.data.balance;
+      });
+    },
+  }
+
 };
 </script>
 

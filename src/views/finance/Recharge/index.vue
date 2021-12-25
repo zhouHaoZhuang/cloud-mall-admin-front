@@ -151,14 +151,14 @@ export default {
       });
     },
     getList () {
-      this.$getList("finance/getList", this.listQuery).then(res => {
+      this.$store.dispatch("finance/getList", this.listQuery).then(res => {
         this.data = res.data.list;
         this.paginationProps.total = res.data.total * 1;
       });
     },
     onSearch (value) {
       this.listQuery.key = this.title;
-      this.listQuery.search = value;
+      this.listQuery[this.listQuery.key] = value;
       console.log(value, this.listQuery.key);
       this.getList();
     }

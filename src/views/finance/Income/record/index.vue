@@ -72,16 +72,22 @@ export default {
       },
     };
   },
+  created () {
+    this.getList();
+  },
   methods: {
     onSearch (value) {
       console.log(value);
+      this.listQuery.key = this.title;
+      this.listQuery[this.listQuery.key] = value;
+      this.getList();
     },
     // 排序的回调
     handleChange (value) {
       console.log(value);
     },
     getList () {
-      this.$getList("finance/getList", this.listQuery).then(res => {
+      this.$getList("pay/getList", this.listQuery).then(res => {
         this.data = res.data.list;
         this.paginationProps.total = res.data.total * 1;
       });
