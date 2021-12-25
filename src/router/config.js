@@ -140,8 +140,8 @@ const options = [
             children: [
               {
                 path: "cloud",
-                name: "云服务器",
-                component: () => import("@/views/control/server/serverAdmin"),
+                name: "云服务器续费管理",
+                component: () => import("@/views/management/cloud/index"),
                 meta: {}
               }
             ]

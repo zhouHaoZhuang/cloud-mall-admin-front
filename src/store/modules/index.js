@@ -4,11 +4,14 @@ import income from "./income";
 import cloud from "./cloud";
 import finance from "./finance";
 import pay from "./pay";
+import renewcloud from "./renewcloud";
+
 export default {
   setting,
   user,
   cloud,
   finance,
   income,
-  pay
+  pay,
+  renewcloud
 };
