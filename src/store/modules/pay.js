@@ -4,20 +4,24 @@ const income = {
   namespaced: true,
   actions: {
     // 获取充值记录
-    getVal({ commit, state},data ) {
+    getList({
+      commit,
+      state
+    }, params) {
       return request({
-				url: "/pay/onlineTopUp",
-				method: "post",
-				data,
-			})
+        url: "/customer/rechargeUserRecord",
+        method: "get",
+        params,
+      })
     },
-    // getOne({ commit, state }, id) {
-    //   console.log(state);
-    //   return request({
-    //     url: `/tcOrder/${id}`,
-    //     method: "get"
-    //   });
-    // }
+    // 获取余额接口
+    getBalance({ commit, state }, id) {
+      console.log(state);
+      return request({
+        url: `/tcOrder`,
+        method: "get"
+      });
+    }
   },
 };
 

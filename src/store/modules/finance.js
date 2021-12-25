@@ -16,11 +16,12 @@ const finance = {
 
   actions: {
     // 获取列表
-    getList({ commit, state }, params) {
+    getList({ commit, state }, data) {
       return request({
-        url: `customerAccountLog`,
-        method: "get",
-        params
+        url: `/customerAccountLog/qu`,
+        method: "post",
+        data,
+        // pay:true
       });
     },
     selectList({ commit, state }, params) {
