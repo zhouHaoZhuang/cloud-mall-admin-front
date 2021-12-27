@@ -32,9 +32,9 @@
         </div>
         <div class="btns">
           <a-space>
-            <a-button @click="handleStart" :disabled="startBtnDisable"
-              >启动</a-button
-            >
+            <a-button @click="handleStart" :disabled="startBtnDisable">
+              启动
+            </a-button>
             <a-button
               type="primary"
               @click="handleCloudActionModal('restart')"
@@ -60,9 +60,11 @@
                 <a-menu-item key="1" @click="handleResetPwdModal">
                   重设密码
                 </a-menu-item>
-                <a-menu-item key="2" disabled>重装系统</a-menu-item>
+                <a-menu-item key="2" @click="handleResetSystemModal">
+                  重装系统
+                </a-menu-item>
                 <a-menu-item key="3" disabled>PUSH</a-menu-item>
-                <a-menu-item key="4" disabled>创建快照</a-menu-item>
+                <a-menu-item key="4" @click="handleCreateSnapshotModal">创建快照</a-menu-item>
                 <a-menu-item key="5" disabled>管理快照</a-menu-item>
                 <a-menu-item key="6" disabled>重设VNC密码</a-menu-item>
                 <a-menu-item key="7" disabled>续费降配</a-menu-item>
@@ -93,6 +95,10 @@
       :list="cloudActionList"
       @success="cloudActionsSuccess"
     />
+    <!-- 重装系统 -->
+    <UpdateSystemModal v-model="updateSystemVisible" />
+    <!-- 创建快照 -->
+    <CreateSnapshotModal v-model="createSnapshotVisible" />
     <!-- 弹窗相关-----end -->
   </div>
 </template>
@@ -104,8 +110,17 @@ import DetailHeader from "@/components/Common/detailHeader";
 import CloudDetail from "@/components/Cloud/cloudDetail";
 import UpdatePwdModal from "@/components/Cloud/CloudModal/updatePwdModal";
 import CloudActionModal from "@/components/Cloud/CloudModal/cloudActionModal";
+import UpdateSystemModal from "@/components/Cloud/CloudModal/updateSystemModal";
+import CreateSnapshotModal from "@/components/Cloud/CloudModal/createSnapshotModal";
 export default {
-  components: { DetailHeader, CloudDetail, UpdatePwdModal, CloudActionModal },
+  components: {
+    DetailHeader,
+    CloudDetail,
+    UpdatePwdModal,
+    CloudActionModal,
+    UpdateSystemModal,
+    CreateSnapshotModal
+  },
   computed: {
     // 返回表格状态类名
     getStatusClassName() {
@@ -178,6 +193,10 @@ export default {
       cloudActionList: [],
       // 启动服务器
       startLoading: false,
+      // 重置系统
+      updateSystemVisible: false,
+      // 创建快照
+      createSnapshotVisible: false,
       // 弹窗相关----------end
       // 服务器操作后回调所需数据----------start
       actionsLoading: false,
@@ -214,7 +233,7 @@ export default {
     // 重设密码第一步弹窗
     handleResetPwdModal() {
       this.$confirm({
-        width: "500px",
+        width: "600px",
         centered: true,
         title: "你所选的1台云服务器将执行重置密码操作，是否确定该操作？",
         content:
@@ -269,6 +288,37 @@ export default {
           });
         }
       });
+    },
+    // 重置系统第一步弹窗
+    handleResetSystemModal() {
+      this.$confirm({
+        width: "600px",
+        centered: true,
+        title: (h) => (
+          <div>
+            <div>你所选的1台云服务器将执行重装系统操作，是否确定该操作？</div>
+            <div>请在重装前确认数据已备份，释放后数据无法找回</div>
+          </div>
+        ),
+        content: (h) => (
+          <div>
+            <div>
+              同Windows系统或同Linux系统重装，只格式化系统盘，数据盘不变；
+            </div>
+            <div>Windows系列和Linux系列互换，系统盘和数据盘将同时格式化；</div>
+          </div>
+        ),
+        onOk: () => {
+          return new Promise((resolve, reject) => {
+            this.updateSystemVisible = true;
+            resolve();
+          });
+        }
+      });
+    },
+    // 创建快照弹窗
+    handleCreateSnapshotModal() {
+      this.createSnapshotVisible = true;
     },
     // 弹窗相关----------end
     // 服务器操作后回调所需数据----------start

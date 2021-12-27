@@ -76,6 +76,14 @@ const cloud = {
         method: "post",
         data
       });
+    },
+    // 查询云服务器系统镜像
+    getSystemList({ commit, state }, params) {
+      return request({
+        url: "/index/query/images",
+        method: "get",
+        params
+      });
     }
   }
 };

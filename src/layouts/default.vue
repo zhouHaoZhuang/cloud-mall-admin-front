@@ -2,7 +2,7 @@
   <div class="layout-container">
     <!-- 左侧菜单 -->
     <div class="side-menu" :style="`width:${menuOpen ? '168' : '64'}px`">
-      <div class="logo-wrap">
+      <div class="logo-wrap" @click="handleJumpCloud">
         <img
           v-if="menuOpen"
           src="@/assets/img/menu/logo-big.png"
@@ -42,6 +42,7 @@ import SideMenu from "@/components/layoutMenu/sideMenu";
 import LeftMenu from "@/components/layoutMenu/leftMenu";
 import Header from "@/layouts/header";
 import Content from "@/layouts/content";
+import { jumpCloudMall } from "@/utils/index";
 export default {
   components: {
     SideMenu,
@@ -75,7 +76,12 @@ export default {
     return {};
   },
   created() {},
-  methods: {}
+  methods: {
+    // 跳转云商城首页
+    handleJumpCloud() {
+      jumpCloudMall("/pc", true);
+    }
+  }
 };
 </script>
 
@@ -101,6 +107,7 @@ export default {
       text-indent: -99999px;
       overflow: hidden;
       position: relative;
+      cursor: pointer;
       .img {
         position: absolute;
         left: 50%;
