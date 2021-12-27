@@ -92,12 +92,14 @@
           <span v-if="text === 0" style="color: red">未开通</span>
           <span v-if="text === 1" style="color: #2bbe22">已开通</span>
           <span v-if="text === 1">
-            /{{ record.renewPeriod }}{{ getAutoRenewUnit(record.renewUnit) }}
+            /{{ record.renewPeriod }}{{ getAutoRenewUnit(record.renewUnit) }}个月
           </span>
         </div>
         <!-- 倒计时/天 -->
         <div slot="residueDay" slot-scope="text">
-            <span v-if="text === 15">已销毁</span>
+          <span v-if="text * 1 < 0&&text * 1 >= -15">已过期{{text.replace('-','')}}天</span>
+          <span v-if="text === '0'">即将到期</span>
+          <span v-if="text * 1 > 0">还剩{{ text }}天</span>
         </div>
         <!-- 操作 -->
         <div slot="action" slot-scope="text, record">
