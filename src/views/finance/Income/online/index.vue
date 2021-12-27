@@ -7,14 +7,18 @@
       </p>
       <p>3、如充值后款项没有到账，请联系在线客服帮助处理，或提交工单</p>
     </div>
-    <h1><span>账户余额：</span><span>{{Amount}} 元</span></h1>
+    <h1>
+      <span>账户余额：</span><span>{{ Amount }} 元</span>
+    </h1>
     <!-- <p>暂未开启充值</p> -->
     <div>
       <span> 充值金额： </span>
-      <a-input style="width: 180px"
-               v-number-evolution="{ value: 2, min: 0, max: 9999999 }"
-               v-model="rechargeBtnForm.totalAmount"
-               placeholder="请输入充值金额" />
+      <a-input
+        style="width: 180px"
+        v-number-evolution="{ value: 2, min: 0, max: 9999999 }"
+        v-model="rechargeBtnForm.totalAmount"
+        placeholder="请输入充值金额"
+      />
     </div>
     <div class="paymentMethod">
       <span class="paymentMethod-type">支付方式：</span>
@@ -23,8 +27,7 @@
         <span>微信支付</span>
       </div> -->
       <div class="WeChatply Alipay">
-        <img width="40px"
-             src="@/assets/img/pay/Alipay.png" />
+        <img width="40px" src="@/assets/img/pay/Alipay.png" />
         <span>支付宝支付</span>
       </div>
     </div>
@@ -35,28 +38,28 @@
 import RechargeBtn from "@/components/Finance/rechargeBtn";
 export default {
   components: {
-    RechargeBtn
+    RechargeBtn,
   },
-  data () {
+  data() {
     return {
-      Amount: '',
+      Amount: "",
       rechargeBtnForm: {
         totalAmount: "",
-        payType: ["ali"]
-      }
+        payType: ["ali"],
+      },
     };
   },
-  created () {
+  created() {
     this.getBalance();
   },
   methods: {
-    getBalance () {
-      this.$store.dispatch("pay/getList").then(res => {
+    getBalance() {
+      this.$store.dispatch("pay/getList").then((res) => {
         // console.log(res, 'gshasgah');
         this.Amount = res.data.list[0].balance;
       });
     },
-  }
+  },
 };
 </script>
 
