@@ -54,6 +54,14 @@ const options = [
                 meta: {
                   hiddenMenu: true
                 }
+              },
+              {
+                path: "upgrade",
+                name: "云服务器升级",
+                component: () => import("@/views/control/server/upgrade"),
+                meta: {
+                  hiddenMenu: true
+                }
               }
               // {
               //   path: "transfer",
@@ -122,9 +130,10 @@ const options = [
               {
                 path: "orderdetails",
                 name: "订单详情",
-                component: () => import("@/views/finance/order/orderdetails.vue"),
+                component: () =>
+                  import("@/views/finance/order/orderdetails.vue"),
                 meta: {
-                  hiddenMenu: true, // 不显示在左侧菜单
+                  hiddenMenu: true // 不显示在左侧菜单
                 }
               }
             ]
