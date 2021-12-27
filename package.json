@@ -16,6 +16,7 @@
     "babel-polyfill": "^6.26.0",
     "compression-webpack-plugin": "5.0.1",
     "core-js": "^3.6.5",
+    "echarts": "^5.2.2",
     "less": "^4.1.2",
     "less-loader": "6.1.1",
     "nprogress": "^0.2.0",
