@@ -9,16 +9,40 @@
     <a-form-model :model="form" :label-col="labelCol" :wrapper-col="wrapperCol">
       <a-form-model-item label="IP地址"> {{ detail.outIp }} </a-form-model-item>
       <a-form-model-item label="CPU">
-        {{ detail.endTimeStr }}
+        <a-select style="width: 160px" v-model="form.time" placeholder="请选择">
+          <a-select-option
+            v-for="(value, key) in snapshotDayEnum"
+            :key="key"
+            :value="key"
+          >
+            {{ value }}
+          </a-select-option>
+        </a-select>
       </a-form-model-item>
       <a-form-model-item label="内存">
-        {{ detail.endTimeStr }}
+        <a-select style="width: 160px" v-model="form.time" placeholder="请选择">
+          <a-select-option
+            v-for="(value, key) in snapshotDayEnum"
+            :key="key"
+            :value="key"
+          >
+            {{ value }}
+          </a-select-option>
+        </a-select>
       </a-form-model-item>
       <a-form-model-item label="SSD数据盘">
-        {{ detail.endTimeStr }}
+        <div class="datasidk-item">
+          <div class="input-number-box">
+            <a-input-number class="input-number" :min="1" :max="10" />
+            <div class="txt">GB</div>
+          </div>
+        </div>
       </a-form-model-item>
       <a-form-model-item label="公网带宽">
-        {{ detail.endTimeStr }}
+        <div class="input-number-box">
+          <a-input-number class="input-number" :min="1" :max="10" />
+          <div class="txt">Mbps</div>
+        </div>
       </a-form-model-item>
       <a-form-model-item label="到期时间">
         {{ detail.endTimeStr }}
@@ -34,6 +58,7 @@
 </template>
 
 <script>
+import { snapshotDayEnum } from "@/utils/enum";
 import DetailHeader from "@/components/Common/detailHeader";
 export default {
   components: {
@@ -41,6 +66,7 @@ export default {
   },
   data() {
     return {
+      snapshotDayEnum,
       detail: {},
       labelCol: { span: 5 },
       wrapperCol: { span: 10 },
@@ -84,6 +110,26 @@ export default {
       font-size: 16px;
       margin-right: 6px;
     }
+  }
+  .input-number-box {
+    width: 160px;
+    position: relative;
+    .input-number {
+      width: 160px;
+    }
+    .txt {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      right: 28px;
+    }
+  }
+}
+</style>
+<style lang="less">
+.upgrade-container {
+  .ant-input-number-handler-wrap {
+    opacity: 1 !important;
   }
 }
 </style>

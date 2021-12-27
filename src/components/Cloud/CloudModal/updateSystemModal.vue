@@ -3,16 +3,16 @@
     :visible="value"
     width="680px"
     centered
-    title="重设密码"
-    wrapClassName="updatePwd-modal-container"
+    title="重装系统"
+    wrapClassName="updateSys-modal-container"
     okText="确定"
     :confirmLoading="loading"
-    @ok="handleResetPwd"
+    @ok="handleResetSystem"
     @cancel="handleCancel"
   >
     <div class="info-box">
       <a-icon class="icon" type="exclamation-circle" />
-      提示：重设密码后系统自行重启云服务器生效，请您提前保存相关信息。
+      注：操作系统重装前请您提前做好相关备份，以免数据丢失给您造成损失！
     </div>
     <a-form-model
       ref="ruleForm"
@@ -21,12 +21,43 @@
       :label-col="labelCol"
       :wrapper-col="wrapperCol"
     >
-      <a-form-model-item label="快照名称">
-        <a-input v-model="form.name" />
+      <a-form-model-item label="IP地址"> {{}}192.108.0.1 </a-form-model-item>
+      <a-form-model-item label="选择操作系统">
+        <a-select
+          v-model="form.defaultSystem"
+          allow-clear
+          class="select1"
+          placeholder="请选择系统类别"
+          @change="handleSystemChange"
+        >
+          <a-select-option v-for="(val, key) in systemList" :key="key">
+            {{ key }}
+          </a-select-option>
+        </a-select>
+        <a-select
+          v-model="form.imageId"
+          allow-clear
+          class="select2"
+          placeholder="请选择系统版本"
+        >
+          <a-select-option
+            v-for="item in systemEditionList"
+            :key="item.imageId"
+          >
+            {{ item.OSName }}
+          </a-select-option>
+        </a-select>
       </a-form-model-item>
-      <a-form-model-item label="新登录密码" prop="password">
-      </a-form-model-item>
-      <a-form-model-item label="确认登录密码" prop="confirmPassword">
+      <a-form-model-item label="重装后的系统密码" prop="password">
+        <a-input v-model="form.password" type="password" style="width: 280px" />
+        <div class="txt">
+          1、8-30个字符，必须同时包含下面四项中的三项：大写字母、小写字母、数字、和特殊字符
+        </div>
+        <div class="txt">
+          2、 （仅支持下列特殊字符： ( ) ` ~ ! @ # $ % ^ {{ "&" }} * - _ + = | {
+          } [ ] : ; ' > <span v-text="'<'"></span> , . ? / ）。其中，Windows
+          实例不能以斜线号（/）为密码首字符。
+        </div>
       </a-form-model-item>
     </a-form-model>
   </a-modal>
@@ -69,17 +100,8 @@ export default {
         callback();
       }
     };
-    const validatePass2 = (rule, value, callback) => {
-      if (value === "") {
-        callback(new Error("请输入确认密码"));
-      } else if (value !== this.form.password) {
-        callback(new Error("两次密码不一致"));
-      } else {
-        callback();
-      }
-    };
     return {
-      labelCol: { span: 7 },
+      labelCol: { span: 6 },
       wrapperCol: { span: 17 },
       loading: false,
       // 必须包含大写字母，小写字母，数字，特殊字符
@@ -99,14 +121,15 @@ export default {
       form: {
         user: "root (Linux) / administrator (Windows)",
         password: "",
-        confirmPassword: ""
+        defaultSystem: undefined,
+        imageId: undefined
       },
       rules: {
-        password: [{ validator: validatePass, trigger: ["blur", "change"] }],
-        confirmPassword: [
-          { validator: validatePass2, trigger: ["blur", "change"] }
-        ]
-      }
+        password: [{ validator: validatePass, trigger: ["blur", "change"] }]
+      },
+      // 系统镜像
+      systemList: [], // 系统
+      systemEditionList: [] // 版本
     };
   },
   created() {},
@@ -115,9 +138,26 @@ export default {
     handleCancel() {
       this.$emit("changeVisible", false);
     },
+    // 获取对应地域的系统镜像
+    getSystemData() {
+      this.$store
+        .dispatch("cloud/getSystemList", { regionId: "bj" })()
+        .then((res) => {
+          this.systemList = res.data.imageMap;
+        });
+    },
+    // 系统镜像-系统change
+    handleSystemChange(val) {
+      this.systemEditionList = this.systemList[val].map((item) => {
+        return { ...item };
+      });
+      this.form.osName = val;
+      this.form.imageId = this.systemEditionList[0].imageId;
+      this.handleChangeGetPrice();
+    },
     // 弹窗提交
-    // 重置服务器密码
-    handleResetPwd() {
+    // 重装系统
+    handleResetSystem() {
       this.$refs.ruleForm.validate((valid) => {
         if (valid) {
           this.loading = true;
@@ -129,7 +169,7 @@ export default {
           this.$store
             .dispatch("cloud/updateCloudInfo", data)
             .then((res) => {
-              this.$message.success("修改实例密码成功");
+              this.$message.success("重装系统成功");
               this.$emit("changeVisible", false);
             })
             .finally(() => {
@@ -143,7 +183,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.updatePwd-modal-container {
+.updateSys-modal-container {
   background: #fff;
   .info-box {
     display: flex;
@@ -165,6 +205,11 @@ export default {
     font-size: 12px;
     color: #999;
     line-height: 24px;
+  }
+  .select1,
+  .select2 {
+    width: 200px;
+    margin-right: 10px;
   }
 }
 </style>
