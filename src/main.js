@@ -29,6 +29,7 @@ Vue.component("icon-font", IconFont);
 
 // 全局挂载请求列表兼容方法---请求列表通过此方法走筛选
 Vue.prototype.$getList = utilsFun.getList;
+Vue.prototype.$getListQp = utilsFun.getListQp;
 
 // 初始化router
 const router = initRouter();
