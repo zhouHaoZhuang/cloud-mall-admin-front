@@ -14,12 +14,12 @@ const payBaseUrl = {
   preprod: "http://pay.dev.ydidc.com",
   prod: "http://pay.dev.ydidc.com"
 };
-// 跳转控制台地址
+// 跳转云商城地址
 const cloudMallUrl = {
-  dev: "http://192.168.0.7:3000"
-  // test: 'http://test.com',
-  // preprod: 'http://preprod.com',
-  // prod: 'http://prod.com'
+  dev: "http://192.168.0.7:3000",
+  test: "http://www.test.ydidc.com",
+  preprod: "http://www.preprod.ydidc.com",
+  prod: "http://www.ydidc.com"
 };
 
 // 请求头携带domain参数
