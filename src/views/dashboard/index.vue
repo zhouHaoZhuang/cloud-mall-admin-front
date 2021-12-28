@@ -76,7 +76,11 @@ export default {
       this.chartLine = echarts.init(document.getElementById("echarts-line"));
       let option = {
         tooltip: {
-          trigger: "axis"
+          trigger: "axis",
+          formatter: (param) => {
+            console.log("tooltip", param);
+            return param.data.time + param.data.value;
+          }
         },
         color: ["#00BBFF", "#FFAD33"],
         legend: {
@@ -92,7 +96,71 @@ export default {
             axisTick: {
               show: false
             },
-            data: ["周一", "周二", "周三", "周四", "周五", "周六", "周日"]
+            data: [
+              "周一",
+              "周二",
+              "周三",
+              "周四",
+              "周五",
+              "周六",
+              "周日",
+              "周一",
+              "周二",
+              "周三",
+              "周四",
+              "周五",
+              "周六",
+              "周日",
+              "周一",
+              "周二",
+              "周三",
+              "周四",
+              "周五",
+              "周六",
+              "周日",
+              "周一",
+              "周二",
+              "周三",
+              "周四",
+              "周五",
+              "周六",
+              "周日",
+              "周一",
+              "周二",
+              "周三",
+              "周四",
+              "周五",
+              "周六",
+              "周日",
+              "周一",
+              "周二",
+              "周三",
+              "周四",
+              "周五",
+              "周六",
+              "周日",
+              "周一",
+              "周二",
+              "周三",
+              "周四",
+              "周五",
+              "周六",
+              "周日",
+              "周一",
+              "周二",
+              "周三",
+              "周四",
+              "周五",
+              "周六",
+              "周日",
+              "周一",
+              "周二",
+              "周三",
+              "周四",
+              "周五",
+              "周六",
+              "周日"
+            ]
           }
         ],
         yAxis: [
@@ -113,13 +181,61 @@ export default {
             name: "邮件营销",
             type: "line",
             stack: "总量",
-            data: [120, 132, 101, 134, 90, 230, 210]
+            data: [
+              {
+                time: "2021-12-28 14:50:00",
+                value: 123
+              },
+              {
+                time: "2021-12-28 14:59:00",
+                value: 50
+              },
+              {
+                time: "2021-12-28 15:50:00",
+                value: 160
+              },
+              {
+                time: "2021-12-28 16:50:00",
+                value: 130
+              },
+              {
+                time: "2021-12-28 17:50:00",
+                value: 12
+              }
+            ],
+            formatter: (params) => {
+              return params.data.value;
+            }
           },
           {
             name: "联盟广告",
             type: "line",
             stack: "总量",
-            data: [220, 182, 191, 234, 290, 330, 310]
+            data: [
+              {
+                time: "2021-12-28 14:50:00",
+                value: 100
+              },
+              {
+                time: "2021-12-28 14:50:00",
+                value: 200
+              },
+              {
+                time: "2021-12-28 14:50:00",
+                value: 16
+              },
+              {
+                time: "2021-12-28 14:50:00",
+                value: 500
+              },
+              {
+                time: "2021-12-28 14:50:00",
+                value: 60
+              }
+            ],
+            formatter: (params) => {
+              return params.data.value;
+            }
           }
         ]
       };
