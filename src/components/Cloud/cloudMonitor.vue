@@ -31,15 +31,31 @@
     </div>
     <!-- 主体折线图列表 -->
     <div class="monitor-list">
-      <!-- cpu -->
-      <Cpu :tabsKey="tabsKey" :listQuery="listQuery" />
+      <!-- cpu使用率 -->
+      <CloudEcharts
+        title="CPU使用率"
+        lineChartType="cpu"
+        yUnit="%"
+        tooltipUnit="%"
+        :tabsKey="tabsKey"
+        :listQuery="listQuery"
+      />
+      <!-- 内存使用率 -->
+      <CloudEcharts
+        title="内存使用率"
+        lineChartType="memory"
+        yUnit="%"
+        tooltipUnit="%"
+        :tabsKey="tabsKey"
+        :listQuery="listQuery"
+      />
     </div>
   </div>
 </template>
 
 <script>
 import moment from "moment";
-import Cpu from "@/components/Cloud/CloudEcharts/cpu";
+import CloudEcharts from "@/components/Cloud/CloudEcharts/index";
 export default {
   props: {
     // 实例详情
@@ -53,12 +69,13 @@ export default {
     }
   },
   components: {
-    Cpu
+    CloudEcharts
   },
   data() {
     return {
       dateTime: [],
       listQuery: {
+        namespace: "acs_ecs_dashboard",
         instanceId: this.detail.instanceId,
         cycle: 1,
         period: "60",
@@ -135,8 +152,12 @@ export default {
       margin: 0 0 16px;
       border: 1px solid #ebebeb;
       box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.13);
-      padding: 16px;
+      padding: 0 16px;
       border-radius: 2px;
+      margin-right: 16px;
+    }
+    > div:nth-child(3n) {
+      margin-right: 0;
     }
   }
 }

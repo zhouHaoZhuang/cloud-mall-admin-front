@@ -98,7 +98,7 @@ export const useLeftTime = (diff) => {
 };
 
 // 打开新页面跳转支付宝支付
-export const openAlipayPay = (res) => {
+export const openAlipayPay = (form) => {
   // 支付宝支付
   // 添加之前先删除一下，如果单页面，页面不刷新，添加进去的内容会一直保留在页面中，二次调用form表单会出错
   const divForm = document.getElementsByTagName("divform");
@@ -107,7 +107,7 @@ export const openAlipayPay = (res) => {
   }
   const div = document.createElement("divform");
   // data就是接口返回的form 表单字符串
-  div.innerHTML = res.data;
+  div.innerHTML = form;
   document.body.appendChild(div);
   // 新开窗口跳转
   document.forms[0].setAttribute("target", "_blank");
