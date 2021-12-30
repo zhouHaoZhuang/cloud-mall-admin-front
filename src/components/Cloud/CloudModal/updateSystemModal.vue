@@ -21,7 +21,7 @@
       :label-col="labelCol"
       :wrapper-col="wrapperCol"
     >
-      <a-form-model-item label="IP地址"> {{}}192.108.0.1 </a-form-model-item>
+      <a-form-model-item label="IP地址"> {{ detail.outIp }} </a-form-model-item>
       <a-form-model-item label="选择操作系统">
         <a-select
           v-model="form.defaultSystem"
@@ -82,6 +82,15 @@ export default {
       default: () => {}
     }
   },
+  watch: {
+    value: {
+      handler(newVal) {
+        if (newVal) {
+          this.getSystemData();
+        }
+      }
+    }
+  },
   data() {
     const validatePass = (rule, value, callback) => {
       if (value === "") {
@@ -119,7 +128,6 @@ export default {
       pwdReg4:
         /^.*(?=.{8,})(?=.*\d)(?=.*[a-z])(?=.*[()`~!@#$%^&*-_+=|{}][:;'><,.?/]).*$/,
       form: {
-        user: "root (Linux) / administrator (Windows)",
         password: "",
         defaultSystem: undefined,
         imageId: undefined
@@ -141,9 +149,12 @@ export default {
     // 获取对应地域的系统镜像
     getSystemData() {
       this.$store
-        .dispatch("cloud/getSystemList", { regionId: "bj" })()
+        .dispatch("cloud/getSystemList", { regionId: this.detail.regionId })
         .then((res) => {
           this.systemList = res.data.imageMap;
+          const defaultKey = Object.keys(res.data.imageMap)[0];
+          this.form.defaultSystem = defaultKey;
+          this.handleSystemChange(defaultKey);
         });
     },
     // 系统镜像-系统change
@@ -151,9 +162,8 @@ export default {
       this.systemEditionList = this.systemList[val].map((item) => {
         return { ...item };
       });
-      this.form.osName = val;
+      this.form.defaultSystem = val;
       this.form.imageId = this.systemEditionList[0].imageId;
-      this.handleChangeGetPrice();
     },
     // 弹窗提交
     // 重装系统

@@ -64,11 +64,16 @@
                   重装系统
                 </a-menu-item>
                 <a-menu-item key="3" disabled>PUSH</a-menu-item>
-                <a-menu-item key="4" @click="handleCreateSnapshotModal">创建快照</a-menu-item>
+                <a-menu-item key="4" @click="handleCreateSnapshotModal">
+                  创建快照
+                </a-menu-item>
                 <a-menu-item key="5" disabled>管理快照</a-menu-item>
                 <a-menu-item key="6" disabled>重设VNC密码</a-menu-item>
                 <a-menu-item key="7" disabled>续费降配</a-menu-item>
                 <a-menu-item key="8" disabled>销毁</a-menu-item>
+                <a-menu-item key="9" @click="installMonitor">
+                  安装监控插件
+                </a-menu-item>
               </a-menu>
             </a-dropdown>
           </a-space>
@@ -80,7 +85,9 @@
         <a-tab-pane key="1" tab="实例详情">
           <CloudDetail :detail="detail" />
         </a-tab-pane>
-        <a-tab-pane key="2" tab="性能监控"></a-tab-pane>
+        <a-tab-pane key="2" tab="性能监控">
+          <CloudMonitor :tabsKey="tabsKey" :detail="detail" />
+        </a-tab-pane>
         <a-tab-pane key="3" tab="备案白名单"></a-tab-pane>
         <a-tab-pane key="4" tab="操作日志"></a-tab-pane>
       </a-tabs>
@@ -96,7 +103,7 @@
       @success="cloudActionsSuccess"
     />
     <!-- 重装系统 -->
-    <UpdateSystemModal v-model="updateSystemVisible" />
+    <UpdateSystemModal v-model="updateSystemVisible" :detail="detail" />
     <!-- 创建快照 -->
     <CreateSnapshotModal v-model="createSnapshotVisible" />
     <!-- 弹窗相关-----end -->
@@ -108,6 +115,7 @@ import moment from "moment";
 import { runningStatusEnum } from "@/utils/enum";
 import DetailHeader from "@/components/Common/detailHeader";
 import CloudDetail from "@/components/Cloud/cloudDetail";
+import CloudMonitor from "@/components/Cloud/cloudMonitor";
 import UpdatePwdModal from "@/components/Cloud/CloudModal/updatePwdModal";
 import CloudActionModal from "@/components/Cloud/CloudModal/cloudActionModal";
 import UpdateSystemModal from "@/components/Cloud/CloudModal/updateSystemModal";
@@ -116,6 +124,7 @@ export default {
   components: {
     DetailHeader,
     CloudDetail,
+    CloudMonitor,
     UpdatePwdModal,
     CloudActionModal,
     UpdateSystemModal,
@@ -204,8 +213,10 @@ export default {
       isHaveAction: false,
       actionsTxt: "",
       actionsTime: null,
-      actionsTimeStep: 60 // 单位：秒
+      actionsTimeStep: 60, // 单位：秒
       // 服务器操作后回调所需数据----------end
+      // tabs的key
+      tabsKey: "1"
     };
   },
   created() {
@@ -227,7 +238,7 @@ export default {
     },
     // tabs切换回调
     tabsCallback(key) {
-      console.log(key);
+      this.tabsKey = key;
     },
     // 弹窗相关----------start
     // 重设密码第一步弹窗
@@ -387,8 +398,19 @@ export default {
       this.actionsTime = setInterval(() => {
         this.getCloudRunStatus();
       }, this.actionsTimeStep * 1000);
-    }
+    },
     // 服务器操作后回调所需数据----------end
+    // 安装监控插件
+    installMonitor() {
+      const data = {
+        force: true,
+        instanceIds: [this.detail.instanceId],
+        regionId: this.detail.regionId
+      };
+      this.$store.dispatch("cloud/installMonitor", data).then((res) => {
+        this.$message.success("发送安装监控插件请求成功");
+      });
+    }
   }
 };
 </script>

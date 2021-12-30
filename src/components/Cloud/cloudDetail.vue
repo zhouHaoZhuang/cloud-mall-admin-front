@@ -188,7 +188,9 @@ export default {
     // 自动续费成功回调
     autoRenewSuccess(autoRenew) {
       this.detail.autoRenew = autoRenew;
-    }
+    },
+    // 跳转升级配置
+    handleJumpUpgrade() {}
   }
 };
 </script>

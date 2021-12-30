@@ -84,6 +84,30 @@ const cloud = {
         method: "get",
         params
       });
+    },
+    // 重装系统
+    reloadSystem({ commit, state }, data) {
+      return request({
+        url: "/index/query/images",
+        method: "post",
+        data
+      });
+    },
+    // 安装监控插件
+    installMonitor({ commit, state }, data) {
+      return request({
+        url: "/aliEcs/installMonitoringAgent",
+        method: "post",
+        data
+      });
+    },
+    // 查询监控数据
+    getMonitorData({ commit, state }, data) {
+      return request({
+        url: "/aliEcs/describeMetricList",
+        method: "post",
+        data
+      });
     }
   }
 };
