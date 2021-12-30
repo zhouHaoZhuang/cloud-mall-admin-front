@@ -5,6 +5,7 @@ import cloud from "./cloud";
 import finance from "./finance";
 import pay from "./pay";
 import renewcloud from "./renewcloud";
+import offline from "./offline";
 
 export default {
   setting,
@@ -13,5 +14,6 @@ export default {
   finance,
   income,
   pay,
-  renewcloud
+  renewcloud,
+  offline
 };

@@ -8,30 +8,29 @@
       </p>
     </div>
     <div class="offline-steps">
-      <a-steps v-model="current"
-               direction="vertical"
-               disabled>
+      <a-steps :current="current" direction="vertical" disabled>
         <a-step disabled>
-          <div slot="title"
-               class="stepInfo">
+          <div slot="title" class="stepInfo">
             <p>汇款至浙江云盾银行账户</p>
             <p>线下汇款直接向浙江云盾的账户汇款，汇款账号如下：</p>
           </div>
           <div slot="description">
             <div>
-              <a-table bordered
-                       :columns="columns"
-                       :data-source="data">
-                <a slot="name"
-                   slot-scope="text">{{ text }}</a>
+              <a-table
+                bordered
+                rowKey="id"
+                :columns="columns"
+                :data-source="data"
+                :pagination="false"
+              >
+                <div slot="companyName" slot-scope="text">{{ text }}</div>
               </a-table>
             </div>
           </div>
         </a-step>
 
         <a-step disabled>
-          <div slot="title"
-               class="stepInfo">
+          <div slot="title" class="stepInfo">
             <p>充值结果反馈</p>
             <p>
               汇款成功后请详细填写与您汇款账号关联的汇款凭据，我司将会核实您的汇款信息；到账时间取决于您的银行系统，请您耐心等待。
@@ -39,56 +38,79 @@
           </div>
           <div slot="description">
             <div>
-              <a-form-model ref="ruleForm"
-                            :model="form"
-                            :rules="rules"
-                            :label-col="labelCol"
-                            :wrapper-col="wrapperCol">
-                <a-form-model-item ref="name"
-                                   label="汇款金额"
-                                   prop="name">
+              <a-form-model
+                ref="ruleForm"
+                :model="form"
+                :rules="rules"
+                :label-col="labelCol"
+                :wrapper-col="wrapperCol"
+              >
+                <a-form-model-item ref="amount" label="汇款金额" prop="amount">
                   <span class="transfer">
-                    <a-input v-model="form.name" />
-                  </span>元
+                    <a-input v-model="form.amount" /> </span
+                  >元
                 </a-form-model-item>
-                <a-form-model-item ref="name"
-                                   label="汇款户名"
-                                   prop="name">
+                <a-form-model-item
+                  ref="accountName"
+                  label="汇款户名"
+                  prop="accountName"
+                >
                   <span class="transfer420">
-                    <a-input v-model="form.name" />
+                    <a-input v-model="form.accountName" />
                   </span>
                 </a-form-model-item>
-                <a-form-model-item ref="name"
-                                   label="汇款账号"
-                                   prop="name">
+                <a-form-model-item
+                  ref="accountCode"
+                  label="汇款账号"
+                  prop="accountCode"
+                >
                   <span class="transfer420">
-                    <a-input v-model="form.name" />
+                    <a-input v-model="form.accountCode" />
                   </span>
                 </a-form-model-item>
-                <a-form-model-item ref="name"
-                                   label="汇款银行"
-                                   prop="name">
+                <a-form-model-item
+                  ref="accountBankName"
+                  label="汇款银行"
+                  prop="accountBankName"
+                >
                   <span class="transfer420">
-                    <a-input v-model="form.name" />
+                    <a-input v-model="form.accountBankName" />
                   </span>
                 </a-form-model-item>
-                <a-form-model-item ref="name"
-                                   label="汇款凭证"
-                                   prop="name">
-                  <a-upload list-type="picture"
-                            :default-file-list="fileList"
-                            class="upload-list-inline">
-                    <a-button>
-                      <a-icon type="upload" /> 上传附件
-                    </a-button>
-                  </a-upload>
+                <a-form-model-item ref="memo" label="汇款备注" prop="memo">
+                  <span class="transfer420">
+                    <a-input v-model="form.memo" />
+                  </span>
+                </a-form-model-item>
+                <a-form-model-item
+                  ref="accountType"
+                  label="款项类型"
+                  prop="accountType"
+                >
+                  <span class="transfer420">
+                    <a-radio-group v-model="form.accountType">
+                      <a-radio :value="2"> 线下充值 </a-radio>
+                      <a-radio :value="4"> 退款 </a-radio>
+                      <!-- <a-radio :value="3"> C </a-radio>
+                      <a-radio :value="4"> D </a-radio> -->
+                    </a-radio-group>
+                  </span>
+                </a-form-model-item>
+                <a-form-model-item
+                  ref="voucher"
+                  label="汇款凭证"
+                  prop="voucher"
+                >
+                  <Upload :defaultFile="form.voucher" @change="imgChange" />
                 </a-form-model-item>
                 <div class="uploadInfo">
                   <p>彩色扫描件</p>
                   <p>JPG或PNG格式，文件大小不超过1MB</p>
                   <p>汇款凭证不能为空</p>
                 </div>
-                <a-button type="primary"> 提交汇款记录 </a-button>
+                <a-button @click="submitForm" type="primary">
+                  提交汇款记录
+                </a-button>
               </a-form-model>
             </div>
           </div>
@@ -102,77 +124,128 @@
 </template>
 
 <script>
+import Upload from "@/components/Upload/index.vue";
 export default {
-  data () {
+  components: {
+    Upload,
+  },
+  data() {
     return {
-      current: 0,
+      current: 1,
       data: [],
       columns: [
         {
           title: "账户名称",
-          dataIndex: "name",
-          scopedSlots: { customRender: "name" }
+          dataIndex: "companyName",
+          scopedSlots: { customRender: "companyName" },
         },
         {
           title: "银行账号",
-          dataIndex: "age",
-          width: 150
+          dataIndex: "bankAccount",
         },
         {
           title: "开户银行",
-          dataIndex: "back"
+          dataIndex: "openBank",
         },
         {
           title: "汇款备注",
-          dataIndex: "remark"
-        }
+          dataIndex: "remark",
+        },
       ],
       form: {
-        name: ""
+        status: 0,
+        amount: "",
+        accountName: "",
+        accountCode: "",
+        memo: "",
+        accountBankName: "",
+        accountType: 2,
       },
-      fileList: [
-        // {
-        //   uid: "-1",
-        //   name: "xxx.png",
-        //   status: "done",
-        //   url: "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png",
-        //   thumbUrl:
-        //     "https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
-        // }
-      ],
+      data: [],
       labelCol: { span: 2 },
       wrapperCol: { span: 14 },
       rules: {
-        name: [
+        amount: [
           {
             required: true,
-            message: "Please input Activity name",
-            trigger: "blur"
-          }
-        ]
-      }
+            message: "请输入汇款金额",
+            trigger: "blur",
+          },
+        ],
+        accountName: [
+          {
+            required: true,
+            message: "请输入汇款户名",
+            trigger: "blur",
+          },
+        ],
+        accountCode: [
+          {
+            required: true,
+            message: "请输入汇款账号",
+            trigger: "blur",
+          },
+        ],
+        accountBankName: [
+          {
+            required: true,
+            message: "请输入汇款银行",
+            trigger: "blur",
+          },
+        ],
+        memo: [
+          {
+            required: true,
+            message: "请输入汇款备注",
+            trigger: "blur",
+          },
+        ],
+        voucher: [
+          {
+            required: true,
+            message: "请输入汇款凭证",
+            trigger: "blur",
+          },
+        ],
+        accountType: [
+          {
+            required: true,
+            message: "请输入款项类型",
+            trigger: "blur",
+          },
+        ],
+      },
     };
   },
   props: ["change"],
+  created() {
+    this.getInfo();
+  },
   methods: {
-    onChange (current) {
-      console.log("onChange:", current);
-      this.current = current;
+    imgChange({ urlList, firstImageUrl }) {
+      // console.log("上传图片回调", urlList, firstImageUrl);
+      this.form.voucher = urlList.toString();
     },
-    submitForm (formName) {
-      this.$refs[formName].validate((valid) => {
-        if (valid) {
-          alert("submit!");
-        } else {
-          console.log("error submit!!");
-          return false;
-        }
+    getInfo() {
+      this.$store.dispatch("offline/getInfo").then((res) => {
+        this.data = [res.data];
+        console.log(res);
       });
     },
-    resetForm (formName) {
-      this.$refs[formName].resetFields();
-    }
-  }
+    putOffline() {
+      this.$store.dispatch("offline/putOffline", this.form).then((res) => {
+        // this.data = res.data;
+        console.log(res);
+      });
+    },
+    submitForm() {
+      console.log(this.form);
+      this.$store.dispatch("offline/putOffline", this.form).then((res) => {
+        // this.data = res.data;
+        console.log(res);
+      });
+    },
+  },
 };
 </script>
 
@@ -210,6 +283,7 @@ export default {
     .transfer {
       display: inline-block;
       width: 200px;
+      margin-right: 10px;
     }
     .transfer420 {
       display: inline-block;

@@ -1,33 +1,36 @@
 <template>
   <div class="record">
     <div class="search">
-      <a-input-group compact
-                     enterButton="true">
+      <a-input-group compact enterButton="true">
         <a-select v-model="listQuery.key">
           <a-select-option value="memo"> 充值方式 </a-select-option>
         </a-select>
-        <a-input-search style="width: 250px"
-                        placeholder="请输入搜索关键词"
-                        enter-button
-                        @search="onSearch" />
+        <a-input-search
+          style="width: 250px"
+          placeholder="请输入搜索关键词"
+          enter-button
+          @search="onSearch"
+        />
         <span class="refresh">
           <a-icon type="reload" />
         </span>
       </a-input-group>
     </div>
     <div>
-      <a-table :columns="columns"
-               :data-source="data"
-               @change="handleChange"
-               row-key="id"
-               :pagination="paginationProps" />
+      <a-table
+        :columns="columns"
+        :data-source="data"
+        @change="handleChange"
+        row-key="id"
+        :pagination="paginationProps"
+      />
     </div>
   </div>
 </template>
 
 <script>
 export default {
-  data () {
+  data() {
     return {
       data: [],
       columns: [
@@ -35,20 +38,22 @@ export default {
           title: "充值金额",
           dataIndex: "amount",
           key: "amount",
-          sorter: (a, b) => a.amount - b.amount
+          sorter: (a, b) => a.amount - b.amount,
         },
         {
           title: "充值方式",
           dataIndex: "memo",
           key: "memo",
-          sorter: (a, b) => a.age - b.age
+          sorter: true,
+          sortDirections: ["ascend", "descend"],
         },
         {
           title: "充值日期",
           dataIndex: "payTime",
           key: "payTime",
-          sorter: (a, b) => a - b
-        }
+          sorter: true,
+          sortDirections: ["ascend", "descend"],
+        },
       ],
       listQuery: {
         key: "memo",
@@ -68,39 +73,46 @@ export default {
             total / this.listQuery.pageSize
           )} 页`,
         onChange: this.quickJump,
-        onShowSizeChange: this.onShowSizeChange
-      }
+        onShowSizeChange: this.onShowSizeChange,
+      },
     };
   },
-  created () {
+  created() {
     this.getList();
   },
   methods: {
-    onSearch (value) {
+    onSearch(value) {
       // console.log(value);
       this.listQuery.memo = value;
       this.getList();
     },
     // 排序的回调
-    handleChange (value) {
-      console.log(value);
+    handleChange(pagination, filters, sorter) {
+      if (sorter) {
+        if (sorter.columnKey =='memo') {
+          // sorter.order = sorter.order.replace('end', '') + '-' + sorter.columnKey
+          console.log(sorter,'这是充值方式');
+        }else if (sorter.columnKey=='payTime') {
+          console.log(sorter,'这是充值日期');
+        }
+      }
     },
-    getList () {
-      this.$store.dispatch("pay/getList", this.listQuery).then(res => {
+    getList() {
+      this.$store.dispatch("pay/getList", this.listQuery).then((res) => {
         this.data = res.data.list;
         this.paginationProps.total = res.data.total * 1;
       });
     },
-    quickJump (current) {
+    quickJump(current) {
       this.listQuery.currentPage = current;
       this.getList();
     },
-    onShowSizeChange (current, pageSize) {
+    onShowSizeChange(current, pageSize) {
       this.listQuery.pageSize = pageSize;
       this.listQuery.currentPage = current;
       this.getList();
-    }
-  }
+    },
+  },
 };
 </script>
 
