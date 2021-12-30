@@ -32,3 +32,15 @@ body {
     font-size: 12px;
   }
 }
+// 文本溢出隐藏--单行
+.text-overflow {
+  white-space: nowrap; /*超出的空白区域不换行*/
+  overflow: hidden; /*超出隐藏*/
+  text-overflow: ellipsis; /*文本超出显示省略号*/
+}
+.text-overflow-many {
+  display: -webkit-box; /*将对象转为弹性盒模型展示*/
+  -webkit-box-orient: vertical; /*设置弹性盒模型子元素的排列方式*/
+  -webkit-line-clamp: 2; /*限制文本行数*/
+  overflow: hidden; /*超出隐藏*/
+}
