@@ -1,7 +1,10 @@
 <template>
   <div class="cpu-echarts-content">
     <a-spin :spinning="loading" wrapperClassName="spin">
-      <div class="chart-title">{{ title }}</div>
+      <div class="chart-title">
+        {{ title }}
+        <span class="sub-title">{{ subTitle }}</span>
+      </div>
       <div :id="`${lineChartType}-echarts-line`" class="echarts-line"></div>
     </a-spin>
   </div>
@@ -25,6 +28,10 @@ export default {
     },
     // 头部文字
     title: {
+      type: String
+    },
+    // 副头部，title右侧单位
+    subTitle: {
       type: String
     },
     // 折线图类型，监控类型
@@ -182,10 +189,15 @@ export default {
           lineStyle: {
             width: 1 //设置线条粗细
           },
-          data: JSON.parse(ele.data.dataPoints).map((item) => item.Average)
+          data: JSON.parse(ele.data.dataPoints).map((item) =>
+            item.Average === 0
+              ? item.Average
+              : parseInt(item.Average) === parseFloat(item.Average)
+              ? item.Average
+              : item.Average.toFixed(2)
+          )
         });
       });
-      console.log("最终的数据", newList);
       this.seriesList = [...newList];
       // 生成折线图
       this.$nextTick(() => {
@@ -297,6 +309,14 @@ export default {
             ...this.getMaxAndMin(),
             axisLabel: {
               formatter: (val) => {
+                // if (this.yUnit === "%") {
+                //   return val + this.yUnit;
+                // }
+                // if (this.yUnit === "K") {
+                //   console.log(val);
+                //   return val / 1000 + this.yUnit;
+                // }
+                // return val;
                 return val + this.yUnit;
               }
             }
@@ -321,6 +341,10 @@ export default {
       font-size: 16px;
       font-weight: bold;
       top: 14px;
+      .sub-title {
+        font-weight: 400;
+        font-size: 12px;
+      }
     }
     .echarts-line {
       height: 253px;

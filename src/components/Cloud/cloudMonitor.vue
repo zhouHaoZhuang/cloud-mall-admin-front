@@ -49,6 +49,69 @@
         :tabsKey="tabsKey"
         :listQuery="listQuery"
       />
+      <!-- 系统负载 -->
+      <CloudEcharts
+        title="系统负载"
+        lineChartType="systemLoad"
+        :tabsKey="tabsKey"
+        :listQuery="listQuery"
+      />
+      <!-- 实例云盘读写BPS -->
+      <CloudEcharts
+        title="实例云盘读写BPS"
+        subTitle="(Byte/s)"
+        lineChartType="readBPS"
+        yUnit="K"
+        tooltipUnit="Byte/s"
+        :tabsKey="tabsKey"
+        :listQuery="listQuery"
+      />
+      <!-- 实例云盘IOPS -->
+      <CloudEcharts
+        title="实例云盘IOPS"
+        subTitle="(次/s)"
+        lineChartType="cloudDiskIOPS"
+        tooltipUnit="次/s"
+        :tabsKey="tabsKey"
+        :listQuery="listQuery"
+      />
+      <!-- 云盘使用率/Inode使用率 -->
+      <CloudEcharts
+        title="云盘使用率/Inode使用率"
+        lineChartType="cloudDiskUse"
+        yUnit="%"
+        tooltipUnit="%"
+        :tabsKey="tabsKey"
+        :listQuery="listQuery"
+      />
+      <!-- 公网带宽(bit/s) -->
+      <CloudEcharts
+        title="公网带宽"
+        subTitle="(bit/s)"
+        lineChartType="outWidth"
+        yUnit="K"
+        tooltipUnit="bit/s"
+        :tabsKey="tabsKey"
+        :listQuery="listQuery"
+      />
+      <!-- 内网带宽(bit/s) -->
+      <CloudEcharts
+        title="内网带宽"
+        subTitle="(bit/s)"
+        lineChartType="innerWidth"
+        yUnit="K"
+        tooltipUnit="bit/s"
+        :tabsKey="tabsKey"
+        :listQuery="listQuery"
+      />
+      <!-- ECS同时连接数(Count) -->
+      <CloudEcharts
+        title="ECS同时连接数"
+        subTitle="(Count)"
+        lineChartType="ecsCount"
+        :tabsKey="tabsKey"
+        :listQuery="listQuery"
+      />
     </div>
   </div>
 </template>
@@ -74,6 +137,19 @@ export default {
   data() {
     return {
       dateTime: [],
+      // 因为根据周期筛选,不同周期有不同的间隔时间
+      // 自定义+1小时  间隔1分钟 60秒
+      // 6小时  间隔5分钟 300秒
+      // 1天  间隔10分钟 600秒
+      // 7天  间隔15分钟 900秒
+      // 维护一个间隔的map
+      cycleMap: {
+        0: 60,
+        1: 60,
+        6: 300,
+        24: 600,
+        168: 900
+      },
       listQuery: {
         namespace: "acs_ecs_dashboard",
         instanceId: this.detail.instanceId,
@@ -85,11 +161,11 @@ export default {
     };
   },
   created() {
-    this.setDateTime();
+    this.setDateTime("1");
   },
   methods: {
     // 设置日期选择组件初始时间。
-    setDateTime() {
+    setDateTime(val) {
       let time = this.listQuery.cycle;
       if (this.listQuery.cycle === 0) {
         time = 1;
@@ -100,6 +176,7 @@ export default {
         "YYYY-MM-DD HH:mm:ss"
       );
       this.listQuery.endTime = moment(newTime[1]).format("YYYY-MM-DD HH:mm:ss");
+      this.listQuery.period = this.cycleMap[val].toString();
     },
     // 禁用日期--禁用当天之后+当天前一个月所有
     disabledDate(current) {
@@ -145,9 +222,10 @@ export default {
   }
   .monitor-list {
     display: flex;
+    flex-wrap: wrap;
     > div {
       height: 268px;
-      width: 33.333333%;
+      width: 32%;
       background: #fff;
       margin: 0 0 16px;
       border: 1px solid #ebebeb;
