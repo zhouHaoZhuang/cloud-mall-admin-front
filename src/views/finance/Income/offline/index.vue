@@ -116,7 +116,7 @@
           </div>
         </a-step>
         <a-step disabled>
-          <p slot="title">充值成功</p>
+          <p slot="title">提交成功</p>
         </a-step>
       </a-steps>
     </div>
@@ -242,7 +242,8 @@ export default {
       console.log(this.form);
       this.$store.dispatch("offline/putOffline", this.form).then((res) => {
         // this.data = res.data;
-        console.log(res);
+        this.$message.success("提交成功");
+        this.current = 2;
       });
     },
   },

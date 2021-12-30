@@ -83,3 +83,10 @@ export const snapshotMonthEnum = {
   24: "24个月",
   36: "36个月"
 };
+// 线下汇款审核状态
+export const offlineRemittance = {
+  0: "待支付",
+  1: "已取消",
+  2: "支付失败",
+  9: "支付完成",
+};

@@ -6,47 +6,47 @@
       </div>
       <div class="btns">
         <div class="btn1">
-          <a-button type="primary"
-                    @click="goRecharge">前往充值</a-button>
+          <a-button type="primary" @click="goRecharge">前往充值</a-button>
         </div>
         <!-- 按钮 -->
         <div class="btn3">
           <a-input-group compact>
             <a-select v-model="listQuery.key">
-              <a-select-option value="paymentLineId"> 流水单号 </a-select-option>
+              <a-select-option value="paymentLineId">
+                流水单号
+              </a-select-option>
               <!-- <a-select-option value="来源/用途"> 来源/用途 </a-select-option> -->
             </a-select>
-            <a-input-search style="width: 70%"
-                            placeholder="请输入搜索关键词"
-                            enter-button
-                            @search="onSearch" />
+            <a-input-search
+              style="width: 70%"
+              placeholder="请输入搜索关键词"
+              enter-button
+              @search="onSearch"
+            />
           </a-input-group>
         </div>
-        <span class="refresh"
-              @click="$router.go(0)">
+        <span class="refresh" @click="$router.go(0)">
           <a-icon type="redo" />
         </span>
       </div>
       <!-- 表格 -->
       <div class="table">
-        <a-table :columns="columns"
-                 :data-source="data"
-                 row-key="id"
-                 :pagination="paginationProps"
-                 @change="sortDirections">
-          <div slot="income"
-               slot-scope="text">
-            <span>{{text.type==='I'?text.dealAmount:'--'}}</span>
+        <a-table
+          :columns="columns"
+          :data-source="data"
+          row-key="id"
+          :pagination="paginationProps"
+          @change="sortDirections"
+        >
+          <div slot="income" slot-scope="text">
+            <span>{{ text.type === "I" ? text.dealAmount : "--" }}</span>
           </div>
-          <div slot="expenditure"
-               slot-scope="text">
-            <span>{{text.type==='O'?text.dealAmount:'--'}}</span>
+          <div slot="expenditure" slot-scope="text">
+            <span>{{ text.type === "O" ? text.dealAmount : "--" }}</span>
           </div>
-          <a slot="name"
-             slot-scope="text">{{ text }}</a>
-          <div slot="createTime"
-               slot-scope="text">
-            {{text | formatDate}}
+          <a slot="name" slot-scope="text">{{ text }}</a>
+          <div slot="createTime" slot-scope="text">
+            {{ text | formatDate }}
           </div>
         </a-table>
       </div>
@@ -57,16 +57,16 @@
 <script>
 export default {
   computed: {},
-  data () {
+  data() {
     return {
       listQuery: {
-        key: 'paymentLineId',
+        key: "paymentLineId",
         search: "",
         currentPage: 1,
         pageSize: 10,
         total: 0,
-        sorter: '',
-        paymentLineId: '',
+        sorter: "",
+        paymentLineId: "",
       },
       columns: [
         {
@@ -74,7 +74,7 @@ export default {
           dataIndex: "paymentLineId",
           key: "id",
           width: 150,
-          sorter: (a, b) => a.id - b.id
+          sorter: (a, b) => a.id - b.id,
         },
         {
           title: "收入(+)",
@@ -92,19 +92,19 @@ export default {
           title: "余额",
           dataIndex: "afterAmount",
           scopedSlots: { customRender: "addressProject" },
-          sorter: (a, b) => a.afterAmount - b.afterAmount
+          sorter: (a, b) => a.afterAmount - b.afterAmount,
         },
         {
           title: "交易日期",
           dataIndex: "createTime",
           key: "createTime",
           scopedSlots: { customRender: "createTime" },
-          sorter: (a, b) => a - b
+          sorter: (a, b) => a - b,
         },
         {
           title: "来源用途",
-          dataIndex: "org"
-        }
+          dataIndex: "org",
+        },
       ],
       data: [],
       paginationProps: {
@@ -116,52 +116,53 @@ export default {
             total / this.listQuery.pageSize
           )} 页`,
         onChange: this.quickJump,
-        onShowSizeChange: this.onShowSizeChange
+        onShowSizeChange: this.onShowSizeChange,
       },
-      tableLoading: false
+      tableLoading: false,
     };
   },
-  created () {
+  created() {
     this.getList();
   },
   methods: {
-    handleChange (value) {
+    handleChange(value) {
       console.log(`selected ${value}`);
     },
-    sortDirections (pagination, filters, sorter) {
+    sortDirections(pagination, filters, sorter) {
       if (sorter && sorter.order) {
         this.listQuery.key = sorter.columnKey;
-        this.listQuery.sorter = sorter.order.replace('end', '') + `-${sorter.columnKey}`;
+        this.listQuery.sorter =
+          sorter.order.replace("end", "") + `-${sorter.columnKey}`;
         this.getList();
         // console.log("排序被点击了", sorter.columnKey);
       }
     },
-    quickJump (current) {
+    quickJump(current) {
       this.listQuery.currentPage = current;
       this.getList();
     },
-    onShowSizeChange (current, pageSize) {
+    onShowSizeChange(current, pageSize) {
       this.listQuery.pageSize = pageSize;
       this.listQuery.currentPage = current;
       this.getList();
     },
-    goRecharge () {
+    goRecharge() {
       this.$router.push({
-        path: "/user/finance/recharge"
+        path: "/user/finance/recharge",
       });
     },
-    getList () {
-      this.$store.dispatch("finance/getList", this.listQuery).then(res => {
+    getList() {
+      this.$store.dispatch("finance/getList", this.listQuery).then((res) => {
         this.data = res.data.list;
         this.paginationProps.total = res.data.total * 1;
       });
     },
-    onSearch (value) {
+    onSearch(value) {
       this.listQuery.paymentLineId = value;
       // console.log(value, this.listQuery.key);
       this.getList();
-    }
-  }
+    },
+  },
 };
 </script>
 

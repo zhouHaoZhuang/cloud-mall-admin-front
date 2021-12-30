@@ -1,16 +1,17 @@
 <template>
   <div class="record-content">
     <p class="record-title">
-      <span
-        >温馨提示：线下汇款后，您的款项具体到账时间依赖于银行系统，请耐心等待。常见问题可查看 </span
-      ><a>充值说明</a>
+      <span>
+        温馨提示：线下汇款后，您的款项具体到账时间依赖于银行系统，请耐心等待。常见问题可查看
+      </span>
+      <a>充值说明</a>
     </p>
     <div class="search">
       <a-input-group compact enterButton="true">
-        <a-select default-value="汇款银行">
-          <a-select-option value="汇款银行"> 汇款银行 </a-select-option>
-          <a-select-option value="汇款账号"> 汇款账号 </a-select-option>
-          <a-select-option value="汇款户名"> 汇款户名 </a-select-option>
+        <a-select v-model="listQuery.key">
+          <a-select-option value="accountBankName"> 汇款银行 </a-select-option>
+          <a-select-option value="accountCode"> 汇款账号 </a-select-option>
+          <a-select-option value="accountName"> 汇款户名 </a-select-option>
         </a-select>
         <a-input-search
           style="width: 250px"
@@ -18,20 +19,31 @@
           enter-button
           @search="onSearch"
         />
-        <span class="refresh">
+        <span class="refresh" @click="getList()">
           <a-icon type="reload" />
         </span>
       </a-input-group>
     </div>
     <div>
-      <a-table :columns="columns" :data-source="data" @change="handleChange">
-        <div slot="action" slot-scope="record">
-          <a-button type="link" @click="seeDetails(record)">查看详情</a-button>
+      <a-table
+        rowKey="id"
+        :columns="columns"
+        :data-source="data"
+        :pagination="paginationProps"
+      >
+        <div slot="createTime" slot-scope="text">
+          {{ text | formatDate }}
+        </div>
+        <div slot="action" slot-scope="text">
+          <a-button type="link" @click="seeDetails(text)">查看详情</a-button>
+        </div>
+        <div slot-scope="text" slot="status">
+          {{ offlineRemittance[text] }}
         </div>
       </a-table>
     </div>
     <div class="modal-details" v-show="isinfo">
-      <div class="modal-details-info">
+      <div class="modal-details-info" v-if="dataInfo">
         <div class="modal-details-title">
           <span>线下汇款详情</span>
           <span @click="isinfo = false">
@@ -43,22 +55,28 @@
             <h1>收款方信息</h1>
             <div class="modal-details-type-list">
               <div>
-                <span class="modal-details-key">汇款账户名称:</span
-                ><span class="modal-details-value"
-                  >浙江云盾互联网科技有限公司</span
-                >
+                <span class="modal-details-key">汇款账户名称:</span>
+                <span class="modal-details-value">
+                  {{ dataInfo.ccCompanyInfoResDto.companyName }}
+                </span>
               </div>
               <div>
-                <span class="modal-details-key">银行账户:</span
-                ><span class="modal-details-value">333222333454545455</span>
+                <span class="modal-details-key">银行账户:</span>
+                <span class="modal-details-value">
+                  {{ dataInfo.ccCompanyInfoResDto.bankAccount }}
+                </span>
               </div>
               <div>
-                <span class="modal-details-key">开户银行:</span
-                ><span class="modal-details-value">中国建设银行</span>
+                <span class="modal-details-key">开户银行:</span>
+                <span class="modal-details-value">
+                  {{ dataInfo.ccCompanyInfoResDto.openBank }}
+                </span>
               </div>
               <div>
-                <span class="modal-details-key">汇款备注:</span
-                ><span class="modal-details-value">2021年12月23日</span>
+                <span class="modal-details-key">汇款备注:</span>
+                <span class="modal-details-value">
+                  {{ dataInfo.ccCompanyInfoResDto.memo }}
+                </span>
               </div>
             </div>
           </div>
@@ -66,36 +84,47 @@
             <h1>充值信息</h1>
             <div class="modal-details-type-list">
               <div>
-                <span class="modal-details-key">汇款人ID:</span
-                ><span class="modal-details-value">1000021</span>
+                <span class="modal-details-key">汇款人ID:</span>
+                <span class="modal-details-value">
+                  {{ dataInfo.applyUserCode }}
+                </span>
               </div>
-              <div>
+              <!-- <div>
                 <span class="modal-details-key">汇款人手机:</span
-                ><span class="modal-details-value">33322233</span>
+                ><span class="modal-details-value">33322233----</span>
+              </div> -->
+              <div>
+                <span class="modal-details-key">汇款金额:</span>
+                <span class="modal-details-value">
+                  {{ dataInfo.amount }}
+                </span>
               </div>
               <div>
-                <span class="modal-details-key">汇款金额:</span
-                ><span class="modal-details-value">23333</span>
+                <span class="modal-details-key">汇款户名:</span>
+                <span class="modal-details-value">
+                  {{ dataInfo.accountName }}
+                </span>
               </div>
               <div>
-                <span class="modal-details-key">汇款户名:</span
-                ><span class="modal-details-value">张三</span>
+                <span class="modal-details-key">汇款账号:</span>
+                <span class="modal-details-value">
+                  {{ dataInfo.accountCode }}
+                </span>
               </div>
               <div>
-                <span class="modal-details-key">汇款账号:</span
-                ><span class="modal-details-value">4795656565322533</span>
+                <span class="modal-details-key">汇款银行:</span>
+                <span class="modal-details-value">
+                  {{ dataInfo.accountBankName }}
+                </span>
               </div>
               <div>
-                <span class="modal-details-key">汇款银行:</span
-                ><span class="modal-details-value">招商银行</span>
+                <span class="modal-details-key"></span
+                ><span class="modal-details-value"></span>
               </div>
               <div>
                 <span class="modal-details-key">汇款凭证:</span>
                 <p class="img-url">
-                  <img
-                    src="https://cn.bing.com/th?id=OHR.ManitobaBears_ZH-CN5877672648_1920x1080.jpg&rf=LaDigue_1920x1080.jpg"
-                    alt=""
-                  />
+                  <img :src="dataInfo.voucher" alt="" />
                 </p>
               </div>
             </div>
@@ -107,77 +136,118 @@
 </template>
 
 <script>
+import { offlineRemittance } from "@/utils/enum";
 export default {
   data() {
     return {
       isinfo: false,
-      data: [{
-        id: 1
-      }],
+      data: [],
+      offlineRemittance,
+      listQuery: {
+        key: "",
+        search: "",
+        currentPage: 1,
+        pageSize: 10,
+        total: 0,
+        sorter: "",
+        paymentLineId: "",
+      },
       columns: [
         {
           title: "汇款账户",
-          dataIndex: "name"
+          dataIndex: "accountCode",
         },
         {
           title: "账户名称",
-          dataIndex: "title"
+          dataIndex: "accountName",
         },
         {
           title: "汇款金额",
-          dataIndex: "age",
-          key: "age",
-          sorter: (a, b) => a.age - b.age
+          dataIndex: "amount",
+          key: "amount",
+          sorter: (a, b) => a.amount - b.amount,
         },
         {
           title: "汇款日期",
-          dataIndex: "address",
-          key: "address",
-          sorter: (a, b) => a.address.length - b.address.length
+          dataIndex: "createTime",
+          key: "createTime",
+          scopedSlots: {
+            customRender: "createTime",
+          },
+          sorter: (a, b) =>
+            new Date(a.createTime).getTime() - new Date(b.createTime).getTime(),
         },
         {
           title: "审核状态",
-          key: "store"
+          dataIndex: "status",
+          key: "status",
+          scopedSlots: {
+            customRender: "status",
+          },
         },
         {
           title: "操作",
           dataIndex: "id",
           key: "action",
           scopedSlots: {
-            customRender: "action"
-          }
-        }
-      ]
+            customRender: "action",
+          },
+        },
+      ],
+      paginationProps: {
+        showQuickJumper: true,
+        showSizeChanger: true,
+        total: 1,
+        showTotal: (total, range) =>
+          `共 ${total} 条记录 第 ${this.listQuery.currentPage} / ${Math.ceil(
+            total / this.listQuery.pageSize
+          )} 页`,
+        onChange: this.quickJump,
+        onShowSizeChange: this.onShowSizeChange,
+      },
+      tableLoading: false,
+      dataInfo: null,
     };
   },
-
+  created() {
+    this.getList();
+  },
   methods: {
     onSearch(value) {
       console.log(value);
+      this.listQuery.search = value;
+      this.getList();
     },
-    seeDetails() {
+    seeDetails(id) {
       this.isinfo = true;
+      console.log(id);
+      this.$store.dispatch("inquire/getOne", id).then((res) => {
+        console.log(res);
+        this.dataInfo = res.data;
+      });
+    },
+    getList() {
+      this.$getList("inquire/getList", this.listQuery).then((res) => {
+        this.data = res.data.list;
+        console.log(res);
+      });
     },
     // 排序的回调
-    handleChange(pagination, filters, sorter) {
-      console.log("Various parameters", pagination, filters, sorter);
-      this.filteredInfo = filters;
-      this.sortedInfo = sorter;
+    // handleChange(pagination, filters, sorter) {
+    //   console.log("Various parameters", pagination, filters, sorter);
+    //   this.filteredInfo = filters;
+    //   this.sortedInfo = sorter;
+    // },
+    quickJump(current) {
+      this.listQuery.currentPage = current;
+      this.getList();
     },
-    clearFilters() {
-      this.filteredInfo = null;
+    onShowSizeChange(current, pageSize) {
+      this.listQuery.pageSize = pageSize;
+      this.listQuery.currentPage = current;
+      this.getList();
     },
-    clearAll() {
-      this.filteredInfo = null;
-      this.sortedInfo = null;
-    },
-    setAgeSort() {
-      this.sortedInfo = {
-        order: "descend",
-        columnKey: "age"
-      };
-    }
-  }
+  },
 };
 </script>
 
