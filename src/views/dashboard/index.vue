@@ -1,5 +1,26 @@
 <template>
   <div class="dashboard-container">
+    <!-- 头部用户信息 -->
+    <div class="header-user-info"></div>
+    <!-- 主体 -->
+    <div class="content">
+      <!-- 账户概览 + 消费趋势 + 待办事项 -->
+      <div class="item">
+        <!-- 账户概览 -->
+        <div class="overview"></div>
+        <!-- 消费趋势 -->
+        <div class="trend"></div>
+        <!-- 待办事项 -->
+        <div class="todolist"></div>
+      </div>
+      <!-- 已开通产品 + 新闻公告 -->
+      <div class="item">
+        <!-- 已开通产品 -->
+        <div class="open-product"></div>
+        <!-- 新闻公告 -->
+        <div class="news"></div>
+      </div>
+    </div>
     <div id="echarts" class="echarts-pie-content"></div>
     <div id="echarts-line" class="echarts-line-content"></div>
   </div>
