@@ -6,7 +6,7 @@
         <a-avatar
           shape="square"
           :src="img.url"
-          style="width:100%;height:100%"
+          style="width: 100%; height: 100%"
         />
         <div class="imgMask">
           <a-icon
@@ -35,9 +35,7 @@
     >
       <div v-if="fileList.length < limit">
         <a-icon type="plus" />
-        <div class="ant-upload-text">
-          上传图片
-        </div>
+        <div class="ant-upload-text">上传图片</div>
       </div>
     </a-upload>
     <!-- 预览图片弹窗 -->
@@ -140,7 +138,7 @@ export default {
         }
         lrz(file, {
           width: 1920
-        }).then(res => {
+        }).then((res) => {
           const file = base64ToFile(res.base64, res.origin.name);
           resolve(file);
         });
@@ -162,14 +160,15 @@ export default {
       this.fileList = fileList;
       const urlList =
         fileList
-          .filter(item => item.response || item.url)
-          .map(item => item.response?.data || item.url) || [];
+          .filter((item) => item.response || item.url)
+          .map((item) => (item.response && item.response.data) || item.url) ||
+        [];
       const firstImageUrl =
         urlList.length && urlList.length > 0 ? urlList[0] : "";
-      this.imageList = this.$clonedeep(fileList).map(item => {
+      this.imageList = this.$clonedeep(fileList).map((item) => {
         return {
           ...item,
-          url: item.url || item.response?.data
+          url: item.url || (item.response && item.response.data)
         };
       });
       this.$emit("change", {
@@ -179,11 +178,13 @@ export default {
     },
     // 删除图片
     delImg(data) {
-      const index = this.imageList.findIndex(item => item.uid === data.uid);
+      const index = this.imageList.findIndex((item) => item.uid === data.uid);
       this.imageList.splice(index, 1);
       this.fileList.splice(index, 1);
       const urlList =
-        this.fileList.map(item => item.response?.data || item.url) || [];
+        this.fileList.map(
+          (item) => (item.response && item.response.data) || item.url
+        ) || [];
       const firstImageUrl =
         urlList.length && urlList.length > 0 ? urlList[0] : "";
       this.$emit("change", {

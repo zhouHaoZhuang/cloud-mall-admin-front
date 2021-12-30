@@ -44,7 +44,7 @@ export default {
           // this.startTime(newData.time);
           this.rechargeOrderList.push(newData);
           // 打开支付宝支付
-          openAlipayPay(res);
+          openAlipayPay(res.data);
         })
         .finally(() => {
           this.loading = false;

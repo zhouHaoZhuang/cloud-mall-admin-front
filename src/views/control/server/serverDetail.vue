@@ -232,8 +232,20 @@ export default {
         .dispatch("cloud/cloudDetail", { id: this.$route.query.id })
         .then((res) => {
           this.detail = { ...res.data };
+          // 查询监控插件运行状态
+          this.getMonitorStatus();
           // 开启轮询查询服务器状态
           this.startTime(false);
+        });
+    },
+    // 获取插件运行状态
+    getMonitorStatus() {
+      this.$store
+        .dispatch("cloud/getMonitorStatus", {
+          instanceIds: [this.detail.instanceId]
+        })
+        .then((res) => {
+          this.detail.monitorStatusDetail = { ...res.data[0] };
         });
     },
     // tabs切换回调

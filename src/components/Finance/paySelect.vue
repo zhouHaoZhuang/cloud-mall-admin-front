@@ -203,7 +203,9 @@ export default {
       const data = {
         tcMergeOrderReqDto: {
           ...this.balanceData,
-          mergeOrderNo: this.detail.mergeOrderNo
+          mergeOrderNo: this.detail.mergeOrderNo,
+          returnUrl: "", // 页面重定向地址
+          requestFromUrl: "" // 用户取消支付会回退改地址
         },
         tcOrderReqDtoList: [
           {
@@ -214,9 +216,12 @@ export default {
       this.$store
         .dispatch("finance/aliPay", data)
         .then((res) => {
-          this.$message.success("余额支付成功");
-          // 打开支付宝支付
-          openAlipayPay(res);
+          if (res.data.aliPayResult) {
+            // 打开支付宝支付
+            openAlipayPay(res.data.aliPayResult);
+          } else {
+            this.$message.success("余额支付成功");
+          }
           // this.startTime();
         })
         .finally(() => {

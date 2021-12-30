@@ -7,6 +7,7 @@ import pay from "./pay";
 import renewcloud from "./renewcloud";
 import offline from "./offline";
 import inquire from "./inquire";
+import dashboard from "./dashboard";
 
 export default {
   setting,
@@ -17,5 +18,6 @@ export default {
   pay,
   renewcloud,
   offline,
-  inquire
+  inquire,
+  dashboard,
 };

@@ -93,6 +93,14 @@ const cloud = {
         data
       });
     },
+    // 查询当前实例监控插件运行状态
+    getMonitorStatus({ commit, state }, data) {
+      return request({
+        url: "/aliEcs/describeMonitoringAgentStatuses",
+        method: "post",
+        data
+      });
+    },
     // 安装监控插件
     installMonitor({ commit, state }, data) {
       return request({
