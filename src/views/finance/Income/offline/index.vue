@@ -161,7 +161,6 @@ export default {
         accountBankName: "",
         accountType: 2,
       },
-      data: [],
       labelCol: { span: 2 },
       wrapperCol: { span: 14 },
       rules: {
