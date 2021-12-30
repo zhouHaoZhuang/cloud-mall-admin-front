@@ -111,7 +111,9 @@ export default {
   data() {
     return {
       isinfo: false,
-      data: [],
+      data: [{
+        id: 1
+      }],
       columns: [
         {
           title: "汇款账户",
