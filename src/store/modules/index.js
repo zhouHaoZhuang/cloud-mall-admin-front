@@ -6,6 +6,7 @@ import finance from "./finance";
 import pay from "./pay";
 import renewcloud from "./renewcloud";
 import offline from "./offline";
+import inquire from "./inquire";
 import dashboard from "./dashboard";
 
 export default {
@@ -17,5 +18,6 @@ export default {
   pay,
   renewcloud,
   offline,
-  dashboard
+  inquire,
+  dashboard,
 };

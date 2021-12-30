@@ -30,7 +30,8 @@ import Inquire from "./Inquire/index.vue";
 export default {
   data() {
     return {
-      change: "online",
+      // change: "online",
+      change: "Inquire",
     };
   },
   methods: {
