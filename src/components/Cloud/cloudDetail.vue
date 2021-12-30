@@ -154,9 +154,10 @@ export default {
     // 返回数据盘大小
     getDataSidkNum() {
       let sum = 0;
-      this.detail.dataDisk?.forEach((ele) => {
-        sum += ele.size;
-      });
+      this.detail.dataDisk &&
+        this.detail.dataDisk.forEach((ele) => {
+          sum += ele.size;
+        });
       return sum;
     }
   },

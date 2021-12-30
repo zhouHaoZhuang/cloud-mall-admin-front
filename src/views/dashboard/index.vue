@@ -1,7 +1,57 @@
 <template>
   <div class="dashboard-container">
     <!-- 头部用户信息 -->
-    <div class="header-user-info"></div>
+    <div class="header-user-info">
+      <a-avatar :size="64" icon="user" />
+      <span class="welcome">欢迎您回来</span>
+      <span class="name">启航</span>
+      <div class="icons">
+        <div class="icon-item">
+          <a-tooltip placement="bottom">
+            <template slot="title">
+              <span>提示文字</span>
+            </template>
+            <div class="icon-item-imgs">
+              <img src="@/assets/img/dashboard/card.png" />
+              <img src="@/assets/img/dashboard/card-a.png" />
+            </div>
+          </a-tooltip>
+        </div>
+        <div class="icon-item">
+          <a-tooltip placement="bottom">
+            <template slot="title">
+              <span>提示文字</span>
+            </template>
+            <div class="icon-item-imgs">
+              <img src="@/assets/img/dashboard/phone.png" />
+              <img src="@/assets/img/dashboard/phone-a.png" />
+            </div>
+          </a-tooltip>
+        </div>
+        <div class="icon-item">
+          <a-tooltip placement="bottom">
+            <template slot="title">
+              <span>提示文字</span>
+            </template>
+            <div class="icon-item-imgs">
+              <img src="@/assets/img/dashboard/email.png" />
+              <img src="@/assets/img/dashboard/email-a.png" />
+            </div>
+          </a-tooltip>
+        </div>
+        <div class="icon-item">
+          <a-tooltip placement="bottom">
+            <template slot="title">
+              <span>提示文字</span>
+            </template>
+            <div class="icon-item-imgs">
+              <img src="@/assets/img/dashboard/lock.png" />
+              <img src="@/assets/img/dashboard/lock-a.png" />
+            </div>
+          </a-tooltip>
+        </div>
+      </div>
+    </div>
     <!-- 主体 -->
     <div class="content">
       <!-- 账户概览 + 消费趋势 + 待办事项 -->
@@ -9,7 +59,9 @@
         <!-- 账户概览 -->
         <div class="overview"></div>
         <!-- 消费趋势 -->
-        <div class="trend"></div>
+        <div class="trend">
+          <div id="echarts" class="echarts-pie-content"></div>
+        </div>
         <!-- 待办事项 -->
         <div class="todolist"></div>
       </div>
@@ -21,8 +73,6 @@
         <div class="news"></div>
       </div>
     </div>
-    <div id="echarts" class="echarts-pie-content"></div>
-    <div id="echarts-line" class="echarts-line-content"></div>
   </div>
 </template>
 
@@ -39,7 +89,6 @@ export default {
   mounted() {
     this.$nextTick(() => {
       this.initEcharts();
-      this.initLineEcharts();
     });
   },
   data() {
@@ -92,175 +141,6 @@ export default {
           }
         ]
       });
-    },
-    initLineEcharts() {
-      this.chartLine = echarts.init(document.getElementById("echarts-line"));
-      let option = {
-        tooltip: {
-          trigger: "axis",
-          formatter: (param) => {
-            console.log("tooltip", param);
-            return param.data.time + param.data.value;
-          }
-        },
-        color: ["#00BBFF", "#FFAD33"],
-        legend: {
-          data: ["邮件营销", "联盟广告"],
-          left: "center",
-          top: "bottom"
-        },
-        calculable: true,
-        xAxis: [
-          {
-            type: "category",
-            boundaryGap: false,
-            axisTick: {
-              show: false
-            },
-            data: [
-              "周一",
-              "周二",
-              "周三",
-              "周四",
-              "周五",
-              "周六",
-              "周日",
-              "周一",
-              "周二",
-              "周三",
-              "周四",
-              "周五",
-              "周六",
-              "周日",
-              "周一",
-              "周二",
-              "周三",
-              "周四",
-              "周五",
-              "周六",
-              "周日",
-              "周一",
-              "周二",
-              "周三",
-              "周四",
-              "周五",
-              "周六",
-              "周日",
-              "周一",
-              "周二",
-              "周三",
-              "周四",
-              "周五",
-              "周六",
-              "周日",
-              "周一",
-              "周二",
-              "周三",
-              "周四",
-              "周五",
-              "周六",
-              "周日",
-              "周一",
-              "周二",
-              "周三",
-              "周四",
-              "周五",
-              "周六",
-              "周日",
-              "周一",
-              "周二",
-              "周三",
-              "周四",
-              "周五",
-              "周六",
-              "周日",
-              "周一",
-              "周二",
-              "周三",
-              "周四",
-              "周五",
-              "周六",
-              "周日"
-            ]
-          }
-        ],
-        yAxis: [
-          {
-            type: "value",
-            axisTick: {
-              show: false
-            },
-            axisLabel: {
-              formatter: (val) => {
-                return val + "K";
-              }
-            }
-          }
-        ],
-        series: [
-          {
-            name: "邮件营销",
-            type: "line",
-            stack: "总量",
-            data: [
-              {
-                time: "2021-12-28 14:50:00",
-                value: 123
-              },
-              {
-                time: "2021-12-28 14:59:00",
-                value: 50
-              },
-              {
-                time: "2021-12-28 15:50:00",
-                value: 160
-              },
-              {
-                time: "2021-12-28 16:50:00",
-                value: 130
-              },
-              {
-                time: "2021-12-28 17:50:00",
-                value: 12
-              }
-            ],
-            formatter: (params) => {
-              return params.data.value;
-            }
-          },
-          {
-            name: "联盟广告",
-            type: "line",
-            stack: "总量",
-            data: [
-              {
-                time: "2021-12-28 14:50:00",
-                value: 100
-              },
-              {
-                time: "2021-12-28 14:50:00",
-                value: 200
-              },
-              {
-                time: "2021-12-28 14:50:00",
-                value: 16
-              },
-              {
-                time: "2021-12-28 14:50:00",
-                value: 500
-              },
-              {
-                time: "2021-12-28 14:50:00",
-                value: 60
-              }
-            ],
-            formatter: (params) => {
-              return params.data.value;
-            }
-          }
-        ]
-      };
-      this.chartLine.setOption(option);
     }
   }
 };
@@ -274,9 +154,17 @@ export default {
     height: 184px;
     margin-bottom: 60px;
   }
-  .echarts-line-content {
-    width: 700px;
-    height: 400px;
+  .header-user-info {
+    display: flex;
+    align-items: center;
+    height: 56px;
+    margin-top: 8px;
+    margin-bottom: 24px;
+    .welcome {
+      color: #a0a2a3;
+      font-size: 14px;
+      margin: 0 20px;
+    }
   }
 }
 </style>
