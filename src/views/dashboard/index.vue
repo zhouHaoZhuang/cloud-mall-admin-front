@@ -62,15 +62,15 @@
           <div class="info">
             <div class="left-box">
               <span class="txt">可用余额（元）</span>
-              <div class="price strong">1.30</div>
+              <div class="price strong">{{ overviewData.balance.balance }}</div>
             </div>
             <div class="coupon">
               <span class="txt">可用代金券（元）</span>
-              <div class="price">0.00</div>
+              <div class="price">{{ overviewData.coupon.balance }}</div>
             </div>
           </div>
           <div class="btns">
-            <a-button type="primary">充值</a-button>
+            <a-button type="primary" @click="goRecharge">充值</a-button>
           </div>
         </div>
         <!-- 消费趋势 -->
@@ -80,8 +80,10 @@
             <div class="jump">查看></div>
           </div>
           <div id="echarts" class="echarts-pie-content"></div>
-          <div class="consumption text-overflow">本月消费：￥10000...</div>
-          <div class="income text-overflow">本月收入：￥10000...</div>
+          <div class="consumption text-overflow">
+            本月消费：￥{{ trendOut }}
+          </div>
+          <div class="income text-overflow">本月收入：￥{{ trendIn }}</div>
         </div>
         <!-- 待办事项 -->
         <div class="public-box todolist">
@@ -166,9 +168,36 @@ export default {
       charts: null,
       chartLine: null,
       // 账户余额信息
-      overviewData: {},
+      overviewData: {
+        balance: {},
+        coupon: {
+          balance: "0.00"
+        }
+      },
       // 消费趋势折线图数据
-      trendData: {},
+      trendData: {
+        name: "消费趋势",
+        type: "pie",
+        radius: ["50%", "70%"],
+        center: ["50%", "50%"],
+        label: {
+          show: true,
+          position: "center",
+          formatter: "本月统计"
+        },
+        emphasis: {
+          label: {
+            show: true,
+            formatter: "本月统计"
+          }
+        },
+        labelLine: {
+          show: false
+        },
+        data: []
+      },
+      trendIn: "0.00",
+      trendOut: "0.00",
       // 云服务器数量
       cloudCount: 0
     };
@@ -180,13 +209,51 @@ export default {
     // 获取数据
     getDashboardData() {
       this.$store.dispatch("dashboard/getBalanceAndCoupon").then((res) => {
-        this.overviewData = res.data;
+        const newData = {
+          balance: {},
+          coupon: {
+            balance: "0.00"
+          }
+        };
+        res.data.forEach((ele) => {
+          if (ele.accountType === 1) {
+            newData.balance = { ...ele };
+          }
+          if (ele.accountType === 2) {
+            newData.coupon = { ...ele };
+          }
+        });
+        this.overviewData = { ...newData };
       });
       this.$store.dispatch("dashboard/trendData").then((res) => {
-        this.trendData = res.data;
+        const newData = res.data.map((ele) => {
+          if (ele.type === "I") {
+            this.trendIn = ele.dealAmount;
+            return {
+              type: ele.type,
+              value: ele.dealAmount,
+              name: "收入记录"
+            };
+          }
+          if (ele.type === "O") {
+            this.trendOut = ele.dealAmount;
+            return {
+              type: ele.type,
+              value: ele.dealAmount,
+              name: "消费记录"
+            };
+          }
+        });
+        this.trendData.data = [...newData];
       });
       this.$store.dispatch("dashboard/getCloudCount").then((res) => {
         this.cloudCount = res.data;
+      });
+    },
+    // 跳转充值
+    goRecharge() {
+      this.$router.push({
+        path: "/user/finance/recharge"
       });
     },
     initEcharts() {
@@ -204,32 +271,7 @@ export default {
           orient: "vertical",
           itemGap: 50
         },
-        series: [
-          {
-            name: "消费趋势",
-            type: "pie",
-            radius: ["50%", "70%"],
-            center: ["50%", "50%"],
-            data: [
-              { value: 335, name: "消费记录" },
-              { value: 310, name: "收入记录" }
-            ],
-            label: {
-              show: true,
-              position: "center",
-              formatter: "本月统计"
-            },
-            emphasis: {
-              label: {
-                show: true,
-                formatter: "本月统计"
-              }
-            },
-            labelLine: {
-              show: false
-            }
-          }
-        ]
+        series: this.trendData
       });
     }
   }
