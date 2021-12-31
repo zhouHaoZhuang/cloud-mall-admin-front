@@ -17,7 +17,7 @@ const cloud = {
     // 获取用户余额+代金券
     getBalanceAndCoupon({ commit, state }, params) {
       return request({
-        url: `/ccCorporation`,
+        url: `/ccCorporation/getCurrentUserAccountBalance`,
         method: "get"
       });
     },
