@@ -22,8 +22,8 @@ const options = [
         name: "总览",
         component: () => import("@/views/dashboard/index"),
         meta: {
-          hiddenMenu: true
-        }
+          hiddenMenu: true,
+        },
       },
       // 控制台
       {
@@ -38,31 +38,31 @@ const options = [
             component: RouteView,
             meta: {
               icon: require("../assets/img/menu/menu_icon_server.png"),
-              iconAct: require("../assets/img/menu/menu_icon_server_active.png")
+              iconAct: require("../assets/img/menu/menu_icon_server_active.png"),
             },
             children: [
               {
                 path: "admin",
                 name: "云服务器管理",
                 component: () => import("@/views/control/server/serverAdmin"),
-                meta: {}
+                meta: {},
               },
               {
                 path: "detail",
                 name: "云服务器详情",
                 component: () => import("@/views/control/server/serverDetail"),
                 meta: {
-                  hiddenMenu: true
-                }
+                  hiddenMenu: true,
+                },
               },
               {
                 path: "upgrade",
                 name: "云服务器升级",
                 component: () => import("@/views/control/server/upgrade"),
                 meta: {
-                  hiddenMenu: true
-                }
-              }
+                  hiddenMenu: true,
+                },
+              },
               // {
               //   path: "transfer",
               //   name: "过户",
@@ -89,9 +89,9 @@ const options = [
               //   component: () => import("@/views/control/server/trash"),
               //   meta: {}
               // }
-            ]
-          }
-        ]
+            ],
+          },
+        ],
       },
       // 用户中心
       {
@@ -106,26 +106,26 @@ const options = [
             component: RouteView,
             meta: {
               icon: require("../assets/img/menu/menu_icon_server.png"),
-              iconAct: require("../assets/img/menu/menu_icon_server_active.png")
+              iconAct: require("../assets/img/menu/menu_icon_server_active.png"),
             },
             children: [
               {
                 path: "recharge",
                 name: "充值中心",
                 component: () => import("@/views/finance/Income/index.vue"),
-                meta: {}
+                meta: {},
               },
               {
                 path: "transfer",
                 name: "收支明细",
                 component: () => import("@/views/finance/Recharge/index.vue"),
-                meta: {}
+                meta: {},
               },
               {
                 path: "trash",
                 name: "订单管理",
                 component: () => import("@/views/finance/order/index.vue"),
-                meta: {}
+                meta: {},
               },
               {
                 path: "orderdetails",
@@ -133,10 +133,10 @@ const options = [
                 component: () =>
                   import("@/views/finance/order/orderdetails.vue"),
                 meta: {
-                  hiddenMenu: true // 不显示在左侧菜单
-                }
-              }
-            ]
+                  hiddenMenu: true, // 不显示在左侧菜单
+                },
+              },
+            ],
           },
           {
             path: "renew",
@@ -144,16 +144,16 @@ const options = [
             component: RouteView,
             meta: {
               icon: require("../assets/img/menu/menu_icon_server.png"),
-              iconAct: require("../assets/img/menu/menu_icon_server_active.png")
+              iconAct: require("../assets/img/menu/menu_icon_server_active.png"),
             },
             children: [
               {
                 path: "cloud",
                 name: "云服务器续费管理",
                 component: () => import("@/views/management/cloud/index"),
-                meta: {}
-              }
-            ]
+                meta: {},
+              },
+            ],
           },
           {
             path: "setting",
@@ -161,44 +161,69 @@ const options = [
             component: RouteView,
             meta: {
               icon: require("../assets/img/menu/menu_icon_server.png"),
-              iconAct: require("../assets/img/menu/menu_icon_server_active.png")
+              iconAct: require("../assets/img/menu/menu_icon_server_active.png"),
             },
             children: [
               {
                 path: "security",
                 name: "安全设置",
-                component: () => import("@/views/control/server/serverAdmin"),
-                meta: {}
+                component: () =>
+                  import("@/views/accountSettings/securitySettings/index.vue"),
+                meta: {},
               },
               {
                 path: "info",
                 name: "基本资料",
-                component: () => import("@/views/control/server/serverAdmin"),
-                meta: {}
+                component: () =>
+                  import("@/views/accountSettings/material/index.vue"),
+                meta: {},
               },
+
               {
                 path: "realname",
                 name: "实名认证",
-                component: () => import("@/views/control/server/serverAdmin"),
-                meta: {}
+                component: () =>
+                  import("@/views/accountSettings/verified/index.vue"),
+                meta: {},
+              },
+
+              {
+                path: "changerealname",
+                name: "变更实名认证",
+                component: () =>
+                  import("@/views/accountSettings/verified/changeVerified.vue"),
+                meta: {
+                  hiddenMenu: true, // 不显示在左侧菜单
+                },
+              },
+              {
+                path: "changephone",
+                name: "变更实名认证(修改手机号)",
+                component: () =>
+                  import("@/views/accountSettings/verified/changephone.vue"),
+                meta: {
+                  hiddenMenu: true, // 不显示在左侧菜单
+                },
               },
               {
                 path: "address",
                 name: "常用地址管理",
-                component: () => import("@/views/control/server/serverAdmin"),
-                meta: {}
+                component: () =>
+                  import("@/views/accountSettings/address/index.vue"),
+                meta: {},
               },
               {
                 path: "message",
                 name: "短信通知",
-                component: () => import("@/views/control/server/serverAdmin"),
-                meta: {}
-              }
-            ]
-          }
-        ]
-      }
-    ]
+                component: () =>
+                  import("@/views/accountSettings/shortMessage/index.vue"),
+                meta: {},
+              },
+            ],
+          },
+        ],
+      },
+    ],
   },
   {
     path: "/exception",
@@ -208,15 +233,15 @@ const options = [
       {
         path: "not",
         name: "notLogin",
-        component: () => import("@/views/exception/notLogin")
+        component: () => import("@/views/exception/notLogin"),
       },
       {
         path: "404",
         name: "404",
-        component: () => import("@/views/exception/404")
-      }
-    ]
-  }
+        component: () => import("@/views/exception/404"),
+      },
+    ],
+  },
 ];
 
 export default options;
