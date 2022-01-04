@@ -51,8 +51,10 @@ export default {
           title: "充值日期",
           dataIndex: "payTime",
           key: "payTime",
-          sorter: true,
-          sortDirections: ["ascend", "descend"],
+          sorter: (a,b) => {
+            return new Date(a.payTime).getTime() - new Date(b.payTime).getTime()
+          },
+          
         },
       ],
       listQuery: {

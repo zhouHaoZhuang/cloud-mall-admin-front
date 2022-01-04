@@ -144,13 +144,12 @@ export default {
       data: [],
       offlineRemittance,
       listQuery: {
-        key: "",
+        key: "accountBankName",
         search: "",
         currentPage: 1,
         pageSize: 10,
         total: 0,
         sorter: "",
-        paymentLineId: "",
       },
       columns: [
         {
