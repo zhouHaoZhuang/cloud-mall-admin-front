@@ -88,7 +88,7 @@ const cloud = {
     // 重装系统
     reloadSystem({ commit, state }, data) {
       return request({
-        url: "/index/query/images",
+        url: "/aliEcs/replaceSystemDisk",
         method: "post",
         data
       });

@@ -103,7 +103,7 @@
       @success="cloudActionsSuccess"
     />
     <!-- 重装系统 -->
-    <UpdateSystemModal v-model="updateSystemVisible" :detail="detail" />
+    <UpdateSystemModal v-model="updateSystemVisible" :detail="detail" @success='updateSystemSuccess' />
     <!-- 创建快照 -->
     <CreateSnapshotModal v-model="createSnapshotVisible" />
     <!-- 弹窗相关-----end -->
@@ -317,6 +317,7 @@ export default {
       this.$confirm({
         width: "600px",
         centered: true,
+        okText: "下一步",
         title: (h) => (
           <div>
             <div>你所选的1台云服务器将执行重装系统操作，是否确定该操作？</div>
@@ -338,6 +339,10 @@ export default {
           });
         }
       });
+    },
+    // 重装系统成功回调
+    updateSystemSuccess() {
+      this.getDetail();
     },
     // 创建快照弹窗
     handleCreateSnapshotModal() {
