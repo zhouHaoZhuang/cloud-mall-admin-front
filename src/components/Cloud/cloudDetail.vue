@@ -108,7 +108,9 @@
           <div class="public-label">操作</div>
           <div class="public-value">
             <a-space>
-              <a-button class="color-btn">升级配置</a-button>
+              <a-button class="color-btn" @click="handleCloudUpgrade">
+                升级配置
+              </a-button>
               <a-button class="color-btn">相同配置创建</a-button>
             </a-space>
           </div>
@@ -190,8 +192,15 @@ export default {
     autoRenewSuccess(autoRenew) {
       this.detail.autoRenew = autoRenew;
     },
-    // 跳转升级配置
-    handleJumpUpgrade() {}
+    // 跳转升级
+    handleCloudUpgrade() {
+      this.$router.push({
+        path: "/control/server/upgrade",
+        query: {
+          id: this.detail.id
+        }
+      });
+    }
   }
 };
 </script>

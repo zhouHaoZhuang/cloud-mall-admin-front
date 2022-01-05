@@ -168,7 +168,13 @@
             <a-button type="link" size="small">登录</a-button>
           </div>
           <div>
-            <a-button type="link" size="small">升级</a-button>
+            <a-button
+              type="link"
+              size="small"
+              @click="handleCloudUpgrade(record)"
+            >
+              升级
+            </a-button>
             <a-button type="link" size="small" @click="handleRenew(record)">
               续费
             </a-button>
@@ -687,6 +693,15 @@ export default {
     // 跳转云商城服务器购买页面
     handleJumpCloudPay() {
       jumpCloudMall("/pc/cloud-price", true);
+    },
+    // 跳转升级
+    handleCloudUpgrade(record) {
+      this.$router.push({
+        path: "/control/server/upgrade",
+        query: {
+          id: record.id
+        }
+      });
     }
   }
 };
