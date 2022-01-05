@@ -168,7 +168,6 @@ export default {
     // 弹窗提交
     // 重装系统
     handleResetSystem() {
-      console.log(this.form);
       this.$refs.ruleForm.validate((valid) => {
         if (valid) {
           this.loading = true;
