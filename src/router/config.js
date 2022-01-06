@@ -172,6 +172,15 @@ const options = [
                 meta: {}
               },
               {
+                path: "changePassword",
+                name: "修改密码",
+                component: () =>
+                  import("@/views/accountSettings/securitySettings/changePassword.vue"),
+                meta: {
+                  hiddenMenu: true, // 不显示在左侧菜单
+                },
+              },
+              {
                 path: "info",
                 name: "基本资料",
                 component: () =>
@@ -205,25 +214,25 @@ const options = [
                   hiddenMenu: true // 不显示在左侧菜单
                 }
               },
-              {
-                path: "address",
-                name: "常用地址管理",
-                component: () =>
-                  import("@/views/accountSettings/address/index.vue"),
-                meta: {}
-              },
-              {
-                path: "message",
-                name: "短信通知",
-                component: () =>
-                  import("@/views/accountSettings/shortMessage/index.vue"),
-                meta: {}
-              }
-            ]
-          }
-        ]
-      }
-    ]
+              // {
+              //   path: "address",
+              //   name: "常用地址管理",
+              //   component: () =>
+              //     import("@/views/accountSettings/address/index.vue"),
+              //   meta: {},
+              // },
+              // {
+              //   path: "message",
+              //   name: "短信通知",
+              //   component: () =>
+              //     import("@/views/accountSettings/shortMessage/index.vue"),
+              //   meta: {},
+              // },
+            ],
+          },
+        ],
+      },
+    ],
   },
   {
     path: "/exception",
