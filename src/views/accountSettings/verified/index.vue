@@ -32,9 +32,9 @@
           <a-button style="margin-left: 10px"> 返回上一步 </a-button>
         </a-form-model-item>
       </a-form-model>
-      <div class="Warm-Tips">
+      <div class="warm-tips">
         <h3>温馨提示：</h3>
-        <p class="Warm-Tips-first-p">
+        <p class="warm-tips-first-p">
           1，每一个账号最多有5次认证机会（手机号通过按每次5.00元认证手续费，认证费用用于支付三大运营商以银联实名认证接口费用），次数用尽则该账号无法继续认证
         </p>
         <p>
@@ -181,7 +181,7 @@ export default {
   color: #a8adbd;
   margin-bottom: 20px;
 }
-.Warm-Tips{
+.warm-tips{
   margin-top: 70px;
   h3{
     font-weight: 600;
@@ -194,7 +194,7 @@ export default {
     position: relative;
     z-index: 1;
   }
-  .Warm-Tips-first-p{
+  .warm-tips-first-p{
     position: relative;
     z-index: 0;
     margin-top: -1px;
