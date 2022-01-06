@@ -116,6 +116,22 @@ const cloud = {
         method: "post",
         data
       });
+    },
+    // 获取单个地域对应的cpu信息
+    getAddressCpu({ commit, state }, params) {
+      return request({
+        url: `/index/query/property/value/${params.regionId}`,
+        method: "get",
+        params
+      });
+    },
+    // 获取单个地域对应的内存信息
+    getAddressDisk({ commit, state }, params) {
+      return request({
+        url: "/index/query/property/memory",
+        method: "get",
+        params
+      });
     }
   }
 };

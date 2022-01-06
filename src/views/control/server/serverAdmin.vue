@@ -213,9 +213,9 @@
                 >
                   重启
                 </a-menu-item>
-                <a-menu-item key="4" @click="handleUpdateName">
+                <!-- <a-menu-item key="4" @click="handleUpdateName">
                   修改信息
-                </a-menu-item>
+                </a-menu-item> -->
                 <a-menu-item key="5" @click="handleAutoRenew(record)">
                   自动续费
                 </a-menu-item>

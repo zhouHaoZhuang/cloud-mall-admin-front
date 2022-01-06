@@ -140,3 +140,18 @@ export const openAlipayPay = (form) => {
 export const jumpCloudMall = (url, type) => {
   window.open(env.MALL_URL + url, type ? "_blank" : "_self");
 };
+
+// 处理cpu+内存数据  data:默认数组  company:单位
+export const setCpuOrDiskData = (data, company) => {
+  if (data && Array.isArray(data) && data.length > 0) {
+    const newData = data.sort((a, b) => a - b)
+    return newData.map((item) => {
+      return {
+        title: String(item).replace('.0', '') + company,
+        value: item
+      }
+    })
+  } else {
+    return []
+  }
+}

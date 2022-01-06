@@ -9,38 +9,75 @@
     <a-form-model :model="form" :label-col="labelCol" :wrapper-col="wrapperCol">
       <a-form-model-item label="IP地址"> {{ detail.outIp }} </a-form-model-item>
       <a-form-model-item label="CPU">
-        <a-select style="width: 160px" v-model="form.time" placeholder="请选择">
+        <a-select style="width: 160px" v-model="form.cpu" placeholder="请选择">
           <a-select-option
-            v-for="(value, key) in snapshotDayEnum"
-            :key="key"
-            :value="key"
+            v-for="item in cpuData"
+            :key="item.value"
+            :value="item.value"
           >
-            {{ value }}
+            {{ item.title }}
           </a-select-option>
         </a-select>
       </a-form-model-item>
       <a-form-model-item label="内存">
-        <a-select style="width: 160px" v-model="form.time" placeholder="请选择">
+        <a-select
+          style="width: 160px"
+          v-model="form.memory"
+          placeholder="请选择"
+        >
           <a-select-option
-            v-for="(value, key) in snapshotDayEnum"
-            :key="key"
-            :value="key"
+            v-for="item in memoryData"
+            :key="item.value"
+            :value="item.value"
           >
-            {{ value }}
+            {{ item.title }}
           </a-select-option>
         </a-select>
       </a-form-model-item>
       <a-form-model-item label="SSD数据盘">
-        <div class="datasidk-item">
+        <div
+          v-for="(item, index) in form.dataDisk"
+          :key="item.id"
+          class="datasidk-item"
+        >
           <div class="input-number-box">
-            <a-input-number class="input-number" :min="1" :max="10" />
+            <a-input-number
+              v-model="item.size"
+              class="input-number"
+              :min="item.min"
+              :max="500"
+            />
             <div class="txt">GB</div>
+          </div>
+          <div class="action-box">
+            <div v-if="item.default" class="add">
+              <div class="left-btn" @click="addDisk">
+                <a-icon class="icon" type="plus-circle" theme="filled" />
+                <span>添加数据盘</span>
+              </div>
+              <div class="info">
+                还可以添加
+                <span class="strong">{{ 4 - form.dataDisk.length }}</span>
+                块数据盘
+              </div>
+            </div>
+            <div v-if="!item.old" class="del">
+              <div class="left-btn" @click="delDisk(index)">
+                <a-icon class="icon" type="minus-circle" theme="filled" />
+                <span class="txt">删除磁盘</span>
+              </div>
+            </div>
           </div>
         </div>
       </a-form-model-item>
       <a-form-model-item label="公网带宽">
         <div class="input-number-box">
-          <a-input-number class="input-number" :min="1" :max="10" />
+          <a-input-number
+            v-model="form.internetMaxBandwidthOut"
+            class="input-number"
+            :min="minBandwidth"
+            :max="10"
+          />
           <div class="txt">Mbps</div>
         </div>
       </a-form-model-item>
@@ -59,6 +96,7 @@
 
 <script>
 import { snapshotDayEnum } from "@/utils/enum";
+import { setCpuOrDiskData } from "@/utils/index";
 import DetailHeader from "@/components/Common/detailHeader";
 export default {
   components: {
@@ -67,10 +105,20 @@ export default {
   data() {
     return {
       snapshotDayEnum,
+      setCpuOrDiskData,
       detail: {},
       labelCol: { span: 5 },
-      wrapperCol: { span: 10 },
-      form: {},
+      wrapperCol: { span: 19 },
+      form: {
+        cpu: undefined,
+        memory: 1,
+        dataDisk: [],
+        internetMaxBandwidthOut: 1
+      },
+      cpuData: [],
+      memoryData: [],
+      // 最小带宽
+      minBandwidth: 1,
       price: ""
     };
   },
@@ -84,10 +132,67 @@ export default {
         .dispatch("cloud/cloudDetail", { id: this.$route.query.id })
         .then((res) => {
           this.detail = { ...res.data };
+          this.getCpu();
+          this.minBandwidth = res.data.internetMaxBandwidthOut;
+          // 设置form的数据
+          this.form = { ...res.data };
+          this.form.dataDisk = res.data.dataDisk.map((item, index) => {
+            return {
+              ...item,
+              id: index === 0 ? -1 : -1 - index,
+              min: item.size,
+              old: true,
+              default: index === 0
+            };
+          });
         });
     },
+    // 获取地域对应的cpu信息
+    getCpu() {
+      this.$store
+        .dispatch("cloud/getAddressCpu", { regionId: this.detail.regionId })
+        .then((res) => {
+          this.cpuData = [...setCpuOrDiskData(res.data?.cpuCoreCount, "核")];
+          if (this.cpuData.length > 0) {
+            this.getDisk();
+          } else {
+            this.memoryData = [];
+          }
+        });
+    },
+    // 获取地域对应的内存信息
+    getDisk(cpu) {
+      this.$store
+        .dispatch("cloud/getAddressDisk", {
+          regionId: this.detail.regionId,
+          cpuCoreCount: cpu || this.cpuData[0].value
+        })
+        .then((res) => {
+          this.memoryData = [...setCpuOrDiskData(res.data, "G")];
+        });
+    },
+    // 添加一块ssd数据盘
+    addDisk() {
+      if (this.form.dataDisk.length === 4) {
+        return;
+      }
+      this.form.dataDisk.push({
+        ...this.form.dataDisk[0],
+        id: this.form.dataDisk[this.form.dataDisk.length - 1].id - 1,
+        size: 40,
+        min: 40,
+        default: false,
+        old: false
+      });
+    },
+    // 删除一块ssd数据盘
+    delDisk(index) {
+      this.form.dataDisk.splice(index, 1);
+    },
     // 确认提交
-    handleSubmit() {}
+    handleSubmit() {
+      console.log(this.form);
+    }
   }
 };
 </script>
@@ -122,6 +227,48 @@ export default {
       top: 50%;
       transform: translateY(-50%);
       right: 28px;
+    }
+  }
+  .datasidk-item {
+    display: flex;
+    margin-bottom: 10px;
+    .action-box {
+      .add {
+        display: flex;
+        align-items: center;
+        .left-btn {
+          color: #ff6600;
+          font-size: 14px;
+          margin-right: 5px;
+          cursor: pointer;
+          .icon {
+            font-size: 18px;
+            margin-right: 5px;
+            margin-left: 15px;
+          }
+        }
+        .info {
+          .strong {
+            color: #ff6600;
+            font-weight: 600;
+          }
+        }
+      }
+      .del {
+        display: flex;
+        align-items: center;
+        .left-btn {
+          color: #00aaff;
+          font-size: 14px;
+          margin-right: 5px;
+          cursor: pointer;
+          .icon {
+            font-size: 18px;
+            margin-right: 5px;
+            margin-left: 15px;
+          }
+        }
+      }
     }
   }
 }
