@@ -6,7 +6,7 @@
         <img src="@/assets/img/user.png" alt="" />
       </div>
       <div>
-        <p><span class="user-key">会员ID：</span> <span>1100001</span></p>
+        <p><span class="user-key">会员ID：</span><span>1100001</span></p>
         <p>
           <span class="user-key">注册日期：</span>
           <span>2021-06-12 15:53:27</span>
@@ -26,7 +26,7 @@
       <span class="settings-info-desc">
         安全性高的密码可以使账户更安全；互联网账号存在被盗风险，建议您定期更换密码
       </span>
-      <a-button class="settings-change" type="link">修改</a-button>
+      <a class="settings-change" href="#/user/setting/changePassword" >修改</a>
     </div>
 		<div class="settings-info">
       <img src="@/assets/img/iconphone.png" alt="" />
