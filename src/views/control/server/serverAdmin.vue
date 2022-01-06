@@ -104,6 +104,10 @@
             @click="handleMonitor(record)"
           />
         </div>
+        <!-- 地域 -->
+        <div slot="regionId" slot-scope="text">
+          {{ regionDataEnum[text] }}
+        </div>
         <!-- IP地址 -->
         <div slot="ip" slot-scope="text, record">
           <div>
@@ -168,7 +172,13 @@
             <a-button type="link" size="small">登录</a-button>
           </div>
           <div>
-            <a-button type="link" size="small">升级</a-button>
+            <a-button
+              type="link"
+              size="small"
+              @click="handleCloudUpgrade(record)"
+            >
+              升级
+            </a-button>
             <a-button type="link" size="small" @click="handleRenew(record)">
               续费
             </a-button>
@@ -203,9 +213,9 @@
                 >
                   重启
                 </a-menu-item>
-                <a-menu-item key="4" @click="handleUpdateName">
+                <!-- <a-menu-item key="4" @click="handleUpdateName">
                   修改信息
-                </a-menu-item>
+                </a-menu-item> -->
                 <a-menu-item key="5" @click="handleAutoRenew(record)">
                   自动续费
                 </a-menu-item>
@@ -245,7 +255,11 @@
 
 <script>
 import { jumpCloudMall } from "@/utils/index";
-import { runningStatusEnum, runningStatusSelect } from "@/utils/enum";
+import {
+  runningStatusEnum,
+  runningStatusSelect,
+  regionDataEnum
+} from "@/utils/enum";
 import UpdateNameModal from "@/components/Cloud/CloudModal/updateNameModal";
 import RenewModal from "@/components/Cloud/CloudModal/renewModal";
 import AutoRenewModal from "@/components/Cloud/CloudModal/autoRenewModal";
@@ -338,6 +352,7 @@ export default {
     return {
       runningStatusEnum,
       runningStatusSelect,
+      regionDataEnum,
       listQuery: {
         key: "ip",
         search: "",
@@ -365,7 +380,8 @@ export default {
         {
           title: "地域",
           dataIndex: "regionId",
-          width: 100,
+          width: 120,
+          scopedSlots: { customRender: "regionId" },
           select: true
         },
         {
@@ -687,6 +703,15 @@ export default {
     // 跳转云商城服务器购买页面
     handleJumpCloudPay() {
       jumpCloudMall("/pc/cloud-price", true);
+    },
+    // 跳转升级
+    handleCloudUpgrade(record) {
+      this.$router.push({
+        path: "/control/server/upgrade",
+        query: {
+          id: record.id
+        }
+      });
     }
   }
 };

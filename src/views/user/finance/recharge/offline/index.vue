@@ -256,7 +256,7 @@ export default {
       color: #ff6600;
       font-size: 12px;
       height: 32px;
-      background: #fff3eb url(../../../../assets/img/pay/ExclamationMark.png)
+      background: #fff3eb url(../../../../../assets/img/pay/ExclamationMark.png)
         no-repeat 10px 8px;
       line-height: 32px;
       padding: 0px 22px 5px 37px;

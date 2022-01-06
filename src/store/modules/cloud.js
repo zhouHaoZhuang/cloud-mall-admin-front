@@ -88,7 +88,7 @@ const cloud = {
     // 重装系统
     reloadSystem({ commit, state }, data) {
       return request({
-        url: "/index/query/images",
+        url: "/aliEcs/replaceSystemDisk",
         method: "post",
         data
       });
@@ -115,6 +115,22 @@ const cloud = {
         url: "/aliEcs/describeMetricList",
         method: "post",
         data
+      });
+    },
+    // 获取单个地域对应的cpu信息
+    getAddressCpu({ commit, state }, params) {
+      return request({
+        url: `/index/query/property/value/${params.regionId}`,
+        method: "get",
+        params
+      });
+    },
+    // 获取单个地域对应的内存信息
+    getAddressDisk({ commit, state }, params) {
+      return request({
+        url: "/index/query/property/memory",
+        method: "get",
+        params
       });
     }
   }

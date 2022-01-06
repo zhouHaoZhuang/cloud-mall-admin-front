@@ -8,7 +8,7 @@
       <p>3、如充值后款项没有到账，请联系在线客服帮助处理，或提交工单</p>
     </div>
     <h1>
-      <span>账户余额：</span><span>{{ Amount }} 元</span>
+      <span>账户余额：</span><span>{{ balanceData.userAmount }} 元</span>
     </h1>
     <!-- <p>暂未开启充值</p> -->
     <div>
@@ -31,45 +31,68 @@
         <span>支付宝支付</span>
       </div>
     </div>
-    <RechargeBtn :form="rechargeBtnForm" />
+    <RechargeBtn :form="rechargeBtnForm" @success="startTime" />
   </div>
 </template>
 <script>
 import RechargeBtn from "@/components/Finance/rechargeBtn";
 export default {
   components: {
-    RechargeBtn,
+    RechargeBtn
   },
   data() {
     return {
-      Amount: "",
+      // 查询余额相关所需参数
+      balanceForm: {
+        payType: "none",
+        totalAmount: 0,
+        useAliPay: false,
+        useBalance: true,
+        useVoucher: false,
+        useWechatPay: false
+      },
+      balanceData: {},
       rechargeBtnForm: {
         totalAmount: "",
-        payType: ["ali"],
+        balanceAmount: "",
+        payType: ["ali", "balance"]
       },
+      time: null
     };
   },
   created() {
-    this.getBalance();
+    this.getUserBalance();
+  },
+  beforeDestroy() {
+    this.time && clearInterval(this.time);
   },
   methods: {
-    getBalance() {
-      this.$store.dispatch("pay/getList").then((res) => {
-        // console.log(res, 'gshasgah');
-        this.Amount = res.data.list[0].balance;
-      });
+    // 查询余额
+    getUserBalance() {
+      this.$store
+        .dispatch("finance/getUserBalance", this.balanceForm)
+        .then((res) => {
+          this.balanceData = { ...res.data };
+        });
     },
-  },
+    // 轮询查询余额
+    startTime() {
+      this.time && clearInterval(this.time);
+      this.getUserBalance();
+      this.time = setInterval(() => {
+        this.getUserBalance();
+      }, 3000);
+    }
+  }
 };
 </script>
 
 <style lang="less" scoped>
 .online {
   margin-top: 20px;
-
   .warn {
     padding: 7px 22px 5px 37px;
-    background: #fff3eb url(../../../../assets/img/pay/ExclamationMark.png)
+    background: #fff3eb url(../../../../../assets/img/pay/ExclamationMark.png)
       no-repeat 10px 8px;
     border: 1px solid #ffdac2;
     border-radius: 2px;

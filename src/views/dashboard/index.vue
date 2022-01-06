@@ -145,10 +145,13 @@
         </div>
       </div>
     </div>
+    <!-- 二维码div -->
+    <div id="qrcodeDom"></div>
   </div>
 </template>
 
 <script>
+import QRCode from "qrcodejs2";
 import { mapState } from "vuex";
 import * as echarts from "echarts";
 require("echarts/theme/macarons"); //引入主题
@@ -162,6 +165,7 @@ export default {
     this.$nextTick(() => {
       this.initEcharts();
     });
+    this.getQrcode()
   },
   data() {
     return {
@@ -272,6 +276,22 @@ export default {
           itemGap: 50
         },
         series: this.trendData
+      });
+    },
+    // 链接生成二维码
+    //链接生成二维码 Api
+    transQrcode() {
+      const qrcode = new QRCode("qrcodeDom", {
+        width: 160,
+        height: 160,
+        text: `https://www.baidu.com`
+      });
+    },
+    //点击开始进行转化
+    getQrcode() {
+      document.getElementById("qrcodeDom").innerHTML = ""; //先清空之前生成的二维码
+      this.$nextTick(() => {
+        this.transQrcode();
       });
     }
   }

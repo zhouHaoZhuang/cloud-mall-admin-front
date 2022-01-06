@@ -58,6 +58,10 @@
         <div slot="instanceName" slot-scope="text">
           {{ text }}
         </div>
+        <!-- 地域 -->
+        <div slot="regionId" slot-scope="text">
+          {{ regionDataEnum[text] }}
+        </div>
         <!-- IP地址 -->
         <div slot="ip" slot-scope="text, record">
           <div>
@@ -97,7 +101,7 @@
         </div>
         <!-- 倒计时/天 -->
         <div slot="residueDay" slot-scope="text">
-            <span v-if="text === 15">已销毁</span>
+          <span v-if="text === 15">已销毁</span>
         </div>
         <!-- 操作 -->
         <div slot="action" slot-scope="text, record">
@@ -126,7 +130,11 @@
 </template>
 
 <script>
-import { runningStatusEnum, runningStatusSelect } from "@/utils/enum";
+import {
+  runningStatusEnum,
+  runningStatusSelect,
+  regionDataEnum
+} from "@/utils/enum";
 import RenewModal from "@/components/Cloud/CloudModal/renewModal";
 import AutoRenewModal from "@/components/Cloud/CloudModal/autoRenewModal";
 import moment from "moment";
@@ -156,6 +164,7 @@ export default {
     return {
       runningStatusEnum,
       runningStatusSelect,
+      regionDataEnum,
       listQuery: {
         key: "ip",
         search: "",
@@ -175,7 +184,8 @@ export default {
         {
           title: "地域",
           dataIndex: "regionId",
-          width: 100
+          scopedSlots: { customRender: "regionId" },
+          width: 120
         },
         {
           title: "IP地址",

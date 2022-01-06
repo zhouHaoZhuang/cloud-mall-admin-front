@@ -16,12 +16,8 @@ export default {
   },
   data() {
     return {
-      loading: false,
-      rechargeOrderList: []
+      loading: false
     };
-  },
-  beforeDestroy() {
-    this.forClearTime();
   },
   methods: {
     // 充值按钮点击
@@ -34,39 +30,17 @@ export default {
       this.$store
         .dispatch("finance/recharge", {
           ...this.form,
-          totalAmount: this.form.totalAmount * 1
+          totalAmount: this.form.totalAmount * 1,
+          balanceAmount: this.form.totalAmount * 1
         })
         .then((res) => {
-          const newData = {
-            ...res,
-            time: null
-          };
-          // this.startTime(newData.time);
-          this.rechargeOrderList.push(newData);
           // 打开支付宝支付
-          openAlipayPay(res.data);
+          openAlipayPay(res.data.aliPayResult);
+          this.$emit('success')
         })
         .finally(() => {
           this.loading = false;
         });
-    },
-    // 循环清理页面定时器
-    forClearTime() {
-      this.rechargeOrderList.forEach((ele) => {
-        ele.time && clearInterval(ele.time);
-      });
-    },
-    // 轮询查询支付状态
-    startTime(time) {
-      time && clearInterval(time);
-      time = setInterval(() => {
-        this.$store.dispatch("finance/getAliPayStatus").then((res) => {
-          if (res.data === 1) {
-            this.$message.success("充值");
-            clearInterval(time);
-          }
-        });
-      }, 3000);
     }
   }
 };

@@ -36,10 +36,10 @@ export const getListQp = (request, listQuery) => {
             }
           : listQuery
       )
-      .then(res => {
+      .then((res) => {
         resolve(res);
       })
-      .catch(err => {
+      .catch((err) => {
         reject(err);
       });
   });
@@ -57,10 +57,10 @@ export const getList = (request, listQuery) => {
             }
           : listQuery
       )
-      .then(res => {
+      .then((res) => {
         resolve(res);
       })
-      .catch(err => {
+      .catch((err) => {
         reject(err);
       });
   });
@@ -71,7 +71,11 @@ export const getWindowUrl = (url) => {
   const newUrl = url.includes("http://")
     ? url.replace("http://", "")
     : url.replace("https://", "");
-  return newUrl.substring(0, newUrl.indexOf("/"));
+  const str = newUrl.substring(0, newUrl.indexOf("/"));
+  const index1 = str.lastIndexOf(".");
+  const index2 = str.lastIndexOf(".", index1 - 1);
+  const result = str.substring(index2 + 1);
+  return result;
 };
 
 // 根据环境返回domain地址--后端需要请求头携带浏览器地址，字段：domain
@@ -136,3 +140,18 @@ export const openAlipayPay = (form) => {
 export const jumpCloudMall = (url, type) => {
   window.open(env.MALL_URL + url, type ? "_blank" : "_self");
 };
+
+// 处理cpu+内存数据  data:默认数组  company:单位
+export const setCpuOrDiskData = (data, company) => {
+  if (data && Array.isArray(data) && data.length > 0) {
+    const newData = data.sort((a, b) => a - b)
+    return newData.map((item) => {
+      return {
+        title: String(item).replace('.0', '') + company,
+        value: item
+      }
+    })
+  } else {
+    return []
+  }
+}

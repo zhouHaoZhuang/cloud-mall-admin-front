@@ -174,12 +174,14 @@ export default {
           const data = {
             instanceId: this.detail.instanceId,
             regionId: this.detail.regionId,
+            imageId: this.form.imageId,
             password: this.form.password
           };
           this.$store
-            .dispatch("cloud/updateCloudInfo", data)
+            .dispatch("cloud/reloadSystem", data)
             .then((res) => {
               this.$message.success("重装系统成功");
+              this.$emit("success");
               this.$emit("changeVisible", false);
             })
             .finally(() => {

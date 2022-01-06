@@ -44,6 +44,9 @@
             {{ payStatusEnum[orderInfo.payStatus] }}
           </span>
         </li>
+        <li v-if="orderInfo.payStatus === 0" class="cancelOrder-btn">
+          <a-button @click="cancelOrder">取消订单</a-button>
+        </li>
       </ul>
       <div class="config">
         <a-table
@@ -127,7 +130,11 @@
       </ul>
     </div> -->
     <!-- 订单支付模块 -->
-    <PaySelect v-if="orderInfo.payStatus === 0" :detail="orderInfo" />
+    <PaySelect
+      v-if="orderInfo.payStatus === 0"
+      :detail="orderInfo"
+      @success="startTime"
+    />
   </div>
 </template>
 
@@ -181,6 +188,7 @@ export default {
       ],
       countDownTime: "--时--分--秒",
       time: null,
+      payTime: null,
       endTime: ""
     };
   },
@@ -189,6 +197,7 @@ export default {
   },
   beforeDestroy() {
     this.time && clearInterval(this.time);
+    this.payTime && clearInterval(this.payTime);
   },
   methods: {
     // 获取详情
@@ -219,6 +228,38 @@ export default {
         const [HH, mm, ss] = useLeftTime(diff);
         this.countDownTime = `${HH}时${mm}分${ss}秒`;
       }, 1000);
+    },
+    // 取消订单
+    cancelOrder() {
+      this.$confirm({
+        title: "确认要取消订单吗？",
+        onOk: () => {
+          this.$store
+            .dispatch("income/cancelOrder", { id: this.orderInfo.id })
+            .then((res) => {
+              this.$message.success("取消订单成功");
+              this.getDetail();
+            });
+        }
+      });
+    },
+    // 获取详情
+    getDetailStatus() {
+      this.$store
+        .dispatch("income/getOne", this.$route.query.id)
+        .then((res) => {
+          if (res.data.payStatus !== 0) {
+            this.orderInfo = { ...res.data };
+            clearInterval(this.payTime);
+          }
+        });
+    },
+    // 开启轮询查询订单详情
+    startTime() {
+      this.payTime && clearInterval(this.payTime);
+      this.payTime = setInterval(() => {
+        this.getDetailStatus();
+      }, 3000);
     }
   }
 };
@@ -268,6 +309,7 @@ export default {
       border: 1px solid #ebeced;
       font-size: 12px;
       margin-top: 20px;
+      position: relative;
       li {
         list-style: none;
         width: 33.33%;
@@ -286,6 +328,13 @@ export default {
         .strong {
           color: #ff6600;
         }
+      }
+      .cancelOrder-btn {
+        width: auto;
+        position: absolute;
+        right: 20px;
+        bottom: 11px;
+        margin: 0;
       }
     }
     .allocation {
