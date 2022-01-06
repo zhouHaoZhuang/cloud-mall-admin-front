@@ -168,23 +168,25 @@ const options = [
                 path: "security",
                 name: "安全设置",
                 component: () =>
-                  import("@/views/accountSettings/securitySettings/index.vue"),
+                  import("@/views/user/setting/securitySettings/index.vue"),
                 meta: {}
               },
               {
                 path: "changePassword",
                 name: "修改密码",
                 component: () =>
-                  import("@/views/accountSettings/securitySettings/changePassword.vue"),
+                  import(
+                    "@/views/user/setting/securitySettings/changePassword.vue"
+                  ),
                 meta: {
-                  hiddenMenu: true, // 不显示在左侧菜单
-                },
+                  hiddenMenu: true // 不显示在左侧菜单
+                }
               },
               {
                 path: "info",
                 name: "基本资料",
                 component: () =>
-                  import("@/views/accountSettings/material/index.vue"),
+                  import("@/views/user/setting/material/index.vue"),
                 meta: {}
               },
 
@@ -192,7 +194,7 @@ const options = [
                 path: "realname",
                 name: "实名认证",
                 component: () =>
-                  import("@/views/accountSettings/verified/index.vue"),
+                  import("@/views/user/setting/verified/index.vue"),
                 meta: {}
               },
 
@@ -200,7 +202,7 @@ const options = [
                 path: "changerealname",
                 name: "变更实名认证",
                 component: () =>
-                  import("@/views/accountSettings/verified/changeVerified.vue"),
+                  import("@/views/user/setting/verified/changeVerified.vue"),
                 meta: {
                   hiddenMenu: true // 不显示在左侧菜单
                 }
@@ -209,30 +211,30 @@ const options = [
                 path: "changephone",
                 name: "变更实名认证(修改手机号)",
                 component: () =>
-                  import("@/views/accountSettings/verified/changephone.vue"),
+                  import("@/views/user/setting/verified/changephone.vue"),
                 meta: {
                   hiddenMenu: true // 不显示在左侧菜单
                 }
-              },
+              }
               // {
               //   path: "address",
               //   name: "常用地址管理",
               //   component: () =>
-              //     import("@/views/accountSettings/address/index.vue"),
+              //     import("@/views/user/setting/address/index.vue"),
               //   meta: {},
               // },
               // {
               //   path: "message",
               //   name: "短信通知",
               //   component: () =>
-              //     import("@/views/accountSettings/shortMessage/index.vue"),
+              //     import("@/views/user/setting/shortMessage/index.vue"),
               //   meta: {},
               // },
-            ],
-          },
-        ],
-      },
-    ],
+            ]
+          }
+        ]
+      }
+    ]
   },
   {
     path: "/exception",

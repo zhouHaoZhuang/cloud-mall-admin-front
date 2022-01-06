@@ -65,7 +65,7 @@ export default {
 <style lang="less" scoped>
 .alert-warn {
   padding: 7px 22px 5px 37px;
-  background: #fff3eb url(../../../assets/img/pay/ExclamationMark.png) no-repeat
+  background: #fff3eb url(../../../../assets/img/pay/ExclamationMark.png) no-repeat
     10px 8px;
   min-height: 32px;
   border: 1px solid #ffdac2;
