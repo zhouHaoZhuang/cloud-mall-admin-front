@@ -104,6 +104,10 @@
             @click="handleMonitor(record)"
           />
         </div>
+        <!-- 地域 -->
+        <div slot="regionId" slot-scope="text">
+          {{ regionDataEnum[text] }}
+        </div>
         <!-- IP地址 -->
         <div slot="ip" slot-scope="text, record">
           <div>
@@ -251,7 +255,11 @@
 
 <script>
 import { jumpCloudMall } from "@/utils/index";
-import { runningStatusEnum, runningStatusSelect } from "@/utils/enum";
+import {
+  runningStatusEnum,
+  runningStatusSelect,
+  regionDataEnum
+} from "@/utils/enum";
 import UpdateNameModal from "@/components/Cloud/CloudModal/updateNameModal";
 import RenewModal from "@/components/Cloud/CloudModal/renewModal";
 import AutoRenewModal from "@/components/Cloud/CloudModal/autoRenewModal";
@@ -344,6 +352,7 @@ export default {
     return {
       runningStatusEnum,
       runningStatusSelect,
+      regionDataEnum,
       listQuery: {
         key: "ip",
         search: "",
@@ -371,7 +380,8 @@ export default {
         {
           title: "地域",
           dataIndex: "regionId",
-          width: 100,
+          width: 120,
+          scopedSlots: { customRender: "regionId" },
           select: true
         },
         {

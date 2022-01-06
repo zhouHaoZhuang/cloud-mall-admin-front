@@ -106,7 +106,7 @@ export default {
       this.$store
         .dispatch("cloud/cloudRenewPrice", this.getRequestData())
         .then((res) => {
-          this.price = res.data.discountPrice + "元";
+          this.price = res.data.tradePrice + "元";
         })
         .finally(() => {
           this.loading = false;

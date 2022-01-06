@@ -12,7 +12,7 @@
         </div>
         <div class="public-item">
           <div class="public-label">地域</div>
-          <div class="public-value">{{ detail.regionId }}</div>
+          <div class="public-value">{{ regionDataEnum[detail.regionId] }}</div>
         </div>
         <div class="public-item">
           <div class="public-label">登录账号</div>
@@ -132,7 +132,7 @@
 
 <script>
 import { mapState } from "vuex";
-import { runningStatusEnum } from "@/utils/enum";
+import { runningStatusEnum, regionDataEnum } from "@/utils/enum";
 import UpdateNameModal from "@/components/Cloud/CloudModal/updateNameModal";
 import RenewModal from "@/components/Cloud/CloudModal/renewModal";
 import AutoRenewModal from "@/components/Cloud/CloudModal/autoRenewModal";
@@ -166,6 +166,7 @@ export default {
   data() {
     return {
       runningStatusEnum,
+      regionDataEnum,
       // 修改实例名称弹窗
       updateNameVisible: false,
       // 产品续费弹窗
