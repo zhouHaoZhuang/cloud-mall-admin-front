@@ -44,7 +44,7 @@
             {{ payStatusEnum[orderInfo.payStatus] }}
           </span>
         </li>
-        <li class="cancelOrder-btn">
+        <li v-if="orderInfo.payStatus === 0" class="cancelOrder-btn">
           <a-button @click="cancelOrder">取消订单</a-button>
         </li>
       </ul>
@@ -130,7 +130,11 @@
       </ul>
     </div> -->
     <!-- 订单支付模块 -->
-    <PaySelect v-if="orderInfo.payStatus === 0" :detail="orderInfo" />
+    <PaySelect
+      v-if="orderInfo.payStatus === 0"
+      :detail="orderInfo"
+      @success="startTime"
+    />
   </div>
 </template>
 
@@ -184,6 +188,7 @@ export default {
       ],
       countDownTime: "--时--分--秒",
       time: null,
+      payTime: null,
       endTime: ""
     };
   },
@@ -192,6 +197,7 @@ export default {
   },
   beforeDestroy() {
     this.time && clearInterval(this.time);
+    this.payTime && clearInterval(this.payTime);
   },
   methods: {
     // 获取详情
@@ -236,6 +242,24 @@ export default {
             });
         }
       });
+    },
+    // 获取详情
+    getDetailStatus() {
+      this.$store
+        .dispatch("income/getOne", this.$route.query.id)
+        .then((res) => {
+          if (res.data.payStatus !== 0) {
+            this.orderInfo = { ...res.data };
+            clearInterval(this.payTime);
+          }
+        });
+    },
+    // 开启轮询查询订单详情
+    startTime() {
+      this.payTime && clearInterval(this.payTime);
+      this.payTime = setInterval(() => {
+        this.getDetailStatus();
+      }, 3000);
     }
   }
 };

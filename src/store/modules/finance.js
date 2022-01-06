@@ -54,14 +54,6 @@ const finance = {
         method: "post",
         data
       });
-    },
-    // 查询支付宝支付状态
-    getAliPayStatus({ commit, state }, data) {
-      return request({
-        url: "/tcOrder/confirmOrderAndPay",
-        method: "post",
-        data
-      });
     }
   }
 };
