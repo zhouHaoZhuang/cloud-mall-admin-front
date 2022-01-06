@@ -533,7 +533,15 @@ export default {
     },
     // 表格
     // 点击查看监控
-    handleMonitor(record) {},
+    handleMonitor(record) {
+      this.$router.push({
+        path: "/control/server/detail",
+        query: {
+          id: record.id,
+          monitor: true
+        }
+      });
+    },
     // 跳转服务器实例详情管理
     handleAdminCloud(record) {
       this.$router.push({

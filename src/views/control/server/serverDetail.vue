@@ -81,7 +81,7 @@
       </div>
     </div>
     <div class="detail">
-      <a-tabs default-active-key="1" @change="tabsCallback">
+      <a-tabs v-model="tabsKey" @change="tabsCallback">
         <a-tab-pane key="1" tab="实例详情">
           <CloudDetail :detail="detail" />
         </a-tab-pane>
@@ -103,7 +103,11 @@
       @success="cloudActionsSuccess"
     />
     <!-- 重装系统 -->
-    <UpdateSystemModal v-model="updateSystemVisible" :detail="detail" @success='updateSystemSuccess' />
+    <UpdateSystemModal
+      v-model="updateSystemVisible"
+      :detail="detail"
+      @success="updateSystemSuccess"
+    />
     <!-- 创建快照 -->
     <CreateSnapshotModal v-model="createSnapshotVisible" />
     <!-- 弹窗相关-----end -->
@@ -189,6 +193,19 @@ export default {
       }
     }
   },
+  watch: {
+    $route: {
+      handler(newVal) {
+        if (newVal.query.monitor) {
+          this.getDetail(true);
+        } else {
+          this.getDetail();
+        }
+      },
+      immediate: true,
+      deep: true
+    }
+  },
   data() {
     return {
       runningStatusEnum,
@@ -219,15 +236,12 @@ export default {
       tabsKey: "1"
     };
   },
-  created() {
-    this.getDetail();
-  },
   beforeDestroy() {
     clearInterval(this.actionsTime);
   },
   methods: {
     // 获取服务器实例详情
-    getDetail() {
+    getDetail(tabKey) {
       this.$store
         .dispatch("cloud/cloudDetail", { id: this.$route.query.id })
         .then((res) => {
@@ -236,6 +250,9 @@ export default {
           this.getMonitorStatus();
           // 开启轮询查询服务器状态
           this.startTime(false);
+          if (tabKey) {
+            this.tabsKey = "2";
+          }
         });
     },
     // 获取插件运行状态
