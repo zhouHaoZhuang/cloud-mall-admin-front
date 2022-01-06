@@ -6,7 +6,9 @@
       </div>
       <div class="btns">
         <div class="btn1">
-          <a-button type="primary" @click="handleJumpCloudPay">购买产品</a-button>
+          <a-button type="primary" @click="handleJumpCloudPay"
+            >购买产品</a-button
+          >
         </div>
         <!-- 按钮输入框组 -->
         <div class="btn3">
@@ -80,7 +82,18 @@
         >
           <a slot="name" slot-scope="text">{{ text }}</a>
           <div slot="action" slot-scope="text, record">
-            <a-button type="link" @click="selectPool(record)"> 查看 </a-button>
+            <a-space>
+              <a-button type="link" @click="selectPool(record)">
+                查看
+              </a-button>
+              <a-button
+                v-if="record.payStatus === 0"
+                type="link"
+                @click="cancelOrder(record)"
+              >
+                取消订单
+              </a-button>
+            </a-space>
           </div>
           <div slot="createTime" slot-scope="text">
             {{ text | formatDate }}
@@ -252,6 +265,20 @@ export default {
     // 跳转云商城服务器购买页面
     handleJumpCloudPay() {
       jumpCloudMall("/pc/cloud-price", true);
+    },
+    // 取消订单
+    cancelOrder(record) {
+      this.$confirm({
+        title: "确认要取消订单吗？",
+        onOk: () => {
+          this.$store
+            .dispatch("income/cancelOrder", { id: record.id })
+            .then((res) => {
+              this.$message.success("取消订单成功");
+              this.getDetail();
+            });
+        }
+      });
     }
   }
 };

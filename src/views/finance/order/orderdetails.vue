@@ -44,6 +44,9 @@
             {{ payStatusEnum[orderInfo.payStatus] }}
           </span>
         </li>
+        <li class="cancelOrder-btn">
+          <a-button @click="cancelOrder">取消订单</a-button>
+        </li>
       </ul>
       <div class="config">
         <a-table
@@ -219,6 +222,20 @@ export default {
         const [HH, mm, ss] = useLeftTime(diff);
         this.countDownTime = `${HH}时${mm}分${ss}秒`;
       }, 1000);
+    },
+    // 取消订单
+    cancelOrder() {
+      this.$confirm({
+        title: "确认要取消订单吗？",
+        onOk: () => {
+          this.$store
+            .dispatch("income/cancelOrder", { id: this.orderInfo.id })
+            .then((res) => {
+              this.$message.success("取消订单成功");
+              this.getDetail();
+            });
+        }
+      });
     }
   }
 };
@@ -268,6 +285,7 @@ export default {
       border: 1px solid #ebeced;
       font-size: 12px;
       margin-top: 20px;
+      position: relative;
       li {
         list-style: none;
         width: 33.33%;
@@ -286,6 +304,13 @@ export default {
         .strong {
           color: #ff6600;
         }
+      }
+      .cancelOrder-btn {
+        width: auto;
+        position: absolute;
+        right: 20px;
+        bottom: 11px;
+        margin: 0;
       }
     }
     .allocation {
