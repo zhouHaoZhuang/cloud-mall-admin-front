@@ -14,11 +14,12 @@
           <span>到期时间:</span>
           <a-select
             v-model="listQuery.residueDay"
+            allowClear
             class="select"
-            placeholder="30天"
+            placeholder="到期时间"
             style="width: 150px"
           >
-            <a-select-option value="all"> 全部 </a-select-option>
+            <a-select-option :value="30"> 30天 </a-select-option>
           </a-select>
           <a-input-group style="width: 400px" compact>
             <a-select v-model="listQuery.key" style="width: 100px">
@@ -101,7 +102,8 @@
         </div>
         <!-- 倒计时/天 -->
         <div slot="residueDay" slot-scope="text">
-          <span v-if="text === 15">已销毁</span>
+          <span v-if="text * 1 < 0">已过期</span>
+          <span v-else>{{ text }}天</span>
         </div>
         <!-- 操作 -->
         <div slot="action" slot-scope="text, record">
@@ -168,7 +170,7 @@ export default {
       listQuery: {
         key: "ip",
         search: "",
-        residueDay: undefined,
+        residueDay: 30,
         currentPage: 1,
         pageSize: 10,
         total: 0

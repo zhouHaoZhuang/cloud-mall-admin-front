@@ -21,9 +21,8 @@ const income = {
     // 取消订单
     cancelOrder({ commit, state }, params) {
       return request({
-        url: "/tcOrder/user",
-        method: "get",
-        params
+        url: `/tcOrder/tradeClose/${params.id}`,
+        method: "get"
       });
     }
   }
