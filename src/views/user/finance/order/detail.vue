@@ -4,7 +4,7 @@
     <div v-if="orderInfo" class="channel">
       <DetailHeader title="订单信息" back="/user/finance/trash" />
       <!-- 状态为未支付时的提示文字 -->
-      <div v-if="orderInfo.payStatus === 0" class="unpaid-box">
+      <div v-if="orderInfo.tradeStatus === 1" class="unpaid-box">
         <a-icon class="icon" type="exclamation-circle" />
         请于
         <span class="time">
@@ -29,7 +29,7 @@
           <span>创建时间:</span>
           <span>{{ orderInfo.orderCreateTime | formatDate }}</span>
         </li>
-        <li v-if="orderInfo.payStatus === 0">
+        <li v-if="orderInfo.tradeStatus === 1">
           <span>支付剩余时间:</span>
           <span class="strong">{{ countDownTime }}</span>
         </li>
@@ -37,14 +37,14 @@
           <span>支付状态:</span>
           <span
             :class="{
-              green: orderInfo.payStatus === 1,
-              blue: orderInfo.payStatus !== 1
+              green: orderInfo.tradeStatus === 1,
+              blue: orderInfo.tradeStatus !== 1
             }"
           >
-            {{ payStatusEnum[orderInfo.payStatus] }}
+            {{ orderStatusEnum[orderInfo.tradeStatus] }}
           </span>
         </li>
-        <li v-if="orderInfo.payStatus === 0" class="cancelOrder-btn">
+        <li v-if="orderInfo.tradeStatus === 1" class="cancelOrder-btn">
           <a-button @click="cancelOrder">取消订单</a-button>
         </li>
       </ul>
@@ -131,7 +131,7 @@
     </div> -->
     <!-- 订单支付模块 -->
     <PaySelect
-      v-if="orderInfo.payStatus === 0"
+      v-if="orderInfo.tradeStatus === 1"
       :detail="orderInfo"
       @success="startTime"
     />
@@ -143,12 +143,12 @@ import moment from "moment";
 import DetailHeader from "@/components/Common/detailHeader";
 import PaySelect from "@/components/Finance/paySelect";
 import { useLeftTime } from "@/utils/index";
-import { payStatusEnum, tradeTypeEnum } from "@/utils/enum";
+import { orderStatusEnum, tradeTypeEnum } from "@/utils/enum";
 export default {
   components: { DetailHeader, PaySelect },
   data() {
     return {
-      payStatusEnum,
+      orderStatusEnum,
       tradeTypeEnum,
       orderInfo: {},
       data: [],
@@ -207,7 +207,7 @@ export default {
         .then((res) => {
           this.orderInfo = { ...res.data };
           this.data = [{ ...res.data }];
-          if (res.data.payStatus === 0) {
+          if (res.data.tradeStatus === 1) {
             this.startCountDown(res.data.orderCreateTime);
           }
         });
@@ -248,7 +248,7 @@ export default {
       this.$store
         .dispatch("income/getOne", this.$route.query.id)
         .then((res) => {
-          if (res.data.payStatus !== 0) {
+          if (res.data.tradeStatus !== 1) {
             this.orderInfo = { ...res.data };
             clearInterval(this.payTime);
           }

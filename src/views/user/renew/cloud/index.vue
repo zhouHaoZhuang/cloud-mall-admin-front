@@ -101,7 +101,8 @@
         </div>
         <!-- 倒计时/天 -->
         <div slot="residueDay" slot-scope="text">
-          <span v-if="text === 15">已销毁</span>
+          <span v-if="text * 1 < 0">已过期</span>
+          <span v-else>{{ text }}天</span>
         </div>
         <!-- 操作 -->
         <div slot="action" slot-scope="text, record">

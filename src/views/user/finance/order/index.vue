@@ -52,13 +52,13 @@
         </div>
         <div class="btn5">
           <a-select
-            v-model="listQuery.payStatus"
+            v-model="listQuery.tradeStatus"
             placeholder="请选择"
             style="width: 120px"
             allowClear
           >
             <a-select-option
-              v-for="(value, key) in payStatusEnum"
+              v-for="(value, key) in orderStatusEnum"
               :key="key"
               :value="key"
             >
@@ -87,7 +87,7 @@
                 查看
               </a-button>
               <a-button
-                v-if="record.payStatus === 0"
+                v-if="record.tradeStatus === 1"
                 type="link"
                 @click="cancelOrder(record)"
               >
@@ -103,10 +103,10 @@
           </div>
           <div
             :class="{ green: text === 1, blue: text !== 1 }"
-            slot="payStatus"
+            slot="tradeStatus"
             slot-scope="text"
           >
-            {{ payStatusEnum[text] }}
+            {{ orderStatusEnum[text] }}
           </div>
         </a-table>
       </div>
@@ -116,11 +116,11 @@
 
 <script>
 import { jumpCloudMall } from "@/utils/index";
-import { payStatusEnum, tradeTypeEnum } from "@/utils/enum";
+import { orderStatusEnum, tradeTypeEnum } from "@/utils/enum";
 export default {
   data() {
     return {
-      payStatusEnum,
+      orderStatusEnum,
       tradeTypeEnum,
       listQuery: {
         key: "orderNo",
@@ -128,7 +128,7 @@ export default {
         startTime: "",
         endTime: "",
         createTimeSort: "desc",
-        payStatus: undefined,
+        tradeStatus: undefined,
         currentPage: 1,
         pageSize: 10,
         total: 0
@@ -159,9 +159,9 @@ export default {
         },
         {
           title: "状态",
-          dataIndex: "payStatus",
+          dataIndex: "tradeStatus",
           width: 100,
-          scopedSlots: { customRender: "payStatus" }
+          scopedSlots: { customRender: "tradeStatus" }
         },
         {
           title: "来源/用途",
@@ -210,7 +210,7 @@ export default {
     //查看
     selectPool(record) {
       this.$router.push({
-        path: "/user/finance/orderdetails",
+        path: "/user/finance/orderDetail",
         query: {
           id: record.orderNo
         }
@@ -275,7 +275,7 @@ export default {
             .dispatch("income/cancelOrder", { id: record.id })
             .then((res) => {
               this.$message.success("取消订单成功");
-              this.getDetail();
+              this.getList();
             });
         }
       });
