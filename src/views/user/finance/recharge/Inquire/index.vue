@@ -42,8 +42,8 @@
         </div>
       </a-table>
     </div>
-    <div class="modal-details" v-show="isinfo">
-      <div class="modal-details-info" v-if="dataInfo">
+    <div class="modal-details" v-show="isinfo" v-if="dataInfo">
+      <div class="modal-details-info" >
         <div class="modal-details-title">
           <span>线下汇款详情</span>
           <span @click="isinfo = false">

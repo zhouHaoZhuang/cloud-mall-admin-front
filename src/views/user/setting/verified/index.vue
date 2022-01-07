@@ -15,16 +15,23 @@
         :label-col="labelCol"
         :wrapper-col="wrapperCol"
       >
-        <a-form-model-item label="手机号码">
-          <a-input v-model="form.name" />
-          请确认该手机号码是您本人所有，否则无法验证通过
+        <a-form-model-item label="验证方式">
+          <a-radio-group v-model="form.checkType">
+            <a-radio
+              :value="index * 1"
+              v-for="(item, index) in verifyTypeEnum"
+              :key="index"
+            >
+              {{ item }}
+            </a-radio>
+          </a-radio-group>
         </a-form-model-item>
         <a-form-model-item label="真实姓名">
           <a-input v-model="form.name" />
           请填写您本人的真实姓名，否则无法验证通过
         </a-form-model-item>
         <a-form-model-item label="身份证号码">
-          <a-input v-model="form.name" />
+          <a-input v-model="form.idNo" />
           请填写您本人的真实身份证号码，否则无法验证通过
         </a-form-model-item>
         <a-form-model-item :wrapper-col="{ span: 14, offset: 6 }">
@@ -52,23 +59,23 @@
     </div>
     <div v-if="choose == 2">
       <div class="alert-warn">
-        <span
-          >如果手机号码不为182******12，或者身份证号码错误，浙江云盾将取消您的实名认证，请仔细核对后提交！</span
-        >
+        <span>
+          如果姓名不正确，或者身份证号码错误，浙江云盾将取消您的实名认证，请仔细核对后提交！
+        </span>
       </div>
       <a-form-model
         :model="form"
         :label-col="labelCol"
         :wrapper-col="wrapperCol"
       >
-        <a-form-model-item label="手机号码">
-          <span></span>
+        <a-form-model-item label="验证方式">
+          <span>{{ verifyTypeEnum[form.checkType] }}</span>
         </a-form-model-item>
         <a-form-model-item label="真实姓名">
-          <span></span>
+          <span>{{ form.name }}</span>
         </a-form-model-item>
         <a-form-model-item label="身份证号码">
-          <span></span>
+          <span>{{ form.idNo }}</span>
         </a-form-model-item>
         <a-form-model-item label="" :wrapper-col="{ span: 14, offset: 4 }">
           <a-checkbox-group v-model="form.type">
@@ -76,7 +83,7 @@
           </a-checkbox-group>
         </a-form-model-item>
         <a-form-model-item :wrapper-col="{ span: 14, offset: 4 }">
-          <a-button type="primary" @click="choose = 1" :disabled="Review">
+          <a-button type="primary" @click="submit" :disabled="Review">
             提交审核
           </a-button>
           <a-button style="margin-left: 10px" @click="choose = 1">
@@ -119,21 +126,44 @@
 </template>
 
 <script>
+import { verifyTypeEnum } from "@/utils/enum";
 export default {
   data() {
     return {
+      verifyTypeEnum,
       choose: 1,
       Review: true,
       labelCol: { span: 4 },
       wrapperCol: { span: 8 },
       form: {
-        name: "",
         phone: "",
-        newPassword: "",
-        newTwoPassword: "",
         code: "",
+        type: [],
+        checkType: 0,
+        idNo: "",
+        name: "",
       },
     };
+  },
+  methods: {
+    submit() {
+      console.log(typeof this.form.checkType);
+      this.$store.dispatch("realName/realName", this.form).then((res) => {
+        console.log(res);
+      });
+    },
+  },
+  watch: {
+    form: {
+      handler() {
+        if (this.form.type.length > 0) {
+          this.Review = false;
+        } else {
+          this.Review = true;
+        }
+      },
+      deep: true,
+    },
   },
 };
 </script>
@@ -148,8 +178,8 @@ export default {
 }
 .alert-warn {
   padding: 7px 22px 5px 37px;
-  background: #fff3eb url(../../../../assets/img/pay/ExclamationMark.png) no-repeat
-    10px 8px;
+  background: #fff3eb url(../../../../assets/img/pay/ExclamationMark.png)
+    no-repeat 10px 8px;
   min-height: 32px;
   border: 1px solid #ffdac2;
   border-radius: 2px;
@@ -181,27 +211,27 @@ export default {
   color: #a8adbd;
   margin-bottom: 20px;
 }
-.warm-tips{
+.warm-tips {
   margin-top: 70px;
-  h3{
+  h3 {
     font-weight: 600;
-    color: #FF6600;
+    color: #ff6600;
     margin-bottom: 0;
     width: 100px;
     text-align: center;
     padding-bottom: 10px;
-    border-bottom: 2px solid #FF6600;
+    border-bottom: 2px solid #ff6600;
     position: relative;
     z-index: 1;
   }
-  .warm-tips-first-p{
+  .warm-tips-first-p {
     position: relative;
     z-index: 0;
     margin-top: -1px;
     padding-top: 20px;
-    border-top: 1px solid #EFEFEF;
+    border-top: 1px solid #efefef;
   }
-  p{
+  p {
     color: #788084;
   }
 }

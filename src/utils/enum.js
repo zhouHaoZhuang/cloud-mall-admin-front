@@ -1,17 +1,17 @@
 // 渠道价格折扣方式
 export const channelPriceType = {
   0: "固定价格",
-  1: "比例折扣"
+  1: "比例折扣",
 };
 // 企业列表企业认证状态
 export const certificationStatusEnum = {
   0: "已认证",
-  1: "未认证"
+  1: "未认证",
 };
 // 企业列表企业状态
 export const corporationStatusEnum = {
   0: "正常",
-  1: "冻结"
+  1: "冻结",
 };
 // 控制台-云服务器-状态
 export const runningStatusEnum = {
@@ -20,14 +20,14 @@ export const runningStatusEnum = {
   2: "已停止",
   3: "已过期",
   4: "停止中",
-  5: "启动中"
+  5: "启动中",
 };
 // 用于下拉选择的渲染
 export const runningStatusSelect = {
   0: "创建中",
   1: "运行中",
   2: "已停止",
-  3: "已过期"
+  3: "已过期",
 };
 // 云服务器-购买时长
 export const regionEnum = {
@@ -42,7 +42,7 @@ export const regionEnum = {
   9: "9个月",
   12: "1年",
   24: "2年",
-  36: "3年"
+  36: "3年",
 };
 // 订单状态
 export const orderStatusEnum = {
@@ -50,7 +50,8 @@ export const orderStatusEnum = {
   "-1": "交易关闭",
   1: "待支付",
   3: "支付中",
-  5: "交易完成"
+  5: "交易完成",
+  9: "支付完成",
 };
 // 订单来源/用途
 export const tradeTypeEnum = {
@@ -58,7 +59,7 @@ export const tradeTypeEnum = {
   5: "升配",
   10: "降配",
   15: "云服务续费",
-  20: "退费"
+  20: "退费",
 };
 // 创建快照-选择时长-按天
 export const snapshotDayEnum = {
@@ -66,7 +67,7 @@ export const snapshotDayEnum = {
   10: "10天",
   15: "15天",
   20: "20天",
-  30: "30天"
+  30: "30天",
 };
 // 创建快照-选择时长-按月
 export const snapshotMonthEnum = {
@@ -81,14 +82,14 @@ export const snapshotMonthEnum = {
   9: "9个月",
   12: "12个月",
   24: "24个月",
-  36: "36个月"
+  36: "36个月",
 };
 // 线下汇款审核状态
 export const offlineRemittance = {
   0: "待支付",
   1: "已取消",
   2: "支付失败",
-  9: "支付完成"
+  9: "支付完成",
 };
 // 地域列表map
 export const regionDataEnum = {
@@ -115,5 +116,12 @@ export const regionDataEnum = {
   "us-west-1": "美国（硅谷）",
   "eu-west-1": "英国（伦敦）",
   "me-east-1": "阿联酋（迪拜）",
-  "eu-central-1": "德国（法兰克福）"
+  "eu-central-1": "德国（法兰克福）",
+};
+
+// 验证方式
+export const verifyTypeEnum = {
+  0: "支付宝芝麻信用认证",
+  1: "腾讯微众银行认证",
+  2: "e签宝刷脸",
 };
