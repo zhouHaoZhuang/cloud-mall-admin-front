@@ -8,6 +8,7 @@ import renewcloud from "./renewcloud";
 import offline from "./offline";
 import inquire from "./inquire";
 import dashboard from "./dashboard";
+import realName from "./realName.js";
 
 export default {
   setting,
@@ -20,4 +21,5 @@ export default {
   offline,
   inquire,
   dashboard,
+  realName
 };
