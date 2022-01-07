@@ -14,11 +14,12 @@
           <span>到期时间:</span>
           <a-select
             v-model="listQuery.residueDay"
+            allowClear
             class="select"
-            placeholder="30天"
+            placeholder="到期时间"
             style="width: 150px"
           >
-            <a-select-option value="all"> 全部 </a-select-option>
+            <a-select-option :value="30"> 30天 </a-select-option>
           </a-select>
           <a-input-group style="width: 400px" compact>
             <a-select v-model="listQuery.key" style="width: 100px">
@@ -169,7 +170,7 @@ export default {
       listQuery: {
         key: "ip",
         search: "",
-        residueDay: undefined,
+        residueDay: 30,
         currentPage: 1,
         pageSize: 10,
         total: 0
