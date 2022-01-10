@@ -2,7 +2,6 @@ let appId = "619c93dc69a93fbb8a1faf8c";
 let appHost = "https://resource-poor.authing.cn";
 // 默认请求地址
 const baseUrl = {
-  // dev: "http://192.168.0.13:8082",
   // dev: "http://216d7872i4.qicp.vip",
   dev: "http://ims.dev.ydidc.com",
   test: "http://ims.test.ydidc.com",
