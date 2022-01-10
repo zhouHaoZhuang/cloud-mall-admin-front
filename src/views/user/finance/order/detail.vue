@@ -265,7 +265,7 @@ export default {
         title: "确认要取消订单吗？",
         onOk: () => {
           this.$store
-            .dispatch("income/cancelOrder", { id: this.orderInfo.id })
+            .dispatch("income/cancelOrder", { id: this.orderInfo.orderId })
             .then((res) => {
               this.$message.success("取消订单成功");
               this.getDetail();
