@@ -53,18 +53,43 @@ export default {
       selectItemPath: (state) => state.setting.selectItemPath
     })
   },
+  watch: {
+    $route: {
+      handler(newVal) {
+        this.menuList = this.menuData.map((ele) => {
+          return {
+            ...ele,
+            open: true
+          };
+        });
+        const routeArr = newVal.path.split("/").slice(1, 3);
+        const newOneMenuData = this.menuList.find(
+          (ele) => ele.path === "/" + routeArr[0]
+        );
+        const newTwoMenuData = newOneMenuData.children.find(
+          (ele) => ele.path === routeArr[1]
+        );
+        // 最左侧菜单选中项（一级）
+        this.$store.dispatch(
+          "setting/changeSelectPath",
+          "/" + routeArr.join("/")
+        );
+        // 保存当前路径
+        this.$store.dispatch(
+          "setting/changeBeforePath",
+          "/" + routeArr.join("/")
+        );
+        // 二级菜单数据
+        this.$store.dispatch("setting/setLeftMenu", newTwoMenuData);
+      },
+      immediate: true,
+      deep: true
+    }
+  },
   data() {
     return {
       menuList: []
     };
-  },
-  created() {
-    this.menuList = this.menuData.map((ele) => {
-      return {
-        ...ele,
-        open: true
-      };
-    });
   },
   methods: {
     // 展开/关闭菜单
@@ -77,18 +102,8 @@ export default {
     },
     // 菜单跳转
     goTo(item, ele) {
-      this.$store.dispatch(
-        "setting/changeSelectPath",
-        item.path + "/" + ele.path
-      );
-      this.$store.commit("setting/setLeftMenuSelectPath", ele.children[0].path);
       const path = item.path + "/" + ele.path + "/" + ele.children[0].path;
       if (path !== this.$route.path) {
-        this.$store.dispatch(
-          "setting/changeBeforePath",
-          item.path + "/" + ele.path
-        );
-        this.$store.dispatch("setting/setLeftMenu", ele);
         this.$router.push(path);
       }
     }
