@@ -31,17 +31,34 @@ const loginGuard = (to, from, next, options) => {
   if (to.query.token) {
     store.commit("user/SET_TOKEN", to.query.token);
   }
-  // 如果没有用户信息，需要查询用户信息
-  if (JSON.stringify(store.state.user.userInfo) === "{}") {
-    store.dispatch("user/getUserInfo");
-  }
-  // console.log(!loginIgnore.includes(to), !token);
   if (!loginIgnore.includes(to) && !token) {
     message.warning("登录已失效，请重新登录");
     next("/exception/not");
   } else {
     next();
   }
+};
+
+/**
+ * 权限守卫--只负责检测本地是否有权限数据
+ * 同时获取下用户信息更新本地数据
+ * @param to
+ * @param form
+ * @param next
+ * @param options
+ */
+const permsGuard = (to, from, next, options) => {
+  const { store, message } = options;
+  // const perms = store.state.user.perms;
+  // 如果没有用户信息，需要查询用户信息
+  const userInfo = store.state.user.userInfo;
+  if (!loginIgnore.includes(to) && JSON.stringify(userInfo) === "{}") {
+    // 获取用户信息
+    store.dispatch("user/getUserInfo");
+    // 获取权限数据
+    // store.dispatch("user/getUserPerms");
+  }
+  next();
 };
 
 /**
@@ -99,6 +116,12 @@ const progressDone = () => {
 };
 
 export default {
-  beforeEach: [progressStart, loginGuard, authorityGuard, dashboardGuard],
+  beforeEach: [
+    progressStart,
+    loginGuard,
+    permsGuard,
+    authorityGuard,
+    dashboardGuard
+  ],
   afterEach: [progressDone]
 };

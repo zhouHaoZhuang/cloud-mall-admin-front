@@ -44,6 +44,10 @@
             {{ orderStatusEnum[orderInfo.tradeStatus] }}
           </span>
         </li>
+        <li>
+          <span>支付时间:</span>
+          <span>{{ orderInfo.payTime | formatDate }}</span>
+        </li>
         <li v-if="orderInfo.tradeStatus === 1" class="cancelOrder-btn">
           <a-button @click="cancelOrder">取消订单</a-button>
         </li>
@@ -59,17 +63,32 @@
           <div slot="tradeType" slot-scope="text">
             {{ tradeTypeEnum[text] }}
           </div>
-          <div slot="productConfig" slot-scope="text">
-            <div>线路:{{ text.regionId }}</div>
-            <div>CPU:{{ text.cpu }}</div>
-            <div>内存:{{ text.memory }}</div>
-            <div>带宽:{{ text.internetMaxBandwidthOut }}</div>
-            <div>防御:{{ "20G" }}</div>
-            <div>镜像:{{ text.osName }}</div>
-            <div>系统盘:{{ text.dataDiskSize }}</div>
-            <div>数据盘:{{ text.systemDiskSize }}</div>
-            <div>自动续费:否</div>
+          <div slot="productConfig" slot-scope="text, record">
+            <div>线路:{{ regionDataEnum[record.regionId] }}</div>
+            <div>CPU:{{ record.cpu }}核</div>
+            <div>内存:{{ record.memory }}G</div>
+            <div>带宽:{{ record.internetMaxBandwidthOut }}M</div>
+            <div>镜像:{{ record.osName }}</div>
+            <div>系统盘:{{ record.dataDiskSize }}G</div>
+            <div>数据盘:{{ record.systemDiskSize }}G</div>
+            <div>
+              自动续费:
+              <span v-if="record.autoRenew === 0" style="color: red">
+                未开通
+              </span>
+              <span v-if="record.autoRenew === 1" style="color: #2bbe22">
+                已开通
+              </span>
+              <span v-if="record.autoRenew === 1">
+                /{{ record.renewPeriod
+                }}{{ getAutoRenewUnit(record.renewUnit) }}
+              </span>
+            </div>
           </div>
+          <span slot="period" slot-scope="text, record">
+            {{ text }}{{ record.priceUnit === "Month" ? "个月" : "年" }}
+          </span>
+          <span slot="discountAmount" slot-scope="text"> {{ text }}元 </span>
         </a-table>
       </div>
     </div>
@@ -143,47 +162,58 @@ import moment from "moment";
 import DetailHeader from "@/components/Common/detailHeader";
 import PaySelect from "@/components/Finance/paySelect";
 import { useLeftTime } from "@/utils/index";
-import { orderStatusEnum, tradeTypeEnum } from "@/utils/enum";
+import { orderStatusEnum, tradeTypeEnum, regionDataEnum } from "@/utils/enum";
 export default {
   components: { DetailHeader, PaySelect },
+  computed: {
+    // 根据自动续费周期的单位返回文字
+    getAutoRenewUnit() {
+      return function (unit) {
+        if (unit === "Month") {
+          return "个月";
+        }
+        if (unit === "Year") {
+          return "年";
+        }
+      };
+    }
+  },
   data() {
     return {
       orderStatusEnum,
       tradeTypeEnum,
+      regionDataEnum,
       orderInfo: {},
       data: [],
       columns: [
         {
           title: "产品名称",
           dataIndex: "productName",
-          key: "productName",
           width: 100
         },
         {
           title: "类型",
           dataIndex: "tradeType",
-          key: "tradeType",
           scopedSlots: { customRender: "tradeType" }
         },
         {
           title: "配置信息",
-          key: "productConfig",
+          dataIndex: "productConfig",
           scopedSlots: { customRender: "productConfig" }
         },
         {
           title: "时长",
           dataIndex: "period",
-          key: "period"
+          scopedSlots: { customRender: "period" }
         },
         {
           title: "数量",
-          dataIndex: "quantity",
-          key: "quantity"
+          dataIndex: "quantity"
         },
         {
           title: "费用",
           dataIndex: "discountAmount",
-          key: "discountAmount"
+          scopedSlots: { customRender: "discountAmount" }
         }
       ],
       countDownTime: "--时--分--秒",
@@ -235,7 +265,7 @@ export default {
         title: "确认要取消订单吗？",
         onOk: () => {
           this.$store
-            .dispatch("income/cancelOrder", { id: this.orderInfo.id })
+            .dispatch("income/cancelOrder", { id: this.orderInfo.orderId })
             .then((res) => {
               this.$message.success("取消订单成功");
               this.getDetail();

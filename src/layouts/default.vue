@@ -43,6 +43,7 @@ import LeftMenu from "@/components/layoutMenu/leftMenu";
 import Header from "@/layouts/header";
 import Content from "@/layouts/content";
 import { jumpCloudMall } from "@/utils/index";
+import route from "@/router/config";
 export default {
   components: {
     SideMenu,

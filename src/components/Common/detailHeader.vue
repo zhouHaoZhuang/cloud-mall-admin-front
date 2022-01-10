@@ -1,7 +1,7 @@
 <template>
-  <div class="detail-header-container">
+  <div class="detail-header-container" @click="handleBack">
     <div class="box">
-      <a-icon type="left" @click="handleBack" />
+      <a-icon type="left" />
     </div>
     <span>{{ title }}</span>
   </div>

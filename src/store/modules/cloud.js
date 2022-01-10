@@ -132,6 +132,30 @@ const cloud = {
         method: "get",
         params
       });
+    },
+    // 获取对应的实例和实例属性，属性值
+    getRegionDetail({ commit, state }, params) {
+      return request({
+        url: "/index/instance",
+        method: "get",
+        params
+      });
+    },
+    // 服务器升级配置询价
+    getcloudUpgradePrice({ commit, state }, data) {
+      return request({
+        url: "/scEcsStock/modify/selectInstance",
+        method: "post",
+        data
+      });
+    },
+    // 服务器升级配置提交
+    cloudUpgrade({ commit, state }, data) {
+      return request({
+        url: "/scEcsStock/modify/prepay/instance",
+        method: "post",
+        data
+      });
     }
   }
 };
