@@ -46,7 +46,7 @@
         </li>
         <li>
           <span>支付时间:</span>
-          <span>{{ orderInfo.orderCreateTime | formatDate }}</span>
+          <span>{{ orderInfo.payTime | formatDate }}</span>
         </li>
         <li v-if="orderInfo.tradeStatus === 1" class="cancelOrder-btn">
           <a-button @click="cancelOrder">取消订单</a-button>
