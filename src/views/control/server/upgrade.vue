@@ -9,7 +9,12 @@
     <a-form-model :model="form" :label-col="labelCol" :wrapper-col="wrapperCol">
       <a-form-model-item label="IP地址"> {{ detail.outIp }} </a-form-model-item>
       <a-form-model-item label="CPU">
-        <a-select style="width: 160px" v-model="form.cpu" placeholder="请选择">
+        <a-select
+          style="width: 160px"
+          v-model="form.cpu"
+          placeholder="请选择"
+          @change="getRegionData"
+        >
           <a-select-option
             v-for="item in cpuData"
             :key="item.value"
@@ -24,6 +29,7 @@
           style="width: 160px"
           v-model="form.memory"
           placeholder="请选择"
+          @change="getRegionData"
         >
           <a-select-option
             v-for="item in memoryData"
@@ -46,6 +52,7 @@
               class="input-number"
               :min="item.min"
               :max="500"
+              @change="getPrice"
             />
             <div class="txt">GB</div>
           </div>
@@ -77,6 +84,7 @@
             class="input-number"
             :min="minBandwidth"
             :max="10"
+            @change="getPrice"
           />
           <div class="txt">Mbps</div>
         </div>
@@ -85,7 +93,7 @@
         {{ detail.endTimeStr }}
       </a-form-model-item>
       <a-form-model-item label="升级差价">
-        <div class="price">{{ price }}</div>
+        <div class="price">{{ price.tradePrice }}</div>
       </a-form-model-item>
       <a-form-model-item :wrapper-col="{ span: 10, offset: 5 }">
         <a-button type="primary" @click="handleSubmit">确认提交</a-button>
@@ -111,7 +119,7 @@ export default {
       wrapperCol: { span: 19 },
       form: {
         cpu: undefined,
-        memory: 1,
+        memory: undefined,
         dataDisk: [],
         internetMaxBandwidthOut: 1
       },
@@ -119,7 +127,9 @@ export default {
       memoryData: [],
       // 最小带宽
       minBandwidth: 1,
-      price: ""
+      price: {
+        tradePrice: "0.00"
+      }
     };
   },
   created() {
@@ -131,7 +141,9 @@ export default {
       this.$store
         .dispatch("cloud/cloudDetail", { id: this.$route.query.id })
         .then((res) => {
-          this.detail = { ...res.data };
+          this.detail = {
+            ...res.data
+          };
           this.getCpu();
           this.minBandwidth = res.data.internetMaxBandwidthOut;
           // 设置form的数据
@@ -169,6 +181,7 @@ export default {
         })
         .then((res) => {
           this.memoryData = [...setCpuOrDiskData(res.data, "G")];
+          this.getRegionData();
         });
     },
     // 添加一块ssd数据盘
@@ -184,14 +197,55 @@ export default {
         default: false,
         old: false
       });
+      this.getRegionData();
     },
     // 删除一块ssd数据盘
     delDisk(index) {
       this.form.dataDisk.splice(index, 1);
+      this.getRegionData();
+    },
+    // 获取对应的实例和实例属性，属性值---目前页面没有设计选择，默认拿第一个
+    getRegionData() {
+      this.$store
+        .dispatch("cloud/getRegionDetail", {
+          regionId: this.detail.regionId,
+          cpuCoreCount: this.form.cpu,
+          memorySize: this.form.memory
+        })
+        .then((res) => {
+          if (res.data && res.data.length > 0) {
+            this.form.instanceType = res.data[0].instanceTypeId;
+            this.getPrice();
+          } else {
+            this.$message.warning("该地域/内存/CPU下没有实例");
+          }
+        });
+    },
+    // 获取询价或提交时的请求参数
+    getParams() {
+      return {
+        dataDisk: this.form.dataDisk,
+        id: this.$route.query.id,
+        instanceType: this.form.instanceType
+      };
+    },
+    // 升级询价
+    getPrice() {
+      this.price.tradePrice = "价格计算中...";
+      this.$store
+        .dispatch("cloud/getcloudUpgradePrice", this.getParams())
+        .then((res) => {
+          this.price = { ...res.data, tradePrice: res.data.tradePrice + "元" };
+        });
     },
     // 确认提交
     handleSubmit() {
-      console.log(this.form);
+      this.$store
+        .dispatch("cloud/cloudUpgrade", this.getParams())
+        .then((res) => {
+          this.$message.success("升级配置成功");
+          this.$router.back();
+        });
     }
   }
 };
