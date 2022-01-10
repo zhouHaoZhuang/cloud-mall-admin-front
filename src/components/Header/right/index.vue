@@ -44,6 +44,8 @@ export default {
 
 <style lang="less" scoped>
 .right-container {
+  margin-right: 20px;
   display: flex;
+  align-items: center;
 }
 </style>

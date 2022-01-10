@@ -1,5 +1,5 @@
 <template>
-  <div class="-container"></div>
+  <div class="work-container"><a-icon type="profile" /> 工单</div>
 </template>
 
 <script>
@@ -19,6 +19,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.container {
+.work-container {
+  padding: 0 20px;
 }
 </style>

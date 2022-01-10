@@ -4,7 +4,7 @@
     <div class="verified-top-nav">
       <span :class="{ chooseClick: choose == 1 }">①填写认证资料</span>
       <span :class="{ chooseClick: choose == 2 }">②确认认证信息</span>
-      <span :class="{ chooseClick: choose == 3 }">③实名认证信息</span>
+      <!-- <span :class="{ chooseClick: choose == 3 }">③实名认证信息</span> -->
     </div>
     <div v-if="choose == 1">
       <p class="phone-hint">
@@ -92,6 +92,10 @@
         </a-form-model-item>
       </a-form-model>
     </div>
+    <div v-if="endTime" class="qrcodeDom">
+      <div id="qrcodeDom"></div>
+      <p>请在{{ endTime }}前扫码完成验证</p>
+    </div>
     <div v-if="choose == 3" class="verified-info">
       <img class="user-img" src="@/assets/img/auth_icon_success.png" alt="" />
       <div class="verified-info-word">
@@ -127,6 +131,8 @@
 
 <script>
 import { verifyTypeEnum } from "@/utils/enum";
+import QRCode from "qrcodejs2";
+import moment from "moment";
 export default {
   data() {
     return {
@@ -143,14 +149,41 @@ export default {
         idNo: "",
         name: "",
       },
+      textUrl: "",
+      endTime: null,
     };
   },
   methods: {
-    submit() {
-      console.log(typeof this.form.checkType);
-      this.$store.dispatch("realName/realName", this.form).then((res) => {
-        console.log(res);
+    // 链接生成二维码
+    //链接生成二维码 Api
+    transQrcode() {
+      const qrcode = new QRCode("qrcodeDom", {
+        width: 160,
+        height: 160,
+        text: `${this.textUrl}`,
       });
+    },
+    //点击开始进行转化
+    getQrcode() {
+      document.getElementById("qrcodeDom").innerHTML = ""; //先清空之前生成的二维码
+      this.$nextTick(() => {
+        this.transQrcode();
+      });
+    },
+    submit() {
+      this.$store
+        .dispatch("realName/realName", this.form)
+        .then((res) => {
+          // 360424199802204319chengqiu
+          this.endTime = moment(parseInt(res.data.expire)).format(
+            "YYYY/MM/DD HH:mm:ss"
+          );
+          this.textUrl = res.data.shortUrl;
+          this.getQrcode();
+        })
+        .catch((val) => {
+          this.$message.error("您的认证信息有误，请重新输入");
+        });
     },
   },
   watch: {
@@ -188,6 +221,10 @@ export default {
   margin-top: 20px;
   margin-bottom: 20px;
 }
+.qrcodeDom {
+  width: 100%;
+  text-align: center;
+}
 .verified-top-nav {
   display: flex;
   justify-content: space-between;
@@ -195,7 +232,7 @@ export default {
   margin-bottom: 20px;
   span {
     display: block;
-    width: 33%;
+    width: 48%;
     text-align: center;
     height: 50px;
     line-height: 50px;

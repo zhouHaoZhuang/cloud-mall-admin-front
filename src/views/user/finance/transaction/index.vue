@@ -39,7 +39,7 @@
           @change="sortDirections"
         >
           <div slot="income" slot-scope="text">
-            <span>{{ text.type === "I" ? text.dealAmount : "--" }}</span>
+            <span class="gold">{{ text.type === "I" ? text.dealAmount : "--" }}</span>
           </div>
           <div slot="expenditure" slot-scope="text">
             <span>{{ text.type === "O" ? text.dealAmount : "--" }}</span>
@@ -47,6 +47,9 @@
           <a slot="name" slot-scope="text">{{ text }}</a>
           <div slot="createTime" slot-scope="text">
             {{ text | formatDate }}
+          </div>
+          <div class="gold" slot="afterAmount" slot-scope="text">
+            {{ afterAmount }}
           </div>
         </a-table>
       </div>
@@ -80,6 +83,7 @@ export default {
           title: "收入(+)",
           key: "income",
           scopedSlots: { customRender: "income" },
+
         },
         // type=O支出 i收入
         // dealAmount金额
@@ -91,7 +95,7 @@ export default {
         {
           title: "余额",
           dataIndex: "afterAmount",
-          scopedSlots: { customRender: "addressProject" },
+          scopedSlots: { customRender: "afterAmount" },
           sorter: (a, b) => a.afterAmount - b.afterAmount,
         },
         {
@@ -103,7 +107,7 @@ export default {
         },
         {
           title: "来源用途",
-          dataIndex: "org",
+          dataIndex: "memo",
         },
       ],
       data: [],
@@ -208,5 +212,8 @@ export default {
       border: 1px solid #ddd;
     }
   }
+}
+.gold{
+  color: #FF8C46;
 }
 </style>
