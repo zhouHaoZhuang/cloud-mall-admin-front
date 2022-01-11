@@ -23,7 +23,14 @@
         @change="handleChange"
         row-key="id"
         :pagination="paginationProps"
-      />
+      >
+      <div slot-scope="text" slot="createTime">
+        {{ text | formatDate }}
+      </div>
+      <div slot-scope="text" slot="modifyTime">
+        {{ text | formatDate }}
+      </div>
+      </a-table>
     </div>
   </div>
 </template>
@@ -35,36 +42,53 @@ export default {
       data: [],
       columns: [
         {
-          title: "充值金额",
-          dataIndex: "amount",
-          key: "amount",
+          title: '充值金额',
+          dataIndex: 'amount',
+          key: 'amount',
           sorter: (a, b) => a.amount - b.amount,
         },
         {
-          title: "充值方式",
-          dataIndex: "memo",
-          key: "memo",
+          title: '充值方式',
+          dataIndex: 'memo',
+          key: 'memo',
           sorter: true,
-          sortDirections: ["ascend", "descend"],
+          sortDirections: ['ascend', 'descend'],
         },
         {
-          title: "充值日期",
-          dataIndex: "payTime",
-          key: "payTime",
-          sorter: (a,b) => {
-            return new Date(a.payTime).getTime() - new Date(b.payTime).getTime()
+          title: '到账日期',
+          dataIndex: 'modifyTime',
+          key: 'modifyTime',
+          sorter: (a, b) => {
+            return (
+              new Date(a.modifyTime).getTime() - new Date(b.modifyTime).getTime()
+            );
           },
-          
+          scopedSlots: {
+            customRender: 'modifyTime',
+          },
+        },
+        {
+          title: '充值日期',
+          dataIndex: 'createTime',
+          key: 'createTime',
+          sorter: (a, b) => {
+            return (
+              new Date(a.payTime).getTime() - new Date(b.payTime).getTime()
+            );
+          },
+          scopedSlots: {
+            customRender: 'createTime',
+          },
         },
       ],
       listQuery: {
-        key: "memo",
-        search: "",
+        key: 'memo',
+        search: '',
         currentPage: 1,
         pageSize: 10,
         total: 0,
-        sorter: "",
-        memo: "",
+        sorter: '',
+        memo: '',
       },
       paginationProps: {
         showQuickJumper: true,
@@ -91,16 +115,16 @@ export default {
     // 排序的回调
     handleChange(pagination, filters, sorter) {
       if (sorter) {
-        if (sorter.columnKey =='memo') {
+        if (sorter.columnKey == 'memo') {
           // sorter.order = sorter.order.replace('end', '') + '-' + sorter.columnKey
-          console.log(sorter,'这是充值方式');
-        }else if (sorter.columnKey=='payTime') {
-          console.log(sorter,'这是充值日期');
+          console.log(sorter, '这是充值方式');
+        } else if (sorter.columnKey == 'payTime') {
+          console.log(sorter, '这是充值日期');
         }
       }
     },
     getList() {
-      this.$store.dispatch("pay/getList", this.listQuery).then((res) => {
+      this.$store.dispatch('pay/getList', this.listQuery).then((res) => {
         this.data = res.data.list;
         this.paginationProps.total = res.data.total * 1;
       });

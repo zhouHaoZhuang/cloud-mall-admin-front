@@ -91,6 +91,13 @@ export const offlineRemittance = {
   2: "支付失败",
   9: "支付完成",
 };
+// 收支明细
+export const detailsMap = { 
+    0: "待审核",
+    1: "待充值",
+    2: "支付失败",
+    9: "支付完成",
+};
 // 地域列表map
 export const regionDataEnum = {
   "cn-qingdao": "华北1（青岛）",
