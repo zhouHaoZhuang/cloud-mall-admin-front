@@ -105,7 +105,9 @@ export default {
       this.$store
         .dispatch("cloud/cloudAutoRenew", data)
         .then((res) => {
-          this.$message.success("设置自动续费成功");
+          this.$message.success(
+            res.data.autoRenew === 1 ? "设置自动续费成功" : "关闭自动续费成功"
+          );
           this.$emit("success", res.data);
           this.handleCancel();
         })
