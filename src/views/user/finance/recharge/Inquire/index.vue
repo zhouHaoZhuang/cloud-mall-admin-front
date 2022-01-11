@@ -34,8 +34,8 @@
         <div slot="createTime" slot-scope="text">
           {{ text | formatDate }}
         </div>
-        <div slot="action" slot-scope="text">
-          <a-button type="link" @click="seeDetails(text)">查看详情</a-button>
+        <div slot="action" slot-scope="text,record">
+          <a-button type="link" @click="seeDetails(record.id)">查看详情</a-button>
         </div>
         <div slot-scope="text" slot="status">
           {{ offlineRemittance[text] }}
@@ -186,8 +186,7 @@ export default {
         },
         {
           title: "操作",
-          dataIndex: "id",
-          key: "action",
+          dataIndex: "action",
           scopedSlots: {
             customRender: "action",
           },
