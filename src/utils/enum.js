@@ -132,3 +132,8 @@ export const verifyTypeEnum = {
   1: "腾讯微众银行认证",
   2: "e签宝刷脸",
 };
+// 充值方式map
+export const rechargeTypeMap = {
+  '1': '余额支付',
+  ali: '支付宝',
+};

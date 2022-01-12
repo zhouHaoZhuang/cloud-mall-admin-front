@@ -18,7 +18,7 @@ const finance = {
     // 获取列表
     getList({ commit, state }, data) {
       return request({
-        url: `/customerAccountLog/qu`,
+        url: `/customerAccountLog/finance`,
         method: "post",
         data
         // pay:true
