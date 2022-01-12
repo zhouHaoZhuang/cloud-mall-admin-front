@@ -24,11 +24,14 @@
         row-key="id"
         :pagination="paginationProps"
       >
-      <div slot-scope="text" slot="createTime">
+      <div slot-scope="text" slot="createTime" v-if="text">
         {{ text | formatDate }}
       </div>
-      <div slot-scope="text" slot="modifyTime">
+      <div slot-scope="text" slot="modifyTime" v-if="text">
         {{ text | formatDate }}
+      </div>
+      <div slot="channelCode" slot-scope="text">
+        {{ rechargeTypeMap[text] }}
       </div>
       </a-table>
     </div>
@@ -36,10 +39,12 @@
 </template>
 
 <script>
+import {rechargeTypeMap} from '@/utils/enum'
 export default {
   data() {
     return {
       data: [],
+      rechargeTypeMap,
       columns: [
         {
           title: '充值金额',
@@ -49,10 +54,11 @@ export default {
         },
         {
           title: '充值方式',
-          dataIndex: 'memo',
-          key: 'memo',
-          sorter: true,
-          sortDirections: ['ascend', 'descend'],
+          dataIndex: 'channelCode',
+          key: 'channelCode',
+          scopedSlots:{
+             customRender: 'channelCode',
+          }
         },
         {
           title: '到账日期',
@@ -70,14 +76,13 @@ export default {
         {
           title: '充值日期',
           dataIndex: 'createTime',
-          key: 'createTime',
+          scopedSlots: {
+            customRender: 'createTime',
+          },
           sorter: (a, b) => {
             return (
               new Date(a.payTime).getTime() - new Date(b.payTime).getTime()
             );
-          },
-          scopedSlots: {
-            customRender: 'createTime',
           },
         },
       ],

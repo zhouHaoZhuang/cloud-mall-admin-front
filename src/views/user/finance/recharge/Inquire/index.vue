@@ -31,7 +31,7 @@
         :data-source="data"
         :pagination="paginationProps"
       >
-        <div slot="createTime" slot-scope="text">
+        <div slot="createTime" slot-scope="text" v-if="text">
           {{ text | formatDate }}
         </div>
         <div slot="action" slot-scope="text,record">
@@ -42,7 +42,7 @@
         </div>
       </a-table>
     </div>
-    <div class="modal-details" v-show="isinfo" v-if="dataInfo">
+    <div class="modal-details" v-show="isinfo" >
       <div class="modal-details-info" >
         <div class="modal-details-title">
           <span>线下汇款详情</span>
@@ -50,14 +50,14 @@
             <a-icon type="close" />
           </span>
         </div>
-        <div class="modal-details-type">
+        <div class="modal-details-type" v-if="dataInfo">
           <div class="modal-details-type-info">
             <h1>收款方信息</h1>
-            <div class="modal-details-type-list">
+            <div class="modal-details-type-list" v-if="dataInfo.ccCompanyInfoResDto">
               <div>
                 <span class="modal-details-key">汇款账户名称:</span>
-                <span class="modal-details-value">
-                  {{ dataInfo.ccCompanyInfoResDto.companyName }}
+                <span class="modal-details-value" >
+                  <!-- {{ dataInfo.ccCompanyInfoResDto.companyName }} -->
                 </span>
               </div>
               <div>
@@ -212,13 +212,13 @@ export default {
   },
   methods: {
     onSearch(value) {
-      console.log(value);
+      // console.log(value,'ghasgha');
       this.listQuery.search = value;
       this.getList();
     },
     seeDetails(id) {
       this.isinfo = true;
-      console.log(id);
+      console.log(id,this.isinfo,'是否显示');
       this.$store.dispatch("inquire/getOne", id).then((res) => {
         console.log(res);
         this.dataInfo = res.data;
@@ -227,6 +227,7 @@ export default {
     getList() {
       this.$getList("inquire/getList", this.listQuery).then((res) => {
         this.data = res.data.list;
+        this.paginationProps.total = res.data.total*1;
         console.log(res);
       });
     },
