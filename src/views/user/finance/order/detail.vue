@@ -79,10 +79,10 @@
               <span v-if="record.autoRenew === 1" style="color: #2bbe22">
                 已开通
               </span>
-              <span v-if="record.autoRenew === 1">
+              <!-- <span v-if="record.autoRenew === 1">
                 /{{ record.renewPeriod
                 }}{{ getAutoRenewUnit(record.renewUnit) }}
-              </span>
+              </span> -->
             </div>
           </div>
           <span slot="period" slot-scope="text, record">
