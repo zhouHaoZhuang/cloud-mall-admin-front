@@ -181,9 +181,9 @@ export default {
           this.textUrl = res.data.shortUrl;
           this.getQrcode();
         })
-        .catch((val) => {
-          this.$message.error("您的认证信息有误，请重新输入");
-        });
+        // .catch((val) => {
+        //   this.$message.error("您的认证信息有误，请重新输入");
+        // });
     },
   },
   watch: {
