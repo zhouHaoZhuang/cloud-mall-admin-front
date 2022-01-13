@@ -126,7 +126,7 @@ export default {
       paginationProps: {
         showQuickJumper: true,
         showSizeChanger: true,
-        total: 1,
+        total: 0,
         showTotal: (total, range) =>
           `共 ${total} 条记录 第 ${this.listQuery.currentPage} / ${Math.ceil(
             total / this.listQuery.pageSize
@@ -170,7 +170,7 @@ export default {
     getList() {
       this.$store.dispatch('finance/getList', this.listQuery).then((res) => {
         this.data = res.data.list;
-        this.paginationProps.total = res.data.total * 1;
+        this.paginationProps.total = res.data.totalCount * 1;
       });
     },
     onSearch(value) {
