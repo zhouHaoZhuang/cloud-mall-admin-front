@@ -51,7 +51,7 @@
             {{ text | formatDate }}
           </div>
           <div class="gold" slot="afterAmount" slot-scope="text, record">
-            {{ record.status === 9 ? afterAmount : '--' }}
+            {{ record.status === 9 ? text : '--' }}
           </div>
           <div slot="status" slot-scope="text">
             {{ detailsMap[text] }}
