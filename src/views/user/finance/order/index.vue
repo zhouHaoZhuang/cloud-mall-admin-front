@@ -80,7 +80,25 @@
           :pagination="paginationProps"
           @change="handleChange"
         >
-          <a slot="name" slot-scope="text">{{ text }}</a>
+          <span slot="orderNo" style="color: #00aaff" slot-scope="text">
+            {{ text }}
+          </span>
+          <span slot="discountAmount" style="color: #ff6600" slot-scope="text">
+            {{ text }}
+          </span>
+          <div slot="createTime" slot-scope="text">
+            {{ text | formatDate }}
+          </div>
+          <div slot="tradeType" slot-scope="text">
+            {{ tradeTypeEnum[text] }}
+          </div>
+          <div
+            :class="{ green: text === 1, blue: text !== 1 }"
+            slot="tradeStatus"
+            slot-scope="text"
+          >
+            {{ orderStatusEnum[text] }}
+          </div>
           <div slot="action" slot-scope="text, record">
             <a-space>
               <a-button type="link" @click="selectPool(record)">
@@ -94,19 +112,6 @@
                 取消订单
               </a-button>
             </a-space>
-          </div>
-          <div slot="createTime" slot-scope="text">
-            {{ text | formatDate }}
-          </div>
-          <div slot="tradeType" slot-scope="text">
-            {{ tradeTypeEnum[text] }}
-          </div>
-          <div
-            :class="{ green: text === 1, blue: text !== 1 }"
-            slot="tradeStatus"
-            slot-scope="text"
-          >
-            {{ orderStatusEnum[text] }}
           </div>
         </a-table>
       </div>
@@ -137,6 +142,7 @@ export default {
         {
           title: "订单编号",
           dataIndex: "orderNo",
+          scopedSlots: { customRender: "orderNo" },
           width: 150
         },
         {
@@ -147,6 +153,7 @@ export default {
         {
           title: "金额",
           dataIndex: "discountAmount",
+          scopedSlots: { customRender: "discountAmount" },
           width: 80
         },
         {

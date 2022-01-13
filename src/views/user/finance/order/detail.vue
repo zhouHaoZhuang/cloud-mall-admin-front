@@ -88,7 +88,9 @@
           <span slot="period" slot-scope="text, record">
             {{ text }}{{ record.priceUnit === "Month" ? "个月" : "年" }}
           </span>
-          <span slot="discountAmount" slot-scope="text"> {{ text }}元 </span>
+          <span slot="discountAmount" style="color: #ff6600" slot-scope="text">
+            {{ text }}元
+          </span>
         </a-table>
       </div>
     </div>
