@@ -68,7 +68,7 @@
             <div>CPU:{{ record.cpu }}核</div>
             <div>内存:{{ record.memory }}G</div>
             <div>带宽:{{ record.internetMaxBandwidthOut }}M</div>
-            <div>镜像:{{ record.osName }}</div>
+            <div>镜像:{{ record.imageId }}</div>
             <div>系统盘:{{ record.dataDiskSize }}G</div>
             <div>数据盘:{{ record.systemDiskSize }}G</div>
             <div>
