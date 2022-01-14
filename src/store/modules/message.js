@@ -22,7 +22,14 @@ const message = {
         data,
       });
     },
-
+    // 全部已读接口
+    readAll({ commit, state }, params) {
+      return request({
+        url: '/messageRecord/updateAllprops',
+        method: 'get',
+        params,
+      });
+    },
     getOne({ commit, state }, params) {
       // console.log(params,'params');
       return request({
