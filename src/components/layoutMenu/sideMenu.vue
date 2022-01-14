@@ -24,14 +24,11 @@
           :style="`padding-left:${menuOpen ? '24' : '0'}px`"
           @click="goTo(item, ele)"
         >
-          <div
+          <Iconfont
             :class="menuOpen ? 'item-icon item-icon-open' : 'item-icon'"
-            :style="`background:url(${
-              selectItemPath === item.path + '/' + ele.path
-                ? ele.meta.iconAct
-                : ele.meta.icon
-            });margin-left:${menuOpen ? '24' : '0'}px`"
-          ></div>
+            :style="`margin-left:${menuOpen ? '24' : '0'}px`"
+            :type="ele.meta.icon"
+          />
           <div v-if="menuOpen" class="item-title">
             {{ ele.name }}
           </div>
@@ -183,14 +180,12 @@ export default {
           margin-left: 24px;
         }
         .item-icon {
-          width: 17px;
-          height: 17px;
-          background-repeat: no-repeat !important;
-          background-position: center;
           position: absolute;
           top: 50%;
           left: 50%;
           transform: translate(-50%, -50%);
+          font-size: 16px;
+          color: #fff;
         }
         .item-icon-open {
           left: 9px;
