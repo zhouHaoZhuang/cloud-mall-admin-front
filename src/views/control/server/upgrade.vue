@@ -83,7 +83,7 @@
             v-model="form.internetMaxBandwidthOut"
             class="input-number"
             :min="minBandwidth"
-            :max="10"
+            :max="100"
             @change="getPrice"
           />
           <div class="txt">Mbps</div>
@@ -96,7 +96,9 @@
         <div class="price">{{ price.tradePrice }}</div>
       </a-form-model-item>
       <a-form-model-item :wrapper-col="{ span: 10, offset: 5 }">
-        <a-button type="primary" @click="handleSubmit">确认提交</a-button>
+        <a-button :disabled="priceLoading" type="primary" @click="handleSubmit"
+          >确认提交</a-button
+        >
       </a-form-model-item>
     </a-form-model>
   </div>
@@ -129,7 +131,10 @@ export default {
       minBandwidth: 1,
       price: {
         tradePrice: "0.00"
-      }
+      },
+      priceLoading: true,
+      // 是否是第一次进入，第一次进入不需要询价
+      firstIn: true
     };
   },
   created() {
@@ -169,6 +174,7 @@ export default {
             this.getDisk();
           } else {
             this.memoryData = [];
+            this.firstIn = false;
           }
         });
     },
@@ -219,6 +225,9 @@ export default {
           } else {
             this.$message.warning("该地域/内存/CPU下没有实例");
           }
+        })
+        .finally(() => {
+          this.firstIn = false;
         });
     },
     // 获取询价或提交时的请求参数
@@ -226,25 +235,35 @@ export default {
       return {
         dataDisk: this.form.dataDisk,
         id: this.$route.query.id,
-        instanceType: this.form.instanceType
+        instanceType: this.form.instanceType,
+        internetMaxBandwidthOut: this.form.internetMaxBandwidthOut
       };
     },
     // 升级询价
     getPrice() {
+      if (this.firstIn) return;
       this.price.tradePrice = "价格计算中...";
+      this.priceLoading = true;
       this.$store
         .dispatch("cloud/getcloudUpgradePrice", this.getParams())
         .then((res) => {
           this.price = { ...res.data, tradePrice: res.data.tradePrice + "元" };
+        })
+        .finally(() => {
+          this.priceLoading = false;
         });
     },
     // 确认提交
     handleSubmit() {
+      this.priceLoading = true;
       this.$store
         .dispatch("cloud/cloudUpgrade", this.getParams())
         .then((res) => {
           this.$message.success("升级配置成功");
           this.$router.back();
+        })
+        .finally(() => {
+          this.priceLoading = false;
         });
     }
   }
