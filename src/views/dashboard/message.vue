@@ -8,7 +8,7 @@
     <p class="all-types">全部类型</p>
     <div class="action-button">
       <a-button class="mark-read" @click="haveRead">标记已读</a-button>
-      <a-button>全部已读</a-button>
+      <a-button @click="readAll">全部已读</a-button>
     </div>
     <div>
       <a-table
@@ -84,9 +84,16 @@ export default {
       console.log('selectedRowKeys changed: ', selectedRowKeys);
       this.selectedRowKeys = selectedRowKeys;
     },
+    // 全部已读
+    readAll(){
+      thin.$stort.dispatch('message/readAll').then((val)=>{  
+        this.$message.success('全部已读');
+      })
+    },
+    // 标记已读
     haveRead() {
       console.log(this.selectedRowKeys);
-      this.$store.dispatch('message/changeList', {id:this.selectedRowKeys}).then((val)=>{  
+      this.$store.dispatch('message/changeList', {id:this.selectedRowKeys.toString()}).then((val)=>{  
         console.log(val);
       });
     },
