@@ -1,7 +1,7 @@
 import Vue from "vue";
 import App from "@/App.vue";
 import store from "@/store";
-import clonedeep from 'lodash.clonedeep'
+import clonedeep from "lodash.clonedeep";
 import { initRouter } from "@/router";
 import bootstrap from "@/bootstrap";
 import * as utilsFun from "@/utils/index";
@@ -24,16 +24,16 @@ Vue.use(Antd);
 Vue.prototype.$message = message;
 // 全局字体图标组件---使用iconfont图标
 const IconFont = Icon.createFromIconfontCN({
-  scriptUrl: "//at.alicdn.com/t/font_2985384_syah0lk535.js"
+  scriptUrl: "//at.alicdn.com/t/font_3142322_9suslilrxih.js"
 });
-Vue.component("icon-font", IconFont);
+Vue.component("Iconfont", IconFont);
 
 // 全局挂载请求列表兼容方法---请求列表通过此方法走筛选
 Vue.prototype.$getList = utilsFun.getList;
 Vue.prototype.$getListQp = utilsFun.getListQp;
 
 // 深拷贝插件
-Vue.prototype.$clonedeep = clonedeep
+Vue.prototype.$clonedeep = clonedeep;
 
 // 初始化router
 const router = initRouter();
