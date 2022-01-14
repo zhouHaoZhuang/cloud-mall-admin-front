@@ -36,7 +36,7 @@
         </a-form-model-item>
         <a-form-model-item :wrapper-col="{ span: 14, offset: 6 }">
           <a-button type="primary" @click="choose = 2"> 下一步 </a-button>
-          <a-button style="margin-left: 10px"> 返回上一步 </a-button>
+          <!-- <a-button style="margin-left: 10px"> 返回上一步 </a-button> -->
         </a-form-model-item>
       </a-form-model>
       <div class="warm-tips">
@@ -92,9 +92,9 @@
         </a-form-model-item>
       </a-form-model>
     </div>
-    <div v-if="endTime" class="qrcodeDom">
+    <div class="qrcodeDom">
       <div id="qrcodeDom"></div>
-      <p>请在{{ endTime }}前扫码完成验证</p>
+      <p v-if="endTime">请在{{ endTime }}前扫码完成验证</p>
     </div>
     <div v-if="choose == 3" class="verified-info">
       <img class="user-img" src="@/assets/img/auth_icon_success.png" alt="" />
@@ -130,9 +130,9 @@
 </template>
 
 <script>
-import { verifyTypeEnum } from "@/utils/enum";
-import QRCode from "qrcodejs2";
-import moment from "moment";
+import { verifyTypeEnum } from '@/utils/enum';
+import QRCode from 'qrcodejs2';
+import moment from 'moment';
 export default {
   data() {
     return {
@@ -142,14 +142,14 @@ export default {
       labelCol: { span: 4 },
       wrapperCol: { span: 8 },
       form: {
-        phone: "",
-        code: "",
+        phone: '',
+        code: '',
         type: [],
         checkType: 0,
-        idNo: "",
-        name: "",
+        idNo: '',
+        name: '',
       },
-      textUrl: "",
+      textUrl: '',
       endTime: null,
     };
   },
@@ -157,7 +157,7 @@ export default {
     // 链接生成二维码
     //链接生成二维码 Api
     transQrcode() {
-      const qrcode = new QRCode("qrcodeDom", {
+      const qrcode = new QRCode('qrcodeDom', {
         width: 160,
         height: 160,
         text: `${this.textUrl}`,
@@ -165,25 +165,23 @@ export default {
     },
     //点击开始进行转化
     getQrcode() {
-      document.getElementById("qrcodeDom").innerHTML = ""; //先清空之前生成的二维码
+      document.getElementById('qrcodeDom').innerHTML = ''; //先清空之前生成的二维码
       this.$nextTick(() => {
         this.transQrcode();
       });
     },
     submit() {
-      this.$store
-        .dispatch("realName/realName", this.form)
-        .then((res) => {
-          // 360424199802204319chengqiu
-          this.endTime = moment(parseInt(res.data.expire)).format(
-            "YYYY/MM/DD HH:mm:ss"
-          );
-          this.textUrl = res.data.shortUrl;
-          this.getQrcode();
-        })
-        // .catch((val) => {
-        //   this.$message.error("您的认证信息有误，请重新输入");
-        // });
+      this.$store.dispatch('realName/realName', this.form).then((res) => {
+        // 360424199802204319c
+        this.endTime = moment(parseInt(res.data.expire)).format(
+          'YYYY/MM/DD HH:mm:ss'
+        );
+        this.textUrl = res.data.shortUrl;
+        this.getQrcode();
+      });
+      // .catch((val) => {
+      //   this.$message.error("您的认证信息有误，请重新输入");
+      // });
     },
   },
   watch: {
@@ -224,6 +222,10 @@ export default {
 .qrcodeDom {
   width: 100%;
   text-align: center;
+  #qrcodeDom{
+    width: 160px;
+    margin: 0 auto;
+  }
 }
 .verified-top-nav {
   display: flex;
