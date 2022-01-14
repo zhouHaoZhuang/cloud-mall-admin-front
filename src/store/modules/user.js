@@ -71,6 +71,22 @@ const user = {
         resolve();
       });
     },
+    // 发送验证码
+    sendCode({ commit, state }, data) {
+      return request({
+        url: "/sms/sendSms",
+        method: "post",
+        data
+      });
+    },
+    // 修改密码
+    changePassword({ commit, state }, data) {
+      return request({
+        url: "/user/updatePassword",
+        method: "post",
+        data
+      });
+    },
     // 获取用户信息
     getUserInfo({ commit, state }) {
       console.log(state.token);

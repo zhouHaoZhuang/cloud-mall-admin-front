@@ -9,7 +9,7 @@ import offline from "./offline";
 import inquire from "./inquire";
 import dashboard from "./dashboard";
 import realName from "./realName.js";
-
+import message from "./message.js";
 export default {
   setting,
   user,
@@ -21,5 +21,6 @@ export default {
   offline,
   inquire,
   dashboard,
-  realName
+  realName,
+  message
 };

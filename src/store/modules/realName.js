@@ -9,7 +9,7 @@ const income = {
       state
     }, data) {
       return request({
-        url: "/ccRealnameAuth/checkFace",
+        url: "/authentication/checkFace",
         method: "post",
         data,
       })
