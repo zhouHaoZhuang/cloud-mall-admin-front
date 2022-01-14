@@ -132,7 +132,9 @@ export default {
       price: {
         tradePrice: "0.00"
       },
-      priceLoading: true
+      priceLoading: true,
+      // 是否是第一次进入，第一次进入不需要询价
+      firstIn: true
     };
   },
   created() {
@@ -172,6 +174,7 @@ export default {
             this.getDisk();
           } else {
             this.memoryData = [];
+            this.firstIn = false;
           }
         });
     },
@@ -222,6 +225,9 @@ export default {
           } else {
             this.$message.warning("该地域/内存/CPU下没有实例");
           }
+        })
+        .finally(() => {
+          this.firstIn = false;
         });
     },
     // 获取询价或提交时的请求参数
@@ -235,6 +241,7 @@ export default {
     },
     // 升级询价
     getPrice() {
+      if (this.firstIn) return;
       this.price.tradePrice = "价格计算中...";
       this.priceLoading = true;
       this.$store
