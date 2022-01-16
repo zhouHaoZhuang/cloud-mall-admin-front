@@ -25,7 +25,7 @@ const message = {
     // 全部已读接口
     readAll({ commit, state }, params) {
       return request({
-        url: '/messageRecord/updateAllprops',
+        url: '/messageRecord/updateAll',
         method: 'get',
         params,
       });

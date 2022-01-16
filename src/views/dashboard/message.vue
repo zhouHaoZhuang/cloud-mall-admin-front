@@ -21,7 +21,6 @@
           onChange: onSelectChange,
         }"
       >
-        <a slot="name" slot-scope="text">{{ text }}</a>
         <div slot="sendTime" slot-scope="text">
           {{ text | formatDate }}
         </div>
@@ -86,7 +85,7 @@ export default {
     },
     // 全部已读
     readAll(){
-      thin.$stort.dispatch('message/readAll').then((val)=>{  
+      this.$store.dispatch('message/readAll').then((val)=>{  
         this.$message.success('全部已读');
       })
     },
