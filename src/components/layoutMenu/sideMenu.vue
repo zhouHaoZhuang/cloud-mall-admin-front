@@ -63,9 +63,6 @@ export default {
         const newOneMenuData = this.menuList.find(
           (ele) => ele.path === "/" + routeArr[0]
         );
-        const newTwoMenuData = newOneMenuData.children.find(
-          (ele) => ele.path === routeArr[1]
-        );
         // 最左侧菜单选中项（一级）
         this.$store.dispatch(
           "setting/changeSelectPath",
@@ -77,7 +74,12 @@ export default {
           "/" + routeArr.join("/")
         );
         // 二级菜单数据
-        this.$store.dispatch("setting/setLeftMenu", newTwoMenuData);
+        if (newVal.path !== "/dashboard") {
+          const newTwoMenuData = newOneMenuData.children.find(
+            (ele) => ele.path === routeArr[1]
+          );
+          this.$store.dispatch("setting/setLeftMenu", newTwoMenuData);
+        }
       },
       immediate: true,
       deep: true
