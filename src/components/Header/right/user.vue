@@ -45,7 +45,7 @@ export default {
     // 退出
     handleLoginOut() {
       this.$store.dispatch("user/logout").then((res) => {
-        jumpCloudMall("/login-pc?out=true");
+        jumpCloudMall("/login-pc?out=1");
       });
     }
   }
