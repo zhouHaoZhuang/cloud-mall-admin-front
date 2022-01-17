@@ -20,7 +20,7 @@
           <a href="javascript:;">常用地址管理</a>
         </a-menu-item> -->
         <a-menu-divider />
-        <a-menu-item>
+        <a-menu-item @click="handleLoginOut">
           <a href="javascript:;">安全退出</a>
         </a-menu-item>
       </a-menu>
@@ -30,24 +30,32 @@
 
 <script>
 import { mapState } from "vuex";
+import { jumpCloudMall } from "@/utils/index";
 export default {
   computed: {
     ...mapState({
-      menuOpen: (state) => state.setting.menuOpen,
-    }),
+      menuOpen: (state) => state.setting.menuOpen
+    })
   },
   data() {
     return {};
   },
   created() {},
-  methods: {},
+  methods: {
+    // 退出
+    handleLoginOut() {
+      this.$store.dispatch("user/logout").then((res) => {
+        jumpCloudMall("/login-pc?out=true");
+      });
+    }
+  }
 };
 </script>
 
 <style lang="less" scoped>
 .user-container {
   padding: 0 20px;
-  .user-name{
+  .user-name {
     margin: 0 10px;
   }
 }
