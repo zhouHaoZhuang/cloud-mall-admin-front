@@ -257,7 +257,6 @@ export default {
                 name: "消费记录"
               }
             ];
-        console.log("dsaaaaaaaaaa", newData);
         this.trendData.data = [...newData];
       });
       this.$store.dispatch("dashboard/getCloudCount").then((res) => {
