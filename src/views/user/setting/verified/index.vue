@@ -35,7 +35,9 @@
           请填写您本人的真实身份证号码，否则无法验证通过
         </a-form-model-item>
         <a-form-model-item :wrapper-col="{ span: 14, offset: 6 }">
-          <a-button type="primary" @click="choose = 2"> 下一步 </a-button>
+          <a-button type="primary" @click="choose = 2" :disabled="nextAudit">
+            下一步
+          </a-button>
           <!-- <a-button style="margin-left: 10px"> 返回上一步 </a-button> -->
         </a-form-model-item>
       </a-form-model>
@@ -151,7 +153,29 @@ export default {
       },
       textUrl: '',
       endTime: null,
+      nextAudit: true,
     };
+  },
+  watch: {
+    form: {
+      deep: true,
+      handler(newName, oldName) {
+        console.log(newName, oldName);
+        if (this.form.name.length > 0 && this.form.idNo.length > 0) {
+          this.nextAudit = false;
+        } else {
+          this.nextAudit = true;
+        }
+        if (this.form.type.length > 0) {
+          this.Review = false;
+        } else {
+          this.Review = true;
+        }
+      },
+    },
+    choose(newVal, oldVal) {
+      console.log(this.form);
+    },
   },
   methods: {
     // 链接生成二维码
@@ -184,18 +208,6 @@ export default {
       // });
     },
   },
-  watch: {
-    form: {
-      handler() {
-        if (this.form.type.length > 0) {
-          this.Review = false;
-        } else {
-          this.Review = true;
-        }
-      },
-      deep: true,
-    },
-  },
 };
 </script>
 
@@ -222,7 +234,7 @@ export default {
 .qrcodeDom {
   width: 100%;
   text-align: center;
-  #qrcodeDom{
+  #qrcodeDom {
     width: 160px;
     margin: 0 auto;
   }
