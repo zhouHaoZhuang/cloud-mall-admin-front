@@ -98,7 +98,10 @@ const user = {
       });
       authenticationClient.getCurrentUser().then((user) => {
         // console.log("查看信息", user);
-        commit("SET_USERINFO", user);
+        commit("SET_USERINFO", {
+          ...user
+          // username: user.username.substring(0, 11)
+        });
       });
     }
   }
