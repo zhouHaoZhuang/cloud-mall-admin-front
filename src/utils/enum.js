@@ -137,3 +137,10 @@ export const rechargeTypeMap = {
   1: "余额支付",
   ali: "支付宝"
 };
+// 充值状态map数据
+export const detailTypeMapData = {
+  "0": "待支付",
+  "1": "已取消",
+  "2": "支付失败",
+  "9": "支付完成"
+};

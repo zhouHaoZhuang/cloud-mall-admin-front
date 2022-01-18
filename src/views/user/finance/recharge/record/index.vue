@@ -27,25 +27,35 @@
       <div slot-scope="text" slot="createTime" v-if="text">
         {{ text | formatDate }}
       </div>
-      <div slot-scope="text" slot="modifyTime" v-if="text">
-        {{ text | formatDate }}
+      <div slot-scope="text" slot="modifyTime" >
+        <span v-if="text">{{ text | formatDate }}</span>
+        <span v-else>-----</span>
       </div>
       <div slot="channelCode" slot-scope="text">
         {{ rechargeTypeMap[text] }}
       </div>
+      <span slot="status" slot-scope="text">
+        {{detailTypeMapData[text]}}
+      </span>
       </a-table>
     </div>
   </div>
 </template>
 
 <script>
-import {rechargeTypeMap} from '@/utils/enum'
+import {rechargeTypeMap,detailTypeMapData} from '@/utils/enum'
 export default {
   data() {
     return {
       data: [],
       rechargeTypeMap,
+      detailTypeMapData,
       columns: [
+         {
+          title: '支付ID',
+          dataIndex: 'payNo',
+          key: 'payNo',
+        },
         {
           title: '充值金额',
           dataIndex: 'amount',
@@ -60,13 +70,21 @@ export default {
              customRender: 'channelCode',
           }
         },
+         {
+          title: '支付状态',
+          dataIndex: 'status',
+          key: 'status',
+          scopedSlots:{
+             customRender: 'status',
+          }
+        },
         {
           title: '到账日期',
-          dataIndex: 'modifyTime',
-          key: 'modifyTime',
+          dataIndex: 'payTime',
+          key: 'payTime',
           sorter: (a, b) => {
             return (
-              new Date(a.modifyTime).getTime() - new Date(b.modifyTime).getTime()
+              new Date(a.payTime).getTime() - new Date(b.payTime).getTime()
             );
           },
           scopedSlots: {
@@ -131,7 +149,7 @@ export default {
     getList() {
       this.$store.dispatch('pay/getList', this.listQuery).then((res) => {
         this.data = res.data.list;
-        this.paginationProps.total = res.data.total * 1;
+        this.paginationProps.total = res.data.totalCount * 1;
       });
     },
     quickJump(current) {
