@@ -1,8 +1,8 @@
 import store from "@/store";
 import env from "@/config/env";
 // 根据id返回数组中对应id的对象---挂载全局 $getArrOnceData
-export const getArrOnceData = (id, arr) => {
-  return arr.find((ele) => ele.id === id);
+export const getArrOnceData = (id, arr, key) => {
+  return arr.find(ele => ele[key ? key : id] === id);
 };
 // 压缩图片
 export function base64ToFile(base64, filename) {
