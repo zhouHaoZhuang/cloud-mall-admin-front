@@ -46,9 +46,7 @@
                 :wrapper-col="wrapperCol"
               >
                 <a-form-model-item ref="amount" label="汇款金额" prop="amount">
-                  <span class="transfer">
-                    <a-input v-model="form.amount" /> </span
-                  >元
+                    <a-input-number v-model="form.amount" />元
                 </a-form-model-item>
                 <a-form-model-item
                   ref="accountName"
@@ -124,7 +122,7 @@
 </template>
 
 <script>
-import Upload from "@/components/Upload/index.vue";
+import Upload from '@/components/Upload/index.vue';
 export default {
   components: {
     Upload,
@@ -135,30 +133,30 @@ export default {
       data: [],
       columns: [
         {
-          title: "账户名称",
-          dataIndex: "companyName",
-          scopedSlots: { customRender: "companyName" },
+          title: '账户名称',
+          dataIndex: 'companyName',
+          scopedSlots: { customRender: 'companyName' },
         },
         {
-          title: "银行账号",
-          dataIndex: "bankAccount",
+          title: '银行账号',
+          dataIndex: 'bankAccount',
         },
         {
-          title: "开户银行",
-          dataIndex: "openBank",
+          title: '开户银行',
+          dataIndex: 'openBank',
         },
         {
-          title: "汇款备注",
-          dataIndex: "remark",
+          title: '汇款备注',
+          dataIndex: 'remark',
         },
       ],
       form: {
         status: 0,
-        amount: "",
-        accountName: "",
-        accountCode: "",
-        memo: "",
-        accountBankName: "",
+        amount: '',
+        accountName: '',
+        accountCode: '',
+        memo: '',
+        accountBankName: '',
         accountType: 2,
       },
       labelCol: { span: 2 },
@@ -167,56 +165,56 @@ export default {
         amount: [
           {
             required: true,
-            message: "请输入汇款金额",
-            trigger: "blur",
+            message: '请输入汇款金额',
+            trigger: 'blur',
           },
         ],
         accountName: [
           {
             required: true,
-            message: "请输入汇款户名",
-            trigger: "blur",
+            message: '请输入汇款户名',
+            trigger: 'blur',
           },
         ],
         accountCode: [
           {
             required: true,
-            message: "请输入汇款账号",
-            trigger: "blur",
+            message: '请输入汇款账号',
+            trigger: 'blur',
           },
         ],
         accountBankName: [
           {
             required: true,
-            message: "请输入汇款银行",
-            trigger: "blur",
+            message: '请输入汇款银行',
+            trigger: 'blur',
           },
         ],
         memo: [
           {
             required: true,
-            message: "请输入汇款备注",
-            trigger: "blur",
+            message: '请输入汇款备注',
+            trigger: 'blur',
           },
         ],
         voucher: [
           {
             required: true,
-            message: "请输入汇款凭证",
-            trigger: "blur",
+            message: '请输入汇款凭证',
+            trigger: 'blur',
           },
         ],
         accountType: [
           {
             required: true,
-            message: "请输入款项类型",
-            trigger: "blur",
+            message: '请输入款项类型',
+            trigger: 'blur',
           },
         ],
       },
     };
   },
-  props: ["change"],
+  props: ['change'],
   created() {
     this.getInfo();
   },
@@ -226,23 +224,29 @@ export default {
       this.form.voucher = urlList.toString();
     },
     getInfo() {
-      this.$store.dispatch("offline/getInfo").then((res) => {
+      this.$store.dispatch('offline/getInfo').then((res) => {
         this.data = [res.data];
         console.log(res);
       });
     },
     putOffline() {
-      this.$store.dispatch("offline/putOffline", this.form).then((res) => {
+      this.$store.dispatch('offline/putOffline', this.form).then((res) => {
         // this.data = res.data;
         console.log(res);
       });
     },
     submitForm() {
-      console.log(this.form);
-      this.$store.dispatch("offline/putOffline", this.form).then((res) => {
-        // this.data = res.data;
-        this.$message.success("提交成功");
-        this.current = 2;
+      this.$confirm({
+        title: '确定要提交吗?',
+        onOk: () => {
+          console.log(this.form);
+          this.$store.dispatch('offline/putOffline', this.form).then((res) => {
+            // this.data = res.data;
+            this.$message.success('提交成功');
+            this.change('Inquire');
+            this.current = 2;
+          });
+        },
       });
     },
   },
