@@ -6,9 +6,14 @@
       服务器升级后，到期时间不变，差价的计算精确到天；升级价格计算公式：(升级配置价格[月]
       - 原始配置价格[月]) * 12 / 365 * 到期剩余天数。
     </div>
+    <a-tabs v-model="tabKey" @change="handleTabChange">
+      <a-tab-pane key="1" tab="实例规格"> </a-tab-pane>
+      <a-tab-pane key="2" tab="SSD数据盘"> </a-tab-pane>
+      <a-tab-pane key="3" tab="公网带宽"> </a-tab-pane>
+    </a-tabs>
     <a-form-model :model="form" :label-col="labelCol" :wrapper-col="wrapperCol">
       <a-form-model-item label="IP地址"> {{ detail.outIp }} </a-form-model-item>
-      <a-form-model-item label="CPU">
+      <a-form-model-item v-if="tabKey === '1'" label="CPU">
         <a-select
           style="width: 160px"
           v-model="form.cpu"
@@ -24,7 +29,7 @@
           </a-select-option>
         </a-select>
       </a-form-model-item>
-      <a-form-model-item label="内存">
+      <a-form-model-item v-if="tabKey === '1'" label="内存">
         <a-select
           style="width: 160px"
           v-model="form.memory"
@@ -40,7 +45,7 @@
           </a-select-option>
         </a-select>
       </a-form-model-item>
-      <a-form-model-item label="SSD数据盘">
+      <a-form-model-item v-if="tabKey === '2'" label="SSD数据盘">
         <div
           v-for="(item, index) in form.dataDisk"
           :key="item.id"
@@ -77,7 +82,7 @@
           </div>
         </div>
       </a-form-model-item>
-      <a-form-model-item label="公网带宽">
+      <a-form-model-item v-if="tabKey === '3'" label="公网带宽">
         <div class="input-number-box">
           <a-input-number
             v-model="form.internetMaxBandwidthOut"
@@ -134,7 +139,8 @@ export default {
       },
       priceLoading: true,
       // 是否是第一次进入，第一次进入不需要询价
-      firstIn: true
+      firstIn: true,
+      tabKey: "1"
     };
   },
   created() {
@@ -149,19 +155,31 @@ export default {
           this.detail = {
             ...res.data
           };
-          this.getCpu();
-          this.minBandwidth = res.data.internetMaxBandwidthOut;
-          // 设置form的数据
-          this.form = { ...res.data };
-          this.form.dataDisk = res.data.dataDisk.map((item, index) => {
-            return {
-              ...item,
-              id: index === 0 ? -1 : -1 - index,
-              min: item.size,
-              old: true,
-              default: index === 0
+          if (this.tabKey === "1") {
+            this.form = {
+              cpu: res.data.cpu,
+              memory: res.data.memory
             };
-          });
+            this.getCpu();
+          }
+          if (this.tabKey === "2") {
+            this.form = {
+              dataDisk: res.data.dataDisk.map((item, index) => {
+                return {
+                  ...item,
+                  id: index === 0 ? -1 : -1 - index,
+                  min: item.size,
+                  old: true,
+                  default: index === 0
+                };
+              })
+            };
+          }
+          if (this.tabKey === "3") {
+            this.form.internetMaxBandwidthOut =
+              res.data.internetMaxBandwidthOut;
+            this.minBandwidth = res.data.internetMaxBandwidthOut;
+          }
         });
     },
     // 获取地域对应的cpu信息
@@ -254,6 +272,11 @@ export default {
         .finally(() => {
           this.priceLoading = false;
         });
+    },
+    // tab切换
+    handleTabChange(val) {
+      console.log(val);
+      this.getDetail();
     },
     // 确认提交
     handleSubmit() {
