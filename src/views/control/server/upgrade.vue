@@ -233,6 +233,8 @@ export default {
     // 获取询价或提交时的请求参数
     getParams() {
       return {
+        cpu: this.form.cpu,
+        memory: this.form.memory,
         dataDisk: this.form.dataDisk,
         id: this.$route.query.id,
         instanceType: this.form.instanceType,
