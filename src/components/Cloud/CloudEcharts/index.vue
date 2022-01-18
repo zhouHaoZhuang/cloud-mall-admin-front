@@ -13,7 +13,7 @@
 <script>
 import * as echarts from "echarts";
 import moment from "moment";
-import { getLineChatsXData } from "@/utils/echartsFn";
+import { getLineChatsXData, getResLineChatsXData } from "@/utils/echartsFn";
 export default {
   props: {
     // 查询数据的参数
@@ -60,10 +60,10 @@ export default {
       // Period默认为60秒，也可以为60的整数倍
       // MetricName取值参考如下说明：
       lineChartTypeObj: {
-        // cpu使用率：CPUUtilization
+        // cpu使用率：CPUUtilization cpu_total
         cpu: [
           {
-            params: "CPUUtilization",
+            params: "cpu_total",
             legend: "CPU Total"
           }
         ],
@@ -182,6 +182,9 @@ export default {
     getChartSeries(res) {
       let newList = [];
       res.forEach((ele, index) => {
+        // 通过接口数据生成x轴数据
+        this.xData = [...getResLineChatsXData(JSON.parse(ele.data.dataPoints))];
+        // 生成y轴数据
         newList.push({
           name: this.lineChartTypeObj[this.lineChartType][index].legend,
           type: "line",
@@ -189,13 +192,15 @@ export default {
           lineStyle: {
             width: 1 //设置线条粗细
           },
-          data: JSON.parse(ele.data.dataPoints).map((item) =>
-            item.Average === 0
+          data: JSON.parse(ele.data.dataPoints).map((item) => {
+            return item.Average === 0
               ? item.Average
               : parseInt(item.Average) === parseFloat(item.Average)
               ? item.Average
-              : item.Average.toFixed(2)
-          )
+              : item.Average !== undefined
+              ? item.Average.toFixed(2)
+              : 0;
+          })
         });
       });
       this.seriesList = [...newList];
@@ -206,8 +211,8 @@ export default {
     },
     // 获取数据
     getData() {
-      // 生成x轴数据
-      this.xData = [...getLineChatsXData(this.listQuery)];
+      // 生成x轴数据--暂时注释，此处是根据listQuery参数进行生成--目前采用后端返会数据生成
+      // this.xData = [...getLineChatsXData(this.listQuery)];
       // 请求数据
       this.loading = true;
       // 多个请求的数组

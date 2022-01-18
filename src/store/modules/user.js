@@ -49,11 +49,11 @@ const user = {
           url: `/user/listAuthorizedResources`,
           method: "get"
         })
-          .then(res => {
+          .then((res) => {
             commit("SET_PERMS", res.data.list);
             resolve();
           })
-          .catch(error => {
+          .catch((error) => {
             reject(error);
           });
       });
@@ -62,6 +62,8 @@ const user = {
     logout({ commit, state }) {
       return new Promise((resolve) => {
         commit("SET_TOKEN", "");
+        commit("SET_USERINFO", {});
+        commit("SET_PERMS", []);
         const authenticationClient = new AuthenticationClient({
           appId: env.appId,
           appHost: env.appHost,
@@ -89,15 +91,17 @@ const user = {
     },
     // 获取用户信息
     getUserInfo({ commit, state }) {
-      console.log(state.token);
       const authenticationClient = new AuthenticationClient({
         appId: env.appId,
         appHost: env.appHost,
         token: state.token
       });
       authenticationClient.getCurrentUser().then((user) => {
-        console.log("查看信息", user);
-        commit("SET_USERINFO", user);
+        // console.log("查看信息", user);
+        commit("SET_USERINFO", {
+          ...user
+          // username: user.username.substring(0, 11)
+        });
       });
     }
   }

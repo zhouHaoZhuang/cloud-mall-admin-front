@@ -15,7 +15,7 @@ const payBaseUrl = {
 };
 // 跳转云商城地址
 const cloudMallUrl = {
-  dev: "http://192.168.0.7:3000",
+  dev: "http://192.168.12.30:3000",
   test: "http://www.test.ydidc.com",
   prod: "http://www.ydidc.com"
 };

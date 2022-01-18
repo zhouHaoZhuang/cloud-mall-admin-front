@@ -20,3 +20,11 @@ export const getLineChatsXData = (listQuery) => {
   }
   return newXData;
 };
+// 根据后端返回的数据，生成折线图x轴的数据
+export const getResLineChatsXData = (data) => {
+  const newXData = [];
+  data.forEach((ele) => {
+    newXData.push(moment(ele.timestamp).format("YYYY-MM-DD HH:mm"));
+  });
+  return newXData;
+};

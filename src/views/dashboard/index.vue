@@ -4,12 +4,12 @@
     <div class="header-user-info">
       <a-avatar :size="64" icon="user" />
       <span class="welcome">欢迎您回来，</span>
-      <span class="name">启航</span>
+      <span class="name">{{ userInfo.username }}</span>
       <div class="icons">
-        <div class="icon-item">
+        <div class="icon-item" @click="handleJump('/user/setting/realname')">
           <a-tooltip placement="bottom">
             <template slot="title">
-              <span>提示文字</span>
+              <span>实名认证</span>
             </template>
             <div class="icon-item-imgs">
               <img src="@/assets/img/dashboard/card.png" />
@@ -17,10 +17,10 @@
             </div>
           </a-tooltip>
         </div>
-        <div class="icon-item">
+        <div class="icon-item" @click="handleJump('/user/setting/security')">
           <a-tooltip placement="bottom">
             <template slot="title">
-              <span>提示文字</span>
+              <span>绑定手机</span>
             </template>
             <div class="icon-item-imgs">
               <!-- <img src="@/assets/img/dashboard/phone.png" /> -->
@@ -28,10 +28,10 @@
             </div>
           </a-tooltip>
         </div>
-        <div class="icon-item">
+        <div class="icon-item" @click="handleJump('/user/setting/security')">
           <a-tooltip placement="bottom">
             <template slot="title">
-              <span>提示文字</span>
+              <span>绑定邮箱</span>
             </template>
             <div class="icon-item-imgs">
               <img src="@/assets/img/dashboard/email.png" />
@@ -39,10 +39,10 @@
             </div>
           </a-tooltip>
         </div>
-        <div class="icon-item">
+        <div class="icon-item" @click="handleJump('/user/setting/security')">
           <a-tooltip placement="bottom">
             <template slot="title">
-              <span>提示文字</span>
+              <span>设置密保问题</span>
             </template>
             <div class="icon-item-imgs">
               <img src="@/assets/img/dashboard/lock.png" />
@@ -119,7 +119,7 @@
         <div class="public-box open-product">
           <div class="public-tit">已开通产品</div>
           <div class="list">
-            <div class="list-item">
+            <div class="list-item" @click="handleJump('/control/server/admin')">
               <div class="left-box">
                 <a-icon class="icon" type="cloud-server" />
               </div>
@@ -145,13 +145,10 @@
         </div>
       </div>
     </div>
-    <!-- 二维码div -->
-    <div id="qrcodeDom"></div>
   </div>
 </template>
 
 <script>
-import QRCode from "qrcodejs2";
 import { mapState } from "vuex";
 import * as echarts from "echarts";
 require("echarts/theme/macarons"); //引入主题
@@ -165,7 +162,6 @@ export default {
     this.$nextTick(() => {
       this.initEcharts();
     });
-    this.getQrcode()
   },
   data() {
     return {
@@ -230,24 +226,37 @@ export default {
         this.overviewData = { ...newData };
       });
       this.$store.dispatch("dashboard/trendData").then((res) => {
-        const newData = res.data.map((ele) => {
-          if (ele.type === "I") {
-            this.trendIn = ele.dealAmount;
-            return {
-              type: ele.type,
-              value: ele.dealAmount,
-              name: "收入记录"
-            };
-          }
-          if (ele.type === "O") {
-            this.trendOut = ele.dealAmount;
-            return {
-              type: ele.type,
-              value: ele.dealAmount,
-              name: "消费记录"
-            };
-          }
-        });
+        const newData = res.data
+          ? res.data.map((ele) => {
+              if (ele.type === "I") {
+                this.trendIn = ele.dealAmount;
+                return {
+                  type: ele.type,
+                  value: ele.dealAmount,
+                  name: "收入记录"
+                };
+              }
+              if (ele.type === "O") {
+                this.trendOut = ele.dealAmount;
+                return {
+                  type: ele.type,
+                  value: ele.dealAmount,
+                  name: "消费记录"
+                };
+              }
+            })
+          : [
+              {
+                type: "I",
+                value: 0,
+                name: "收入记录"
+              },
+              {
+                type: "O",
+                value: 0,
+                name: "消费记录"
+              }
+            ];
         this.trendData.data = [...newData];
       });
       this.$store.dispatch("dashboard/getCloudCount").then((res) => {
@@ -259,6 +268,10 @@ export default {
       this.$router.push({
         path: "/user/finance/recharge"
       });
+    },
+    // 跳转
+    handleJump(path) {
+      this.$router.push(path);
     },
     initEcharts() {
       this.charts = echarts.init(document.getElementById("echarts"));
@@ -276,22 +289,6 @@ export default {
           itemGap: 50
         },
         series: this.trendData
-      });
-    },
-    // 链接生成二维码
-    //链接生成二维码 Api
-    transQrcode() {
-      const qrcode = new QRCode("qrcodeDom", {
-        width: 160,
-        height: 160,
-        text: `https://www.baidu.com`
-      });
-    },
-    //点击开始进行转化
-    getQrcode() {
-      document.getElementById("qrcodeDom").innerHTML = ""; //先清空之前生成的二维码
-      this.$nextTick(() => {
-        this.transQrcode();
       });
     }
   }
@@ -462,6 +459,7 @@ export default {
             width: 32.5%;
             margin-right: 1.25%;
             padding-top: 15px;
+            cursor: pointer;
             .left-box {
               width: 63px;
               height: 72px;

@@ -50,8 +50,7 @@ export const orderStatusEnum = {
   "-1": "交易关闭",
   1: "待支付",
   3: "支付中",
-  5: "交易完成",
-  9: "支付完成"
+  5: "交易完成"
 };
 // 订单来源/用途
 export const tradeTypeEnum = {

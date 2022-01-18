@@ -215,6 +215,8 @@ export default {
           if (res.data.aliPayResult) {
             // 打开支付宝支付
             openAlipayPay(res.data.aliPayResult);
+          } else {
+            this.$message.success("余额支付成功");
           }
           this.$emit("success");
         })
