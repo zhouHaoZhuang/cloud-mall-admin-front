@@ -60,7 +60,7 @@ export default {
   display: flex;
   justify-content: space-between;
   padding-right: 168px;
-  z-index: 1;
+  z-index: 3;
   .left {
     display: flex;
     .dashboard {

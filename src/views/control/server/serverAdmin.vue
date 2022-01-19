@@ -357,6 +357,7 @@ export default {
         key: "ip",
         search: "",
         regionId: undefined,
+        createTimeSort: "desc",
         currentPage: 1,
         pageSize: 10,
         total: 0
@@ -442,6 +443,7 @@ export default {
           `共 ${total} 条记录 第 ${this.listQuery.currentPage} / ${Math.ceil(
             total / this.listQuery.pageSize
           )} 页`,
+        onChange: this.quickJump,
         onShowSizeChange: this.onShowSizeChange
       },
       tableLoading: false,
@@ -511,10 +513,20 @@ export default {
               // 服务器操作后回调所需数据----------end
             };
           });
+          this.paginationProps.total = res.data.totalCount * 1;
         })
         .finally(() => {
           this.tableLoading = false;
         });
+    },
+    quickJump(current) {
+      this.listQuery.currentPage = current;
+      this.getList();
+    },
+    onShowSizeChange(current, pageSize) {
+      this.listQuery.pageSize = pageSize;
+      this.listQuery.currentPage = current;
+      this.getList();
     },
     // 头部线路切换
     handleAddressChange(value) {
