@@ -230,6 +230,7 @@ export default {
           `共 ${total} 条记录 第 ${this.listQuery.currentPage} / ${Math.ceil(
             total / this.listQuery.pageSize
           )} 页`,
+        onChange: this.quickJump,
         onShowSizeChange: this.onShowSizeChange
       },
       tableLoading: false,
@@ -260,10 +261,20 @@ export default {
         })
         .then((res) => {
           this.data = [...res.data.list];
+          this.paginationProps.total = res.data.totalCount * 1;
         })
         .finally(() => {
           this.tableLoading = false;
         });
+    },
+    quickJump(current) {
+      this.listQuery.currentPage = current;
+      this.getList();
+    },
+    onShowSizeChange(current, pageSize) {
+      this.listQuery.pageSize = pageSize;
+      this.listQuery.currentPage = current;
+      this.getList();
     },
     // 点击搜索
     handleSearch() {
