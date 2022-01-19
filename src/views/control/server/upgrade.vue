@@ -54,6 +54,7 @@
           <div class="input-number-box">
             <a-input-number
               v-model="item.size"
+              :disabled="item.old"
               class="input-number"
               :min="item.min"
               :max="500"
@@ -101,9 +102,9 @@
         <div class="price">{{ price.tradePrice }}</div>
       </a-form-model-item>
       <a-form-model-item :wrapper-col="{ span: 10, offset: 5 }">
-        <a-button :disabled="priceLoading" type="primary" @click="handleSubmit"
-          >确认提交</a-button
-        >
+        <a-button :disabled="priceLoading" type="primary" @click="handleSubmit">
+          确认提交
+        </a-button>
       </a-form-model-item>
     </a-form-model>
   </div>
@@ -135,11 +136,9 @@ export default {
       // 最小带宽
       minBandwidth: 1,
       price: {
-        tradePrice: "0.00"
+        tradePrice: "0.00元"
       },
       priceLoading: true,
-      // 是否是第一次进入，第一次进入不需要询价
-      firstIn: true,
       tabKey: "1"
     };
   },
@@ -176,8 +175,9 @@ export default {
             };
           }
           if (this.tabKey === "3") {
-            this.form.internetMaxBandwidthOut =
-              res.data.internetMaxBandwidthOut;
+            this.form = {
+              internetMaxBandwidthOut: res.data.internetMaxBandwidthOut
+            };
             this.minBandwidth = res.data.internetMaxBandwidthOut;
           }
         });
@@ -192,7 +192,6 @@ export default {
             this.getDisk();
           } else {
             this.memoryData = [];
-            this.firstIn = false;
           }
         });
     },
@@ -205,7 +204,7 @@ export default {
         })
         .then((res) => {
           this.memoryData = [...setCpuOrDiskData(res.data, "G")];
-          this.getRegionData();
+          // this.getRegionData();
         });
     },
     // 添加一块ssd数据盘
@@ -221,12 +220,12 @@ export default {
         default: false,
         old: false
       });
-      this.getRegionData();
+      this.getPrice();
     },
     // 删除一块ssd数据盘
     delDisk(index) {
       this.form.dataDisk.splice(index, 1);
-      this.getRegionData();
+      this.getPrice();
     },
     // 获取对应的实例和实例属性，属性值---目前页面没有设计选择，默认拿第一个
     getRegionData() {
@@ -243,17 +242,18 @@ export default {
           } else {
             this.$message.warning("该地域/内存/CPU下没有实例");
           }
-        })
-        .finally(() => {
-          this.firstIn = false;
         });
     },
     // 获取询价或提交时的请求参数
     getParams() {
+      const newDataDisk =
+        this.tabKey === "2"
+          ? this.form.dataDisk.filter((ele) => !ele.old)
+          : undefined;
       return {
         cpu: this.form.cpu,
         memory: this.form.memory,
-        dataDisk: this.form.dataDisk,
+        dataDisk: newDataDisk,
         id: this.$route.query.id,
         instanceType: this.form.instanceType,
         internetMaxBandwidthOut: this.form.internetMaxBandwidthOut
@@ -261,7 +261,6 @@ export default {
     },
     // 升级询价
     getPrice() {
-      if (this.firstIn) return;
       this.price.tradePrice = "价格计算中...";
       this.priceLoading = true;
       this.$store
@@ -275,8 +274,8 @@ export default {
     },
     // tab切换
     handleTabChange(val) {
-      console.log(val);
       this.getDetail();
+      this.price.tradePrice = "0.00元";
     },
     // 确认提交
     handleSubmit() {
@@ -284,8 +283,13 @@ export default {
       this.$store
         .dispatch("cloud/cloudUpgrade", this.getParams())
         .then((res) => {
-          this.$message.success("升级配置成功");
-          this.$router.back();
+          this.$message.success("提交升级配置订单成功");
+          this.$router.push({
+            path: "/user/finance/orderDetail",
+            query: {
+              id: res.data.orderNo
+            }
+          });
         })
         .finally(() => {
           this.priceLoading = false;
@@ -368,6 +372,11 @@ export default {
         }
       }
     }
+  }
+  .price {
+    color: #ff6600;
+    font-weight: 500;
+    font-size: 16px;
   }
 }
 </style>

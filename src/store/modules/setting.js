@@ -6,7 +6,7 @@ export default {
     menuData: [],
     leftMenuData: {},
     beforePath: "",
-    filterList: ["/dashboard"],
+    filterList: ["/dashboard", "/message", "/messageInfo"],
     leftOpenShow: true,
     selectItemPath: "",
     selectLeftPath: ""

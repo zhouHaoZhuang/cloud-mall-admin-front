@@ -49,14 +49,18 @@
         </a-select>
       </a-form-model-item>
       <a-form-model-item label="重装后的系统密码" prop="password">
-        <a-input-password v-model="form.password" type="password" style="width: 280px" />
+        <a-input-password
+          v-model="form.password"
+          type="password"
+          style="width: 280px"
+          :max-length="30"
+        />
         <div class="txt">
           1、8-30个字符，必须同时包含下面四项中的三项：大写字母、小写字母、数字、和特殊字符
         </div>
         <div class="txt">
           2、 （仅支持下列特殊字符： ( ) ` ~ ! @ # $ % ^ {{ "&" }} * - _ + = | {
-          } [ ] : ; ' > <span v-text="'<'"></span> , . ? / ）。其中，Windows
-          实例不能以斜线号（/）为密码首字符。
+          } [ ] : ; ' > <span v-text="'<'"></span> , . ? / ）。
         </div>
       </a-form-model-item>
       <a-form-model-item label="确认密码" prop="confirmPassword">
@@ -64,6 +68,7 @@
           v-model="form.confirmPassword"
           type="password"
           style="width: 280px"
+          :max-length="30"
         />
       </a-form-model-item>
     </a-form-model>
@@ -103,7 +108,9 @@ export default {
       if (value === "") {
         callback(new Error("请输入密码"));
       } else {
-        if (
+        if (this.specialReg.test(value)) {
+          callback(new Error("密码包含了不被允许的特殊字符"));
+        } else if (
           !(
             this.pwdReg1.test(value) ||
             this.pwdReg2.test(value) ||
@@ -143,6 +150,8 @@ export default {
       // 必须包含小写字母，数字，特殊字符
       pwdReg4:
         /^.*(?=.{8,})(?=.*\d)(?=.*[a-z])(?=.*[()`~!@#$%^&*-_+=|{}][:;'><,.?/]).*$/,
+      // 不允许包含的特殊字符集合正则
+      specialReg: new RegExp("[《》！￥……（）—【】‘；：”“。，、？]"),
       form: {
         password: "",
         confirmPassword: "",

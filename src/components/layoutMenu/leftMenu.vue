@@ -52,7 +52,7 @@
       </div>
     </div>
     <!-- 修改主题左侧菜单的折叠/打开 -->
-    <OpenLeftMenu />
+    <OpenLeftMenu v-if="leftOpenShow" />
   </div>
 </template>
 

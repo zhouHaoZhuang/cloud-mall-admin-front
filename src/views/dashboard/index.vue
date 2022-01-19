@@ -158,11 +158,6 @@ export default {
       userInfo: (state) => state.user.userInfo
     })
   },
-  mounted() {
-    this.$nextTick(() => {
-      this.initEcharts();
-    });
-  },
   data() {
     return {
       charts: null,
@@ -226,38 +221,40 @@ export default {
         this.overviewData = { ...newData };
       });
       this.$store.dispatch("dashboard/trendData").then((res) => {
-        const newData = res.data
-          ? res.data.map((ele) => {
-              if (ele.type === "I") {
-                this.trendIn = ele.dealAmount;
-                return {
-                  type: ele.type,
-                  value: ele.dealAmount,
+        const newData =
+          res.data && res.data.length > 0
+            ? res.data.map((ele) => {
+                if (ele.type === "I") {
+                  this.trendIn = ele.dealAmount;
+                  return {
+                    type: ele.type,
+                    value: ele.dealAmount,
+                    name: "收入记录"
+                  };
+                }
+                if (ele.type === "O") {
+                  this.trendOut = ele.dealAmount;
+                  return {
+                    type: ele.type,
+                    value: ele.dealAmount,
+                    name: "消费记录"
+                  };
+                }
+              })
+            : [
+                {
+                  type: "I",
+                  value: 0,
                   name: "收入记录"
-                };
-              }
-              if (ele.type === "O") {
-                this.trendOut = ele.dealAmount;
-                return {
-                  type: ele.type,
-                  value: ele.dealAmount,
+                },
+                {
+                  type: "O",
+                  value: 0,
                   name: "消费记录"
-                };
-              }
-            })
-          : [
-              {
-                type: "I",
-                value: 0,
-                name: "收入记录"
-              },
-              {
-                type: "O",
-                value: 0,
-                name: "消费记录"
-              }
-            ];
+                }
+              ];
         this.trendData.data = [...newData];
+        this.initEcharts();
       });
       this.$store.dispatch("dashboard/getCloudCount").then((res) => {
         this.cloudCount = res.data;
