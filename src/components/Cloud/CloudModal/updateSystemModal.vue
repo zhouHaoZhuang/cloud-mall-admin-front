@@ -49,7 +49,12 @@
         </a-select>
       </a-form-model-item>
       <a-form-model-item label="重装后的系统密码" prop="password">
-        <a-input-password v-model="form.password" type="password" style="width: 280px" />
+        <a-input-password
+          v-model="form.password"
+          type="password"
+          style="width: 280px"
+          :max-length="30"
+        />
         <div class="txt">
           1、8-30个字符，必须同时包含下面四项中的三项：大写字母、小写字母、数字、和特殊字符
         </div>
@@ -64,6 +69,7 @@
           v-model="form.confirmPassword"
           type="password"
           style="width: 280px"
+          :max-length="30"
         />
       </a-form-model-item>
     </a-form-model>
