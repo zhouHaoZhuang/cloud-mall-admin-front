@@ -95,10 +95,7 @@ const dashboardGuard = (to, from, next, options) => {
     store.dispatch("setting/changeLeftOpenMenu", true);
   }
   // 设置主体左侧菜单显示还是隐藏
-  if (
-    store.state.setting.filterList.indexOf(to.path) !== -1 &&
-    store.state.setting.leftOpenShow
-  ) {
+  if (store.state.setting.filterList.indexOf(to.path) !== -1) {
     store.dispatch("setting/changeLeftMenuShow", false);
     store.dispatch("setting/changeSelectPath", "");
   } else {
