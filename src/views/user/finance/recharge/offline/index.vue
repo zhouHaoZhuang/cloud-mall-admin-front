@@ -46,53 +46,43 @@
                 :wrapper-col="wrapperCol"
               >
                 <a-form-model-item ref="amount" label="汇款金额" prop="amount">
-                    <a-input-number :min="1" v-model="form.amount" />元
+                  <a-input-number :min="1" v-model="form.amount" />元
                 </a-form-model-item>
                 <a-form-model-item
                   ref="accountName"
                   label="汇款户名"
                   prop="accountName"
                 >
-                  <span class="transfer420">
-                    <a-input v-model="form.accountName" />
-                  </span>
+                  <a-input v-model="form.accountName" />
                 </a-form-model-item>
                 <a-form-model-item
                   ref="accountCode"
                   label="汇款账号"
                   prop="accountCode"
                 >
-                  <span class="transfer420">
-                    <a-input v-model="form.accountCode" />
-                  </span>
+                  <a-input v-model="form.accountCode" />
                 </a-form-model-item>
                 <a-form-model-item
                   ref="accountBankName"
                   label="汇款银行"
                   prop="accountBankName"
                 >
-                  <span class="transfer420">
-                    <a-input v-model="form.accountBankName" />
-                  </span>
+                  <a-input v-model="form.accountBankName" />
                 </a-form-model-item>
                 <a-form-model-item ref="memo" label="汇款备注" prop="memo">
-                  <span class="transfer420">
-                    <a-input v-model="form.memo" />
-                  </span>
+                  <a-input v-model="form.memo" />
                 </a-form-model-item>
                 <a-form-model-item
                   ref="accountType"
                   label="款项类型"
                   prop="accountType"
                 >
-                  <span class="transfer420">
-                    <a-radio-group v-model="form.accountType">
-                      <a-radio :value="2"> 线下充值 </a-radio>
-                      <a-radio :value="4"> 退款 </a-radio>
-                      <!-- <a-radio :value="3"> C </a-radio>
+                  <a-radio-group v-model="form.accountType">
+                    <a-radio :value="2"> 线下充值 </a-radio>
+                    <a-radio :value="4"> 退款 </a-radio>
+                    <!-- <a-radio :value="3"> C </a-radio>
                       <a-radio :value="4"> D </a-radio> -->
-                    </a-radio-group>
-                  </span>
+                  </a-radio-group>
                 </a-form-model-item>
                 <a-form-model-item
                   ref="voucher"
@@ -106,9 +96,11 @@
                   <p>JPG或PNG格式，文件大小不超过1MB</p>
                   <p>汇款凭证不能为空</p>
                 </div>
+                 <a-form-model-item :wrapper-col="{ span: 14, offset: 2 }">
                 <a-button @click="submitForm" type="primary">
                   提交汇款记录
                 </a-button>
+              </a-form-model-item>
               </a-form-model>
             </div>
           </div>
@@ -160,7 +152,7 @@ export default {
         accountType: 2,
       },
       labelCol: { span: 2 },
-      wrapperCol: { span: 14 },
+      wrapperCol: { span: 5 },
       rules: {
         amount: [
           {
@@ -180,6 +172,11 @@ export default {
           {
             required: true,
             message: '请输入汇款账号',
+            trigger: 'blur',
+          },
+          {
+            pattern: /^\d{16,19}$/,
+            message: '汇款账号为数字,长度为16-19位',
             trigger: 'blur',
           },
         ],
@@ -296,7 +293,7 @@ export default {
     .uploadInfo {
       font-size: 12px;
       color: #999999;
-      margin-left: 90px;
+      margin-left:120px;
     }
   }
 }

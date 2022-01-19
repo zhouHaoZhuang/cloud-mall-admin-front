@@ -1,7 +1,7 @@
 <template>
   <div class="online">
     <div class="warn">
-      <p>1、充值最小金额1.00元，充值金额必须为整数</p>
+      <p>1、充值最小金额1.00元</p>
       <p>
         2、支付过程中浏览器会有几次跳转，支付完成之前请勿关闭浏览器，否则可能造成支付失败
       </p>
@@ -13,11 +13,14 @@
     <!-- <p>暂未开启充值</p> -->
     <div>
       <span> 充值金额： </span>
-      <a-input
+      <a-input-number
         style="width: 180px"
-        v-number-evolution="{ value: 2, min: 0, max: 9999999 }"
+        v-number-evolution="{
+          min: 0,
+          max: 9999999,
+          value: 2,
+        }"
         v-model="rechargeBtnForm.totalAmount"
-        placeholder="请输入充值金额"
       />
     </div>
     <div class="paymentMethod">
@@ -35,29 +38,29 @@
   </div>
 </template>
 <script>
-import RechargeBtn from "@/components/Finance/rechargeBtn";
+import RechargeBtn from '@/components/Finance/rechargeBtn';
 export default {
   components: {
-    RechargeBtn
+    RechargeBtn,
   },
   data() {
     return {
       // 查询余额相关所需参数
       balanceForm: {
-        payType: "none",
+        payType: 'none',
         totalAmount: 0,
         useAliPay: false,
         useBalance: true,
         useVoucher: false,
-        useWechatPay: false
+        useWechatPay: false,
       },
       balanceData: {},
       rechargeBtnForm: {
-        totalAmount: "",
-        balanceAmount: "",
-        payType: ["ali", "balance"]
+        totalAmount: '',
+        balanceAmount: '',
+        payType: ['ali', 'balance'],
       },
-      time: null
+      time: null,
     };
   },
   created() {
@@ -70,7 +73,7 @@ export default {
     // 查询余额
     getUserBalance() {
       this.$store
-        .dispatch("finance/getUserBalance", this.balanceForm)
+        .dispatch('finance/getUserBalance', this.balanceForm)
         .then((res) => {
           this.balanceData = { ...res.data };
         });
@@ -82,8 +85,8 @@ export default {
       this.time = setInterval(() => {
         this.getUserBalance();
       }, 3000);
-    }
-  }
+    },
+  },
 };
 </script>
 

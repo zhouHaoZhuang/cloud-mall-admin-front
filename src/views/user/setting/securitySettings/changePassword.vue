@@ -43,7 +43,7 @@
           <a-input-password v-model="form.newPassword" />
         </a-form-model-item>
         <a-form-model-item ref="name" label="确认密码" prop="newPasswordEnter">
-          <a-input-password v-model="form.newPasswordEnter"/>
+          <a-input-password v-model="form.newPasswordEnter" />
         </a-form-model-item>
         <a-form-model-item :wrapper-col="{ span: 14, offset: 4 }">
           <a-button @click="onSubmit" type="primary"> 提交修改 </a-button>
@@ -55,6 +55,7 @@
 
 <script>
 import CodeBtn from '@/components/CodeBtn/index';
+import { jumpCloudMall } from '@/utils/index';
 export default {
   components: { CodeBtn },
   data() {
@@ -63,10 +64,16 @@ export default {
         name: '',
       },
       rules: {
-        phone: [{ required: true, message: '请输入验证手机号', trigger: 'blur' }],
+        phone: [
+          { required: true, message: '请输入验证手机号', trigger: 'blur' },
+        ],
         code: [{ required: true, message: '请输入验证码', trigger: 'blur' }],
-        newPassword: [{ required: true, message: '请输入新密码', trigger: 'blur' }],
-        newPasswordEnter: [{ required: true, message: '确认密码', trigger: 'blur' }],
+        newPassword: [
+          { required: true, message: '请输入新密码', trigger: 'blur' },
+        ],
+        newPasswordEnter: [
+          { required: true, message: '确认密码', trigger: 'blur' },
+        ],
       },
       labelCol: {
         span: 4,
@@ -87,6 +94,9 @@ export default {
           }
           this.$store.dispatch('user/changePassword', this.form).then(() => {
             this.$message.success('修改成功');
+            this.$store.dispatch('user/logout').then((res) => {
+              jumpCloudMall('/login-pc?out=1');
+            });
           });
         } else {
           this.$message.error('请检查输入项');

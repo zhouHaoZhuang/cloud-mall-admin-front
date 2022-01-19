@@ -2,9 +2,8 @@
   <div class="record-content">
     <p class="record-title">
       <span>
-        温馨提示：线下汇款后，您的款项具体到账时间依赖于银行系统，请耐心等待。常见问题可查看
+        温馨提示：线下汇款后，您的款项具体到账时间依赖于银行系统，请耐心等待。常见问题可查看充值说明
       </span>
-      <a>充值说明</a>
     </p>
     <div class="search">
       <a-input-group compact enterButton="true">
@@ -34,16 +33,18 @@
         <div slot="createTime" slot-scope="text" v-if="text">
           {{ text | formatDate }}
         </div>
-        <div slot="action" slot-scope="text,record">
-          <a-button type="link" @click="seeDetails(record.id)">查看详情</a-button>
+        <div slot="action" slot-scope="text, record">
+          <a-button type="link" @click="seeDetails(record.id)"
+            >查看详情</a-button
+          >
         </div>
         <div slot-scope="text" slot="status">
           {{ offlineRemittance[text] }}
         </div>
       </a-table>
     </div>
-    <div class="modal-details" v-show="isinfo" >
-      <div class="modal-details-info" >
+    <div class="modal-details" v-show="isinfo">
+      <div class="modal-details-info">
         <div class="modal-details-title">
           <span>线下汇款详情</span>
           <span @click="isinfo = false">
@@ -51,13 +52,16 @@
           </span>
         </div>
         <div class="modal-details-type" v-if="dataInfo">
-          <div class="modal-details-type-info">
+          <div
+            class="modal-details-type-info"
+            v-if="dataInfo.ccCompanyInfoResDto"
+          >
             <h1>收款方信息</h1>
-            <div class="modal-details-type-list" v-if="dataInfo.ccCompanyInfoResDto">
+            <div class="modal-details-type-list">
               <div>
                 <span class="modal-details-key">汇款账户名称:</span>
-                <span class="modal-details-value" >
-                  <!-- {{ dataInfo.ccCompanyInfoResDto.companyName }} -->
+                <span class="modal-details-value">
+                  {{ dataInfo.ccCompanyInfoResDto.companyName }}
                 </span>
               </div>
               <div>
@@ -136,7 +140,7 @@
 </template>
 
 <script>
-import { offlineRemittance } from "@/utils/enum";
+import { offlineRemittance } from '@/utils/enum';
 export default {
   data() {
     return {
@@ -144,51 +148,51 @@ export default {
       data: [],
       offlineRemittance,
       listQuery: {
-        key: "accountBankName",
-        search: "",
+        key: 'accountBankName',
+        search: '',
         currentPage: 1,
         pageSize: 10,
         total: 0,
-        sorter: "",
+        sorter: '',
       },
       columns: [
         {
-          title: "汇款账户",
-          dataIndex: "accountCode",
+          title: '汇款账户',
+          dataIndex: 'accountCode',
         },
         {
-          title: "账户名称",
-          dataIndex: "accountName",
+          title: '账户名称',
+          dataIndex: 'accountName',
         },
         {
-          title: "汇款金额",
-          dataIndex: "amount",
-          key: "amount",
+          title: '汇款金额',
+          dataIndex: 'amount',
+          key: 'amount',
           sorter: (a, b) => a.amount - b.amount,
         },
         {
-          title: "汇款日期",
-          dataIndex: "createTime",
-          key: "createTime",
+          title: '汇款日期',
+          dataIndex: 'createTime',
+          key: 'createTime',
           scopedSlots: {
-            customRender: "createTime",
+            customRender: 'createTime',
           },
           sorter: (a, b) =>
             new Date(a.createTime).getTime() - new Date(b.createTime).getTime(),
         },
         {
-          title: "审核状态",
-          dataIndex: "status",
-          key: "status",
+          title: '审核状态',
+          dataIndex: 'status',
+          key: 'status',
           scopedSlots: {
-            customRender: "status",
+            customRender: 'status',
           },
         },
         {
-          title: "操作",
-          dataIndex: "action",
+          title: '操作',
+          dataIndex: 'action',
           scopedSlots: {
-            customRender: "action",
+            customRender: 'action',
           },
         },
       ],
@@ -218,16 +222,16 @@ export default {
     },
     seeDetails(id) {
       this.isinfo = true;
-      console.log(id,this.isinfo,'是否显示');
-      this.$store.dispatch("inquire/getOne", id).then((res) => {
+      console.log(id, this.isinfo, '是否显示');
+      this.$store.dispatch('inquire/getOne', id).then((res) => {
         console.log(res);
         this.dataInfo = res.data;
       });
     },
     getList() {
-      this.$getList("inquire/getList", this.listQuery).then((res) => {
+      this.$getList('inquire/getList', this.listQuery).then((res) => {
         this.data = res.data.list;
-        this.paginationProps.total = res.data.totalCount*1;
+        this.paginationProps.total = res.data.totalCount * 1;
         console.log(res);
       });
     },
@@ -306,7 +310,7 @@ export default {
       height: 70%;
     }
     .modal-details-title {
-      font-family: "Arial Normal", "Arial";
+      font-family: 'Arial Normal', 'Arial';
       font-weight: 400;
       font-style: normal;
       font-size: 20px;

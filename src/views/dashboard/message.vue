@@ -1,10 +1,6 @@
 <template>
   <div>
-    <h2>
-      <a-icon type="left" @click="$router.back()" /><span class="message"
-        >消息中心</span
-      >
-    </h2>
+    <DetailHeader title = '消息中心'/>
     <p class="all-types">全部类型</p>
     <div class="action-button">
       <a-button class="mark-read" @click="haveRead">标记已读</a-button>
@@ -33,7 +29,11 @@
 </template>
 
 <script>
+import DetailHeader from '@/components/Common/detailHeader.vue';
 export default {
+  components: {
+    DetailHeader,
+  },  
   data() {
     return {
       data: [],
@@ -84,17 +84,19 @@ export default {
       this.selectedRowKeys = selectedRowKeys;
     },
     // 全部已读
-    readAll(){
-      this.$store.dispatch('message/readAll').then((val)=>{  
+    readAll() {
+      this.$store.dispatch('message/readAll').then((val) => {
         this.$message.success('全部已读');
-      })
+      });
     },
     // 标记已读
     haveRead() {
       console.log(this.selectedRowKeys);
-      this.$store.dispatch('message/changeList', {id:this.selectedRowKeys.toString()}).then((val)=>{  
-        console.log(val);
-      });
+      this.$store
+        .dispatch('message/changeList', { id: this.selectedRowKeys.toString() })
+        .then((val) => {
+          console.log(val);
+        });
     },
     // 获取消息列表
     getMessageList() {
@@ -116,7 +118,7 @@ export default {
     },
     lookOver(id) {
       this.$router.push({
-        path: '/user/setting/messageInfo',
+        path: '/messageInfo',
         query: {
           id,
         },
