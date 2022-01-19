@@ -15,9 +15,11 @@
       <span> 充值金额： </span>
       <a-input-number
         style="width: 180px"
-        :min="1"
-        :max="9999999"
-        :step="0.1"
+        v-number-evolution="{
+          min: 0,
+          max: 9999999,
+          value: 2,
+        }"
         v-model="rechargeBtnForm.totalAmount"
       />
     </div>
