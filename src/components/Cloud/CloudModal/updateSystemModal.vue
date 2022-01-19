@@ -49,7 +49,7 @@
         </a-select>
       </a-form-model-item>
       <a-form-model-item label="重装后的系统密码" prop="password">
-        <a-input v-model="form.password" type="password" style="width: 280px" />
+        <a-input-password v-model="form.password" type="password" style="width: 280px" />
         <div class="txt">
           1、8-30个字符，必须同时包含下面四项中的三项：大写字母、小写字母、数字、和特殊字符
         </div>
@@ -58,6 +58,13 @@
           } [ ] : ; ' > <span v-text="'<'"></span> , . ? / ）。其中，Windows
           实例不能以斜线号（/）为密码首字符。
         </div>
+      </a-form-model-item>
+      <a-form-model-item label="确认密码" prop="confirmPassword">
+        <a-input-password
+          v-model="form.confirmPassword"
+          type="password"
+          style="width: 280px"
+        />
       </a-form-model-item>
     </a-form-model>
   </a-modal>
@@ -109,6 +116,15 @@ export default {
         callback();
       }
     };
+    const validatePass2 = (rule, value, callback) => {
+      if (value === "") {
+        callback(new Error("请输入确认密码"));
+      } else if (value !== this.form.password) {
+        callback(new Error("两次密码不一致"));
+      } else {
+        callback();
+      }
+    };
     return {
       labelCol: { span: 6 },
       wrapperCol: { span: 17 },
@@ -129,11 +145,15 @@ export default {
         /^.*(?=.{8,})(?=.*\d)(?=.*[a-z])(?=.*[()`~!@#$%^&*-_+=|{}][:;'><,.?/]).*$/,
       form: {
         password: "",
+        confirmPassword: "",
         defaultSystem: undefined,
         imageId: undefined
       },
       rules: {
-        password: [{ validator: validatePass, trigger: ["blur", "change"] }]
+        password: [{ validator: validatePass, trigger: ["blur", "change"] }],
+        confirmPassword: [
+          { validator: validatePass2, trigger: ["blur", "change"] }
+        ]
       },
       // 系统镜像
       systemList: [], // 系统
