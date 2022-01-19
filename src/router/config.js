@@ -25,7 +25,24 @@ const options = [
           hiddenMenu: true
         }
       },
-
+      // 消息中心
+      {
+        path: "/message",
+        name: "消息中心",
+        component: () => import("@/views/dashboard/message.vue"),
+        meta: {
+          hiddenMenu: true
+        }
+      },
+      // 消息中心详情
+      {
+        path: "/messageInfo",
+        name: "消息中心详情",
+        component: () => import("@/views/dashboard/messageInfo.vue"),
+        meta: {
+          hiddenMenu: true
+        }
+      },
       // 控制台
       {
         path: "/control",
@@ -191,18 +208,6 @@ const options = [
                 name: "实名认证",
                 component: () =>
                   import("@/views/user/setting/verified/index.vue"),
-                meta: {}
-              },
-              {
-                path: "message",
-                name: "消息中心",
-                component: () => import("@/views/dashboard/message.vue"),
-                meta: {}
-              },
-              {
-                path: "messageInfo",
-                name: "消息中心详情",
-                component: () => import("@/views/dashboard/messageInfo.vue"),
                 meta: {}
               },
               {

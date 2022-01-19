@@ -73,7 +73,7 @@ const authorityGuard = (to, from, next, options) => {
 };
 
 /**
- * 总览页守卫
+ * 总览页守卫(也包括其他所有不需要展开左侧二级菜单的页面)
  * @param to
  * @param form
  * @param next
@@ -82,10 +82,16 @@ const authorityGuard = (to, from, next, options) => {
 const dashboardGuard = (to, from, next, options) => {
   const { store, message } = options;
   // 设置主体左侧菜单展开还是关闭
-  if (to.path === "/dashboard" && store.state.setting.leftOpen) {
+  if (
+    store.state.setting.filterList.indexOf(to.path) !== -1 &&
+    store.state.setting.leftOpen
+  ) {
     store.dispatch("setting/changeLeftOpenMenu", false);
   }
-  if (to.path !== "/dashboard" && !store.state.setting.leftOpen) {
+  if (
+    store.state.setting.filterList.indexOf(to.path) === -1 &&
+    !store.state.setting.leftOpen
+  ) {
     store.dispatch("setting/changeLeftOpenMenu", true);
   }
   // 设置主体左侧菜单显示还是隐藏

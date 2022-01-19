@@ -47,7 +47,8 @@ export default {
       userInfo: (state) => state.user.userInfo,
       menuData: (state) => state.setting.menuData,
       menuOpen: (state) => state.setting.menuOpen,
-      selectItemPath: (state) => state.setting.selectItemPath
+      selectItemPath: (state) => state.setting.selectItemPath,
+      filterList: (state) => state.setting.filterList
     })
   },
   watch: {
@@ -74,7 +75,7 @@ export default {
           "/" + routeArr.join("/")
         );
         // 二级菜单数据
-        if (newVal.path !== "/dashboard") {
+        if (this.filterList.indexOf(newVal.path) === -1) {
           const newTwoMenuData = newOneMenuData.children.find(
             (ele) => ele.path === routeArr[1]
           );
