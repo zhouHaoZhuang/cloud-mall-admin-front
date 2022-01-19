@@ -357,7 +357,7 @@ export default {
         key: "ip",
         search: "",
         regionId: undefined,
-        // createTimeSort: "asc",
+        createTimeSort: "desc",
         currentPage: 1,
         pageSize: 10,
         total: 0

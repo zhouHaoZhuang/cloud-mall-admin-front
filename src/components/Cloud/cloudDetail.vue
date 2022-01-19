@@ -111,7 +111,9 @@
               <a-button class="color-btn" @click="handleCloudUpgrade">
                 升级配置
               </a-button>
-              <a-button class="color-btn">相同配置创建</a-button>
+              <!-- <a-button class="color-btn" @click="handleBuyCloud">
+                相同配置创建
+              </a-button> -->
             </a-space>
           </div>
         </div>
@@ -133,6 +135,7 @@
 <script>
 import { mapState } from "vuex";
 import { runningStatusEnum, regionDataEnum } from "@/utils/enum";
+import { jumpCloudMall } from "@/utils/index";
 import UpdateNameModal from "@/components/Cloud/CloudModal/updateNameModal";
 import RenewModal from "@/components/Cloud/CloudModal/renewModal";
 import AutoRenewModal from "@/components/Cloud/CloudModal/autoRenewModal";
@@ -201,6 +204,12 @@ export default {
           id: this.detail.id
         }
       });
+    },
+    // 跳转云商城购买相同配置
+    handleBuyCloud() {
+      const path = `/pc/cloud-price?cpu=${this.detail.cpu}&memory=${this.detail.memory}`;
+      console.log(this.detail, path);
+      // jumpCloudMall(path, true);
     }
   }
 };
