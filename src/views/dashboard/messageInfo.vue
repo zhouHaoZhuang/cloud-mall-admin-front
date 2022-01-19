@@ -1,24 +1,28 @@
 <template>
   <div>
-    <h2><a-icon @click="$router.back()" type="left" class="back" />全部消息</h2>
+    <DetailHeader title="全部消息" />
     <div class="message-budy" v-if="data">
-      <h2>{{data.title}}</h2>
-      <p class="message-time">{{data.sendTime | formatDate}}</p>
+      <h2>{{ data.title }}</h2>
+      <p class="message-time">{{ data.sendTime | formatDate }}</p>
       <p class="message-info">
-        {{data.content}}
+        {{ data.content }}
       </p>
     </div>
   </div>
 </template>
 
 <script>
+import DetailHeader from '@/components/Common/detailHeader.vue';
 export default {
+  components: {
+    DetailHeader,
+  },
   data() {
     return {
       data: null,
     };
   },
- 
+
   created() {
     this.getMessageInfo();
   },
