@@ -3,7 +3,7 @@
     <div class="search">
       <a-input-group compact enterButton="true">
         <a-select v-model="listQuery.key">
-          <a-select-option value="memo"> 充值方式 </a-select-option>
+          <a-select-option value="channelCode"> 充值方式 </a-select-option>
         </a-select>
         <a-input-search
           style="width: 250px"
@@ -43,13 +43,14 @@
 </template>
 
 <script>
-import {rechargeTypeMap,detailTypeMapData} from '@/utils/enum'
+import {rechargeTypeMap,detailTypeMapData,rechargeTypeReverseMap} from '@/utils/enum'
 export default {
   data() {
     return {
       data: [],
       rechargeTypeMap,
       detailTypeMapData,
+      rechargeTypeReverseMap,
       columns: [
          {
           title: '支付ID',
@@ -105,13 +106,13 @@ export default {
         },
       ],
       listQuery: {
-        key: 'memo',
+        key: 'channelCode',
         search: '',
         currentPage: 1,
         pageSize: 10,
         total: 0,
         sorter: '',
-        memo: '',
+        channelCode: '',
       },
       paginationProps: {
         showQuickJumper: true,
@@ -131,8 +132,8 @@ export default {
   },
   methods: {
     onSearch(value) {
-      // console.log(value);
-      this.listQuery.memo = value;
+      console.log(value);
+      this.listQuery.channelCode = this.rechargeTypeReverseMap[value];
       this.getList();
     },
     // 排序的回调

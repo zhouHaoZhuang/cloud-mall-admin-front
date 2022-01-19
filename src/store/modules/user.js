@@ -89,6 +89,14 @@ const user = {
         data
       });
     },
+    // 获取用户真实信息
+    getUserActualName({ commit, state }, data) {
+      return request({
+        url: "/ccCorporation/getByToken",
+        method: "get",
+        data
+      });
+    },
     // 获取用户信息
     getUserInfo({ commit, state }) {
       const authenticationClient = new AuthenticationClient({
