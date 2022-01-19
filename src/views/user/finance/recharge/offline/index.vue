@@ -46,7 +46,7 @@
                 :wrapper-col="wrapperCol"
               >
                 <a-form-model-item ref="amount" label="汇款金额" prop="amount">
-                    <a-input-number v-model="form.amount" />元
+                    <a-input-number :min="1" v-model="form.amount" />元
                 </a-form-model-item>
                 <a-form-model-item
                   ref="accountName"

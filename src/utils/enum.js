@@ -136,6 +136,11 @@ export const rechargeTypeMap = {
   1: "余额支付",
   ali: "支付宝"
 };
+// 充值方式map反向
+export const rechargeTypeReverseMap = {
+  "余额支付": 1,
+  "支付宝" : 'ali'
+};
 // 充值状态map数据
 export const detailTypeMapData = {
   "0": "待支付",

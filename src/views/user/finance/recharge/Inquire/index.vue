@@ -227,7 +227,7 @@ export default {
     getList() {
       this.$getList("inquire/getList", this.listQuery).then((res) => {
         this.data = res.data.list;
-        this.paginationProps.total = res.data.total*1;
+        this.paginationProps.total = res.data.totalCount*1;
         console.log(res);
       });
     },
