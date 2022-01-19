@@ -3,7 +3,7 @@
     <a-dropdown>
       <span class="ant-dropdown-link" @click="(e) => e.preventDefault()">
         <img width="30px" src="@/assets/img/user.png" alt="" />
-        <span class="user-name">*勇</span>
+        <span class="user-name">{{realName}}</span>
         <a-icon type="down" />
       </span>
       <a-menu slot="overlay">
@@ -38,10 +38,21 @@ export default {
     })
   },
   data() {
-    return {};
+    return {
+      realName:''
+    };
   },
-  created() {},
+  created() {
+    this.getUser()
+  },
   methods: {
+    getUser(){
+      this.$store.dispatch("user/getUserActualName").then((val)=>{  
+        // console.log(val.data.realName)
+        this.realName = '*' + val.data.realName.slice(1)
+        // console.log(this.realName);
+      });
+    },
     // 退出
     handleLoginOut() {
       this.$store.dispatch("user/logout").then((res) => {
