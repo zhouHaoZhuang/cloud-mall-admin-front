@@ -3,7 +3,7 @@
     <a-dropdown>
       <span class="ant-dropdown-link" @click="(e) => e.preventDefault()">
         <img width="30px" src="@/assets/img/user.png" alt="" />
-        <span class="user-name">{{realName}}</span>
+        <span class="user-name">{{ realName }}</span>
         <a-icon type="down" />
       </span>
       <a-menu slot="overlay">
@@ -29,37 +29,41 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
-import { jumpCloudMall } from "@/utils/index";
+import { mapState } from 'vuex';
+import { jumpCloudMall } from '@/utils/index';
 export default {
   computed: {
     ...mapState({
-      menuOpen: (state) => state.setting.menuOpen
-    })
+      menuOpen: (state) => state.setting.menuOpen,
+    }),
   },
   data() {
     return {
-      realName:''
+      realName: '',
     };
   },
   created() {
-    this.getUser()
+    this.getUser();
   },
   methods: {
-    getUser(){
-      this.$store.dispatch("user/getUserActualName").then((val)=>{  
+    getUser() {
+      this.$store.dispatch('user/getUserActualName').then((res) => {
         // console.log(val.data.realName)
-        this.realName = '*' + val.data.realName.slice(1)
+        if (res.data && res.data.realName) {
+          this.realName = '*' + res.data.realName.slice(1);
+        } else {
+          this.realName = '未实名认证';
+        }
         // console.log(this.realName);
       });
     },
     // 退出
     handleLoginOut() {
-      this.$store.dispatch("user/logout").then((res) => {
-        jumpCloudMall("/login-pc?out=1");
+      this.$store.dispatch('user/logout').then((res) => {
+        jumpCloudMall('/login-pc?out=1');
       });
-    }
-  }
+    },
+  },
 };
 </script>
 

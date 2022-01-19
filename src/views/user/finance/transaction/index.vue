@@ -54,7 +54,7 @@
             {{ record.status === 9 ? text : '--' }}
           </div>
           <div slot="status" slot-scope="text">
-            {{ detailsMap[text] }}
+            {{ detailTypeMapData[text] }}
           </div>
         </a-table>
       </div>
@@ -63,12 +63,13 @@
 </template>
 
 <script>
-import { detailsMap } from '@/utils/enum';
+import { detailsMap,detailTypeMapData } from '@/utils/enum';
 export default {
   computed: {},
   data() {
     return {
       detailsMap,
+      detailTypeMapData,
       listQuery: {
         key: 'paymentLineId',
         search: '',
