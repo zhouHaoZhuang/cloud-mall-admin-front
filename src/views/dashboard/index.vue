@@ -200,6 +200,11 @@ export default {
   created() {
     this.getDashboardData();
   },
+  mounted() {
+    window.addEventListener("resize", () => {
+      this.chartLine.resize(); //刷新画布 监听屏幕大小，来刷新画布
+    });
+  },
   methods: {
     // 获取数据
     getDashboardData() {
@@ -221,38 +226,40 @@ export default {
         this.overviewData = { ...newData };
       });
       this.$store.dispatch("dashboard/trendData").then((res) => {
-        const newData =
-          res.data && res.data.length > 0
-            ? res.data.map((ele) => {
-                if (ele.type === "I") {
-                  this.trendIn = ele.dealAmount;
-                  return {
-                    type: ele.type,
-                    value: ele.dealAmount,
-                    name: "收入记录"
-                  };
-                }
-                if (ele.type === "O") {
-                  this.trendOut = ele.dealAmount;
-                  return {
-                    type: ele.type,
-                    value: ele.dealAmount,
-                    name: "消费记录"
-                  };
-                }
-              })
-            : [
-                {
-                  type: "I",
-                  value: 0,
-                  name: "收入记录"
-                },
-                {
-                  type: "O",
-                  value: 0,
-                  name: "消费记录"
-                }
-              ];
+        let newData = [];
+        if (res.data && res.data.length > 0) {
+          const I = res.data.find((ele) => ele.type === "I");
+          const O = res.data.find((ele) => ele.type === "O");
+          const newIDealAmount = (I && I.dealAmount) || 0;
+          const newODealAmount = (O && O.dealAmount) || 0;
+          this.trendIn = newIDealAmount;
+          this.trendOut = newODealAmount;
+          newData = [
+            {
+              type: "I",
+              value: newIDealAmount,
+              name: "收入记录"
+            },
+            {
+              type: "O",
+              value: newODealAmount,
+              name: "消费记录"
+            }
+          ];
+        } else {
+          newData = [
+            {
+              type: "I",
+              value: 0,
+              name: "收入记录"
+            },
+            {
+              type: "O",
+              value: 0,
+              name: "消费记录"
+            }
+          ];
+        }
         this.trendData.data = [...newData];
         this.initEcharts();
       });
@@ -280,7 +287,7 @@ export default {
         color: ["#00BBFF", "#FFAD33"],
         legend: {
           data: ["消费记录", "收入记录"],
-          left: "right",
+          left: "73%",
           top: "center",
           orient: "vertical",
           itemGap: 50
@@ -403,7 +410,7 @@ export default {
         .income {
           max-width: 140px;
           position: absolute;
-          left: 206px;
+          left: 200px;
         }
         .consumption {
           top: 127px;
