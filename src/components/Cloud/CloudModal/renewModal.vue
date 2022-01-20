@@ -128,6 +128,12 @@ export default {
         .then((res) => {
           this.$message.success("提交续费订单成功");
           this.handleCancel();
+          this.$router.push({
+            path: "/user/finance/orderDetail",
+            query: {
+              id: res.data.orderNo
+            }
+          });
         })
         .finally(() => {
           this.loading = false;
