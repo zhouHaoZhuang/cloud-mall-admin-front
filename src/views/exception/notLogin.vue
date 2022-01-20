@@ -4,7 +4,7 @@
 
 <script>
 import { mapState } from "vuex";
-import env from "@/config/env";
+import { jumpCloudMall } from "@/utils/index";
 export default {
   computed: {
     ...mapState({
@@ -31,15 +31,15 @@ export default {
         if (this.timeNum - 1 === 0) {
           clearInterval(this.time);
           this.timeNum = 5;
-          this.jumpCloudMall();
+          this.autoJumpCloudMall();
           return;
         }
         this.timeNum -= 1;
       }, 1000);
     },
     // 跳转云商城
-    jumpCloudMall() {
-      window.location.href = env.MALL_URL;
+    autoJumpCloudMall() {
+      jumpCloudMall("/login-pc?out=1");
     }
   }
 };

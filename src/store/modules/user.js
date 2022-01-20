@@ -64,12 +64,12 @@ const user = {
         commit("SET_TOKEN", "");
         commit("SET_USERINFO", {});
         commit("SET_PERMS", []);
-        const authenticationClient = new AuthenticationClient({
-          appId: env.appId,
-          appHost: env.appHost,
-          token: state.token
-        });
-        authenticationClient.logout();
+        // const authenticationClient = new AuthenticationClient({
+        //   appId: env.appId,
+        //   appHost: env.appHost,
+        //   token: state.token
+        // });
+        // authenticationClient.logout();
         resolve();
       });
     },
