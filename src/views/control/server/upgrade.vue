@@ -52,15 +52,11 @@
           class="datasidk-item"
         >
           <div class="input-number-box">
-            <a-input-number
+            <NumberInput
               v-model="item.size"
               :disabled="item.old"
-              class="input-number"
-              :min="item.min"
-              :max="500"
-              @change="getPrice"
+              :on-change="getPrice"
             />
-            <div class="txt">GB</div>
           </div>
           <div class="action-box">
             <div v-if="item.default" class="add">
@@ -85,14 +81,14 @@
       </a-form-model-item>
       <a-form-model-item v-if="tabKey === '3'" label="公网带宽">
         <div class="input-number-box">
-          <a-input-number
+          <NumberInput
             v-model="form.internetMaxBandwidthOut"
-            class="input-number"
+            company="M"
+            :step="1"
             :min="minBandwidth"
             :max="100"
-            @change="getPrice"
+            :on-change="getPrice"
           />
-          <div class="txt">Mbps</div>
         </div>
       </a-form-model-item>
       <a-form-model-item label="到期时间">
@@ -114,9 +110,11 @@
 import { snapshotDayEnum } from "@/utils/enum";
 import { setCpuOrDiskData } from "@/utils/index";
 import DetailHeader from "@/components/Common/detailHeader";
+import NumberInput from "@/components/NumberInput/index";
 export default {
   components: {
-    DetailHeader
+    DetailHeader,
+    NumberInput
   },
   data() {
     return {
