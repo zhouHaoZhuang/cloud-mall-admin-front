@@ -134,9 +134,7 @@ export const verifyTypeEnum = {
 // 充值方式map
 export const rechargeTypeMap = {
   wechat: "微信",
-  ali: "支付宝",
-  balance: "余额账户",
-  voucher: "代金券账户",
+  ali: "支付宝"
 };
 
 // 充值状态map数据
