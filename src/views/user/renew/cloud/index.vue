@@ -170,7 +170,7 @@ export default {
       listQuery: {
         key: "ip",
         search: "",
-        residueDay: 30,
+        residueDay: undefined,
         currentPage: 1,
         pageSize: 10,
         total: 0
