@@ -165,5 +165,8 @@ export const getIdcMallUrl = () => {
   const result = newUrl
     .substring(0, newUrl.indexOf("/"))
     .replace("console.", "");
-  return url.includes("http://") ? "http://" : "https://" + result;
+  const newResult = `${
+    url.includes("http://") ? "http://" : "https://"
+  }${result}`;
+  return newResult;
 };
