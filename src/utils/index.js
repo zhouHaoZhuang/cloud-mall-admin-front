@@ -167,6 +167,6 @@ export const getIdcMallUrl = () => {
     .replace("console.", "");
   const newResult = `${
     url.includes("http://") ? "http://" : "https://"
-  }${result}`;
+  }www.${result}`;
   return newResult;
 };
