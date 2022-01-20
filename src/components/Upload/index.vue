@@ -82,7 +82,8 @@ export default {
     return {
       // 请求头
       headers: {
-        domain: getDomainUrl()
+        domain: getDomainUrl(),
+        system: "idc"
       },
       previewVisible: false,
       previewImage: "",
