@@ -113,7 +113,7 @@ export default {
         pageSize: 10,
         total: 0,
         sorter: '',
-        channelCode: 'ali',
+        channelCode: '',
       },
       paginationProps: {
         showQuickJumper: true,
