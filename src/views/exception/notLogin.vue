@@ -1,5 +1,12 @@
 <template>
-  <div class="container">{{ timeNum }}{{ notTxt }}</div>
+  <div class="container">
+    <a-result status="404" title="登录失效">
+      <span slot="subTitle"> {{ timeNum }}{{ notTxt }} </span>
+      <template #extra>
+        <a-button type="primary" @click="handleNowJump"> 立即跳转 </a-button>
+      </template>
+    </a-result>
+  </div>
 </template>
 
 <script>
@@ -37,6 +44,10 @@ export default {
         this.timeNum -= 1;
       }, 1000);
     },
+    handleNowJump() {
+      clearInterval(this.time);
+      this.autoJumpCloudMall();
+    },
     // 跳转云商城
     autoJumpCloudMall() {
       jumpCloudMall("/login-pc?out=1");
@@ -47,6 +58,10 @@ export default {
 
 <style lang="less" scoped>
 .container {
-  color: red;
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 </style>
