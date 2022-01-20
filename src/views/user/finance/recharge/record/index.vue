@@ -2,18 +2,17 @@
   <div class="record">
     <div class="search">
       <a-input-group compact enterButton="true">
-        <a-select v-model="listQuery.key">
-          <a-select-option value="channelCode"> 充值方式 </a-select-option>
+        <a-select v-model="listQuery.channelCode" style="width: 250px">
+          <a-select-option value=""> 充值方式 </a-select-option>
+          <a-select-option
+            :value="index"
+            v-for="(item, index) in rechargeTypeMap"
+            :key="index"
+          >
+            {{ item }}
+          </a-select-option>
         </a-select>
-        <a-input-search
-          style="width: 250px"
-          placeholder="请输入搜索关键词"
-          enter-button
-          @search="onSearch"
-        />
-        <span class="refresh">
-          <a-icon type="reload" />
-        </span>
+        <a-button type  = 'primary' @click="onSearch">查询</a-button>
       </a-input-group>
     </div>
     <div>
@@ -24,35 +23,37 @@
         row-key="id"
         :pagination="paginationProps"
       >
-      <div slot-scope="text" slot="createTime" v-if="text">
-        {{ text | formatDate }}
-      </div>
-      <div slot-scope="text" slot="modifyTime" >
-        <span v-if="text">{{ text | formatDate }}</span>
-        <span v-else>-----</span>
-      </div>
-      <div slot="channelCode" slot-scope="text">
-        {{ rechargeTypeMap[text] }}
-      </div>
-      <span slot="status" slot-scope="text">
-        {{detailTypeMapData[text]}}
-      </span>
+        <div slot-scope="text" slot="createTime" v-if="text">
+          {{ text | formatDate }}
+        </div>
+        <div slot-scope="text" slot="modifyTime">
+          <span v-if="text">{{ text | formatDate }}</span>
+          <span v-else>-----</span>
+        </div>
+        <div slot="channelCode" slot-scope="text">
+          {{ rechargeTypeMap[text] }}
+        </div>
+        <span slot="status" slot-scope="text">
+          {{ detailTypeMapData[text] }}
+        </span>
       </a-table>
     </div>
   </div>
 </template>
 
 <script>
-import {rechargeTypeMap,detailTypeMapData,rechargeTypeReverseMap} from '@/utils/enum'
+import {
+  rechargeTypeMap,
+  detailTypeMapData,
+} from '@/utils/enum';
 export default {
   data() {
     return {
       data: [],
       rechargeTypeMap,
       detailTypeMapData,
-      rechargeTypeReverseMap,
       columns: [
-         {
+        {
           title: '支付ID',
           dataIndex: 'payNo',
           key: 'payNo',
@@ -67,17 +68,17 @@ export default {
           title: '充值方式',
           dataIndex: 'channelCode',
           key: 'channelCode',
-          scopedSlots:{
-             customRender: 'channelCode',
-          }
+          scopedSlots: {
+            customRender: 'channelCode',
+          },
         },
-         {
+        {
           title: '支付状态',
           dataIndex: 'status',
           key: 'status',
-          scopedSlots:{
-             customRender: 'status',
-          }
+          scopedSlots: {
+            customRender: 'status',
+          },
         },
         {
           title: '到账日期',
@@ -131,9 +132,9 @@ export default {
     this.getList();
   },
   methods: {
-    onSearch(value) {
-      console.log(value);
-      this.listQuery.channelCode = this.rechargeTypeReverseMap[value];
+    onSearch() {
+      console.log(this.listQuery);
+      
       this.getList();
     },
     // 排序的回调

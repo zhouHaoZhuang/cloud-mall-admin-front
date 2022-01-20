@@ -16,7 +16,7 @@
       <a-input-number
         style="width: 180px"
         v-number-evolution="{
-          min: 0,
+          min: 1,
           max: 9999999,
           value: 2,
         }"
