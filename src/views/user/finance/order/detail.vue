@@ -44,7 +44,7 @@
             {{ orderStatusEnum[orderInfo.tradeStatus] }}
           </span>
         </li>
-        <li>
+        <li v-if="orderInfo.tradeStatus !== 1 && orderInfo.tradeStatus !== 3">
           <span>支付时间:</span>
           <span>{{ orderInfo.payTime | formatDate }}</span>
         </li>
