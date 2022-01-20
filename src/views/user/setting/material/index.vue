@@ -14,10 +14,10 @@
         :wrapper-col="wrapperCol"
       >
         <a-form-model-item ref="name" label="会员ID">
-          <span>1100001</span>
+          <span>{{corporationCode}}</span>
         </a-form-model-item>
         <a-form-model-item ref="name" label="真实姓名">
-          <span>*勇</span>
+          <span>{{realName}}</span>
         </a-form-model-item>
         <a-form-model-item ref="name" label="QQ号码" prop="name">
           <a-input v-model="form.name" />
@@ -36,6 +36,8 @@ export default {
     return {
       labelCol: { span: 2 },
       wrapperCol: { span: 6 },
+      realName: "",
+      corporationCode: "",
       form: {
         name: "",
       },
@@ -43,6 +45,9 @@ export default {
         name: [{ required: true, message: "请输入QQ号码", trigger: "blur" }],
       },
     };
+  },
+  created() {
+    this.getUser();
   },
   methods: {
     onSubmit() {
@@ -57,6 +62,20 @@ export default {
     },
     resetForm() {
       this.$refs.ruleForm.resetFields();
+    },
+    getUser() {
+      this.$store.dispatch('user/getUserActualName').then((res) => {
+        if (!res.data) {
+         return
+        }
+        console.log(res.data)
+        this.corporationCode = res.data.corporationCode;
+        if ( res.data.realName) {
+          this.realName = '*' + res.data.realName.slice(1);
+        } else {
+          this.realName = '-----';
+        }
+      });
     },
   },
 };

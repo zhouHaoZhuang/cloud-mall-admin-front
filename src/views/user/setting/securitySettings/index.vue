@@ -6,10 +6,10 @@
         <img src="@/assets/img/user.png" alt="" />
       </div>
       <div>
-        <p><span class="user-key">会员ID：</span><span>1100001</span></p>
+        <p><span class="user-key">会员ID：</span><span>{{corporationCode}}</span></p>
         <p>
           <span class="user-key">注册日期：</span>
-          <span>2021-06-12 15:53:27</span>
+          <span>{{createTime | formatDate}}</span>
         </p>
         <p>
           <span class="user-key">安全级别：</span>
@@ -32,7 +32,7 @@
       <img src="@/assets/img/iconphone.png" alt="" />
       <span class="settings-info-type">手机绑定</span>
       <span class="settings-info-desc">
-        您的手机：139*****963。绑定认证后可用于手机找回密码、接收手机动态验证码等，保障您的账户安全。
+        您的手机：{{phoneNumber}}。绑定认证后可用于手机找回密码、接收手机动态验证码等，保障您的账户安全。
       </span>
       <a-button class="settings-change" type="link">修改</a-button>
     </div>
@@ -56,7 +56,7 @@
       <img src="@/assets/img/icon-identity-success.png" alt="" />
       <span class="settings-info-type">实名认证</span>
       <span class="settings-info-desc">
-       您的实名认证信息：*勇
+       您的实名认证信息：{{realName}}
       </span>
       <a-button class="settings-change" type="link">查看</a-button>
     </div>
@@ -64,7 +64,37 @@
 </template>
 
 <script>
-export default {};
+export default {
+  data() {
+    return {
+      corporationCode:'',
+      realName:'',
+      createTime:'',
+      phoneNumber:'',
+    }
+  },
+  created() {
+    this.getUser()
+  },
+  methods: {
+    getUser() {
+      this.$store.dispatch('user/getUserActualName').then((res) => {
+        if(!res.data){
+          return
+        }
+        console.log(res.data)
+        this.corporationCode = res.data.corporationCode;
+        this.createTime = res.data.createTime;
+        this.phoneNumber = res.data.phoneNumber?.slice(0,3)+'****'+res.data.phoneNumber?.slice(8,11);
+        if (res.data.realName) {
+          this.realName = '*' + res.data.realName.slice(1);
+        } else {
+          this.realName = '-----';
+        }
+      });
+    },
+  }
+};
 </script>
 
 <style lang="less" scoped>
