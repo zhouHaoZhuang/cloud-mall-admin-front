@@ -203,7 +203,8 @@ export default {
     },
     // 重装系统按钮是否禁用
     updateSystemBtnDisable() {
-      if (this.detail.runningStatus === 2) {
+      console.log(this.detail.runningStatus);
+      if (this.detail.runningStatus !== 2) {
         return true;
       } else {
         return false;
