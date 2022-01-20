@@ -2,7 +2,7 @@ import store from "@/store";
 import env from "@/config/env";
 // 根据id返回数组中对应id的对象---挂载全局 $getArrOnceData
 export const getArrOnceData = (id, arr, key) => {
-  return arr.find(ele => ele[key ? key : id] === id);
+  return arr.find((ele) => ele[key ? key : id] === id);
 };
 // 压缩图片
 export function base64ToFile(base64, filename) {
@@ -144,14 +144,14 @@ export const jumpCloudMall = (url, type) => {
 // 处理cpu+内存数据  data:默认数组  company:单位
 export const setCpuOrDiskData = (data, company) => {
   if (data && Array.isArray(data) && data.length > 0) {
-    const newData = data.sort((a, b) => a - b)
+    const newData = data.sort((a, b) => a - b);
     return newData.map((item) => {
       return {
-        title: String(item).replace('.0', '') + company,
-        value: item
-      }
-    })
+        title: String(item).replace(".0", "") + company,
+        value: item * 1
+      };
+    });
   } else {
-    return []
+    return [];
   }
-}
+};

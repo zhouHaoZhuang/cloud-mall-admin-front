@@ -18,7 +18,7 @@
           style="width: 160px"
           v-model="form.cpu"
           placeholder="请选择"
-          @change="getRegionData"
+          @change="handleCpuChange"
         >
           <a-select-option
             v-for="item in cpuData"
@@ -204,7 +204,12 @@ export default {
         })
         .then((res) => {
           this.memoryData = [...setCpuOrDiskData(res.data, "G")];
-          // this.getRegionData();
+          this.form.memory =
+            (this.memoryData.length > 0 && this.memoryData[0].value) ||
+            undefined;
+          if (cpu) {
+            this.getRegionData();
+          }
         });
     },
     // 添加一块ssd数据盘
@@ -276,6 +281,10 @@ export default {
     handleTabChange(val) {
       this.getDetail();
       this.price.tradePrice = "0.00元";
+    },
+    // cpu的change事件
+    handleCpuChange(val) {
+      this.getDisk(val);
     },
     // 确认提交
     handleSubmit() {
