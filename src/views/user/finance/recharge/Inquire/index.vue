@@ -76,12 +76,12 @@
                   {{ dataInfo.ccCompanyInfoResDto.openBank }}
                 </span>
               </div>
-              <div>
+              <!-- <div>
                 <span class="modal-details-key">汇款备注:</span>
                 <span class="modal-details-value">
                   {{ dataInfo.ccCompanyInfoResDto.memo }}
                 </span>
-              </div>
+              </div> -->
             </div>
           </div>
           <div class="modal-details-type-info">
