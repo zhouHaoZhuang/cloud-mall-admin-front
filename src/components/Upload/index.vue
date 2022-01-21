@@ -61,7 +61,7 @@ export default {
     // 可上传的图片数量
     limit: {
       type: Number,
-      default: 10
+      default: 1
     },
     // 默认图片,可以是字符串，单张图片，也可是数组，多个图片
     defaultFile: {
