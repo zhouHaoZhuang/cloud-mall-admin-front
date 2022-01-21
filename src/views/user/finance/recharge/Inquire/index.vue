@@ -287,7 +287,6 @@ export default {
   .img-url {
     display: inline-block;
     width: 100px;
-    height: 100px;
     margin-left: 20px;
     img {
       width: 100%;
@@ -331,19 +330,27 @@ export default {
       .modal-details-type-list {
         display: flex;
         flex-wrap: wrap;
-        padding-left: 60px;
+        padding-left: 45px;
         font-size: 13px;
         color: #333333;
         div {
-          width: 30%;
+          width: 32%;
           line-height: 50px;
+          display: flex;
+          align-items: center;
           .modal-details-key {
             display: inline-block;
-            width: 100px;
+            width: 81px;
             text-align: right;
           }
           .modal-details-value {
-            margin-left: 20px;
+            margin-left: 2%;
+            display: block;
+            line-height: 20px;
+            word-wrap: break-word;
+            width: 63%;
+            // height: 50px;
+            // background-color: rgb(255, 108, 108);
           }
         }
       }
