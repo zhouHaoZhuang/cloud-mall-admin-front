@@ -48,6 +48,8 @@ request.interceptors.request.use(async (config) => {
   }
   // 携带domain
   config.headers.domain = getDomainUrl();
+  // 携带system区分不同项目
+  config.headers.system = 'idc'
   // 头部携带ip
   const ip = localStorage.getItem("Ip");
   config.headers["ip"] = ip;

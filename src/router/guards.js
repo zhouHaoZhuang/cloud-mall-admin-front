@@ -28,10 +28,12 @@ const loginGuard = (to, from, next, options) => {
   const { store, message } = options;
   // console.log("登录守卫", to, to.query.token, "----", store.state.user.token);
   const token = to.query.token || store.state.user.token;
-  if (to.query.token) {
-    store.commit("user/SET_TOKEN", to.query.token);
+  if (token) {
+    store.commit("user/SET_TOKEN", token);
   }
   if (!loginIgnore.includes(to) && !token) {
+    // 执行退出
+    store.dispatch("user/logout");
     message.warning("登录已失效，请重新登录");
     next("/exception/not");
   } else {

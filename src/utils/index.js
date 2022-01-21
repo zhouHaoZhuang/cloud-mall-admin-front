@@ -155,3 +155,18 @@ export const setCpuOrDiskData = (data, company) => {
     return [];
   }
 };
+
+// 跳转云商城的url地址生成
+export const getIdcMallUrl = () => {
+  const url = window.location.href;
+  const newUrl = url.includes("http://")
+    ? url.replace("http://", "")
+    : url.replace("https://", "");
+  const result = newUrl
+    .substring(0, newUrl.indexOf("/"))
+    .replace("console.", "");
+  const newResult = `${
+    url.includes("http://") ? "http://" : "https://"
+  }www.${result}`;
+  return newResult;
+};

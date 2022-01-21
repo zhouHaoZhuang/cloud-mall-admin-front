@@ -1,3 +1,4 @@
+import { getIdcMallUrl } from "../utils/index";
 let appId = "619c93dc69a93fbb8a1faf8c";
 let appHost = "https://resource-poor.authing.cn";
 // 默认请求地址
@@ -15,10 +16,14 @@ const payBaseUrl = {
 };
 // 跳转云商城地址
 const cloudMallUrl = {
-  dev: "http://192.168.12.30:3000",
-  test: "http://www.test.ydidc.com",
-  prod: "http://www.ydidc.com"
+  dev: "http://192.168.12.30:3000"
 };
+// 获取云商城地址
+function getCloudMallUrl() {
+  return process.env.VUE_APP_ENV === "dev"
+    ? cloudMallUrl[process.env.VUE_APP_ENV]
+    : getIdcMallUrl();
+}
 
 // 请求头携带domain参数
 const domains = {
@@ -33,6 +38,6 @@ export default {
   appHost,
   BASE_URL: baseUrl[process.env.VUE_APP_ENV],
   PAY_BASE_URL: payBaseUrl[process.env.VUE_APP_ENV],
-  MALL_URL: cloudMallUrl[process.env.VUE_APP_ENV],
+  MALL_URL: getCloudMallUrl(),
   DOMAIN_URL: domains[process.env.VUE_APP_ENV]
 };

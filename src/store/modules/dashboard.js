@@ -28,12 +28,11 @@ const cloud = {
         method: "get"
       });
     },
-    //
-    cloudRenewPrice({ commit, state }, data) {
+    // 获取未完成订单和待续费数量
+    getOrderAndRenewCount({ commit, state }) {
       return request({
-        url: "/scEcsStock/renew/selectInstance",
-        method: "post",
-        data
+        url: "/index/getCount",
+        method: "get"
       });
     }
   }

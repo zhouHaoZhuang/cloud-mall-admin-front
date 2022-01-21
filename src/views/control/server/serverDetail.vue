@@ -60,8 +60,17 @@
                 <a-menu-item key="1" @click="handleResetPwdModal">
                   重设密码
                 </a-menu-item>
-                <a-menu-item key="2" @click="handleResetSystemModal">
-                  重装系统
+                <a-menu-item
+                  :disabled="updateSystemBtnDisable"
+                  key="2"
+                  @click="handleResetSystemModal"
+                >
+                  <a-tooltip placement="top">
+                    <template slot="title">
+                      <span>已停止的实例才可以更换操作系统</span>
+                    </template>
+                    重装系统
+                  </a-tooltip>
                 </a-menu-item>
                 <a-menu-item key="3" disabled>PUSH</a-menu-item>
                 <a-menu-item key="4" @click="handleCreateSnapshotModal">
@@ -187,6 +196,15 @@ export default {
         return true;
       }
       if (this.detail.runningStatus !== 1) {
+        return true;
+      } else {
+        return false;
+      }
+    },
+    // 重装系统按钮是否禁用
+    updateSystemBtnDisable() {
+      console.log(this.detail.runningStatus);
+      if (this.detail.runningStatus !== 2) {
         return true;
       } else {
         return false;
