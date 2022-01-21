@@ -89,16 +89,16 @@
         <div class="public-box todolist">
           <div class="public-tit">待办事项</div>
           <div class="list">
-            <div class="todo-item">
+            <div class="todo-item" @click="handleJump('/user/renew/cloud')">
               <div class="left-txt">
-                <span class="count">0</span>
+                <span class="count">{{ todoObj.ecsCount }}</span>
                 个待续费产品
               </div>
               <div class="jump">前往续费></div>
             </div>
-            <div class="todo-item">
+            <div class="todo-item" @click="handleJump('/user/finance/trash')">
               <div class="left-txt">
-                <span class="count">0</span>
+                <span class="count">{{ todoObj.toPayOrder }}</span>
                 个未完成订单
               </div>
               <div class="jump">前往支付></div>
@@ -194,11 +194,17 @@ export default {
       trendIn: "0.00",
       trendOut: "0.00",
       // 云服务器数量
-      cloudCount: 0
+      cloudCount: 0,
+      // 待办事项对象
+      todoObj: {
+        ecsCount: 0,
+        toPayOrder: 0
+      }
     };
   },
   created() {
     this.getDashboardData();
+    this.getOrderAndRenewCount();
   },
   mounted() {
     window.addEventListener("resize", () => {
@@ -263,8 +269,15 @@ export default {
         this.trendData.data = [...newData];
         this.initEcharts();
       });
+      // 获取服务器数量
       this.$store.dispatch("dashboard/getCloudCount").then((res) => {
         this.cloudCount = res.data;
+      });
+    },
+    // 获取未完成订单和待续费数量
+    getOrderAndRenewCount() {
+      this.$store.dispatch("dashboard/getOrderAndRenewCount").then((res) => {
+        this.todoObj = { ...res.data };
       });
     },
     // 跳转充值
@@ -433,6 +446,7 @@ export default {
             justify-content: space-between;
             align-items: center;
             padding: 0 16px;
+            cursor: pointer;
             .left-txt {
               display: flex;
               align-items: center;
