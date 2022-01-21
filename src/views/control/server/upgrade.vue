@@ -180,12 +180,24 @@ export default {
           }
         });
     },
+    // 处理cpu+内存的数据，需要截取当前配置之后的数据
+    returnCpuOrDiskData(data, cpuOrMemory) {
+      if (data.length === 0) {
+        return [];
+      }
+      const index = data.findIndex((ele) => ele * 1 === cpuOrMemory);
+      const newData = data.slice(index);
+      return newData;
+    },
     // 获取地域对应的cpu信息
     getCpu() {
       this.$store
         .dispatch("cloud/getAddressCpu", { regionId: this.detail.regionId })
         .then((res) => {
-          this.cpuData = [...setCpuOrDiskData(res.data?.cpuCoreCount, "核")];
+          const newRes =
+            res.data && res.data.cpuCoreCount ? res.data.cpuCoreCount : [];
+          const newData = this.returnCpuOrDiskData(newRes, this.form.cpu);
+          this.cpuData = [...setCpuOrDiskData(newData, "核")];
           if (this.cpuData.length > 0) {
             this.getDisk();
           } else {
@@ -194,18 +206,20 @@ export default {
         });
     },
     // 获取地域对应的内存信息
-    getDisk(cpu) {
+    getDisk(isGetRegion) {
       this.$store
         .dispatch("cloud/getAddressDisk", {
           regionId: this.detail.regionId,
-          cpuCoreCount: cpu || this.cpuData[0].value
+          cpuCoreCount: this.form.cpu
         })
         .then((res) => {
-          this.memoryData = [...setCpuOrDiskData(res.data, "G")];
-          this.form.memory =
-            (this.memoryData.length > 0 && this.memoryData[0].value) ||
-            undefined;
-          if (cpu) {
+          const newRes = res.data ? res.data : [];
+          const newData = this.returnCpuOrDiskData(newRes, this.form.memory);
+          this.memoryData = [...setCpuOrDiskData(newData, "G")];
+          if (isGetRegion) {
+            this.form.memory =
+              (this.memoryData.length > 0 && this.memoryData[0].value) ||
+              undefined;
             this.getRegionData();
           }
         });
@@ -282,7 +296,7 @@ export default {
     },
     // cpu的change事件
     handleCpuChange(val) {
-      this.getDisk(val);
+      this.getDisk(true);
     },
     // 确认提交
     handleSubmit() {
