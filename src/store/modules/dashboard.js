@@ -2,9 +2,17 @@ import request from "@/utils/request";
 
 const cloud = {
   namespaced: true,
-  state: {},
+  state: {
+    // 网站信息
+    webInfo: {}
+  },
 
-  mutations: {},
+  mutations: {
+    // 保存网站设置信息
+    saveWebInfo(state, payload) {
+      state.webInfo = { ...payload };
+    }
+  },
 
   actions: {
     // 获取首页消费趋势数据
@@ -33,6 +41,22 @@ const cloud = {
       return request({
         url: "/index/getCount",
         method: "get"
+      });
+    },
+    // 获取网站信息
+    getWebInfo({ commit, state }) {
+      return new Promise((resolve, reject) => {
+        request({
+          url: "/ccWebsiteInfo",
+          method: "get"
+        })
+          .then((res) => {
+            commit("saveWebInfo", res.data.list[0]);
+            resolve();
+          })
+          .catch((error) => {
+            reject(error);
+          });
       });
     }
   }
