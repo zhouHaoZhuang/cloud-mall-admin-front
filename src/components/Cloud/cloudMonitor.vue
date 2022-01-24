@@ -111,6 +111,7 @@
         lineChartType="ecsCount"
         :tabsKey="tabsKey"
         :listQuery="listQuery"
+        valueKey="Maximum"
       />
     </div>
   </div>
