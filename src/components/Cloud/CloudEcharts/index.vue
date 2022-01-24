@@ -204,6 +204,7 @@ export default {
         });
       });
       this.seriesList = [...newList];
+      console.log("查看监控数据", this.title, newList, this.xData);
       // 生成折线图
       this.$nextTick(() => {
         this.initLineEcharts();

@@ -367,7 +367,7 @@ export default {
         {
           title: "实例名称",
           dataIndex: "instanceName",
-          width: 150,
+          width: 200,
           scopedSlots: { customRender: "instanceName" },
           select: true
         },

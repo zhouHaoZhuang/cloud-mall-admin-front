@@ -24,7 +24,7 @@ export const getLineChatsXData = (listQuery) => {
 export const getResLineChatsXData = (data) => {
   const newXData = [];
   data.forEach((ele) => {
-    newXData.push(moment(ele.timestamp).format("YYYY-MM-DD HH:mm"));
+    newXData.push(moment(ele.timestamp).format("YYYY-MM-DD HH:mm:ss"));
   });
   return newXData;
 };

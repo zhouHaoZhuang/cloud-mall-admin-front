@@ -57,6 +57,8 @@ const permsGuard = (to, from, next, options) => {
   if (!loginIgnore.includes(to) && JSON.stringify(userInfo) === "{}") {
     // 获取用户信息
     store.dispatch("user/getUserInfo");
+    // 获取网站信息
+    store.dispatch("dashboard/getWebInfo");
     // 获取权限数据
     // store.dispatch("user/getUserPerms");
   }
