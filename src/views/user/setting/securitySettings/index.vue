@@ -6,10 +6,13 @@
         <img src="@/assets/img/user.png" alt="" />
       </div>
       <div>
-        <p><span class="user-key">会员ID：</span><span>{{corporationCode}}</span></p>
+        <p>
+          <span class="user-key">会员ID：</span
+          ><span>{{ corporationCode }}</span>
+        </p>
         <p>
           <span class="user-key">注册日期：</span>
-          <span>{{createTime | formatDate}}</span>
+          <span>{{ createTime | formatDate }}</span>
         </p>
         <p>
           <span class="user-key">安全级别：</span>
@@ -26,17 +29,19 @@
       <span class="settings-info-desc">
         安全性高的密码可以使账户更安全；互联网账号存在被盗风险，建议您定期更换密码
       </span>
-      <a class="settings-change" href="#/user/setting/changePassword" >修改</a>
+      <a class="settings-change" href="#/user/setting/changePassword">修改</a>
     </div>
-		<div class="settings-info">
+    <div class="settings-info">
       <img src="@/assets/img/iconphone.png" alt="" />
       <span class="settings-info-type">手机绑定</span>
       <span class="settings-info-desc">
-        您的手机：{{phoneNumber}}。绑定认证后可用于手机找回密码、接收手机动态验证码等，保障您的账户安全。
+        您的手机：{{
+          phoneNumber
+        }}。绑定认证后可用于手机找回密码、接收手机动态验证码等，保障您的账户安全。
       </span>
       <a-button class="settings-change" type="link">修改</a-button>
     </div>
-		<div class="settings-info">
+    <div class="settings-info">
       <img src="@/assets/img/iconemail.png" alt="" />
       <span class="settings-info-type">邮箱绑定</span>
       <span class="settings-info-desc">
@@ -44,21 +49,21 @@
       </span>
       <a-button class="settings-change settings-start">立即启用</a-button>
     </div>
-		<div class="settings-info">
+    <div class="settings-info">
       <img src="@/assets/img/icon-security-undone.png" alt="" />
       <span class="settings-info-type">密保问题</span>
       <span class="settings-info-desc">
         设置密保问题可以进一步提升您的账户安全性。是您找回登录密码的方式之一。
       </span>
-      <a-button class="settings-change settings-start" >立即启用</a-button>
+      <a-button class="settings-change settings-start">立即启用</a-button>
     </div>
-		<div class="settings-info">
+    <div class="settings-info">
       <img src="@/assets/img/icon-identity-success.png" alt="" />
       <span class="settings-info-type">实名认证</span>
-      <span class="settings-info-desc">
-       您的实名认证信息：{{realName}}
-      </span>
-      <a-button class="settings-change" type="link">查看</a-button>
+      <span class="settings-info-desc"> 您的实名认证信息：{{ realName }} </span>
+      <a-button class="settings-change" type="link" @click="realNameClick">
+        查看
+      </a-button>
     </div>
   </div>
 </template>
@@ -67,25 +72,28 @@
 export default {
   data() {
     return {
-      corporationCode:'',
-      realName:'',
-      createTime:'',
-      phoneNumber:'',
-    }
+      corporationCode: '',
+      realName: '',
+      createTime: '',
+      phoneNumber: '',
+    };
   },
   created() {
-    this.getUser()
+    this.getUser();
   },
   methods: {
     getUser() {
       this.$store.dispatch('user/getUserActualName').then((res) => {
-        if(!res.data){
-          return
+        if (!res.data) {
+          return;
         }
-        console.log(res.data)
+        console.log(res.data);
         this.corporationCode = res.data.corporationCode;
         this.createTime = res.data.createTime;
-        this.phoneNumber = res.data.phoneNumber?.slice(0,3)+'****'+res.data.phoneNumber?.slice(8,11);
+        this.phoneNumber =
+          res.data.phoneNumber?.slice(0, 3) +
+          '****' +
+          res.data.phoneNumber?.slice(8, 11);
         if (res.data.realName) {
           this.realName = '*' + res.data.realName.slice(1);
         } else {
@@ -93,7 +101,11 @@ export default {
         }
       });
     },
-  }
+    realNameClick() {
+      // console.log('实名认证');
+      this.$router.push('/user/setting/realName');
+    },
+  },
 };
 </script>
 
@@ -141,7 +153,7 @@ export default {
   }
   .settings-info {
     height: 80px;
-		width: 100%;
+    width: 100%;
     line-height: 80px;
     border-bottom: 1px dashed #e6e6e6;
     font-size: 12px;
@@ -155,20 +167,20 @@ export default {
     .settings-info-desc {
       color: #999;
     }
-		.settings-change{
-			float: right;
-			width: 80px;
-			height: 80px;
-			line-height: 80px;
-			text-align: center;
-			font-size: 12px;
-		}
-		.settings-start{
-			width: 82px;
-			height: 32px;
-			line-height: 32px;
-			margin-top: 20px;
-		}
+    .settings-change {
+      float: right;
+      width: 80px;
+      height: 80px;
+      line-height: 80px;
+      text-align: center;
+      font-size: 12px;
+    }
+    .settings-start {
+      width: 82px;
+      height: 32px;
+      line-height: 32px;
+      margin-top: 20px;
+    }
   }
 }
 </style>

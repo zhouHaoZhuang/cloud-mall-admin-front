@@ -11,7 +11,9 @@
         您选择了“手机号码认证方式”进行实名认证，请填写一下信息：
       </p>
       <a-form-model
+        ref="ruleForm"
         :model="form"
+        :rules="rules"
         :label-col="labelCol"
         :wrapper-col="wrapperCol"
       >
@@ -26,11 +28,11 @@
             </a-radio>
           </a-radio-group>
         </a-form-model-item>
-        <a-form-model-item label="真实姓名">
+        <a-form-model-item label="真实姓名" prop="name">
           <a-input v-model="form.name" />
           请填写您本人的真实姓名，否则无法验证通过
         </a-form-model-item>
-        <a-form-model-item label="身份证号码">
+        <a-form-model-item label="身份证号码" prop="idNo">
           <a-input v-model="form.idNo" />
           请填写您本人的真实身份证号码，否则无法验证通过
         </a-form-model-item>
@@ -44,18 +46,12 @@
       <div class="warm-tips">
         <h3>温馨提示：</h3>
         <p class="warm-tips-first-p">
-          1，每一个账号最多有5次认证机会（手机号通过按每次5.00元认证手续费，认证费用用于支付三大运营商以银联实名认证接口费用），次数用尽则该账号无法继续认证
+          1，请确保姓名、身份证号码完全正确，请勿使用他人身份信息进行认证，否则会认证失败
         </p>
+        <p>2，请勿使用虚假信息认证，否则浙江云盾有权注销您的实名认证申请</p>
+        <p>3，浙江云盾会加密保存您的认证资料，绝不会泄露用户隐私，请放心认证</p>
         <p>
-          2，请确保姓名、身份证号码完全正确，请勿使用他人身份信息进行认证，否则会认证失败
-        </p>
-        <p>3，请勿使用虚假信息认证，否则浙江云盾有权注销您的实名认证申请</p>
-        <p>4，浙江云盾会加密保存您的认证资料，绝不会泄露用户隐私，请放心认证</p>
-        <p>
-          5，所填写资料仅用于实名认证，不会开通其他任何附加服务，浙江云盾工作人员不会向您索要短信验证码，谨防上当
-        </p>
-        <p>
-          6，注册手机号必须属本人所有，请勿使用他人手机进行注册，否则认证会失败，如果非本人手机号码，请先修改手机号再进行实名认证
+          4，所填写资料仅用于实名认证，不会开通其他任何附加服务，浙江云盾工作人员不会向您索要短信验证码，谨防上当
         </p>
       </div>
     </div>
@@ -154,6 +150,34 @@ export default {
       textUrl: '',
       endTime: null,
       nextAudit: true,
+      rules: {
+        name: [
+          {
+            required: true,
+            message: '真实姓名不能为空',
+            trigger: 'blur',
+          },
+          // {
+          //   min: 3,
+          //   max: 5,
+          //   message: 'Length should be 3 to 5',
+          //   trigger: 'blur',
+          // },
+        ],
+        idNo: [
+          {
+            required: true,
+            message: '身份证号码不能为空',
+            trigger: 'blur',
+          },
+          {
+            min: 18,
+            max: 18,
+            message: '身份证号码长度为18位',
+            trigger: 'blur',
+          },
+        ],
+      },
     };
   },
   watch: {
