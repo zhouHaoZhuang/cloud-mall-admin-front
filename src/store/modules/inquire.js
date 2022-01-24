@@ -6,7 +6,7 @@ const inquire = {
     // 获取线下充值记录
     getList({ commit, state},params ) {
       return request({
-				url: "/pcOfflineRecharge",
+				url: "/pcOfflineRecharge/user",
 				method: "get",
 				params,
 			})

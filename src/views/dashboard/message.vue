@@ -3,7 +3,7 @@
     <DetailHeader title = '消息中心'/>
     <p class="all-types">全部类型</p>
     <div class="action-button">
-      <a-button class="mark-read" @click="haveRead">标记已读</a-button>
+      <a-button class="mark-read" @click="haveRead" :disabled = 'selectedRowKeys.length == 0'>标记已读</a-button>
       <a-button @click="readAll">全部已读</a-button>
     </div>
     <div>
