@@ -47,6 +47,11 @@ export default {
     tooltipUnit: {
       type: String,
       default: ""
+    },
+    // 默认取值是直接拿接口返回的Average字段，有的接口需要替换字段
+    valueKey: {
+      type: String,
+      default: ""
     }
   },
   data() {
@@ -193,12 +198,13 @@ export default {
             width: 1 //设置线条粗细
           },
           data: JSON.parse(ele.data.dataPoints).map((item) => {
-            return item.Average === 0
-              ? item.Average
-              : parseInt(item.Average) === parseFloat(item.Average)
-              ? item.Average
-              : item.Average !== undefined
-              ? item.Average.toFixed(2)
+            const newValue = this.valueKey ? item[this.valueKey] : item.Average;
+            return newValue === 0
+              ? newValue
+              : parseInt(newValue) === parseFloat(newValue)
+              ? newValue
+              : newValue !== undefined
+              ? newValue.toFixed(2)
               : 0;
           })
         });
