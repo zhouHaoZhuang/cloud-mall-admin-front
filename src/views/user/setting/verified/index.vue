@@ -285,12 +285,13 @@ export default {
   text-align: center;
   #qrcodeDom {
     width: 160px;
-    margin: 0 auto;
+    margin: 20px auto;
   }
   p{
     font-size: 16px;
     span{
       color: #ff0000;
+      font-weight: 500;
     }
   }
 }
