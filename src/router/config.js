@@ -244,6 +244,29 @@ const options = [
               //   meta: {},
               // },
             ]
+          },
+          {
+            path: "management",
+            name: "工单管理",
+            component: RouteView,
+            meta: {
+              icon: "icon-gongdanguanli"
+            },
+            children: [
+              {
+                path: "submit",
+                name: "提交工单",
+                component: () => import("@/views/management/submit/index.vue"),
+                meta: {}
+              },
+              {
+                path: "mymanagement",
+                name: "我的工单",
+                component: () =>
+                  import("@/views/management/mymanagement/index.vue"),
+                meta: {}
+              }
+            ]
           }
         ]
       }
