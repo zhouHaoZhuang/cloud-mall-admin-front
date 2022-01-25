@@ -89,10 +89,20 @@
           </a-button>
         </a-form-model-item>
       </a-form-model>
-    </div>
-    <div class="qrcodeDom">
-      <div id="qrcodeDom"></div>
-      <p v-if="endTime">请在{{ endTime }}前扫码完成验证</p>
+      <a-modal
+        title="请扫描下方二维码"
+        :visible="visible"
+        :confirm-loading="confirmLoading"
+        @ok="handleOk"
+        @cancel="handleCancel"
+        forceRender
+      >
+        <!-- <p>{{ ModalText }}</p> -->
+        <div class="qrcodeDom">
+          <div id="qrcodeDom"></div>
+          <p v-if="endTime">请在<span>{{ endTime }}</span>前扫码完成验证</p>
+        </div>
+      </a-modal>
     </div>
     <div v-if="choose == 3" class="verified-info">
       <img class="user-img" src="@/assets/img/auth_icon_success.png" alt="" />
@@ -178,6 +188,9 @@ export default {
           },
         ],
       },
+      ModalText: 'Content of the modal',
+      visible: false,
+      confirmLoading: false,
     };
   },
   watch: {
@@ -218,8 +231,20 @@ export default {
         this.transQrcode();
       });
     },
+    handleOk(e) {
+      this.confirmLoading = true;
+      // setTimeout(() => {
+      this.visible = false;
+      this.confirmLoading = false;
+      // }, 2000);
+    },
+    handleCancel(e) {
+      console.log('Clicked cancel button');
+      this.visible = false;
+    },
     submit() {
       this.$store.dispatch('realName/realName', this.form).then((res) => {
+        this.visible = true;
         // 360424199802204319c
         this.endTime = moment(parseInt(res.data.expire)).format(
           'YYYY/MM/DD HH:mm:ss'
@@ -261,6 +286,12 @@ export default {
   #qrcodeDom {
     width: 160px;
     margin: 0 auto;
+  }
+  p{
+    font-size: 16px;
+    span{
+      color: #ff0000;
+    }
   }
 }
 .verified-top-nav {
