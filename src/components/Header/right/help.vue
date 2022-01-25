@@ -1,5 +1,5 @@
 <template>
-  <div class="-container"></div>
+  <div class="help-container"><a-icon type="question-circle" /> 帮助文档</div>
 </template>
 
 <script>
@@ -19,6 +19,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.container {
+.help-container {
+  padding: 0 20px;
 }
 </style>

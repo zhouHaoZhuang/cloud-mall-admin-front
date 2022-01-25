@@ -1,0 +1,65 @@
+import request from "@/utils/request";
+
+const cloud = {
+  namespaced: true,
+  state: {
+    // 网站信息
+    webInfo: {}
+  },
+
+  mutations: {
+    // 保存网站设置信息
+    saveWebInfo(state, payload) {
+      state.webInfo = { ...payload };
+    }
+  },
+
+  actions: {
+    // 获取首页消费趋势数据
+    trendData({ commit, state }) {
+      return request({
+        url: "/customerAccountLog/query/monthLog",
+        method: "get"
+      });
+    },
+    // 获取用户余额+代金券
+    getBalanceAndCoupon({ commit, state }, params) {
+      return request({
+        url: `/ccCorporation/getCurrentUserAccountBalance`,
+        method: "get"
+      });
+    },
+    // 获取云服务器数量
+    getCloudCount({ commit, state }) {
+      return request({
+        url: "/scEcsStock/getEcsCount",
+        method: "get"
+      });
+    },
+    // 获取未完成订单和待续费数量
+    getOrderAndRenewCount({ commit, state }) {
+      return request({
+        url: "/index/getCount",
+        method: "get"
+      });
+    },
+    // 获取网站信息
+    getWebInfo({ commit, state }) {
+      return new Promise((resolve, reject) => {
+        request({
+          url: "/ccWebsiteInfo",
+          method: "get"
+        })
+          .then((res) => {
+            commit("saveWebInfo", res.data.list[0]);
+            resolve();
+          })
+          .catch((error) => {
+            reject(error);
+          });
+      });
+    }
+  }
+};
+
+export default cloud;

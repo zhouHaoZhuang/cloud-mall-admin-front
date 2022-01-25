@@ -76,6 +76,86 @@ const cloud = {
         method: "post",
         data
       });
+    },
+    // 查询云服务器系统镜像
+    getSystemList({ commit, state }, params) {
+      return request({
+        url: "/index/query/images",
+        method: "get",
+        params
+      });
+    },
+    // 重装系统
+    reloadSystem({ commit, state }, data) {
+      return request({
+        url: "/aliEcs/replaceSystemDisk",
+        method: "post",
+        data
+      });
+    },
+    // 查询当前实例监控插件运行状态
+    getMonitorStatus({ commit, state }, data) {
+      return request({
+        url: "/aliEcs/describeMonitoringAgentStatuses",
+        method: "post",
+        data
+      });
+    },
+    // 安装监控插件
+    installMonitor({ commit, state }, data) {
+      return request({
+        url: "/aliEcs/installMonitoringAgent",
+        method: "post",
+        data
+      });
+    },
+    // 查询监控数据
+    getMonitorData({ commit, state }, data) {
+      return request({
+        url: "/aliEcs/describeMetricList",
+        method: "post",
+        data
+      });
+    },
+    // 获取单个地域对应的cpu信息
+    getAddressCpu({ commit, state }, params) {
+      return request({
+        url: `/index/query/property/value/${params.regionId}`,
+        method: "get",
+        params
+      });
+    },
+    // 获取单个地域对应的内存信息
+    getAddressDisk({ commit, state }, params) {
+      return request({
+        url: "/index/query/property/memory",
+        method: "get",
+        params
+      });
+    },
+    // 获取对应的实例和实例属性，属性值
+    getRegionDetail({ commit, state }, params) {
+      return request({
+        url: "/index/instance",
+        method: "get",
+        params
+      });
+    },
+    // 服务器升级配置询价
+    getcloudUpgradePrice({ commit, state }, data) {
+      return request({
+        url: "/scEcsStock/modify/selectInstance",
+        method: "post",
+        data
+      });
+    },
+    // 服务器升级配置提交
+    cloudUpgrade({ commit, state }, data) {
+      return request({
+        url: "/scEcsStock/modify/prepay/instance",
+        method: "post",
+        data
+      });
     }
   }
 };

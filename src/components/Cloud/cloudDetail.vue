@@ -12,7 +12,7 @@
         </div>
         <div class="public-item">
           <div class="public-label">地域</div>
-          <div class="public-value">{{ detail.regionId }}</div>
+          <div class="public-value">{{ regionDataEnum[detail.regionId] }}</div>
         </div>
         <div class="public-item">
           <div class="public-label">登录账号</div>
@@ -108,8 +108,12 @@
           <div class="public-label">操作</div>
           <div class="public-value">
             <a-space>
-              <a-button class="color-btn">升级配置</a-button>
-              <a-button class="color-btn">相同配置创建</a-button>
+              <a-button class="color-btn" @click="handleCloudUpgrade">
+                升级配置
+              </a-button>
+              <!-- <a-button class="color-btn" @click="handleBuyCloud">
+                相同配置创建
+              </a-button> -->
             </a-space>
           </div>
         </div>
@@ -130,7 +134,8 @@
 
 <script>
 import { mapState } from "vuex";
-import { runningStatusEnum } from "@/utils/enum";
+import { runningStatusEnum, regionDataEnum } from "@/utils/enum";
+import { jumpCloudMall } from "@/utils/index";
 import UpdateNameModal from "@/components/Cloud/CloudModal/updateNameModal";
 import RenewModal from "@/components/Cloud/CloudModal/renewModal";
 import AutoRenewModal from "@/components/Cloud/CloudModal/autoRenewModal";
@@ -154,15 +159,17 @@ export default {
     // 返回数据盘大小
     getDataSidkNum() {
       let sum = 0;
-      this.detail.dataDisk?.forEach((ele) => {
-        sum += ele.size;
-      });
+      this.detail.dataDisk &&
+        this.detail.dataDisk.forEach((ele) => {
+          sum += ele.size;
+        });
       return sum;
     }
   },
   data() {
     return {
       runningStatusEnum,
+      regionDataEnum,
       // 修改实例名称弹窗
       updateNameVisible: false,
       // 产品续费弹窗
@@ -188,6 +195,21 @@ export default {
     // 自动续费成功回调
     autoRenewSuccess(autoRenew) {
       this.detail.autoRenew = autoRenew;
+    },
+    // 跳转升级
+    handleCloudUpgrade() {
+      this.$router.push({
+        path: "/control/server/upgrade",
+        query: {
+          id: this.detail.id
+        }
+      });
+    },
+    // 跳转云商城购买相同配置
+    handleBuyCloud() {
+      const path = `/pc/cloud-price?cpu=${this.detail.cpu}&memory=${this.detail.memory}`;
+      console.log(this.detail, path);
+      // jumpCloudMall(path, true);
     }
   }
 };

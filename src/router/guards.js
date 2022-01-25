@@ -28,20 +28,41 @@ const loginGuard = (to, from, next, options) => {
   const { store, message } = options;
   // console.log("登录守卫", to, to.query.token, "----", store.state.user.token);
   const token = to.query.token || store.state.user.token;
-  if (to.query.token) {
-    store.commit("user/SET_TOKEN", to.query.token);
+  if (token) {
+    store.commit("user/SET_TOKEN", token);
   }
-  // 如果没有用户信息，需要查询用户信息
-  if (JSON.stringify(store.state.user.userInfo) === "{}") {
-    store.dispatch("user/getUserInfo");
-  }
-  // console.log(!loginIgnore.includes(to), !token);
   if (!loginIgnore.includes(to) && !token) {
+    // 执行退出
+    store.dispatch("user/logout");
     message.warning("登录已失效，请重新登录");
     next("/exception/not");
   } else {
     next();
   }
+};
+
+/**
+ * 权限守卫--只负责检测本地是否有权限数据
+ * 同时获取下用户信息更新本地数据
+ * @param to
+ * @param form
+ * @param next
+ * @param options
+ */
+const permsGuard = (to, from, next, options) => {
+  const { store, message } = options;
+  // const perms = store.state.user.perms;
+  // 如果没有用户信息，需要查询用户信息
+  const userInfo = store.state.user.userInfo;
+  if (!loginIgnore.includes(to) && JSON.stringify(userInfo) === "{}") {
+    // 获取用户信息
+    store.dispatch("user/getUserInfo");
+    // 获取网站信息
+    store.dispatch("dashboard/getWebInfo");
+    // 获取权限数据
+    // store.dispatch("user/getUserPerms");
+  }
+  next();
 };
 
 /**
@@ -56,7 +77,7 @@ const authorityGuard = (to, from, next, options) => {
 };
 
 /**
- * 总览页守卫
+ * 总览页守卫(也包括其他所有不需要展开左侧二级菜单的页面)
  * @param to
  * @param form
  * @param next
@@ -65,17 +86,20 @@ const authorityGuard = (to, from, next, options) => {
 const dashboardGuard = (to, from, next, options) => {
   const { store, message } = options;
   // 设置主体左侧菜单展开还是关闭
-  if (to.path === "/dashboard" && store.state.setting.leftOpen) {
+  if (
+    store.state.setting.filterList.indexOf(to.path) !== -1 &&
+    store.state.setting.leftOpen
+  ) {
     store.dispatch("setting/changeLeftOpenMenu", false);
   }
-  if (to.path !== "/dashboard" && !store.state.setting.leftOpen) {
+  if (
+    store.state.setting.filterList.indexOf(to.path) === -1 &&
+    !store.state.setting.leftOpen
+  ) {
     store.dispatch("setting/changeLeftOpenMenu", true);
   }
   // 设置主体左侧菜单显示还是隐藏
-  if (
-    store.state.setting.filterList.indexOf(to.path) !== -1 &&
-    store.state.setting.leftOpenShow
-  ) {
+  if (store.state.setting.filterList.indexOf(to.path) !== -1) {
     store.dispatch("setting/changeLeftMenuShow", false);
     store.dispatch("setting/changeSelectPath", "");
   } else {
@@ -99,6 +123,12 @@ const progressDone = () => {
 };
 
 export default {
-  beforeEach: [progressStart, loginGuard, authorityGuard, dashboardGuard],
+  beforeEach: [
+    progressStart,
+    loginGuard,
+    permsGuard,
+    authorityGuard,
+    dashboardGuard
+  ],
   afterEach: [progressDone]
 };

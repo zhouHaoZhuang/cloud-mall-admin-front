@@ -52,7 +52,7 @@
       </div>
     </div>
     <!-- 修改主题左侧菜单的折叠/打开 -->
-    <OpenLeftMenu />
+    <OpenLeftMenu v-if="leftOpenShow" />
   </div>
 </template>
 
@@ -80,6 +80,18 @@ export default {
     };
   },
   watch: {
+    $route: {
+      handler(newVal) {
+        const routeArr = newVal.path.split("/");
+        // 左侧菜单选中项（二级）
+        this.$store.commit(
+          "setting/setLeftMenuSelectPath",
+          routeArr[routeArr.length - 1]
+        );
+      },
+      immediate: true,
+      deep: true
+    },
     leftMenuData: {
       handler(newVal, oldVal) {
         this.menuList =
@@ -98,7 +110,6 @@ export default {
       deep: true
     }
   },
-  created() {},
   methods: {
     // 点击跳转
     goTo(item, ele, index) {
@@ -112,10 +123,10 @@ export default {
         let path = "";
         if (ele && JSON.stringify(ele) !== "{}") {
           path = `${this.beforePath}/${item.path}/${ele.path}`;
-          this.$store.commit("setting/setLeftMenuSelectPath", ele.path);
+          // this.$store.commit("setting/setLeftMenuSelectPath", ele.path);
         } else {
           path = `${this.beforePath}/${item.path}`;
-          this.$store.commit("setting/setLeftMenuSelectPath", item.path);
+          // this.$store.commit("setting/setLeftMenuSelectPath", item.path);
         }
         if (path !== this.$route.path) {
           this.$router.push(path);

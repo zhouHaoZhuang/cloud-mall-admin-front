@@ -104,6 +104,10 @@
             @click="handleMonitor(record)"
           />
         </div>
+        <!-- 地域 -->
+        <div slot="regionId" slot-scope="text">
+          {{ regionDataEnum[text] }}
+        </div>
         <!-- IP地址 -->
         <div slot="ip" slot-scope="text, record">
           <div>
@@ -168,7 +172,13 @@
             <a-button type="link" size="small">登录</a-button>
           </div>
           <div>
-            <a-button type="link" size="small">升级</a-button>
+            <a-button
+              type="link"
+              size="small"
+              @click="handleCloudUpgrade(record)"
+            >
+              升级
+            </a-button>
             <a-button type="link" size="small" @click="handleRenew(record)">
               续费
             </a-button>
@@ -203,9 +213,9 @@
                 >
                   重启
                 </a-menu-item>
-                <a-menu-item key="4" @click="handleUpdateName">
+                <!-- <a-menu-item key="4" @click="handleUpdateName">
                   修改信息
-                </a-menu-item>
+                </a-menu-item> -->
                 <a-menu-item key="5" @click="handleAutoRenew(record)">
                   自动续费
                 </a-menu-item>
@@ -245,7 +255,11 @@
 
 <script>
 import { jumpCloudMall } from "@/utils/index";
-import { runningStatusEnum, runningStatusSelect } from "@/utils/enum";
+import {
+  runningStatusEnum,
+  runningStatusSelect,
+  regionDataEnum
+} from "@/utils/enum";
 import UpdateNameModal from "@/components/Cloud/CloudModal/updateNameModal";
 import RenewModal from "@/components/Cloud/CloudModal/renewModal";
 import AutoRenewModal from "@/components/Cloud/CloudModal/autoRenewModal";
@@ -338,10 +352,12 @@ export default {
     return {
       runningStatusEnum,
       runningStatusSelect,
+      regionDataEnum,
       listQuery: {
         key: "ip",
         search: "",
         regionId: undefined,
+        createTimeSort: "desc",
         currentPage: 1,
         pageSize: 10,
         total: 0
@@ -351,7 +367,7 @@ export default {
         {
           title: "实例名称",
           dataIndex: "instanceName",
-          width: 150,
+          width: 200,
           scopedSlots: { customRender: "instanceName" },
           select: true
         },
@@ -365,7 +381,8 @@ export default {
         {
           title: "地域",
           dataIndex: "regionId",
-          width: 100,
+          width: 120,
+          scopedSlots: { customRender: "regionId" },
           select: true
         },
         {
@@ -426,6 +443,7 @@ export default {
           `共 ${total} 条记录 第 ${this.listQuery.currentPage} / ${Math.ceil(
             total / this.listQuery.pageSize
           )} 页`,
+        onChange: this.quickJump,
         onShowSizeChange: this.onShowSizeChange
       },
       tableLoading: false,
@@ -495,10 +513,20 @@ export default {
               // 服务器操作后回调所需数据----------end
             };
           });
+          this.paginationProps.total = res.data.totalCount * 1;
         })
         .finally(() => {
           this.tableLoading = false;
         });
+    },
+    quickJump(current) {
+      this.listQuery.currentPage = current;
+      this.getList();
+    },
+    onShowSizeChange(current, pageSize) {
+      this.listQuery.pageSize = pageSize;
+      this.listQuery.currentPage = current;
+      this.getList();
     },
     // 头部线路切换
     handleAddressChange(value) {
@@ -517,7 +545,15 @@ export default {
     },
     // 表格
     // 点击查看监控
-    handleMonitor(record) {},
+    handleMonitor(record) {
+      this.$router.push({
+        path: "/control/server/detail",
+        query: {
+          id: record.id,
+          monitor: true
+        }
+      });
+    },
     // 跳转服务器实例详情管理
     handleAdminCloud(record) {
       this.$router.push({
@@ -687,6 +723,15 @@ export default {
     // 跳转云商城服务器购买页面
     handleJumpCloudPay() {
       jumpCloudMall("/pc/cloud-price", true);
+    },
+    // 跳转升级
+    handleCloudUpgrade(record) {
+      this.$router.push({
+        path: "/control/server/upgrade",
+        query: {
+          id: record.id
+        }
+      });
     }
   }
 };

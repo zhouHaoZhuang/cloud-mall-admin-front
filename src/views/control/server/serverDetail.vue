@@ -32,9 +32,9 @@
         </div>
         <div class="btns">
           <a-space>
-            <a-button @click="handleStart" :disabled="startBtnDisable"
-              >启动</a-button
-            >
+            <a-button @click="handleStart" :disabled="startBtnDisable">
+              启动
+            </a-button>
             <a-button
               type="primary"
               @click="handleCloudActionModal('restart')"
@@ -60,13 +60,29 @@
                 <a-menu-item key="1" @click="handleResetPwdModal">
                   重设密码
                 </a-menu-item>
-                <a-menu-item key="2" disabled>重装系统</a-menu-item>
+                <a-menu-item
+                  :disabled="updateSystemBtnDisable"
+                  key="2"
+                  @click="handleResetSystemModal"
+                >
+                  <a-tooltip placement="top">
+                    <template slot="title">
+                      <span>已停止的实例才可以更换操作系统</span>
+                    </template>
+                    重装系统
+                  </a-tooltip>
+                </a-menu-item>
                 <a-menu-item key="3" disabled>PUSH</a-menu-item>
-                <a-menu-item key="4" disabled>创建快照</a-menu-item>
+                <a-menu-item key="4" @click="handleCreateSnapshotModal">
+                  创建快照
+                </a-menu-item>
                 <a-menu-item key="5" disabled>管理快照</a-menu-item>
                 <a-menu-item key="6" disabled>重设VNC密码</a-menu-item>
                 <a-menu-item key="7" disabled>续费降配</a-menu-item>
                 <a-menu-item key="8" disabled>销毁</a-menu-item>
+                <a-menu-item key="9" @click="installMonitor">
+                  安装监控插件
+                </a-menu-item>
               </a-menu>
             </a-dropdown>
           </a-space>
@@ -74,11 +90,13 @@
       </div>
     </div>
     <div class="detail">
-      <a-tabs default-active-key="1" @change="tabsCallback">
+      <a-tabs v-model="tabsKey" @change="tabsCallback">
         <a-tab-pane key="1" tab="实例详情">
           <CloudDetail :detail="detail" />
         </a-tab-pane>
-        <a-tab-pane key="2" tab="性能监控"></a-tab-pane>
+        <a-tab-pane key="2" tab="性能监控">
+          <CloudMonitor :tabsKey="tabsKey" :detail="detail" />
+        </a-tab-pane>
         <a-tab-pane key="3" tab="备案白名单"></a-tab-pane>
         <a-tab-pane key="4" tab="操作日志"></a-tab-pane>
       </a-tabs>
@@ -93,6 +111,14 @@
       :list="cloudActionList"
       @success="cloudActionsSuccess"
     />
+    <!-- 重装系统 -->
+    <UpdateSystemModal
+      v-model="updateSystemVisible"
+      :detail="detail"
+      @success="updateSystemSuccess"
+    />
+    <!-- 创建快照 -->
+    <CreateSnapshotModal v-model="createSnapshotVisible" />
     <!-- 弹窗相关-----end -->
   </div>
 </template>
@@ -102,10 +128,21 @@ import moment from "moment";
 import { runningStatusEnum } from "@/utils/enum";
 import DetailHeader from "@/components/Common/detailHeader";
 import CloudDetail from "@/components/Cloud/cloudDetail";
+import CloudMonitor from "@/components/Cloud/cloudMonitor";
 import UpdatePwdModal from "@/components/Cloud/CloudModal/updatePwdModal";
 import CloudActionModal from "@/components/Cloud/CloudModal/cloudActionModal";
+import UpdateSystemModal from "@/components/Cloud/CloudModal/updateSystemModal";
+import CreateSnapshotModal from "@/components/Cloud/CloudModal/createSnapshotModal";
 export default {
-  components: { DetailHeader, CloudDetail, UpdatePwdModal, CloudActionModal },
+  components: {
+    DetailHeader,
+    CloudDetail,
+    CloudMonitor,
+    UpdatePwdModal,
+    CloudActionModal,
+    UpdateSystemModal,
+    CreateSnapshotModal
+  },
   computed: {
     // 返回表格状态类名
     getStatusClassName() {
@@ -163,6 +200,28 @@ export default {
       } else {
         return false;
       }
+    },
+    // 重装系统按钮是否禁用
+    updateSystemBtnDisable() {
+      console.log(this.detail.runningStatus);
+      if (this.detail.runningStatus !== 2) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+  },
+  watch: {
+    $route: {
+      handler(newVal) {
+        if (newVal.query.monitor) {
+          this.getDetail(true);
+        } else {
+          this.getDetail();
+        }
+      },
+      immediate: true,
+      deep: true
     }
   },
   data() {
@@ -178,6 +237,10 @@ export default {
       cloudActionList: [],
       // 启动服务器
       startLoading: false,
+      // 重置系统
+      updateSystemVisible: false,
+      // 创建快照
+      createSnapshotVisible: false,
       // 弹窗相关----------end
       // 服务器操作后回调所需数据----------start
       actionsLoading: false,
@@ -185,36 +248,50 @@ export default {
       isHaveAction: false,
       actionsTxt: "",
       actionsTime: null,
-      actionsTimeStep: 60 // 单位：秒
+      actionsTimeStep: 60, // 单位：秒
       // 服务器操作后回调所需数据----------end
+      // tabs的key
+      tabsKey: "1"
     };
-  },
-  created() {
-    this.getDetail();
   },
   beforeDestroy() {
     clearInterval(this.actionsTime);
   },
   methods: {
     // 获取服务器实例详情
-    getDetail() {
+    getDetail(tabKey) {
       this.$store
         .dispatch("cloud/cloudDetail", { id: this.$route.query.id })
         .then((res) => {
           this.detail = { ...res.data };
+          // 查询监控插件运行状态
+          this.getMonitorStatus();
           // 开启轮询查询服务器状态
           this.startTime(false);
+          if (tabKey) {
+            this.tabsKey = "2";
+          }
+        });
+    },
+    // 获取插件运行状态
+    getMonitorStatus() {
+      this.$store
+        .dispatch("cloud/getMonitorStatus", {
+          instanceIds: [this.detail.instanceId]
+        })
+        .then((res) => {
+          this.detail.monitorStatusDetail = { ...res.data[0] };
         });
     },
     // tabs切换回调
     tabsCallback(key) {
-      console.log(key);
+      this.tabsKey = key;
     },
     // 弹窗相关----------start
     // 重设密码第一步弹窗
     handleResetPwdModal() {
       this.$confirm({
-        width: "500px",
+        width: "600px",
         centered: true,
         title: "你所选的1台云服务器将执行重置密码操作，是否确定该操作？",
         content:
@@ -269,6 +346,42 @@ export default {
           });
         }
       });
+    },
+    // 重置系统第一步弹窗
+    handleResetSystemModal() {
+      this.$confirm({
+        width: "600px",
+        centered: true,
+        okText: "下一步",
+        title: (h) => (
+          <div>
+            <div>你所选的1台云服务器将执行重装系统操作，是否确定该操作？</div>
+            <div>请在重装前确认数据已备份，释放后数据无法找回</div>
+          </div>
+        ),
+        content: (h) => (
+          <div>
+            <div>
+              同Windows系统或同Linux系统重装，只格式化系统盘，数据盘不变；
+            </div>
+            <div>Windows系列和Linux系列互换，系统盘和数据盘将同时格式化；</div>
+          </div>
+        ),
+        onOk: () => {
+          return new Promise((resolve, reject) => {
+            this.updateSystemVisible = true;
+            resolve();
+          });
+        }
+      });
+    },
+    // 重装系统成功回调
+    updateSystemSuccess() {
+      this.getDetail();
+    },
+    // 创建快照弹窗
+    handleCreateSnapshotModal() {
+      this.createSnapshotVisible = true;
     },
     // 弹窗相关----------end
     // 服务器操作后回调所需数据----------start
@@ -337,8 +450,19 @@ export default {
       this.actionsTime = setInterval(() => {
         this.getCloudRunStatus();
       }, this.actionsTimeStep * 1000);
-    }
+    },
     // 服务器操作后回调所需数据----------end
+    // 安装监控插件
+    installMonitor() {
+      const data = {
+        force: true,
+        instanceIds: [this.detail.instanceId],
+        regionId: this.detail.regionId
+      };
+      this.$store.dispatch("cloud/installMonitor", data).then((res) => {
+        this.$message.success("发送安装监控插件请求成功");
+      });
+    }
   }
 };
 </script>

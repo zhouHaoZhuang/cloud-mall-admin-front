@@ -24,14 +24,11 @@
           :style="`padding-left:${menuOpen ? '24' : '0'}px`"
           @click="goTo(item, ele)"
         >
-          <div
+          <Iconfont
             :class="menuOpen ? 'item-icon item-icon-open' : 'item-icon'"
-            :style="`background:url(${
-              selectItemPath === item.path + '/' + ele.path
-                ? ele.meta.iconAct
-                : ele.meta.icon
-            });margin-left:${menuOpen ? '24' : '0'}px`"
-          ></div>
+            :style="`margin-left:${menuOpen ? '24' : '0'}px`"
+            :type="ele.meta.icon"
+          />
           <div v-if="menuOpen" class="item-title">
             {{ ele.name }}
           </div>
@@ -50,21 +47,49 @@ export default {
       userInfo: (state) => state.user.userInfo,
       menuData: (state) => state.setting.menuData,
       menuOpen: (state) => state.setting.menuOpen,
-      selectItemPath: (state) => state.setting.selectItemPath
+      selectItemPath: (state) => state.setting.selectItemPath,
+      filterList: (state) => state.setting.filterList
     })
+  },
+  watch: {
+    $route: {
+      handler(newVal) {
+        this.menuList = this.menuData.map((ele) => {
+          return {
+            ...ele,
+            open: true
+          };
+        });
+        const routeArr = newVal.path.split("/").slice(1, 3);
+        const newOneMenuData = this.menuList.find(
+          (ele) => ele.path === "/" + routeArr[0]
+        );
+        // 最左侧菜单选中项（一级）
+        this.$store.dispatch(
+          "setting/changeSelectPath",
+          "/" + routeArr.join("/")
+        );
+        // 保存当前路径
+        this.$store.dispatch(
+          "setting/changeBeforePath",
+          "/" + routeArr.join("/")
+        );
+        // 二级菜单数据
+        if (this.filterList.indexOf(newVal.path) === -1) {
+          const newTwoMenuData = newOneMenuData.children.find(
+            (ele) => ele.path === routeArr[1]
+          );
+          this.$store.dispatch("setting/setLeftMenu", newTwoMenuData);
+        }
+      },
+      immediate: true,
+      deep: true
+    }
   },
   data() {
     return {
       menuList: []
     };
-  },
-  created() {
-    this.menuList = this.menuData.map((ele) => {
-      return {
-        ...ele,
-        open: true
-      };
-    });
   },
   methods: {
     // 展开/关闭菜单
@@ -77,18 +102,8 @@ export default {
     },
     // 菜单跳转
     goTo(item, ele) {
-      this.$store.dispatch(
-        "setting/changeSelectPath",
-        item.path + "/" + ele.path
-      );
-      this.$store.commit("setting/setLeftMenuSelectPath", ele.children[0].path);
       const path = item.path + "/" + ele.path + "/" + ele.children[0].path;
       if (path !== this.$route.path) {
-        this.$store.dispatch(
-          "setting/changeBeforePath",
-          item.path + "/" + ele.path
-        );
-        this.$store.dispatch("setting/setLeftMenu", ele);
         this.$router.push(path);
       }
     }
@@ -168,14 +183,12 @@ export default {
           margin-left: 24px;
         }
         .item-icon {
-          width: 17px;
-          height: 17px;
-          background-repeat: no-repeat !important;
-          background-position: center;
           position: absolute;
           top: 50%;
           left: 50%;
           transform: translate(-50%, -50%);
+          font-size: 16px;
+          color: #fff;
         }
         .item-icon-open {
           left: 9px;

@@ -5,7 +5,11 @@ import cloud from "./cloud";
 import finance from "./finance";
 import pay from "./pay";
 import renewcloud from "./renewcloud";
-
+import offline from "./offline";
+import inquire from "./inquire";
+import dashboard from "./dashboard";
+import realName from "./realName.js";
+import message from "./message.js";
 export default {
   setting,
   user,
@@ -13,5 +17,10 @@ export default {
   finance,
   income,
   pay,
-  renewcloud
+  renewcloud,
+  offline,
+  inquire,
+  dashboard,
+  realName,
+  message
 };

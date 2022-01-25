@@ -119,3 +119,25 @@ export const numberEvolution = Vue.directive("number-evolution", {
     });
   },
 });
+
+/*
+ * password-input 输入框限制只能输入英文字母、数字、还有指定特殊字符
+ * 在需要控制输入的输入框上使用 v-password-input
+ */
+export const passwordInput = Vue.directive("password-input", {
+  inserted: function(el) {
+    el = findInput(el);
+    if (!el) return;
+    el.addEventListener("keyup", function() {
+      const newVal = el.value.replace(/[^a-zA-Z0-9,-._=+!#$%*()<>?:""''@]/g, "");
+      el.value = newVal;
+      el.dispatchEvent(new Event("input"));
+    });
+    el.addEventListener("blur", function() {
+      const newVal = el.value.replace(/[^a-zA-Z0-9,.-_=+!#$%*()<>?:""''@]/g, "");
+      el.value = newVal;
+      el.dispatchEvent(new Event("input"));
+    });
+  }
+});
+

@@ -1,5 +1,5 @@
 <template>
-  <div class="-container"></div>
+  <div class="price-container"><a-icon type="pay-circle" /> 费用</div>
 </template>
 
 <script>
@@ -19,6 +19,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.container {
+.price-container {
+  padding: 0 20px;
 }
 </style>

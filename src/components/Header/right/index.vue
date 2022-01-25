@@ -1,16 +1,16 @@
 <template>
   <div class="right-container">
-    <icon-font type="iconwuliuguanli" style="font-size: 30px"></icon-font>
+    <!-- <icon-font type="iconwuliuguanli" style="font-size: 30px"></icon-font> -->
     <!-- 帮助文档 -->
     <Help />
-    <!-- 站内信 -->
+    <!-- 站内信-->
     <Message />
     <!-- 费用 -->
     <Price />
     <!-- 工单 -->
     <WorkOrder />
     <!-- 用户 -->
-    <User />
+    <User /> 
   </div>
 </template>
 
@@ -44,6 +44,8 @@ export default {
 
 <style lang="less" scoped>
 .right-container {
+  margin-right: 20px;
   display: flex;
+  align-items: center;
 }
 </style>

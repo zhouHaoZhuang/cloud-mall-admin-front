@@ -106,7 +106,7 @@ export default {
       this.$store
         .dispatch("cloud/cloudRenewPrice", this.getRequestData())
         .then((res) => {
-          this.price = res.data.discountPrice + "元";
+          this.price = res.data.tradePrice + "元";
         })
         .finally(() => {
           this.loading = false;
@@ -128,6 +128,12 @@ export default {
         .then((res) => {
           this.$message.success("提交续费订单成功");
           this.handleCancel();
+          this.$router.push({
+            path: "/user/finance/orderDetail",
+            query: {
+              id: res.data.orderNo
+            }
+          });
         })
         .finally(() => {
           this.loading = false;

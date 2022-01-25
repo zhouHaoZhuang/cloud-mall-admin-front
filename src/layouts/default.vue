@@ -3,18 +3,8 @@
     <!-- 左侧菜单 -->
     <div class="side-menu" :style="`width:${menuOpen ? '168' : '64'}px`">
       <div class="logo-wrap" @click="handleJumpCloud">
-        <img
-          v-if="menuOpen"
-          src="@/assets/img/menu/logo-big.png"
-          alt=""
-          class="img img1"
-        />
-        <img
-          v-else
-          src="@/assets/img/menu/logo-small.png"
-          alt=""
-          class="img img2"
-        />
+        <img v-if="menuOpen" :src="userCenterLogo" alt="" class="img img1" />
+        <img v-else :src="userCenterMiniLogo" alt="" class="img img2" />
         浙江云盾
       </div>
       <SideMenu />
@@ -43,6 +33,7 @@ import LeftMenu from "@/components/layoutMenu/leftMenu";
 import Header from "@/layouts/header";
 import Content from "@/layouts/content";
 import { jumpCloudMall } from "@/utils/index";
+import route from "@/router/config";
 export default {
   components: {
     SideMenu,
@@ -54,7 +45,10 @@ export default {
     ...mapState({
       userInfo: (state) => state.user.userInfo,
       menuOpen: (state) => state.setting.menuOpen,
-      leftOpen: (state) => state.setting.leftOpen
+      leftOpen: (state) => state.setting.leftOpen,
+      webInfo: (state) => state.dashboard.webInfo,
+      userCenterLogo: (state) => state.dashboard.webInfo.userCenterLogo,
+      userCenterMiniLogo: (state) => state.dashboard.webInfo.userCenterMiniLogo
     }),
     getLayoutPadding() {
       if (!this.menuOpen && !this.leftOpen) {
