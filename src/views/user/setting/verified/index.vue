@@ -148,7 +148,7 @@ export default {
       choose: 1,
       Review: true,
       labelCol: { span: 4 },
-      wrapperCol: { span: 8 },
+      wrapperCol: { span: 10 },
       form: {
         phone: '',
         code: '',
