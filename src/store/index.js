@@ -12,6 +12,7 @@ const store = new Vuex.Store({
   getters,
   plugins: [
     createPersistedState({
+      key: "cloudAdminVuex",
       paths: PERSIST_PATHS
     })
   ] // 数据持久化
