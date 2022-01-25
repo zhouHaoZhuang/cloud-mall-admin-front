@@ -1,0 +1,264 @@
+<template>
+  <div>
+    <h2 class="verified-title">提交工单</h2>
+    <div class="verified-top-nav">
+      <div class="step-cont" :class="{ chooseClick: choose == 1 }">
+        ①选择问题所属产品
+        <span class="step-arrow-right"></span>
+      </div>
+      <div class="step-cont" :class="{ chooseClick: choose == 2 }">
+        <span class="step-arrow-left"></span>
+        ②选择问题类别
+        <span class="step-arrow-right"></span>
+      </div>
+      <div class="step-cont" :class="{ chooseClick: choose == 3 }">
+        <span class="step-arrow-left"></span>
+        ③选择解决方案
+        <span class="step-arrow-right"></span>
+      </div>
+      <div class="step-cont" :class="{ chooseClick: choose == 4 }">
+        <span class="step-arrow-left"></span>
+        ④创建工单
+      </div>
+    </div>
+    <div v-if="choose == 1">
+      <p class="basic-information">技术类问题</p>
+      <div class="technique">
+        <div class="cont">
+          <div class="left"></div>
+          <div class="right">
+            <p class="title">服务器类问题</p>
+            <p class="text">服务器无法连接，PING不通，速度慢等基础网络问题</p>
+          </div>
+        </div>
+      </div>
+      <p class="basic-information">账户和财务类</p>
+      <div class="account">
+        <div class="cont">
+          <div class="left"></div>
+          <div class="right">
+            <p class="title">财务类问题</p>
+            <p class="text">订单、发票、支付、提现、退款、现金券等相关问题</p>
+          </div>
+        </div>
+        <div class="cont">
+          <div class="left"></div>
+          <div class="right">
+            <p class="title">合同类问题</p>
+            <p class="text">合同申请、合同作废、合同信息修改等相关问题</p>
+          </div>
+        </div>
+        <div class="cont">
+          <div class="left"></div>
+          <div class="right">
+            <p class="title">会员账号问题</p>
+            <p class="text">账号激活、换绑资料、找回密码等相关问题</p>
+          </div>
+        </div>
+      </div>
+      <p class="basic-information">其他咨询类</p>
+      <div class="other">
+        <div class="cont">
+          <div class="left"></div>
+          <div class="right">
+            <p class="title">售前类问题</p>
+            <p class="text">产品购买咨询、售前询价等相关问题</p>
+          </div>
+        </div>
+        <div class="cont">
+          <div class="left"></div>
+          <div class="right">
+            <p class="title">备案类问题</p>
+            <p class="text">备案咨询、白名单等相关问题</p>
+          </div>
+        </div>
+        <div class="cont">
+          <div class="left"></div>
+          <div class="right">
+            <p class="title">商标类问题</p>
+            <p class="text">商标注册、商标服务等相关问题</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+export default {
+  data() {
+    return {
+      choose: 1
+    };
+  }
+};
+</script>
+
+<style lang="less" scoped>
+.verified-title {
+  margin-bottom: 20px;
+  height: 40px;
+  line-height: 40px;
+  font-size: 22px;
+  color: #272829;
+}
+
+.verified-top-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  .step-cont {
+    position: relative;
+    width: 22%;
+    height: 50px;
+    text-align: center;
+    height: 50px;
+    line-height: 50px;
+    background-color: #f2f2f2;
+    color: #000;
+    .step-arrow-left {
+      position: absolute;
+      top: 0px;
+      left: -50px;
+      display: inline-block;
+      border: 25px solid #f2f2f2;
+      border-left-color: transparent;
+    }
+    .step-arrow-right {
+      position: absolute;
+      top: 0px;
+      right: -50px;
+      display: inline-block;
+      border: 25px solid transparent;
+      border-left-color: #f2f2f2;
+    }
+  }
+  .chooseClick {
+    background-color: #00aaff;
+    color: #fff;
+    .step-arrow-left {
+      border-color: #00aaff;
+      border-left-color: transparent;
+    }
+    .step-arrow-right {
+      border-left-color: #00aaff;
+    }
+  }
+}
+
+.basic-information {
+  margin: 36px 0 20px 0;
+  color: #0af;
+  font-weight: 700;
+}
+
+.technique {
+  .cont {
+    .left {
+      background: url(../../../assets/img/management/management1.png) no-repeat
+        0px 0px;
+    }
+  }
+}
+
+.account {
+  .cont:nth-child(1) {
+    .left {
+      background: url(../../../assets/img/management/management2.png) no-repeat
+        0px 0px;
+    }
+  }
+  .cont:nth-child(2) {
+    .left {
+      background: url(../../../assets/img/management/management3.png) no-repeat
+        0px 0px;
+    }
+  }
+  .cont:nth-child(3) {
+    .left {
+      background: url(../../../assets/img/management/management4.png) no-repeat
+        0px 0px;
+    }
+  }
+  .cont:hover {
+    border: 1px solid #00aaff;
+    .left {
+      background: url(../../../assets/img/management/management1.png) no-repeat -51px
+        0px;
+    }
+  }
+}
+
+.other {
+  .cont:nth-child(1) {
+    .left {
+      background: url(../../../assets/img/management/management5.png) no-repeat
+        0px 0px;
+    }
+  }
+  .cont:nth-child(2) {
+    .left {
+      background: url(../../../assets/img/management/management6.png) no-repeat
+        0px 0px;
+    }
+  }
+  .cont:nth-child(3) {
+    .left {
+      background: url(../../../assets/img/management/management7.png) no-repeat
+        0px 0px;
+    }
+  }
+  .cont:hover {
+    border: 1px solid #00aaff;
+    .left {
+      background: url(../../../assets/img/management/management1.png) no-repeat -51px
+        0px;
+    }
+  }
+}
+
+.cont {
+  display: flex;
+  justify-content: left;
+  align-items: center;
+  width: 31%;
+  height: 120px;
+  border: 1px solid #ccc;
+  .left {
+    width: 51px;
+    height: 56px;
+    margin: 0 20px 0 20px;
+  }
+  .right {
+    .title {
+      font-size: 18px;
+      color: #262829;
+      font-weight: 500;
+      margin-top: 10px;
+      margin-bottom: 0;
+    }
+    .text {
+      color: #a0a2a3;
+    }
+  }
+}
+
+.cont:hover {
+  border: 1px solid #00aaff;
+  .left {
+    background: url(../../../assets/img/management/management1.png) no-repeat -51px
+      0px;
+  }
+}
+
+.account {
+  display: flex;
+  justify-content: space-between;
+}
+
+.other {
+  display: flex;
+  justify-content: space-between;
+}
+</style>

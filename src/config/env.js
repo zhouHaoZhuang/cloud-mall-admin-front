@@ -1,6 +1,4 @@
 import { getIdcMallUrl } from "../utils/index";
-let appId = "619c93dc69a93fbb8a1faf8c";
-let appHost = "https://resource-poor.authing.cn";
 // 默认请求地址
 const baseUrl = {
   // dev: "http://216d7872i4.qicp.vip",
@@ -24,7 +22,6 @@ function getCloudMallUrl() {
     ? cloudMallUrl[process.env.VUE_APP_ENV]
     : getIdcMallUrl();
 }
-
 // 请求头携带domain参数
 const domains = {
   dev: "localhost"
@@ -32,12 +29,26 @@ const domains = {
   // preprod: 'http://preprod.com',
   // prod: 'http://prod.com'
 };
+// authing接口参数
+const authingReq = {
+  dev: {
+    appId: "619c93dc69a93fbb8a1faf8c",
+    appHost: "https://resource-poor.authing.cn"
+  },
+  test: {
+    appId: "61cc1320c33bcb838eafe6cb",
+    appHost: "https://idc.authing.cn"
+  },
+  prod: {
+    appId: "",
+    appHost: ""
+  }
+};
 
 export default {
-  appId,
-  appHost,
   BASE_URL: baseUrl[process.env.VUE_APP_ENV],
   PAY_BASE_URL: payBaseUrl[process.env.VUE_APP_ENV],
   MALL_URL: getCloudMallUrl(),
-  DOMAIN_URL: domains[process.env.VUE_APP_ENV]
+  DOMAIN_URL: domains[process.env.VUE_APP_ENV],
+  ...authingReq[process.env.VUE_APP_ENV]
 };
