@@ -12,14 +12,14 @@
 </template>
 
 <script>
-import DetailHeader from '@/components/Common/detailHeader.vue';
+import DetailHeader from "@/components/Common/detailHeader.vue";
 export default {
   components: {
-    DetailHeader,
+    DetailHeader
   },
   data() {
     return {
-      data: null,
+      data: null
     };
   },
 
@@ -29,13 +29,13 @@ export default {
   methods: {
     getMessageInfo() {
       this.$store
-        .dispatch('message/getOne', { id: this.$route.query.id })
+        .dispatch("message/getOne", { id: this.$route.query.id })
         .then((res) => {
-          console.log(res, '1232123');
+          console.log(res, "1232123");
           this.data = res.data;
         });
-    },
-  },
+    }
+  }
 };
 </script>
 

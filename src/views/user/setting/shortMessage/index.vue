@@ -39,34 +39,34 @@ export default {
       wrapperCol: { span: 14 },
       form: {
         name: "",
-        resource: "1",
+        resource: "1"
       },
       rules: {
         name: [
           {
             required: true,
             message: "Please input Activity name",
-            trigger: "blur",
-          },
-        ],
-      },
+            trigger: "blur"
+          }
+        ]
+      }
     };
   },
-	methods: {
-		 onSubmit() {
-      this.$refs.ruleForm.validate(valid => {
+  methods: {
+    onSubmit() {
+      this.$refs.ruleForm.validate((valid) => {
         if (valid) {
-          alert('submit!');
+          alert("submit!");
         } else {
-          console.log('error submit!!');
+          console.log("error submit!!");
           return false;
         }
       });
     },
     resetForm() {
       this.$refs.ruleForm.resetFields();
-    },
-	},
+    }
+  }
 };
 </script>
 

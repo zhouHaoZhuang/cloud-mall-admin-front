@@ -30,20 +30,20 @@ import Inquire from "./Inquire/index.vue";
 export default {
   data() {
     return {
-      change: "online",
+      change: "online"
     };
   },
   methods: {
     changePage(change) {
       this.change = change;
-    },
+    }
   },
   components: {
     record,
     online,
     offline,
-    Inquire,
-  },
+    Inquire
+  }
 };
 </script>
 

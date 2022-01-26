@@ -100,7 +100,10 @@
         <!-- <p>{{ ModalText }}</p> -->
         <div class="qrcodeDom">
           <div id="qrcodeDom"></div>
-          <p v-if="endTime">请在<span>{{ endTime }}</span>前扫码完成验证</p>
+          <p v-if="endTime">
+            请在<span>{{ endTime }}</span
+            >前扫码完成验证
+          </p>
         </div>
       </a-modal>
     </div>
@@ -138,9 +141,9 @@
 </template>
 
 <script>
-import { verifyTypeEnum } from '@/utils/enum';
-import QRCode from 'qrcodejs2';
-import moment from 'moment';
+import { verifyTypeEnum } from "@/utils/enum";
+import QRCode from "qrcodejs2";
+import moment from "moment";
 export default {
   data() {
     return {
@@ -150,23 +153,23 @@ export default {
       labelCol: { span: 4 },
       wrapperCol: { span: 10 },
       form: {
-        phone: '',
-        code: '',
+        phone: "",
+        code: "",
         type: [],
         checkType: 0,
-        idNo: '',
-        name: '',
+        idNo: "",
+        name: ""
       },
-      textUrl: '',
+      textUrl: "",
       endTime: null,
       nextAudit: true,
       rules: {
         name: [
           {
             required: true,
-            message: '真实姓名不能为空',
-            trigger: 'blur',
-          },
+            message: "真实姓名不能为空",
+            trigger: "blur"
+          }
           // {
           //   min: 3,
           //   max: 5,
@@ -177,20 +180,20 @@ export default {
         idNo: [
           {
             required: true,
-            message: '身份证号码不能为空',
-            trigger: 'blur',
+            message: "身份证号码不能为空",
+            trigger: "blur"
           },
           {
             min: 18,
             max: 18,
-            message: '身份证号码长度为18位',
-            trigger: 'blur',
-          },
-        ],
+            message: "身份证号码长度为18位",
+            trigger: "blur"
+          }
+        ]
       },
-      ModalText: 'Content of the modal',
+      ModalText: "Content of the modal",
       visible: false,
-      confirmLoading: false,
+      confirmLoading: false
     };
   },
   watch: {
@@ -208,25 +211,25 @@ export default {
         } else {
           this.Review = true;
         }
-      },
+      }
     },
     choose(newVal, oldVal) {
       console.log(this.form);
-    },
+    }
   },
   methods: {
     // 链接生成二维码
     //链接生成二维码 Api
     transQrcode() {
-      const qrcode = new QRCode('qrcodeDom', {
+      const qrcode = new QRCode("qrcodeDom", {
         width: 160,
         height: 160,
-        text: `${this.textUrl}`,
+        text: `${this.textUrl}`
       });
     },
     //点击开始进行转化
     getQrcode() {
-      document.getElementById('qrcodeDom').innerHTML = ''; //先清空之前生成的二维码
+      document.getElementById("qrcodeDom").innerHTML = ""; //先清空之前生成的二维码
       this.$nextTick(() => {
         this.transQrcode();
       });
@@ -239,15 +242,15 @@ export default {
       // }, 2000);
     },
     handleCancel(e) {
-      console.log('Clicked cancel button');
+      console.log("Clicked cancel button");
       this.visible = false;
     },
     submit() {
-      this.$store.dispatch('realName/realName', this.form).then((res) => {
+      this.$store.dispatch("realName/realName", this.form).then((res) => {
         this.visible = true;
         // 360424199802204319c
         this.endTime = moment(parseInt(res.data.expire)).format(
-          'YYYY/MM/DD HH:mm:ss'
+          "YYYY/MM/DD HH:mm:ss"
         );
         this.textUrl = res.data.shortUrl;
         this.getQrcode();
@@ -255,8 +258,8 @@ export default {
       // .catch((val) => {
       //   this.$message.error("您的认证信息有误，请重新输入");
       // });
-    },
-  },
+    }
+  }
 };
 </script>
 
@@ -287,9 +290,9 @@ export default {
     width: 160px;
     margin: 20px auto;
   }
-  p{
+  p {
     font-size: 16px;
-    span{
+    span {
       color: #ff0000;
       font-weight: 500;
     }

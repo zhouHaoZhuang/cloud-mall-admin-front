@@ -7,8 +7,8 @@
       </div>
       <div>
         <p>
-          <span class="user-key">会员ID：</span
-          ><span>{{ corporationCode }}</span>
+          <span class="user-key">会员ID：</span>
+          <span>{{ corporationCode }}</span>
         </p>
         <p>
           <span class="user-key">注册日期：</span>
@@ -72,10 +72,10 @@
 export default {
   data() {
     return {
-      corporationCode: '',
-      realName: '',
-      createTime: '',
-      phoneNumber: '',
+      corporationCode: "",
+      realName: "",
+      createTime: "",
+      phoneNumber: ""
     };
   },
   created() {
@@ -83,7 +83,7 @@ export default {
   },
   methods: {
     getUser() {
-      this.$store.dispatch('user/getUserActualName').then((res) => {
+      this.$store.dispatch("user/getUserActualName").then((res) => {
         if (!res.data) {
           return;
         }
@@ -92,20 +92,20 @@ export default {
         this.createTime = res.data.createTime;
         this.phoneNumber =
           res.data.phoneNumber?.slice(0, 3) +
-          '****' +
+          "****" +
           res.data.phoneNumber?.slice(8, 11);
         if (res.data.realName) {
-          this.realName = '*' + res.data.realName.slice(1);
+          this.realName = "*" + res.data.realName.slice(1);
         } else {
-          this.realName = '-----';
+          this.realName = "-----";
         }
       });
     },
     realNameClick() {
       // console.log('实名认证');
-      this.$router.push('/user/setting/realName');
-    },
-  },
+      this.$router.push("/user/setting/realName");
+    }
+  }
 };
 </script>
 

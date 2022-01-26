@@ -97,7 +97,8 @@
           <span v-if="text === 0" style="color: red">未开通</span>
           <span v-if="text === 1" style="color: #2bbe22">已开通</span>
           <span v-if="text === 1">
-            /{{ record.renewPeriod }}{{ getAutoRenewUnit(record.renewUnit) }}个月
+            /{{ record.renewPeriod
+            }}{{ getAutoRenewUnit(record.renewUnit) }}个月
           </span>
         </div>
         <!-- 倒计时/天 -->

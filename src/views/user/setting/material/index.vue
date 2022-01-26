@@ -14,10 +14,10 @@
         :wrapper-col="wrapperCol"
       >
         <a-form-model-item ref="name" label="会员ID">
-          <span>{{corporationCode}}</span>
+          <span>{{ corporationCode }}</span>
         </a-form-model-item>
         <a-form-model-item ref="name" label="真实姓名">
-          <span>{{realName}}</span>
+          <span>{{ realName }}</span>
         </a-form-model-item>
         <a-form-model-item ref="name" label="QQ号码" prop="name">
           <a-input v-model="form.name" />
@@ -39,11 +39,11 @@ export default {
       realName: "",
       corporationCode: "",
       form: {
-        name: "",
+        name: ""
       },
       rules: {
-        name: [{ required: true, message: "请输入QQ号码", trigger: "blur" }],
-      },
+        name: [{ required: true, message: "请输入QQ号码", trigger: "blur" }]
+      }
     };
   },
   created() {
@@ -64,28 +64,28 @@ export default {
       this.$refs.ruleForm.resetFields();
     },
     getUser() {
-      this.$store.dispatch('user/getUserActualName').then((res) => {
+      this.$store.dispatch("user/getUserActualName").then((res) => {
         if (!res.data) {
-         return
+          return;
         }
-        console.log(res.data)
+        console.log(res.data);
         this.corporationCode = res.data.corporationCode;
-        if ( res.data.realName) {
-          this.realName = '*' + res.data.realName.slice(1);
+        if (res.data.realName) {
+          this.realName = "*" + res.data.realName.slice(1);
         } else {
-          this.realName = '-----';
+          this.realName = "-----";
         }
       });
-    },
-  },
+    }
+  }
 };
 </script>
 
 <style lang="less" scoped>
 .alert-warn {
   padding: 7px 22px 5px 37px;
-  background: #fff3eb url(../../../../assets/img/pay/ExclamationMark.png) no-repeat
-    10px 8px;
+  background: #fff3eb url(../../../../assets/img/pay/ExclamationMark.png)
+    no-repeat 10px 8px;
   min-height: 32px;
   border: 1px solid #ffdac2;
   border-radius: 2px;

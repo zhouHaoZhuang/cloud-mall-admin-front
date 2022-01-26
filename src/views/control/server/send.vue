@@ -7,14 +7,14 @@ import { mapState } from "vuex";
 export default {
   computed: {
     ...mapState({
-      userInfo: (state) => state.user.userInfo,
-    }),
+      userInfo: (state) => state.user.userInfo
+    })
   },
   data() {
     return {};
   },
   created() {},
-  methods: {},
+  methods: {}
 };
 </script>
 
