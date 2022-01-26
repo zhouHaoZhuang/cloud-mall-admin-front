@@ -98,7 +98,7 @@
 </template>
 
 <script>
-import { openAlipayPay } from "@/utils/index";
+import { openAlipayPay, getAliPayCallBack } from "@/utils/index";
 export default {
   props: {
     // 订单详情
@@ -140,6 +140,9 @@ export default {
       console.log(this.balanceData.userAmount, this.detail.discountAmount);
       return this.balanceData.userAmount >= this.detail.discountAmount;
     }
+  },
+  created() {
+    getAliPayCallBack();
   },
   methods: {
     // 折叠面板点击
@@ -200,8 +203,8 @@ export default {
         tcMergeOrderReqDto: {
           ...this.balanceData,
           mergeOrderNo: this.detail.mergeOrderNo,
-          returnUrl: "", // 页面重定向地址
-          requestFromUrl: "" // 用户取消支付会回退改地址
+          returnUrl: getAliPayCallBack(this.detail.orderNo), // 页面重定向地址
+          requestFromUrl: getAliPayCallBack(this.detail.orderNo) // 用户取消支付会回退改地址
         },
         tcOrderReqDtoList: [
           {
