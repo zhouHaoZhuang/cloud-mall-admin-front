@@ -25,31 +25,31 @@ export default {
         {
           title: "联系人姓名",
           key: "name",
-          width: "200px",
+          width: "200px"
         },
         {
           title: "手机号",
           key: "area",
-          width: "200px",
+          width: "200px"
         },
         {
           title: "地址",
           key: "address",
-          width: "200px",
+          width: "200px"
         },
         {
           title: "邮编",
           key: "phone",
-          width: "200px",
+          width: "200px"
         },
         {
           title: "操作",
           key: "actions",
-					scopedSlots: { customRender: "actions" },
-				},
-      ],
+          scopedSlots: { customRender: "actions" }
+        }
+      ]
     };
-  },
+  }
 };
 </script>
 

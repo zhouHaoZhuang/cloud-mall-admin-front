@@ -140,7 +140,7 @@
 </template>
 
 <script>
-import { offlineRemittance } from '@/utils/enum';
+import { offlineRemittance } from "@/utils/enum";
 export default {
   data() {
     return {
@@ -148,53 +148,53 @@ export default {
       data: [],
       offlineRemittance,
       listQuery: {
-        key: 'accountBankName',
-        search: '',
+        key: "accountBankName",
+        search: "",
         currentPage: 1,
         pageSize: 10,
         total: 0,
-        sorter: '',
+        sorter: ""
       },
       columns: [
         {
-          title: '汇款账户',
-          dataIndex: 'accountCode',
+          title: "汇款账户",
+          dataIndex: "accountCode"
         },
         {
-          title: '账户名称',
-          dataIndex: 'accountName',
+          title: "账户名称",
+          dataIndex: "accountName"
         },
         {
-          title: '汇款金额',
-          dataIndex: 'amount',
-          key: 'amount',
-          sorter: (a, b) => a.amount - b.amount,
+          title: "汇款金额",
+          dataIndex: "amount",
+          key: "amount",
+          sorter: (a, b) => a.amount - b.amount
         },
         {
-          title: '汇款日期',
-          dataIndex: 'createTime',
-          key: 'createTime',
+          title: "汇款日期",
+          dataIndex: "createTime",
+          key: "createTime",
           scopedSlots: {
-            customRender: 'createTime',
+            customRender: "createTime"
           },
           sorter: (a, b) =>
-            new Date(a.createTime).getTime() - new Date(b.createTime).getTime(),
+            new Date(a.createTime).getTime() - new Date(b.createTime).getTime()
         },
         {
-          title: '审核状态',
-          dataIndex: 'status',
-          key: 'status',
+          title: "审核状态",
+          dataIndex: "status",
+          key: "status",
           scopedSlots: {
-            customRender: 'status',
-          },
+            customRender: "status"
+          }
         },
         {
-          title: '操作',
-          dataIndex: 'action',
+          title: "操作",
+          dataIndex: "action",
           scopedSlots: {
-            customRender: 'action',
-          },
-        },
+            customRender: "action"
+          }
+        }
       ],
       paginationProps: {
         showQuickJumper: true,
@@ -205,10 +205,10 @@ export default {
             total / this.listQuery.pageSize
           )} 页`,
         onChange: this.quickJump,
-        onShowSizeChange: this.onShowSizeChange,
+        onShowSizeChange: this.onShowSizeChange
       },
       tableLoading: false,
-      dataInfo: null,
+      dataInfo: null
     };
   },
   created() {
@@ -222,14 +222,14 @@ export default {
     },
     seeDetails(id) {
       this.isinfo = true;
-      console.log(id, this.isinfo, '是否显示');
-      this.$store.dispatch('inquire/getOne', id).then((res) => {
+      console.log(id, this.isinfo, "是否显示");
+      this.$store.dispatch("inquire/getOne", id).then((res) => {
         console.log(res);
         this.dataInfo = res.data;
       });
     },
     getList() {
-      this.$getList('inquire/getList', this.listQuery).then((res) => {
+      this.$getList("inquire/getList", this.listQuery).then((res) => {
         this.data = res.data.list;
         this.paginationProps.total = res.data.totalCount * 1;
         console.log(res);
@@ -249,8 +249,8 @@ export default {
       this.listQuery.pageSize = pageSize;
       this.listQuery.currentPage = current;
       this.getList();
-    },
-  },
+    }
+  }
 };
 </script>
 
@@ -309,7 +309,7 @@ export default {
       height: 70%;
     }
     .modal-details-title {
-      font-family: 'Arial Normal', 'Arial';
+      font-family: "Arial Normal", "Arial";
       font-weight: 400;
       font-style: normal;
       font-size: 20px;

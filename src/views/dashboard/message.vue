@@ -1,9 +1,15 @@
 <template>
   <div>
-    <DetailHeader title = '消息中心'/>
+    <DetailHeader title="消息中心" />
     <p class="all-types">全部类型</p>
     <div class="action-button">
-      <a-button class="mark-read" @click="haveRead" :disabled = 'selectedRowKeys.length == 0'>标记已读</a-button>
+      <a-button
+        class="mark-read"
+        @click="haveRead"
+        :disabled="selectedRowKeys.length == 0"
+      >
+        标记已读
+      </a-button>
       <a-button @click="readAll">全部已读</a-button>
     </div>
     <div>
@@ -14,7 +20,7 @@
         rowKey="id"
         :row-selection="{
           selectedRowKeys: selectedRowKeys,
-          onChange: onSelectChange,
+          onChange: onSelectChange
         }"
       >
         <div slot="sendTime" slot-scope="text">
@@ -29,11 +35,11 @@
 </template>
 
 <script>
-import DetailHeader from '@/components/Common/detailHeader.vue';
+import DetailHeader from "@/components/Common/detailHeader.vue";
 export default {
   components: {
-    DetailHeader,
-  },  
+    DetailHeader
+  },
   data() {
     return {
       data: [],
@@ -45,33 +51,33 @@ export default {
             total / this.listQuery.pageSize
           )} 页`,
         onChange: this.quickJump,
-        onShowSizeChange: this.onShowSizeChange,
+        onShowSizeChange: this.onShowSizeChange
       },
       columns: [
         {
-          title: '标题',
-          dataIndex: 'title',
-          key: 'title',
+          title: "标题",
+          dataIndex: "title",
+          key: "title"
         },
         {
-          title: '发送时间',
-          dataIndex: 'sendTime',
+          title: "发送时间",
+          dataIndex: "sendTime",
           scopedSlots: {
-            customRender: 'sendTime',
-          },
+            customRender: "sendTime"
+          }
         },
         {
-          title: '操作',
-          key: 'action',
-          scopedSlots: { customRender: 'action' },
-        },
+          title: "操作",
+          key: "action",
+          scopedSlots: { customRender: "action" }
+        }
       ],
       selectedRowKeys: [],
       listQuery: {
         currentPage: 1,
         pageSize: 10,
-        total: 0,
-      },
+        total: 0
+      }
     };
   },
   created() {
@@ -80,27 +86,27 @@ export default {
   methods: {
     // 获取选中的行
     onSelectChange(selectedRowKeys) {
-      console.log('selectedRowKeys changed: ', selectedRowKeys);
+      console.log("selectedRowKeys changed: ", selectedRowKeys);
       this.selectedRowKeys = selectedRowKeys;
     },
     // 全部已读
     readAll() {
-      this.$store.dispatch('message/readAll').then((val) => {
-        this.$message.success('全部已读');
+      this.$store.dispatch("message/readAll").then((val) => {
+        this.$message.success("全部已读");
       });
     },
     // 标记已读
     haveRead() {
       console.log(this.selectedRowKeys);
       this.$store
-        .dispatch('message/changeList', { id: this.selectedRowKeys.toString() })
+        .dispatch("message/changeList", { id: this.selectedRowKeys.toString() })
         .then((val) => {
           console.log(val);
         });
     },
     // 获取消息列表
     getMessageList() {
-      this.$store.dispatch('message/getList', this.listQuery).then((res) => {
+      this.$store.dispatch("message/getList", this.listQuery).then((res) => {
         this.data = res.data.list;
         this.paginationProps.total = res.data.totalCount * 1;
         console.log(res);
@@ -118,13 +124,13 @@ export default {
     },
     lookOver(id) {
       this.$router.push({
-        path: '/messageInfo',
+        path: "/messageInfo",
         query: {
-          id,
-        },
+          id
+        }
       });
-    },
-  },
+    }
+  }
 };
 </script>
 

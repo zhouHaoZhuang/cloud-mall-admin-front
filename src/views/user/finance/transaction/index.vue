@@ -40,18 +40,18 @@
         >
           <div slot="income" slot-scope="text">
             <span class="gold">{{
-              text.type === 'I' ? text.dealAmount : '--'
+              text.type === "I" ? text.dealAmount : "--"
             }}</span>
           </div>
           <div slot="expenditure" slot-scope="text">
-            <span>{{ text.type === 'O' ? text.dealAmount : '--' }}</span>
+            <span>{{ text.type === "O" ? text.dealAmount : "--" }}</span>
           </div>
           <a slot="name" slot-scope="text">{{ text }}</a>
           <div slot="createTime" slot-scope="text">
             {{ text | formatDate }}
           </div>
           <div class="gold" slot="afterAmount" slot-scope="text, record">
-            {{ record.status === 9 ? text : '--' }}
+            {{ record.status === 9 ? text : "--" }}
           </div>
           <div slot="status" slot-scope="text">
             {{ detailTypeMapData[text] }}
@@ -63,7 +63,7 @@
 </template>
 
 <script>
-import { detailsMap,detailTypeMapData } from '@/utils/enum';
+import { detailsMap, detailTypeMapData } from "@/utils/enum";
 export default {
   computed: {},
   data() {
@@ -71,57 +71,57 @@ export default {
       detailsMap,
       detailTypeMapData,
       listQuery: {
-        key: 'paymentLineId',
-        search: '',
+        key: "paymentLineId",
+        search: "",
         currentPage: 1,
         pageSize: 10,
         total: 0,
-        sorter: '',
-        paymentLineId: '',
+        sorter: "",
+        paymentLineId: ""
       },
       columns: [
         {
-          title: '流水单号',
-          dataIndex: 'paymentLineId',
-          key: 'id',
+          title: "流水单号",
+          dataIndex: "paymentLineId",
+          key: "id",
           width: 150,
-          sorter: (a, b) => a.id - b.id,
+          sorter: (a, b) => a.id - b.id
         },
         {
-          title: '收入(+)',
-          key: 'income',
-          scopedSlots: { customRender: 'income' },
+          title: "收入(+)",
+          key: "income",
+          scopedSlots: { customRender: "income" }
         },
         // type=O支出 i收入
         // dealAmount金额
         {
-          title: '支出(-)',
-          key: 'expenditure',
-          scopedSlots: { customRender: 'expenditure' },
+          title: "支出(-)",
+          key: "expenditure",
+          scopedSlots: { customRender: "expenditure" }
         },
         {
-          title: '余额',
-          dataIndex: 'afterAmount',
-          scopedSlots: { customRender: 'afterAmount' },
-          sorter: (a, b) => a.afterAmount - b.afterAmount,
+          title: "余额",
+          dataIndex: "afterAmount",
+          scopedSlots: { customRender: "afterAmount" },
+          sorter: (a, b) => a.afterAmount - b.afterAmount
         },
         {
-          title: '状态',
-          dataIndex: 'status',
-          key: 'status',
-          scopedSlots: { customRender: 'status' },
+          title: "状态",
+          dataIndex: "status",
+          key: "status",
+          scopedSlots: { customRender: "status" }
         },
         {
-          title: '交易日期',
-          dataIndex: 'createTime',
-          key: 'createTime',
-          scopedSlots: { customRender: 'createTime' },
-          sorter: (a, b) => a - b,
+          title: "交易日期",
+          dataIndex: "createTime",
+          key: "createTime",
+          scopedSlots: { customRender: "createTime" },
+          sorter: (a, b) => a - b
         },
         {
-          title: '来源用途',
-          dataIndex: 'memo',
-        },
+          title: "来源用途",
+          dataIndex: "memo"
+        }
       ],
       data: [],
       paginationProps: {
@@ -133,9 +133,9 @@ export default {
             total / this.listQuery.pageSize
           )} 页`,
         onChange: this.quickJump,
-        onShowSizeChange: this.onShowSizeChange,
+        onShowSizeChange: this.onShowSizeChange
       },
-      tableLoading: false,
+      tableLoading: false
     };
   },
   created() {
@@ -149,7 +149,7 @@ export default {
       if (sorter && sorter.order) {
         this.listQuery.key = sorter.columnKey;
         this.listQuery.sorter =
-          sorter.order.replace('end', '') + `-${sorter.columnKey}`;
+          sorter.order.replace("end", "") + `-${sorter.columnKey}`;
         this.getList();
         // console.log("排序被点击了", sorter.columnKey);
       }
@@ -165,11 +165,11 @@ export default {
     },
     goRecharge() {
       this.$router.push({
-        path: '/user/finance/recharge',
+        path: "/user/finance/recharge"
       });
     },
     getList() {
-      this.$store.dispatch('finance/getList', this.listQuery).then((res) => {
+      this.$store.dispatch("finance/getList", this.listQuery).then((res) => {
         this.data = res.data.list;
         this.paginationProps.total = res.data.totalCount * 1;
       });
@@ -178,8 +178,8 @@ export default {
       this.listQuery.paymentLineId = value;
       // console.log(value, this.listQuery.key);
       this.getList();
-    },
-  },
+    }
+  }
 };
 </script>
 

@@ -12,12 +12,13 @@ export default {};
 </script>
 
 <style lang="less" scoped>
-h2{
-	font-weight: 400;
+h2 {
+  font-weight: 400;
 }
 .alert-warn {
   padding: 7px 22px 5px 37px;
-  background: #fff3eb url(../../../../assets/img/pay/ExclamationMark.png) no-repeat 10px 8px;
+  background: #fff3eb url(../../../../assets/img/pay/ExclamationMark.png)
+    no-repeat 10px 8px;
   min-height: 32px;
   border: 1px solid #ffdac2;
   border-radius: 2px;

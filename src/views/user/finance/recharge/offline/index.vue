@@ -96,11 +96,11 @@
                   <p>JPG或PNG格式，文件大小不超过1MB</p>
                   <p>汇款凭证不能为空</p>
                 </div>
-                 <a-form-model-item :wrapper-col="{ span: 14, offset: 2 }">
-                <a-button @click="submitForm" type="primary">
-                  提交汇款记录
-                </a-button>
-              </a-form-model-item>
+                <a-form-model-item :wrapper-col="{ span: 14, offset: 2 }">
+                  <a-button @click="submitForm" type="primary">
+                    提交汇款记录
+                  </a-button>
+                </a-form-model-item>
               </a-form-model>
             </div>
           </div>
@@ -114,10 +114,10 @@
 </template>
 
 <script>
-import Upload from '@/components/Upload/index.vue';
+import Upload from "@/components/Upload/index.vue";
 export default {
   components: {
-    Upload,
+    Upload
   },
   data() {
     return {
@@ -125,31 +125,31 @@ export default {
       data: [],
       columns: [
         {
-          title: '账户名称',
-          dataIndex: 'companyName',
-          scopedSlots: { customRender: 'companyName' },
+          title: "账户名称",
+          dataIndex: "companyName",
+          scopedSlots: { customRender: "companyName" }
         },
         {
-          title: '银行账号',
-          dataIndex: 'bankAccount',
+          title: "银行账号",
+          dataIndex: "bankAccount"
         },
         {
-          title: '开户银行',
-          dataIndex: 'openBank',
+          title: "开户银行",
+          dataIndex: "openBank"
         },
         {
-          title: '汇款备注',
-          dataIndex: 'remark',
-        },
+          title: "汇款备注",
+          dataIndex: "remark"
+        }
       ],
       form: {
         status: 0,
-        amount: '',
-        accountName: '',
-        accountCode: '',
-        memo: '',
-        accountBankName: '',
-        accountType: 2,
+        amount: "",
+        accountName: "",
+        accountCode: "",
+        memo: "",
+        accountBankName: "",
+        accountType: 2
       },
       labelCol: { span: 2 },
       wrapperCol: { span: 5 },
@@ -157,61 +157,61 @@ export default {
         amount: [
           {
             required: true,
-            message: '请输入汇款金额',
-            trigger: 'blur',
-          },
+            message: "请输入汇款金额",
+            trigger: "blur"
+          }
         ],
         accountName: [
           {
             required: true,
-            message: '请输入汇款户名',
-            trigger: 'blur',
-          },
+            message: "请输入汇款户名",
+            trigger: "blur"
+          }
         ],
         accountCode: [
           {
             required: true,
-            message: '请输入汇款账号',
-            trigger: 'blur',
+            message: "请输入汇款账号",
+            trigger: "blur"
           },
           {
             pattern: /^\d{16,19}$/,
-            message: '汇款账号为数字,长度为16-19位',
-            trigger: 'blur',
-          },
+            message: "汇款账号为数字,长度为16-19位",
+            trigger: "blur"
+          }
         ],
         accountBankName: [
           {
             required: true,
-            message: '请输入汇款银行',
-            trigger: 'blur',
-          },
+            message: "请输入汇款银行",
+            trigger: "blur"
+          }
         ],
         memo: [
           {
             required: true,
-            message: '请输入汇款备注',
-            trigger: 'blur',
-          },
+            message: "请输入汇款备注",
+            trigger: "blur"
+          }
         ],
         voucher: [
           {
             required: true,
-            message: '请输入汇款凭证',
-            trigger: 'blur',
-          },
+            message: "请输入汇款凭证",
+            trigger: "blur"
+          }
         ],
         accountType: [
           {
             required: true,
-            message: '请输入款项类型',
-            trigger: 'blur',
-          },
-        ],
-      },
+            message: "请输入款项类型",
+            trigger: "blur"
+          }
+        ]
+      }
     };
   },
-  props: ['change'],
+  props: ["change"],
   created() {
     this.getInfo();
   },
@@ -221,32 +221,32 @@ export default {
       this.form.voucher = urlList.toString();
     },
     getInfo() {
-      this.$store.dispatch('offline/getInfo').then((res) => {
+      this.$store.dispatch("offline/getInfo").then((res) => {
         this.data = [res.data];
         console.log(res);
       });
     },
     putOffline() {
-      this.$store.dispatch('offline/putOffline', this.form).then((res) => {
+      this.$store.dispatch("offline/putOffline", this.form).then((res) => {
         // this.data = res.data;
         console.log(res);
       });
     },
     submitForm() {
       this.$confirm({
-        title: '确定要提交吗?',
+        title: "确定要提交吗?",
         onOk: () => {
           console.log(this.form);
-          this.$store.dispatch('offline/putOffline', this.form).then((res) => {
+          this.$store.dispatch("offline/putOffline", this.form).then((res) => {
             // this.data = res.data;
-            this.$message.success('提交成功');
-            this.change('Inquire');
+            this.$message.success("提交成功");
+            this.change("Inquire");
             this.current = 2;
           });
-        },
+        }
       });
-    },
-  },
+    }
+  }
 };
 </script>
 
@@ -293,7 +293,7 @@ export default {
     .uploadInfo {
       font-size: 12px;
       color: #999999;
-      margin-left:120px;
+      margin-left: 120px;
     }
   }
 }

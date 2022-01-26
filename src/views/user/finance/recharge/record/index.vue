@@ -12,7 +12,7 @@
             {{ item }}
           </a-select-option>
         </a-select>
-        <a-button type  = 'primary' @click="onSearch">查询</a-button>
+        <a-button type="primary" @click="onSearch">查询</a-button>
       </a-input-group>
     </div>
     <div>
@@ -42,10 +42,7 @@
 </template>
 
 <script>
-import {
-  rechargeTypeMap,
-  detailTypeMapData,
-} from '@/utils/enum';
+import { rechargeTypeMap, detailTypeMapData } from "@/utils/enum";
 export default {
   data() {
     return {
@@ -54,66 +51,66 @@ export default {
       detailTypeMapData,
       columns: [
         {
-          title: '支付ID',
-          dataIndex: 'payNo',
-          key: 'payNo',
+          title: "支付ID",
+          dataIndex: "payNo",
+          key: "payNo"
         },
         {
-          title: '充值金额',
-          dataIndex: 'amount',
-          key: 'amount',
-          sorter: (a, b) => a.amount - b.amount,
+          title: "充值金额",
+          dataIndex: "amount",
+          key: "amount",
+          sorter: (a, b) => a.amount - b.amount
         },
         {
-          title: '充值方式',
-          dataIndex: 'channelCode',
-          key: 'channelCode',
+          title: "充值方式",
+          dataIndex: "channelCode",
+          key: "channelCode",
           scopedSlots: {
-            customRender: 'channelCode',
-          },
+            customRender: "channelCode"
+          }
         },
         {
-          title: '支付状态',
-          dataIndex: 'status',
-          key: 'status',
+          title: "支付状态",
+          dataIndex: "status",
+          key: "status",
           scopedSlots: {
-            customRender: 'status',
-          },
+            customRender: "status"
+          }
         },
         {
-          title: '到账日期',
-          dataIndex: 'payTime',
-          key: 'payTime',
+          title: "到账日期",
+          dataIndex: "payTime",
+          key: "payTime",
           sorter: (a, b) => {
             return (
               new Date(a.payTime).getTime() - new Date(b.payTime).getTime()
             );
           },
           scopedSlots: {
-            customRender: 'modifyTime',
-          },
+            customRender: "modifyTime"
+          }
         },
         {
-          title: '充值日期',
-          dataIndex: 'createTime',
+          title: "充值日期",
+          dataIndex: "createTime",
           scopedSlots: {
-            customRender: 'createTime',
+            customRender: "createTime"
           },
           sorter: (a, b) => {
             return (
               new Date(a.payTime).getTime() - new Date(b.payTime).getTime()
             );
-          },
-        },
+          }
+        }
       ],
       listQuery: {
-        key: 'channelCode',
-        search: '',
+        key: "channelCode",
+        search: "",
         currentPage: 1,
         pageSize: 10,
         total: 0,
-        sorter: '',
-        channelCode: '',
+        sorter: "",
+        channelCode: ""
       },
       paginationProps: {
         showQuickJumper: true,
@@ -124,8 +121,8 @@ export default {
             total / this.listQuery.pageSize
           )} 页`,
         onChange: this.quickJump,
-        onShowSizeChange: this.onShowSizeChange,
-      },
+        onShowSizeChange: this.onShowSizeChange
+      }
     };
   },
   created() {
@@ -134,22 +131,22 @@ export default {
   methods: {
     onSearch() {
       console.log(this.listQuery);
-      
+
       this.getList();
     },
     // 排序的回调
     handleChange(pagination, filters, sorter) {
       if (sorter) {
-        if (sorter.columnKey == 'memo') {
+        if (sorter.columnKey == "memo") {
           // sorter.order = sorter.order.replace('end', '') + '-' + sorter.columnKey
-          console.log(sorter, '这是充值方式');
-        } else if (sorter.columnKey == 'payTime') {
-          console.log(sorter, '这是充值日期');
+          console.log(sorter, "这是充值方式");
+        } else if (sorter.columnKey == "payTime") {
+          console.log(sorter, "这是充值日期");
         }
       }
     },
     getList() {
-      this.$store.dispatch('pay/getList', this.listQuery).then((res) => {
+      this.$store.dispatch("pay/getList", this.listQuery).then((res) => {
         this.data = res.data.list;
         this.paginationProps.total = res.data.totalCount * 1;
       });
@@ -162,8 +159,8 @@ export default {
       this.listQuery.pageSize = pageSize;
       this.listQuery.currentPage = current;
       this.getList();
-    },
-  },
+    }
+  }
 };
 </script>
 

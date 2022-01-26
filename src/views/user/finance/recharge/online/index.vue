@@ -18,7 +18,7 @@
         v-number-evolution="{
           min: 1,
           max: 9999999,
-          value: 2,
+          value: 2
         }"
         v-model="rechargeBtnForm.totalAmount"
       />
@@ -38,29 +38,29 @@
   </div>
 </template>
 <script>
-import RechargeBtn from '@/components/Finance/rechargeBtn';
+import RechargeBtn from "@/components/Finance/rechargeBtn";
 export default {
   components: {
-    RechargeBtn,
+    RechargeBtn
   },
   data() {
     return {
       // 查询余额相关所需参数
       balanceForm: {
-        payType: 'none',
+        payType: "none",
         totalAmount: 0,
         useAliPay: false,
         useBalance: true,
         useVoucher: false,
-        useWechatPay: false,
+        useWechatPay: false
       },
       balanceData: {},
       rechargeBtnForm: {
-        totalAmount: '',
-        balanceAmount: '',
-        payType: ['ali', 'balance'],
+        totalAmount: "",
+        balanceAmount: "",
+        payType: ["ali", "balance"]
       },
-      time: null,
+      time: null
     };
   },
   created() {
@@ -73,7 +73,7 @@ export default {
     // 查询余额
     getUserBalance() {
       this.$store
-        .dispatch('finance/getUserBalance', this.balanceForm)
+        .dispatch("finance/getUserBalance", this.balanceForm)
         .then((res) => {
           this.balanceData = { ...res.data };
         });
@@ -85,8 +85,8 @@ export default {
       this.time = setInterval(() => {
         this.getUserBalance();
       }, 3000);
-    },
-  },
+    }
+  }
 };
 </script>
 

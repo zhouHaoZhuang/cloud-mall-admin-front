@@ -6,9 +6,9 @@
       </div>
       <div class="btns">
         <div class="btn1">
-          <a-button type="primary" @click="handleJumpCloudPay"
-            >购买产品</a-button
-          >
+          <a-button type="primary" @click="handleJumpCloudPay">
+            购买产品
+          </a-button>
         </div>
         <!-- 按钮输入框组 -->
         <div class="btn3">

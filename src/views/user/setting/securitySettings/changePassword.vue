@@ -25,7 +25,7 @@
           <CodeBtn :phone="form.phone" />
         </a-form-model-item> -->
         <a-form-model-item label="验证手机号" prop="phone">
-          <a-input v-model="form.phone" ></a-input>
+          <a-input v-model="form.phone"></a-input>
         </a-form-model-item>
         <a-form-model-item label="验证码" prop="code">
           <a-input
@@ -40,7 +40,7 @@
           <CodeBtn :phone="form.phone" />
         </a-form-model-item>
         <a-form-model-item ref="name" label="新密码" prop="newPassword">
-          <a-input-password v-model="form.newPassword" v-password-input/>
+          <a-input-password v-model="form.newPassword" v-password-input />
         </a-form-model-item>
         <a-form-model-item ref="name" label="确认密码" prop="newPasswordEnter">
           <a-input-password v-model="form.newPasswordEnter" v-password-input />
@@ -54,26 +54,26 @@
 </template>
 
 <script>
-import CodeBtn from '@/components/CodeBtn/index';
-import { jumpCloudMall } from '@/utils/index';
+import CodeBtn from "@/components/CodeBtn/index";
+import { jumpCloudMall } from "@/utils/index";
 export default {
   components: { CodeBtn },
   data() {
     const validatePass = (rule, value, callback) => {
-      if (value === '') {
-        callback(new Error('请输入密码'));
+      if (value === "") {
+        callback(new Error("请输入密码"));
       } else {
         if (!this.pwdReg.test(value)) {
-          callback(new Error('密码格式不正确'));
+          callback(new Error("密码格式不正确"));
         }
         callback();
       }
     };
-      const validatePass2 = (rule, value, callback) => {
-      if (value === '') {
-        callback(new Error('请输入确认密码'));
+    const validatePass2 = (rule, value, callback) => {
+      if (value === "") {
+        callback(new Error("请输入确认密码"));
       } else if (value !== this.form.newPassword) {
-        callback(new Error('两次密码不一致'));
+        callback(new Error("两次密码不一致"));
       } else {
         callback();
       }
@@ -81,17 +81,17 @@ export default {
     return {
       pwdReg: /(?=.*[0-9])(?=.*[a-z]).{8,20}/,
       form: {
-        name: '',
-        phone: '',
-        code: '',
-        newPassword: '',
-        newPasswordEnter: '',
+        name: "",
+        phone: "",
+        code: "",
+        newPassword: "",
+        newPasswordEnter: ""
       },
       rules: {
         phone: [
-          { required: true, message: '请输入验证手机号', trigger: 'blur' },
+          { required: true, message: "请输入验证手机号", trigger: "blur" }
         ],
-        code: [{ required: true, message: '请输入验证码', trigger: 'blur' }],
+        code: [{ required: true, message: "请输入验证码", trigger: "blur" }],
         // newPassword: [
         //   { required: true, message: '请输入新密码', trigger: 'blur' },
         // ],
@@ -99,20 +99,20 @@ export default {
         //   { required: true, message: '确认密码', trigger: 'blur' },
         // ],
         newPassword: [
-          { validator: validatePass, trigger: ['blur', 'change'] },
-          { min: 8, max: 20, message: '密码位数在8~20位', trigger: 'blur' },
+          { validator: validatePass, trigger: ["blur", "change"] },
+          { min: 8, max: 20, message: "密码位数在8~20位", trigger: "blur" }
         ],
         newPasswordEnter: [
-          { validator: validatePass2, trigger: ['blur', 'change'] },
-          { min: 8, max: 20, message: '密码位数在8~20位', trigger: 'blur' },
-        ],
+          { validator: validatePass2, trigger: ["blur", "change"] },
+          { min: 8, max: 20, message: "密码位数在8~20位", trigger: "blur" }
+        ]
       },
       labelCol: {
-        span: 4,
+        span: 4
       },
       wrapperCol: {
-        span: 8,
-      },
+        span: 8
+      }
     };
   },
   methods: {
@@ -120,18 +120,18 @@ export default {
       this.$refs.ruleForm.validate((valid) => {
         if (valid) {
           // console.log('submit!', this.form);
-          this.$store.dispatch('user/changePassword', this.form).then(() => {
-            this.$message.success('修改成功');
-            this.$store.dispatch('user/logout').then((res) => {
-              jumpCloudMall('/login-pc?out=1');
+          this.$store.dispatch("user/changePassword", this.form).then(() => {
+            this.$message.success("修改成功");
+            this.$store.dispatch("user/logout").then((res) => {
+              jumpCloudMall("/login-pc?out=1");
             });
           });
         } else {
-          this.$message.error('请检查输入项');
+          this.$message.error("请检查输入项");
         }
       });
-    },
-  },
+    }
+  }
 };
 </script>
 
