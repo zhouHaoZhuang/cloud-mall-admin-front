@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import { openAlipayPay } from "@/utils/index";
+import { openAlipayPay, getRechargeAliPayCallBack } from "@/utils/index";
 export default {
   props: {
     // 充值参数
@@ -31,12 +31,14 @@ export default {
         .dispatch("finance/recharge", {
           ...this.form,
           totalAmount: this.form.totalAmount * 1,
-          balanceAmount: this.form.totalAmount * 1
+          balanceAmount: this.form.totalAmount * 1,
+          returnUrl: getRechargeAliPayCallBack(), // 页面重定向地址
+          requestFromUrl: getRechargeAliPayCallBack() // 用户取消支付会回退改地址
         })
         .then((res) => {
           // 打开支付宝支付
           openAlipayPay(res.data.aliPayResult);
-          this.$emit('success')
+          this.$emit("success");
         })
         .finally(() => {
           this.loading = false;
