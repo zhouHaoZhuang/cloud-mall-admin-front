@@ -197,6 +197,17 @@ const options = [
                 }
               },
               {
+                path: "emailBinding",
+                name: "邮箱绑定",
+                component: () =>
+                  import(
+                    "@/views/user/setting/securitySettings/emailBinding.vue"
+                  ),
+                meta: {
+                  hiddenMenu: true // 不显示在左侧菜单
+                }
+              },
+              {
                 path: "info",
                 name: "基本资料",
                 component: () =>
