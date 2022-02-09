@@ -47,7 +47,7 @@
       <span class="settings-info-desc">
         绑定认证后可用于邮箱找回密码、接收订单提醒等，保障您的账户安全。
       </span>
-      <a-button class="settings-change settings-start">立即启用</a-button>
+      <a-button class="settings-change settings-start" @click="emailBinding">立即启用</a-button>
     </div>
     <div class="settings-info">
       <img src="@/assets/img/icon-security-undone.png" alt="" />
@@ -104,6 +104,15 @@ export default {
     realNameClick() {
       // console.log('实名认证');
       this.$router.push("/user/setting/realName");
+    },
+    emailBinding() {
+      // console.log('邮箱绑定');
+      this.$router.push({
+        path: "/user/setting/emailBinding",
+        query: {
+          corporationCode: this.corporationCode
+        }
+      })
     }
   }
 };
