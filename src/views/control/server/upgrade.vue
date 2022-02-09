@@ -1,14 +1,17 @@
 <template>
   <div class="upgrade-container">
-    <DetailHeader title="升级配置" />
+    <DetailHeader :title="title" />
     <div class="info-box">
       <a-icon class="icon" type="exclamation-circle" />
-      服务器升级后，到期时间不变，差价的计算精确到天；升级价格计算公式：(升级配置价格[月]
-      - 原始配置价格[月]) * 12 / 365 * 到期剩余天数。
+      <span v-if="isUpgrade">
+        服务器升级后，到期时间不变，差价的计算精确到天；升级价格计算公式：(升级配置价格[月]
+        - 原始配置价格[月]) * 12 / 365 * 到期剩余天数。
+      </span>
+      <span v-else>降低配置</span>
     </div>
     <a-tabs v-model="tabKey" @change="handleTabChange">
       <a-tab-pane key="1" tab="实例规格"> </a-tab-pane>
-      <a-tab-pane key="2" tab="SSD数据盘"> </a-tab-pane>
+      <a-tab-pane v-if="isUpgrade" key="2" tab="SSD数据盘"> </a-tab-pane>
       <a-tab-pane key="3" tab="公网带宽"> </a-tab-pane>
     </a-tabs>
     <a-form-model :model="form" :label-col="labelCol" :wrapper-col="wrapperCol">
@@ -82,11 +85,12 @@
       <a-form-model-item v-if="tabKey === '3'" label="公网带宽">
         <div class="input-number-box">
           <NumberInput
+            v-if="minBandwidth && maxBandwidth"
             v-model="form.internetMaxBandwidthOut"
             company="M"
             :step="1"
             :min="minBandwidth"
-            :max="100"
+            :max="maxBandwidth"
             :on-change="getPrice"
           />
         </div>
@@ -120,6 +124,7 @@ export default {
     return {
       snapshotDayEnum,
       setCpuOrDiskData,
+      type: "", // 标识是升级还是降配
       detail: {},
       labelCol: { span: 5 },
       wrapperCol: { span: 19 },
@@ -132,13 +137,33 @@ export default {
       cpuData: [],
       memoryData: [],
       // 最小带宽
-      minBandwidth: 1,
+      minBandwidth: undefined,
+      // 最大带宽
+      maxBandwidth: undefined,
       price: {
         tradePrice: "0.00元"
       },
       priceLoading: true,
       tabKey: "1"
     };
+  },
+  computed: {
+    title() {
+      return this.type ? "降低配置" : "升级配置";
+    },
+    // 是否是升级配置
+    isUpgrade() {
+      return !this.type ? true : false;
+    }
+  },
+  watch: {
+    $route: {
+      handler(newVal) {
+        console.log(newVal);
+        this.type = newVal.query.type;
+      },
+      immediate: true
+    }
   },
   created() {
     this.getDetail();
@@ -176,7 +201,13 @@ export default {
             this.form = {
               internetMaxBandwidthOut: res.data.internetMaxBandwidthOut
             };
-            this.minBandwidth = res.data.internetMaxBandwidthOut;
+            if (this.isUpgrade) {
+              this.minBandwidth = res.data.internetMaxBandwidthOut;
+              this.maxBandwidth = 100;
+            } else {
+              this.minBandwidth = 1;
+              this.maxBandwidth = res.data.internetMaxBandwidthOut;
+            }
           }
         });
     },
@@ -187,7 +218,9 @@ export default {
       }
       const index = data.findIndex((ele) => ele * 1 === cpuOrMemory);
       if (index !== -1) {
-        const newData = data.slice(index);
+        const newData = this.isUpgrade
+          ? data.slice(index)
+          : data.slice(0, index + 1);
         return newData;
       } else {
         return data;
@@ -277,7 +310,9 @@ export default {
         dataDisk: newDataDisk,
         id: this.$route.query.id,
         instanceType: this.form.instanceType,
-        internetMaxBandwidthOut: this.form.internetMaxBandwidthOut
+        internetMaxBandwidthOut: this.form.internetMaxBandwidthOut,
+        type: this.type,
+        regionId: this.detail.regionId
       };
     },
     // 升级询价

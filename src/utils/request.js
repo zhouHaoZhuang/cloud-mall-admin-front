@@ -32,7 +32,10 @@ request.interceptors.request.use(async (config) => {
     config.baseURL = env.PAY_BASE_URL;
   }
   config.cancelToken = axiosSource.token;
+  // token
   const token = store.state.user.token;
+  // 租户id
+  const tenantId = store.state.user.userInfo.tenantId;
   // 每次请求时需要判断登录状态，未登录直接跳转登录页，并且取消本次请求
   if (config.url !== "/user/loginByUsername") {
     const data = await authenticationClient.checkLoginStatus(token);
@@ -42,15 +45,20 @@ request.interceptors.request.use(async (config) => {
       window.location.replace("/");
     }
   }
+  // 携带token
   if (token) {
     // 让每个请求携带token-- ['token']为自定义key 请根据实际情况自行修改
     config.headers["token"] = token;
+  }
+  // 携带租户id
+  if (tenantId) {
+    config.headers["tenantId"] = tenantId;
   }
   // 携带domain
   config.headers.domain = getDomainUrl();
   // config.headers.domain = 'ydidc.com'
   // 携带system区分不同项目
-  config.headers.system = 'idc'
+  config.headers.system = "idc";
   // 头部携带ip
   const ip = localStorage.getItem("Ip");
   config.headers["ip"] = ip;

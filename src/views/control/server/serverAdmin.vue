@@ -175,7 +175,7 @@
             <a-button
               type="link"
               size="small"
-              @click="handleCloudUpgrade(record)"
+              @click="handleCloudUpgrade(record, '')"
             >
               升级
             </a-button>
@@ -218,6 +218,12 @@
                 </a-menu-item> -->
                 <a-menu-item key="5" @click="handleAutoRenew(record)">
                   自动续费
+                </a-menu-item>
+                <a-menu-item
+                  key="6"
+                  @click="handleCloudUpgrade(record, 'downEcsConfig')"
+                >
+                  降配
                 </a-menu-item>
               </a-menu>
             </a-dropdown>
@@ -725,11 +731,12 @@ export default {
       jumpCloudMall("/pc/cloud-price", true);
     },
     // 跳转升级
-    handleCloudUpgrade(record) {
+    handleCloudUpgrade(record, type) {
       this.$router.push({
         path: "/control/server/upgrade",
         query: {
-          id: record.id
+          id: record.id,
+          type
         }
       });
     }

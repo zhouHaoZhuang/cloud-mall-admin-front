@@ -1,7 +1,7 @@
 <template>
   <div class="number-input-wrap">
     <a-button
-      :disabled="disabled"
+      :disabled="minusDisabled"
       class="left-btn"
       type="link"
       @click="handleReduce"
@@ -20,7 +20,7 @@
       </div>
     </div>
     <a-button
-      :disabled="disabled"
+      :disabled="plusDisabled"
       class="right-btn"
       type="link"
       @click="handleAdd"
@@ -77,6 +77,26 @@ export default {
     return {
       inputValue: 0
     };
+  },
+  computed: {
+    // 减
+    minusDisabled() {
+      if (this.disabled) return true;
+      if (this.value === this.min) {
+        return true;
+      } else {
+        return false;
+      }
+    },
+    // 加
+    plusDisabled() {
+      if (this.disabled) return true;
+      if (this.value === this.max) {
+        return true;
+      } else {
+        return false;
+      }
+    }
   },
   watch: {
     value: {
