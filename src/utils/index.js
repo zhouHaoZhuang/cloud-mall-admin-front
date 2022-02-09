@@ -170,3 +170,29 @@ export const getIdcMallUrl = () => {
   }www.${result}`;
   return newResult;
 };
+
+// 订单详情支付生成支付宝回调地址
+export const getAliPayCallBack = (id) => {
+  if (process.env.VUE_APP_ENV === "dev") {
+    return "";
+  }
+  const url = window.location.href;
+  const index = url.indexOf(".com") !== -1 ? url.indexOf(".com") + 4 : -1;
+  const result =
+    index !== -1
+      ? `${url.substring(0, index)}/#/user/finance/orderDetail?id=${id}`
+      : "";
+  return result;
+};
+
+// 充值页面支付生成支付宝回调地址
+export const getRechargeAliPayCallBack = () => {
+  if (process.env.VUE_APP_ENV === "dev") {
+    return "";
+  }
+  const url = window.location.href;
+  const index = url.indexOf(".com") !== -1 ? url.indexOf(".com") + 4 : -1;
+  const result =
+    index !== -1 ? `${url.substring(0, index)}/#/user/finance/recharge` : "";
+  return result;
+};

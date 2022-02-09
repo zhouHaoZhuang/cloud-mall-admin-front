@@ -186,8 +186,12 @@ export default {
         return [];
       }
       const index = data.findIndex((ele) => ele * 1 === cpuOrMemory);
-      const newData = data.slice(index);
-      return newData;
+      if (index !== -1) {
+        const newData = data.slice(index);
+        return newData;
+      } else {
+        return data;
+      }
     },
     // 获取地域对应的cpu信息
     getCpu() {
@@ -214,7 +218,7 @@ export default {
         })
         .then((res) => {
           const newRes = res.data ? res.data : [];
-          const newData = this.returnCpuOrDiskData(newRes, this.form.memory);
+          const newData = this.returnCpuOrDiskData(newRes, this.detail.memory);
           this.memoryData = [...setCpuOrDiskData(newData, "G")];
           if (isGetRegion) {
             this.form.memory =
