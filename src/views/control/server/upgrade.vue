@@ -311,8 +311,7 @@ export default {
         id: this.$route.query.id,
         instanceType: this.form.instanceType,
         internetMaxBandwidthOut: this.form.internetMaxBandwidthOut,
-        type: this.type,
-        regionId: this.detail.regionId
+        type: this.type
       };
     },
     // 升级询价
