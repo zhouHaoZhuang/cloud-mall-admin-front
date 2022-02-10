@@ -98,7 +98,7 @@
       <a-form-model-item label="到期时间">
         {{ detail.endTimeStr }}
       </a-form-model-item>
-      <a-form-model-item label="升级差价">
+      <a-form-model-item :label="isUpgrade ? '升级差价' : '降配差价'">
         <div class="price">{{ price.tradePrice }}</div>
       </a-form-model-item>
       <a-form-model-item :wrapper-col="{ span: 10, offset: 5 }">
@@ -343,13 +343,18 @@ export default {
       this.$store
         .dispatch("cloud/cloudUpgrade", this.getParams())
         .then((res) => {
-          this.$message.success("提交升级配置订单成功");
-          this.$router.push({
-            path: "/user/finance/orderDetail",
-            query: {
-              id: res.data.orderNo
-            }
-          });
+          if (this.isUpgrade) {
+            this.$message.success("提交升级配置订单成功");
+            this.$router.push({
+              path: "/user/finance/orderDetail",
+              query: {
+                id: res.data.orderNo
+              }
+            });
+          } else {
+            this.$message.success("提交降低配置成功");
+            this.$router.back();
+          }
         })
         .finally(() => {
           this.priceLoading = false;
