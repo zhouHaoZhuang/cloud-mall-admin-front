@@ -33,10 +33,10 @@
 </template>
 
 <script>
-import CodeBtn from "@/components/CodeBtn/index";
+// import CodeBtn from "@/components/CodeBtn/index";
 import { jumpCloudMall } from "@/utils/index";
 export default {
-  components: { CodeBtn },
+  // components: { CodeBtn },
   data() {
     return {
       form: {
