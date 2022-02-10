@@ -89,6 +89,13 @@ const user = {
         data,
       });
     },
+    // 绑定邮箱
+    emailBinding({ commit, state }, email) {
+      return request({
+        url: `/user/bindEmail/${email}`,
+        method: "get",
+      });
+    },
     // 获取用户真实信息
     getUserActualName({ commit, state }, data) {
       return request({

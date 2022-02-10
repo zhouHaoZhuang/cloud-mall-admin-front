@@ -47,7 +47,8 @@
       <span class="settings-info-desc">
         绑定认证后可用于邮箱找回密码、接收订单提醒等，保障您的账户安全。
       </span>
-      <a-button class="settings-change settings-start" @click="emailBinding">立即启用</a-button>
+      <a-button type = 'link' class="settings-change settings-start" v-if="email.length>1">已绑定</a-button>
+      <a-button class="settings-change settings-start" @click="emailBinding" v-else>立即启用</a-button>
     </div>
     <div class="settings-info">
       <img src="@/assets/img/icon-security-undone.png" alt="" />
@@ -75,7 +76,8 @@ export default {
       corporationCode: "",
       realName: "",
       createTime: "",
-      phoneNumber: ""
+      phoneNumber: "",
+      email: ""
     };
   },
   created() {
@@ -90,6 +92,7 @@ export default {
         console.log(res.data);
         this.corporationCode = res.data.corporationCode;
         this.createTime = res.data.createTime;
+        this.email = res.data.email;
         this.phoneNumber =
           res.data.phoneNumber?.slice(0, 3) +
           "****" +
