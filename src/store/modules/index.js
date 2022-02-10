@@ -10,6 +10,7 @@ import inquire from "./inquire";
 import dashboard from "./dashboard";
 import realName from "./realName.js";
 import message from "./message.js";
+import refund from "./refund.js";
 export default {
   setting,
   user,
@@ -22,5 +23,6 @@ export default {
   inquire,
   dashboard,
   realName,
-  message
+  message,
+  refund
 };
