@@ -111,7 +111,7 @@
 </template>
 
 <script>
-import Add from "@/views/management/submit/add.vue";
+import Add from "@/views/user/workOrder/submit/add.vue";
 export default {
   components: { Add },
   data() {
@@ -205,14 +205,14 @@ export default {
 .technique {
   .cont {
     .left {
-      background: url(../../../assets/img/management/management1.png) no-repeat
+      background: url(../../../../assets/img/management/management1.png) no-repeat
         0px 0px;
     }
   }
   .cont:hover {
     border: 1px solid #00aaff;
     .left {
-      background: url(../../../assets/img/management/management1.png) no-repeat -51px
+      background: url(../../../../assets/img/management/management1.png) no-repeat -51px
         0px;
     }
   }
@@ -221,40 +221,40 @@ export default {
 .account {
   .cont:nth-child(1) {
     .left {
-      background: url(../../../assets/img/management/management2.png) no-repeat
+      background: url(../../../../assets/img/management/management2.png) no-repeat
         0px 0px;
     }
   }
   .cont:nth-child(2) {
     .left {
-      background: url(../../../assets/img/management/management3.png) no-repeat
+      background: url(../../../../assets/img/management/management3.png) no-repeat
         0px 0px;
     }
   }
   .cont:nth-child(3) {
     .left {
-      background: url(../../../assets/img/management/management4.png) no-repeat
+      background: url(../../../../assets/img/management/management4.png) no-repeat
         0px 0px;
     }
   }
   .cont:nth-child(1):hover {
     border: 1px solid #00aaff;
     .left {
-      background: url(../../../assets/img/management/management2.png) no-repeat -51px
+      background: url(../../../../assets/img/management/management2.png) no-repeat -51px
         0px;
     }
   }
   .cont:nth-child(2):hover {
     border: 1px solid #00aaff;
     .left {
-      background: url(../../../assets/img/management/management3.png) no-repeat -51px
+      background: url(../../../../assets/img/management/management3.png) no-repeat -51px
         0px;
     }
   }
   .cont:nth-child(3):hover {
     border: 1px solid #00aaff;
     .left {
-      background: url(../../../assets/img/management/management4.png) no-repeat -51px
+      background: url(../../../../assets/img/management/management4.png) no-repeat -51px
         0px;
     }
   }
@@ -263,40 +263,40 @@ export default {
 .other {
   .cont:nth-child(1) {
     .left {
-      background: url(../../../assets/img/management/management5.png) no-repeat
+      background: url(../../../../assets/img/management/management5.png) no-repeat
         0px 0px;
     }
   }
   .cont:nth-child(2) {
     .left {
-      background: url(../../../assets/img/management/management6.png) no-repeat
+      background: url(../../../../assets/img/management/management6.png) no-repeat
         0px 0px;
     }
   }
   .cont:nth-child(3) {
     .left {
-      background: url(../../../assets/img/management/management7.png) no-repeat
+      background: url(../../../../assets/img/management/management7.png) no-repeat
         0px 0px;
     }
   }
   .cont:nth-child(1):hover {
     border: 1px solid #00aaff;
     .left {
-      background: url(../../../assets/img/management/management5.png) no-repeat -51px
+      background: url(../../../../assets/img/management/management5.png) no-repeat -51px
         0px;
     }
   }
   .cont:nth-child(2):hover {
     border: 1px solid #00aaff;
     .left {
-      background: url(../../../assets/img/management/management6.png) no-repeat -51px
+      background: url(../../../../assets/img/management/management6.png) no-repeat -51px
         0px;
     }
   }
   .cont:nth-child(3):hover {
     border: 1px solid #00aaff;
     .left {
-      background: url(../../../assets/img/management/management7.png) no-repeat -51px
+      background: url(../../../../assets/img/management/management7.png) no-repeat -51px
         0px;
     }
   }

@@ -1,5 +1,16 @@
 <template>
-  <div>
-    <h2 class="verified-title">我的工单</h2>
-  </div>
+  <div class="work-my-container"></div>
 </template>
+
+<script>
+export default {
+  data(){
+    return {}
+  }
+};
+</script>
+
+<style lang="less" scoped>
+.work-my-container {
+}
+</style>
