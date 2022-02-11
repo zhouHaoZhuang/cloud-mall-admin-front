@@ -31,13 +31,14 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
 export default {
   data() {
     return {
       labelCol: { span: 2 },
       wrapperCol: { span: 6 },
-      realName: "",
-      corporationCode: "",
+      // realName: "",
+      // corporationCode: "",
       form: {
         name: ""
       },
@@ -46,8 +47,24 @@ export default {
       }
     };
   },
-  created() {
-    this.getUser();
+  computed: {
+    ...mapState({
+      userRealInfo: (state) => state.user.userRealInfo
+    }),
+    realName() {
+      if (this.userRealInfo && this.userRealInfo.realName) {
+        return "*" + this.userRealInfo.realName.slice(1);
+      } else {
+        return "----";
+      }
+    },
+    corporationCode() {
+      if (this.userRealInfo && this.userRealInfo.corporationCode) {
+        return this.userRealInfo.corporationCode;
+      } else {
+        return "";
+      }
+    }
   },
   methods: {
     onSubmit() {
@@ -63,20 +80,6 @@ export default {
     resetForm() {
       this.$refs.ruleForm.resetFields();
     },
-    getUser() {
-      this.$store.dispatch("user/getUserActualName").then((res) => {
-        if (!res.data) {
-          return;
-        }
-        console.log(res.data);
-        this.corporationCode = res.data.corporationCode;
-        if (res.data.realName) {
-          this.realName = "*" + res.data.realName.slice(1);
-        } else {
-          this.realName = "-----";
-        }
-      });
-    }
   }
 };
 </script>

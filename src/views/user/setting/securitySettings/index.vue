@@ -47,8 +47,18 @@
       <span class="settings-info-desc">
         绑定认证后可用于邮箱找回密码、接收订单提醒等，保障您的账户安全。
       </span>
-      <a-button type = 'link' class="settings-change settings-start" v-if="email.length>1">已绑定</a-button>
-      <a-button class="settings-change settings-start" @click="emailBinding" v-else>立即启用</a-button>
+      <a-button
+        type="link"
+        class="settings-change settings-start"
+        v-if="email.length > 1"
+        >已绑定</a-button
+      >
+      <a-button
+        class="settings-change settings-start"
+        @click="emailBinding"
+        v-else
+        >立即启用</a-button
+      >
     </div>
     <div class="settings-info">
       <img src="@/assets/img/icon-security-undone.png" alt="" />
@@ -70,40 +80,54 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
+
 export default {
-  data() {
-    return {
-      corporationCode: "",
-      realName: "",
-      createTime: "",
-      phoneNumber: "",
-      email: ""
-    };
-  },
-  created() {
-    this.getUser();
+  computed: {
+    ...mapState({
+      userRealInfo: (state) => state.user.userRealInfo
+    }),
+    realName() {
+      if (this.userRealInfo && this.userRealInfo.realName) {
+        return "*" + this.userRealInfo.realName.slice(1);
+      } else {
+        return "----";
+      }
+    },
+    phoneNumber() {
+      if (this.userRealInfo && this.userRealInfo.phoneNumber) {
+        return (
+          this.userRealInfo.phoneNumber?.slice(0, 3) +
+          "****" +
+          this.userRealInfo.phoneNumber?.slice(8, 11)
+        );
+      } else {
+        return "未绑定";
+      }
+    },
+    email() {
+      if (this.userRealInfo && this.userRealInfo.email) {
+        return this.userRealInfo.email;
+      }else{
+        return "";
+      }
+    },
+    createTime() {
+      if (this.userRealInfo && this.userRealInfo.createTime) {
+        return this.userRealInfo.createTime;
+      } else {
+        return "";
+      }
+    },
+    corporationCode() {
+      if (this.userRealInfo && this.userRealInfo.corporationCode) {
+        return this.userRealInfo.corporationCode;
+      } else {
+        return "";
+      }
+    }
   },
   methods: {
-    getUser() {
-      this.$store.dispatch("user/getUserActualName").then((res) => {
-        if (!res.data) {
-          return;
-        }
-        console.log(res.data);
-        this.corporationCode = res.data.corporationCode;
-        this.createTime = res.data.createTime;
-        this.email = res.data.email;
-        this.phoneNumber =
-          res.data.phoneNumber?.slice(0, 3) +
-          "****" +
-          res.data.phoneNumber?.slice(8, 11);
-        if (res.data.realName) {
-          this.realName = "*" + res.data.realName.slice(1);
-        } else {
-          this.realName = "-----";
-        }
-      });
-    },
     realNameClick() {
       // console.log('实名认证');
       this.$router.push("/user/setting/realName");
@@ -115,7 +139,7 @@ export default {
         query: {
           corporationCode: this.corporationCode
         }
-      })
+      });
     }
   }
 };
