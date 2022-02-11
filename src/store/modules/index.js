@@ -11,6 +11,7 @@ import dashboard from "./dashboard";
 import realName from "./realName.js";
 import message from "./message.js";
 import refund from "./refund.js";
+import workorder from "./workorder.js";
 export default {
   setting,
   user,
@@ -24,5 +25,6 @@ export default {
   dashboard,
   realName,
   message,
-  refund
+  refund,
+  workorder
 };

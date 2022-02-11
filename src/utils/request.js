@@ -31,6 +31,10 @@ request.interceptors.request.use(async (config) => {
   if (config.pay) {
     config.baseURL = env.PAY_BASE_URL;
   }
+  // form，新的服务接口请求地址
+  if (config.formService) {
+    config.baseURL = env.FORM_BASE_URL;
+  }
   config.cancelToken = axiosSource.token;
   // token
   const token = store.state.user.token;

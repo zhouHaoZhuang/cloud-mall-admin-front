@@ -12,6 +12,12 @@ const payBaseUrl = {
   test: "http://pay.test.ydidc.com",
   prod: "http://pay.prod.ydidc.com"
 };
+// form服务接口请求地址
+const formBaseUrl = {
+  dev: "http://form.dev.ydidc.com",
+  test: "http://form.test.ydidc.com",
+  prod: "http://form.prod.ydidc.com"
+};
 // 跳转云商城地址
 const cloudMallUrl = {
   dev: "http://192.168.12.30:3000"
@@ -48,6 +54,7 @@ const authingReq = {
 export default {
   BASE_URL: baseUrl[process.env.VUE_APP_ENV],
   PAY_BASE_URL: payBaseUrl[process.env.VUE_APP_ENV],
+  FORM_BASE_URL: formBaseUrl[process.env.VUE_APP_ENV],
   MALL_URL: getCloudMallUrl(),
   DOMAIN_URL: domains[process.env.VUE_APP_ENV],
   ...authingReq[process.env.VUE_APP_ENV]

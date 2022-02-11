@@ -124,8 +124,15 @@ export const rechargeTypeMap = {
 
 // 充值状态map数据
 export const detailTypeMapData = {
-  "0": "待支付",
-  "1": "已取消",
-  "2": "支付失败",
-  "9": "支付完成"
+  0: "待支付",
+  1: "已取消",
+  2: "支付失败",
+  9: "支付完成"
+};
+
+// 工单状态
+export const workOrderStatusEnum = {
+  1: "待接单",
+  2: "接单处理中",
+  3: "处理完成"
 };

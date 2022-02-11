@@ -24,7 +24,7 @@ Vue.use(Antd);
 Vue.prototype.$message = message;
 // 全局字体图标组件---使用iconfont图标
 const IconFont = Icon.createFromIconfontCN({
-  scriptUrl: "//at.alicdn.com/t/font_3142322_4aszqbr5hjy.js"
+  scriptUrl: "//at.alicdn.com/t/font_3142322_qmq2qa72k2.js"
 });
 Vue.component("Iconfont", IconFont);
 
