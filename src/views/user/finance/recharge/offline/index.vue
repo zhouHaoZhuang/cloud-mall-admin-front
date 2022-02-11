@@ -11,8 +11,8 @@
       <a-steps :current="current" direction="vertical" disabled>
         <a-step disabled>
           <div slot="title" class="stepInfo">
-            <p>汇款至浙江云盾银行账户</p>
-            <p>线下汇款直接向浙江云盾的账户汇款，汇款账号如下：</p>
+            <p>汇款至{{companyName}}银行账户</p>
+            <p>线下汇款直接向{{companyName}}的账户汇款，汇款账号如下：</p>
           </div>
           <div slot="description">
             <div>
@@ -208,12 +208,14 @@ export default {
             trigger: "blur"
           }
         ]
-      }
+      },
+      companyName: "",
     };
   },
   props: ["change"],
   created() {
     this.getInfo();
+    this.getCompanyInfo()
   },
   methods: {
     imgChange({ urlList, firstImageUrl }) {
@@ -224,6 +226,13 @@ export default {
       this.$store.dispatch("offline/getInfo").then((res) => {
         this.data = [res.data];
         console.log(res);
+      });
+    },
+    // 获取公司信息
+    getCompanyInfo() {
+      this.$store.dispatch("user/getCompanyInfo").then((res) => {
+        console.log(res.data.companyName);
+        this.companyName = res.data.companyName;
       });
     },
     putOffline() {

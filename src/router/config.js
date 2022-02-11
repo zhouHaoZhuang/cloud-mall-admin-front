@@ -151,7 +151,27 @@ const options = [
                 meta: {
                   hiddenMenu: true // 不显示在左侧菜单
                 }
-              }
+              },
+              {
+                path: "refund",
+                name: "退款管理",
+                component: RouteView,
+                meta: {},
+                children: [
+                  {
+                    path: "apply",
+                    name: "退款申请",
+                    component: () => import("@/views/user/finance/refund/apply"),
+                    meta: {}
+                  },
+                  {
+                    path: "record",
+                    name: "退订记录",
+                    component: () => import("@/views/user/finance/refund/record"),
+                    meta: {}
+                  },
+                ]
+              },
             ]
           },
           {
@@ -191,6 +211,17 @@ const options = [
                 component: () =>
                   import(
                     "@/views/user/setting/securitySettings/changePassword.vue"
+                  ),
+                meta: {
+                  hiddenMenu: true // 不显示在左侧菜单
+                }
+              },
+              {
+                path: "emailBinding",
+                name: "邮箱绑定",
+                component: () =>
+                  import(
+                    "@/views/user/setting/securitySettings/emailBinding.vue"
                   ),
                 meta: {
                   hiddenMenu: true // 不显示在左侧菜单

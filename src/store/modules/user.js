@@ -7,7 +7,7 @@ const user = {
   state: {
     token: "",
     userInfo: {},
-    perms: []
+    perms: [],
   },
 
   mutations: {
@@ -19,7 +19,7 @@ const user = {
     },
     SET_PERMS: (state, perms) => {
       state.perms = [...perms];
-    }
+    },
   },
 
   actions: {
@@ -29,7 +29,7 @@ const user = {
         request({
           url: "/user/loginByUsername",
           method: "post",
-          data
+          data,
         })
           .then((res) => {
             const token = res.data.token;
@@ -47,7 +47,7 @@ const user = {
       return new Promise((resolve, reject) => {
         request({
           url: `/user/listAuthorizedResources`,
-          method: "get"
+          method: "get",
         })
           .then((res) => {
             commit("SET_PERMS", res.data.list);
@@ -78,7 +78,7 @@ const user = {
       return request({
         url: "/sms/sendSms",
         method: "post",
-        data
+        data,
       });
     },
     // 修改密码
@@ -86,7 +86,14 @@ const user = {
       return request({
         url: "/user/updatePassword",
         method: "post",
-        data
+        data,
+      });
+    },
+    // 绑定邮箱
+    emailBinding({ commit, state }, email) {
+      return request({
+        url: `/user/bindEmail/${email}`,
+        method: "get",
       });
     },
     // 获取用户真实信息
@@ -94,7 +101,15 @@ const user = {
       return request({
         url: "/ccCorporation/getByToken",
         method: "get",
-        data
+        data,
+      });
+    },
+    // 获取公司信息
+    getCompanyInfo({ commit, state }, data) {
+      return request({
+        url: "/ccCompanyInfo/getOne",
+        method: "get",
+        data,
       });
     },
     // 获取用户信息
@@ -102,17 +117,17 @@ const user = {
       const authenticationClient = new AuthenticationClient({
         appId: env.appId,
         appHost: env.appHost,
-        token: state.token
+        token: state.token,
       });
       authenticationClient.getCurrentUser().then((user) => {
         // console.log("查看信息", user);
         commit("SET_USERINFO", {
-          ...user
+          ...user,
           // username: user.username.substring(0, 11)
         });
       });
-    }
-  }
+    },
+  },
 };
 
 export default user;
