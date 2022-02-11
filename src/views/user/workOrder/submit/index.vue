@@ -12,22 +12,22 @@
           fontSize: '16px',
           border: '1px solid #ddd'
         }"
-        v-if="choose === 4"
-        @click="choose = 1"
+        v-show="choose === '4'"
+        @click="choose = '1'"
       />
       <span class="back">提交工单</span>
     </h2>
     <div class="verified-top-nav">
       <div
         class="step-cont"
-        :class="{ chooseClick: choose == 1, choosedClick: choose == 4 }"
+        :class="{ chooseClick: choose == '1', choosedClick: choose == '4' }"
       >
         ①选择问题所属产品
         <span class="step-arrow-right"></span>
       </div>
       <div
         class="step-cont"
-        :class="{ chooseClick: choose == 2, choosedClick: choose == 4 }"
+        :class="{ chooseClick: choose == '2', choosedClick: choose == '4' }"
       >
         <span class="step-arrow-left"></span>
         ②选择问题类别
@@ -35,21 +35,21 @@
       </div>
       <div
         class="step-cont"
-        :class="{ chooseClick: choose == 3, choosedClick: choose == 4 }"
+        :class="{ chooseClick: choose == '3', choosedClick: choose == '4' }"
       >
         <span class="step-arrow-left"></span>
         ③选择解决方案
         <span class="step-arrow-right"></span>
       </div>
-      <div class="step-cont" :class="{ chooseClick: choose == 4 }">
+      <div class="step-cont" :class="{ chooseClick: choose == '4' }">
         <span class="step-arrow-left"></span>
         ④创建工单
       </div>
     </div>
-    <div v-if="choose === 1">
+    <div v-show="choose === '1'">
       <p class="basic-information">技术类问题</p>
       <div class="technique">
-        <div class="cont" @click="addWorkorder(1)">
+        <div class="cont" @click="addWorkorder('1')">
           <div class="left"></div>
           <div class="right">
             <p class="title">服务器类问题</p>
@@ -59,21 +59,21 @@
       </div>
       <p class="basic-information">账户和财务类</p>
       <div class="account">
-        <div class="cont" @click="addWorkorder(2)">
+        <div class="cont" @click="addWorkorder('2')">
           <div class="left"></div>
           <div class="right">
             <p class="title">财务类问题</p>
             <p class="text">订单、发票、支付、提现、退款、现金券等相关问题</p>
           </div>
         </div>
-        <div class="cont" @click="addWorkorder(3)">
+        <div class="cont" @click="addWorkorder('3')">
           <div class="left"></div>
           <div class="right">
             <p class="title">合同类问题</p>
             <p class="text">合同申请、合同作废、合同信息修改等相关问题</p>
           </div>
         </div>
-        <div class="cont" @click="addWorkorder(4)">
+        <div class="cont" @click="addWorkorder('4')">
           <div class="left"></div>
           <div class="right">
             <p class="title">会员账号问题</p>
@@ -83,21 +83,21 @@
       </div>
       <p class="basic-information">其他咨询类</p>
       <div class="other">
-        <div class="cont" @click="addWorkorder(5)">
+        <div class="cont" @click="addWorkorder('5')">
           <div class="left"></div>
           <div class="right">
             <p class="title">售前类问题</p>
             <p class="text">产品购买咨询、售前询价等相关问题</p>
           </div>
         </div>
-        <div class="cont" @click="addWorkorder(6)">
+        <div class="cont" @click="addWorkorder('6')">
           <div class="left"></div>
           <div class="right">
             <p class="title">备案类问题</p>
             <p class="text">备案咨询、白名单等相关问题</p>
           </div>
         </div>
-        <div class="cont" @click="addWorkorder(7)">
+        <div class="cont" @click="addWorkorder('7')">
           <div class="left"></div>
           <div class="right">
             <p class="title">商标类问题</p>
@@ -106,7 +106,7 @@
         </div>
       </div>
     </div>
-    <Add :classId="classId" v-if="choose === 4" />
+    <Add :classId="classId" :choose="choose" v-if="choose === '4'" />
   </div>
 </template>
 
@@ -116,13 +116,13 @@ export default {
   components: { Add },
   data() {
     return {
-      choose: 1,
-      classId: 1
+      choose: "1",
+      classId: "1"
     };
   },
   methods: {
     addWorkorder(id) {
-      this.choose = 4;
+      this.choose = "4";
       this.classId = id;
     }
   }
@@ -205,15 +205,15 @@ export default {
 .technique {
   .cont {
     .left {
-      background: url(../../../../assets/img/management/management1.png) no-repeat
-        0px 0px;
+      background: url(../../../../assets/img/management/management1.png)
+        no-repeat 0px 0px;
     }
   }
   .cont:hover {
     border: 1px solid #00aaff;
     .left {
-      background: url(../../../../assets/img/management/management1.png) no-repeat -51px
-        0px;
+      background: url(../../../../assets/img/management/management1.png)
+        no-repeat -51px 0px;
     }
   }
 }
@@ -221,41 +221,41 @@ export default {
 .account {
   .cont:nth-child(1) {
     .left {
-      background: url(../../../../assets/img/management/management2.png) no-repeat
-        0px 0px;
+      background: url(../../../../assets/img/management/management2.png)
+        no-repeat 0px 0px;
     }
   }
   .cont:nth-child(2) {
     .left {
-      background: url(../../../../assets/img/management/management3.png) no-repeat
-        0px 0px;
+      background: url(../../../../assets/img/management/management3.png)
+        no-repeat 0px 0px;
     }
   }
   .cont:nth-child(3) {
     .left {
-      background: url(../../../../assets/img/management/management4.png) no-repeat
-        0px 0px;
+      background: url(../../../../assets/img/management/management4.png)
+        no-repeat 0px 0px;
     }
   }
   .cont:nth-child(1):hover {
     border: 1px solid #00aaff;
     .left {
-      background: url(../../../../assets/img/management/management2.png) no-repeat -51px
-        0px;
+      background: url(../../../../assets/img/management/management2.png)
+        no-repeat -51px 0px;
     }
   }
   .cont:nth-child(2):hover {
     border: 1px solid #00aaff;
     .left {
-      background: url(../../../../assets/img/management/management3.png) no-repeat -51px
-        0px;
+      background: url(../../../../assets/img/management/management3.png)
+        no-repeat -51px 0px;
     }
   }
   .cont:nth-child(3):hover {
     border: 1px solid #00aaff;
     .left {
-      background: url(../../../../assets/img/management/management4.png) no-repeat -51px
-        0px;
+      background: url(../../../../assets/img/management/management4.png)
+        no-repeat -51px 0px;
     }
   }
 }
@@ -263,41 +263,41 @@ export default {
 .other {
   .cont:nth-child(1) {
     .left {
-      background: url(../../../../assets/img/management/management5.png) no-repeat
-        0px 0px;
+      background: url(../../../../assets/img/management/management5.png)
+        no-repeat 0px 0px;
     }
   }
   .cont:nth-child(2) {
     .left {
-      background: url(../../../../assets/img/management/management6.png) no-repeat
-        0px 0px;
+      background: url(../../../../assets/img/management/management6.png)
+        no-repeat 0px 0px;
     }
   }
   .cont:nth-child(3) {
     .left {
-      background: url(../../../../assets/img/management/management7.png) no-repeat
-        0px 0px;
+      background: url(../../../../assets/img/management/management7.png)
+        no-repeat 0px 0px;
     }
   }
   .cont:nth-child(1):hover {
     border: 1px solid #00aaff;
     .left {
-      background: url(../../../../assets/img/management/management5.png) no-repeat -51px
-        0px;
+      background: url(../../../../assets/img/management/management5.png)
+        no-repeat -51px 0px;
     }
   }
   .cont:nth-child(2):hover {
     border: 1px solid #00aaff;
     .left {
-      background: url(../../../../assets/img/management/management6.png) no-repeat -51px
-        0px;
+      background: url(../../../../assets/img/management/management6.png)
+        no-repeat -51px 0px;
     }
   }
   .cont:nth-child(3):hover {
     border: 1px solid #00aaff;
     .left {
-      background: url(../../../../assets/img/management/management7.png) no-repeat -51px
-        0px;
+      background: url(../../../../assets/img/management/management7.png)
+        no-repeat -51px 0px;
     }
   }
 }
