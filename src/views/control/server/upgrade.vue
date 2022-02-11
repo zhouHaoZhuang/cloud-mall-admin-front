@@ -16,7 +16,7 @@
     </a-tabs>
     <a-form-model :model="form" :label-col="labelCol" :wrapper-col="wrapperCol">
       <a-form-model-item label="IP地址"> {{ detail.outIp }} </a-form-model-item>
-      <a-form-model-item v-if="tabKey === '1'" label="CPU">
+      <a-form-model-item class="cpu-wrap" v-if="tabKey === '1'" label="CPU">
         <a-select
           style="width: 160px"
           v-model="form.cpu"
@@ -32,7 +32,7 @@
           </a-select-option>
         </a-select>
       </a-form-model-item>
-      <a-form-model-item v-if="tabKey === '1'" label="内存">
+      <a-form-model-item class="memory-wrap" v-if="tabKey === '1'" label="内存">
         <a-select
           style="width: 160px"
           v-model="form.memory"
