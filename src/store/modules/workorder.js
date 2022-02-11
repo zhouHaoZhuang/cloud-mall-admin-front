@@ -25,6 +25,14 @@ const workorder = {
         params,
         formService: true
       });
+    },
+    // 关闭工单
+    closeWorkOrder({ commit, state }, params) {
+      return request({
+        url: `/workOrder/close/${params.wordOrderNo}`,
+        method: "get",
+        formService: true
+      });
     }
     // 我的工单-----end
   }

@@ -80,7 +80,6 @@
         <div slot="action" slot-scope="text, record">
           <a-button
             type="link"
-            size="small"
             @click="handleSelectWorkOrder(record)"
           >
             查看
@@ -157,13 +156,11 @@ export default {
         onChange: this.quickJump,
         onShowSizeChange: this.onShowSizeChange
       },
-      tableLoading: false,
-      time: null
+      tableLoading: false
     };
   },
   created() {
     this.getList();
-    // this.startTime();
   },
   activated() {
     this.getList();
@@ -208,18 +205,11 @@ export default {
     // 查看工单详情
     handleSelectWorkOrder(record) {
       this.$router.push({
-        path: "/user/workOrder/submit",
+        path: "/user/workOrder/detail",
         query: {
           workOrderNo: record.workOrderNo
         }
       });
-    },
-    // 定时轮询
-    startTime() {
-      this.time && clearInterval(this.time);
-      this.time = setInterval(() => {
-        this.getList();
-      }, 180000);
     }
   }
 };

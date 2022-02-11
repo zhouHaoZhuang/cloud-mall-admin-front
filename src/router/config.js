@@ -298,6 +298,14 @@ const options = [
                 name: "我的工单",
                 component: () => import("@/views/user/workOrder/my/index.vue"),
                 meta: {}
+              },
+              {
+                path: "detail",
+                name: "工单详情",
+                component: () => import("@/views/user/workOrder/my/detail.vue"),
+                meta: {
+                  hiddenMenu: true
+                }
               }
             ]
           }
