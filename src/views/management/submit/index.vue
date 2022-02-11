@@ -112,9 +112,8 @@
 
 <script>
 import Add from "@/views/management/submit/add.vue";
-import DetailHeader from "@/components/Common/detailHeader.vue";
 export default {
-  components: { Add, DetailHeader },
+  components: { Add },
   data() {
     return {
       choose: 1,

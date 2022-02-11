@@ -9,24 +9,22 @@
     <a-form-model-item label="问题类别" prop="region">
       <a-select v-model="form.region">
         <a-select-option
-          v-for="(obj, ind) in question"
-          :key="ind"
+          v-for="(obj, index) in question"
+          :key="index"
           :value="obj.value"
         >
           {{ obj.title }}
         </a-select-option>
       </a-select>
     </a-form-model-item>
-    
+    <a-form-model-item v-if="classId === 1" label=" 产品类别类型" prop="resource">
+      <a-radio-group v-model="form.resource">
+        <a-radio value="1"> Sponsor </a-radio>
+        <a-radio value="2"> Venue </a-radio>
+      </a-radio-group>
+    </a-form-model-item>
     <a-form-model-item ref="name" label="问题标题" prop="name">
-      <a-input
-        v-model="form.name"
-        @blur="
-          () => {
-            $refs.name.onFieldBlur();
-          }
-        "
-      />
+      <a-input v-model="form.name" />
     </a-form-model-item>
     <a-form-model-item label="问题描述" prop="desc">
       <a-input v-model="form.desc" type="textarea" />
@@ -56,6 +54,7 @@ export default {
       other: "",
       form: {
         name: "",
+        resource: "",
         region: this.classId,
         desc: ""
       },
@@ -74,6 +73,13 @@ export default {
             trigger: "change"
           }
         ],
+        resource: [
+          {
+            required: true,
+            message: "该项不能为空",
+            trigger: "change"
+          }
+        ],
         desc: [
           {
             required: true,
@@ -84,6 +90,7 @@ export default {
       }
     };
   },
+
   methods: {
     onSubmit() {
       this.$refs.ruleForm.validate((valid) => {
