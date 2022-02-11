@@ -161,17 +161,19 @@ const options = [
                   {
                     path: "apply",
                     name: "退款申请",
-                    component: () => import("@/views/user/finance/refund/apply"),
+                    component: () =>
+                      import("@/views/user/finance/refund/apply"),
                     meta: {}
                   },
                   {
                     path: "record",
                     name: "退订记录",
-                    component: () => import("@/views/user/finance/refund/record"),
+                    component: () =>
+                      import("@/views/user/finance/refund/record"),
                     meta: {}
-                  },
+                  }
                 ]
-              },
+              }
             ]
           },
           {
@@ -277,7 +279,7 @@ const options = [
             ]
           },
           {
-            path: "management",
+            path: "workOrder",
             name: "工单管理",
             component: RouteView,
             meta: {
@@ -287,14 +289,14 @@ const options = [
               {
                 path: "submit",
                 name: "提交工单",
-                component: () => import("@/views/management/submit/index.vue"),
+                component: () =>
+                  import("@/views/user/workOrder/submit/index.vue"),
                 meta: {}
               },
               {
-                path: "mymanagement",
+                path: "my",
                 name: "我的工单",
-                component: () =>
-                  import("@/views/management/mymanagement/index.vue"),
+                component: () => import("@/views/user/workOrder/my/index.vue"),
                 meta: {}
               }
             ]
