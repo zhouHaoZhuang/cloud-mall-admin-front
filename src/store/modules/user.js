@@ -140,6 +140,7 @@ const user = {
           ...user
           // username: user.username.substring(0, 11)
         });
+        commit("SET_PERMS", ["*"]);
       });
     }
   }

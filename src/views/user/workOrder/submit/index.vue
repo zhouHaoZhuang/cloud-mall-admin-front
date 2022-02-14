@@ -79,7 +79,12 @@
         </div>
       </div>
     </div>
-    <Add :classId="classId" :choose="choose" v-if="choose === '4'" />
+    <Add
+      :classId="classId"
+      :choose="choose"
+      v-if="choose === '4'"
+      @success="addWorkorderCallBack"
+    />
   </div>
 </template>
 
@@ -98,6 +103,10 @@ export default {
     addWorkorder(id) {
       this.choose = "4";
       this.classId = id;
+    },
+    // 提交工单成功回调
+    addWorkorderCallBack() {
+      this.choose = '1';
     }
   }
 };

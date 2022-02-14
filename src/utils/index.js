@@ -50,7 +50,7 @@ export const getList = (request, listQuery) => {
     store
       .dispatch(
         request,
-        listQuery.key
+        listQuery.key && listQuery.search
           ? {
               ...listQuery,
               [`${listQuery.key}`]: listQuery.search

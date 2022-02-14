@@ -34,10 +34,10 @@ export default {
     Upload
   },
   props: {
-    // 进度
-    step: {
-      type: Number,
-      default: 1
+    // 工单详情
+    detail: {
+      type: Object,
+      default: () => {}
     }
   },
   data() {

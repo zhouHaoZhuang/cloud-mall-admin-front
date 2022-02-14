@@ -78,10 +78,7 @@
         </div>
         <!-- 操作 -->
         <div slot="action" slot-scope="text, record">
-          <a-button
-            type="link"
-            @click="handleSelectWorkOrder(record)"
-          >
+          <a-button type="link" @click="handleSelectWorkOrder(record)">
             查看
           </a-button>
         </div>
@@ -104,7 +101,7 @@ export default {
         pageSize: 10,
         total: 0
       },
-      data: [{}],
+      data: [],
       columns: [
         {
           title: "工单编号",
@@ -166,11 +163,9 @@ export default {
     // 获取我的工单列表
     getList() {
       this.tableLoading = true;
-      this.$store
-        .dispatch("workorder/workOrderList", {
-          ...this.listQuery,
-          [this.listQuery.key]: this.listQuery.search
-        })
+      this.$getList("workorder/workOrderList", {
+        ...this.listQuery
+      })
         .then((res) => {
           this.data = res.data.list;
           this.paginationProps.total = res.data.totalCount * 1;

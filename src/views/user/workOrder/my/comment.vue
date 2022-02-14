@@ -32,7 +32,11 @@
         />
       </a-form-model-item>
       <a-form-model-item :wrapper-col="{ span: 14, offset: 3 }">
-        <a-button type="primary" @click="handleSubmitComment">
+        <a-button
+          type="primary"
+          :loading="loading"
+          @click="handleSubmitComment"
+        >
           提交评价
         </a-button>
       </a-form-model-item>
@@ -116,7 +120,8 @@ export default {
             trigger: ["change", "blur"]
           }
         ]
-      }
+      },
+      loading: false
     };
   },
   methods: {
@@ -124,12 +129,16 @@ export default {
     handleSubmitComment() {
       this.$refs.ruleForm.validate((valid) => {
         if (valid) {
+          this.loading = true;
           this.$store
             .dispatch("workorder/commentWorkOrder", {
               queryType: 1,
               wordOrderNo: this.$route.query.wordOrderNo
             })
-            .then((res) => {});
+            .then((res) => {})
+            .finally(() => {
+              this.loading = false;
+            });
         }
       });
     },

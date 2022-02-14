@@ -5,11 +5,11 @@
     <!-- 步骤组件 -->
     <Step :step="step" type="myDetail" />
     <!-- 头部信息 -->
-    <Detail />
+    <Detail :detail="detail" />
     <!-- 沟通记录 -->
-    <Record />
+    <Record :detail="detail" />
     <!-- 发表回复 -->
-    <Reply />
+    <Reply :detail="detail" />
   </div>
 </template>
 
@@ -30,7 +30,8 @@ export default {
   data() {
     return {
       time: null,
-      step: 1
+      step: 1,
+      detail: {}
     };
   },
   created() {

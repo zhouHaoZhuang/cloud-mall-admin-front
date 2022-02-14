@@ -2,27 +2,33 @@
   <div class="work-top-container">
     <div class="item">
       <div class="label">问题标题：</div>
-      <div class="value"></div>
+      <div class="value">
+        {{detail.title}}
+      </div>
     </div>
     <div class="item">
       <div class="label">工单编号：</div>
-      <div class="value"></div>
+      <div class="value">
+         {{detail.workOrderNo}}
+      </div>
     </div>
     <div class="item">
       <div class="label">提交时间：</div>
-      <div class="value"></div>
+      <div class="value">
+         {{detail.createTime}}
+      </div>
     </div>
     <div class="item">
       <div class="label">工单状态：</div>
       <div class="value">
         <!-- 待接单 -->
-        <div class="wait status">{{ workOrderStatusEnum[text] }}</div>
+        <div class="wait status">{{ workOrderStatusEnum[detail.status] }}</div>
         <!-- 处理中 -->
         <div class="center status">
-          {{ workOrderStatusEnum[text] }}
+          {{ workOrderStatusEnum[detail.status] }}
         </div>
         <!-- 处理完成 -->
-        <div class="ok status">{{ workOrderStatusEnum[text] }}</div>
+        <div class="ok status">{{ workOrderStatusEnum[detail.status] }}</div>
       </div>
     </div>
     <!-- 按钮盒子 -->

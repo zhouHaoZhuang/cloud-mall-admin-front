@@ -53,8 +53,8 @@ const permsGuard = (to, from, next, options) => {
   const { store, message } = options;
   // const perms = store.state.user.perms;
   // 如果没有用户信息，需要查询用户信息
-  const userInfo = store.state.user.userInfo;
-  if (!loginIgnore.includes(to) && JSON.stringify(userInfo) === "{}") {
+  const perms = store.state.user.perms;
+  if (!loginIgnore.includes(to) && perms.length === 0) {
     // 获取用户信息
     store.dispatch("user/getUserInfo");
     // 获取用户实名相关信息

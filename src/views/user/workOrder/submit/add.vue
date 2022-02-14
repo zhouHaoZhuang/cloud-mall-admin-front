@@ -82,12 +82,13 @@
       <a-form-model-item label="附件上传">
         <Upload
           :defaultFile="form.url"
+          :limit="5"
           replaceUrl="formService"
           @change="imgChange"
         />
       </a-form-model-item>
       <a-form-model-item :wrapper-col="{ span: 10, offset: 4 }">
-        <a-button type="primary" @click="onSubmit">
+        <a-button type="primary" :loading="loading" @click="onSubmit">
           确认工单信息，提交
         </a-button>
       </a-form-model-item>
@@ -195,7 +196,8 @@ export default {
             trigger: ["change", "blur"]
           }
         ]
-      }
+      },
+      loading: false
     };
   },
   computed: {
@@ -221,19 +223,37 @@ export default {
     }
   },
   methods: {
+    // 获取问题类别
+    getProblemTypeList() {
+      this.$store.dispatch("workorder/problemTypeList", {}).then((res) => {});
+    },
+    // 获取产品类别类型
+    getProductTypeList() {
+      this.$store.dispatch("workorder/productTypeList", {}).then((res) => {});
+    },
+    // 获取对应产品类别类型的数据
+    getProductTypeIp() {
+      this.$store.dispatch("workorder/productTypeIp", {}).then((res) => {});
+    },
     // 提交
     onSubmit() {
       this.$refs.ruleForm.validate((valid) => {
         if (valid) {
+          this.loading = true;
           const data = {
             ...this.form,
             submitCode: this.userRealInfo.corporationCode,
-            submitName: this.userRealInfo.corporationName
+            submitName: this.userRealInfo.corporationName,
+            url: this.form.url.toString()
           };
           this.$store
             .dispatch("workorder/submitWorkOrder", data)
             .then((res) => {
-              console.log(res.data);
+              this.$message.success("提交工单成功");
+              this.$emit("success");
+            })
+            .finally(() => {
+              this.loading = false;
             });
         }
       });
