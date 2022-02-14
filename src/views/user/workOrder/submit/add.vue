@@ -100,8 +100,8 @@ import Upload from "@/components/Upload/index.vue";
 import { mapState } from "vuex";
 export default {
   props: {
-    classId: { type: String, default: 0 },
-    choose: { type: String, default: 0 }
+    classId: { type: Number, default: 0 },
+    choose: { type: Number, default: 0 }
   },
   components: {
     Upload
