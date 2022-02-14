@@ -29,41 +29,30 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
-import { jumpCloudMall } from '@/utils/index';
+import { mapState } from "vuex";
+import { jumpCloudMall } from "@/utils/index";
 export default {
   computed: {
     ...mapState({
       menuOpen: (state) => state.setting.menuOpen,
+      userRealInfo: (state) => state.user.userRealInfo
     }),
-  },
-  data() {
-    return {
-      realName: '',
-    };
-  },
-  created() {
-    this.getUser();
+    realName() {
+      if (this.userRealInfo && this.userRealInfo.realName) {
+        return "*" + this.userRealInfo.realName.slice(1);
+      } else {
+        return "未实名认证";
+      }
+    }
   },
   methods: {
-    getUser() {
-      this.$store.dispatch('user/getUserActualName').then((res) => {
-        // console.log(val.data.realName)
-        if (res.data && res.data.realName) {
-          this.realName = '*' + res.data.realName.slice(1);
-        } else {
-          this.realName = '未实名认证';
-        }
-        // console.log(this.realName);
-      });
-    },
     // 退出
     handleLoginOut() {
-      this.$store.dispatch('user/logout').then((res) => {
-        jumpCloudMall('/login-pc?out=1');
+      this.$store.dispatch("user/logout").then((res) => {
+        jumpCloudMall("/login-pc?out=1");
       });
-    },
-  },
+    }
+  }
 };
 </script>
 

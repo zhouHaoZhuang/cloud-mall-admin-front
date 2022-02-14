@@ -141,6 +141,14 @@ const user = {
           // username: user.username.substring(0, 11)
         });
       });
+    },
+    // 提交表单
+    submitForm({ commit, state }, data) {
+      return request({
+        url: "/workOrder",
+        method: "post",
+        data
+      });
     }
   }
 };
