@@ -6,7 +6,7 @@
         <a-avatar
           shape="square"
           :src="img.url"
-          style="width:100%;height:100%"
+          style="width: 100%; height: 100%"
         />
         <div class="imgMask">
           <a-icon
@@ -25,7 +25,7 @@
       :accept="accept"
       :limit="limit"
       :multiple="multiple"
-      :headers="headers"
+      :headers="{ ...headers, system: headerSystem }"
       :action="uploadUrl"
       list-type="picture-card"
       :file-list="fileList"
@@ -35,9 +35,7 @@
     >
       <div v-if="fileList.length < limit">
         <a-icon type="plus" />
-        <div class="ant-upload-text">
-          上传图片
-        </div>
+        <div class="ant-upload-text">上传图片</div>
       </div>
     </a-upload>
     <!-- 预览图片弹窗 -->
@@ -76,6 +74,11 @@ export default {
     accept: {
       type: String,
       default: "image/jpeg,image/png"
+    },
+    // 兼容多个图片上传地址
+    replaceUrl: {
+      type: String,
+      default: "default"
     }
   },
   data() {
@@ -83,7 +86,7 @@ export default {
       // 请求头
       headers: {
         domain: getDomainUrl(),
-        system: "idc"
+        system: ""
       },
       previewVisible: false,
       previewImage: "",
@@ -94,7 +97,23 @@ export default {
   computed: {
     // 图片上传地址
     uploadUrl() {
-      return env.BASE_URL + "/ccOss/uploadFile";
+      if (this.replaceUrl === "default") {
+        return env.BASE_URL + "/ccOss/uploadFile";
+      }
+      if (this.replaceUrl === "formService") {
+        return env.FORM_BASE_URL + "/oss/uploadFile";
+      }
+      return env.BASE_URL + "/uploadFile";
+    },
+    // 返回请求头system的值
+    headerSystem() {
+      if (this.replaceUrl === "default") {
+        return "idc";
+      }
+      if (this.replaceUrl === "formService") {
+        return "fs";
+      }
+      return "";
     },
     // 是否可多选文件上传
     multiple() {
@@ -145,7 +164,7 @@ export default {
         }
         lrz(file, {
           width: 1920
-        }).then(res => {
+        }).then((res) => {
           const file = base64ToFile(res.base64, res.origin.name);
           resolve(file);
         });
@@ -165,7 +184,7 @@ export default {
       const { fileList } = info;
       this.fileList = this.$clonedeep(fileList);
       let successCount = 0;
-      fileList.forEach(ele => {
+      fileList.forEach((ele) => {
         if (ele.status === "done") {
           successCount += 1;
         }
@@ -173,11 +192,11 @@ export default {
       if (successCount === fileList.length) {
         const urlList =
           fileList
-            .filter(item => item.response || item.url)
-            .map(item => item.response?.data || item.url) || [];
+            .filter((item) => item.response || item.url)
+            .map((item) => item.response?.data || item.url) || [];
         const firstImageUrl =
           urlList.length && urlList.length > 0 ? urlList[0] : "";
-        this.imageList = this.$clonedeep(fileList).map(item => {
+        this.imageList = this.$clonedeep(fileList).map((item) => {
           return {
             ...item,
             url: item.url || item.response?.data
@@ -191,11 +210,11 @@ export default {
     },
     // 删除图片
     delImg(data) {
-      const index = this.imageList.findIndex(item => item.uid === data.uid);
+      const index = this.imageList.findIndex((item) => item.uid === data.uid);
       this.imageList.splice(index, 1);
       this.fileList.splice(index, 1);
       const urlList =
-        this.fileList.map(item => item.response?.data || item.url) || [];
+        this.fileList.map((item) => item.response?.data || item.url) || [];
       const firstImageUrl =
         urlList.length && urlList.length > 0 ? urlList[0] : "";
       this.$emit("change", {

@@ -17,35 +17,8 @@
       />
       <span class="back">提交工单</span>
     </h2>
-    <div class="verified-top-nav">
-      <div
-        class="step-cont"
-        :class="{ chooseClick: choose == '1', choosedClick: choose == '4' }"
-      >
-        ①选择问题所属产品
-        <span class="step-arrow-right"></span>
-      </div>
-      <div
-        class="step-cont"
-        :class="{ chooseClick: choose == '2', choosedClick: choose == '4' }"
-      >
-        <span class="step-arrow-left"></span>
-        ②选择问题类别
-        <span class="step-arrow-right"></span>
-      </div>
-      <div
-        class="step-cont"
-        :class="{ chooseClick: choose == '3', choosedClick: choose == '4' }"
-      >
-        <span class="step-arrow-left"></span>
-        ③选择解决方案
-        <span class="step-arrow-right"></span>
-      </div>
-      <div class="step-cont" :class="{ chooseClick: choose == '4' }">
-        <span class="step-arrow-left"></span>
-        ④创建工单
-      </div>
-    </div>
+    <!-- 步骤组件 -->
+    <Step :step="choose * 1" />
     <div v-show="choose === '1'">
       <p class="basic-information">技术类问题</p>
       <div class="technique">
@@ -112,8 +85,9 @@
 
 <script>
 import Add from "@/views/user/workOrder/submit/add.vue";
+import Step from "@/components/Domain/step";
 export default {
-  components: { Add },
+  components: { Add, Step },
   data() {
     return {
       choose: "1",
@@ -138,61 +112,6 @@ export default {
   color: #272829;
   .back {
     vertical-align: middle;
-  }
-}
-
-.verified-top-nav {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 20px;
-  margin-bottom: 20px;
-  .step-cont {
-    position: relative;
-    width: 22.8%;
-    height: 36px;
-    text-align: center;
-    line-height: 36px;
-    background-color: #f2f2f2;
-    color: #000;
-    .step-arrow-left {
-      position: absolute;
-      top: 0px;
-      left: -36px;
-      display: inline-block;
-      border: 18px solid #f2f2f2;
-      border-left-color: transparent;
-    }
-    .step-arrow-right {
-      position: absolute;
-      top: 0px;
-      right: -36px;
-      display: inline-block;
-      border: 18px solid transparent;
-      border-left-color: #f2f2f2;
-    }
-  }
-  .chooseClick {
-    background-color: #00aaff;
-    color: #fff;
-    .step-arrow-left {
-      border-color: #00aaff;
-      border-left-color: transparent;
-    }
-    .step-arrow-right {
-      border-left-color: #00aaff;
-    }
-  }
-  .choosedClick {
-    background-color: #7fddff;
-    color: #fff;
-    .step-arrow-left {
-      border-color: #7fddff;
-      border-left-color: transparent;
-    }
-    .step-arrow-right {
-      border-left-color: #7fddff;
-    }
   }
 }
 
@@ -304,19 +223,21 @@ export default {
 
 .cont {
   display: flex;
-  justify-content: left;
+  justify-content: space-between;
   align-items: center;
+  flex-wrap: wrap;
   width: 31%;
   height: 120px;
   border: 1px solid #ccc;
+  padding: 0 20px;
   cursor: pointer;
   .left {
     width: 51px;
     height: 56px;
-    margin: 0 20px 0 20px;
+    margin-right: 20px;
   }
   .right {
-    width: 260px;
+    flex: 1;
     .title {
       font-size: 18px;
       color: #262829;

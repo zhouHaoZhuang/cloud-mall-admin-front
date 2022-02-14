@@ -306,6 +306,15 @@ const options = [
                 meta: {
                   hiddenMenu: true
                 }
+              },
+              {
+                path: "comment",
+                name: "工单服务评价",
+                component: () =>
+                  import("@/views/user/workOrder/my/comment.vue"),
+                meta: {
+                  hiddenMenu: true
+                }
               }
             ]
           }

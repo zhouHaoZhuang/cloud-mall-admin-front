@@ -7,6 +7,17 @@ const workorder = {
   mutations: {},
 
   actions: {
+    // 提交工单-----start
+    // 提交工单
+    submitWorkOrder({ commit, state }, data) {
+      return request({
+        url: "/workOrder",
+        method: "post",
+        data,
+        formService: true
+      });
+    },
+    // 提交工单-----end
     // 我的工单-----start
     // 工单列表
     workOrderList({ commit, state }, data) {
@@ -31,6 +42,33 @@ const workorder = {
       return request({
         url: `/workOrder/close/${params.wordOrderNo}`,
         method: "get",
+        formService: true
+      });
+    },
+    // 消息记录列表
+    messageList({ commit, state }, params) {
+      return request({
+        url: `/workOrderReply`,
+        method: "get",
+        params,
+        formService: true
+      });
+    },
+    // 用户发送一条消息
+    sendMessage({ commit, state }, data) {
+      return request({
+        url: "/workOrderReply",
+        method: "post",
+        data,
+        formService: true
+      });
+    },
+    // 评价工单
+    commentWorkOrder({ commit, state }, data) {
+      return request({
+        url: "/workOrderReply",
+        method: "post",
+        data,
         formService: true
       });
     }

@@ -1,103 +1,103 @@
 <template>
-  <a-form-model
-    ref="ruleForm"
-    :model="form"
-    :rules="rules"
-    :label-col="labelCol"
-    :wrapper-col="wrapperCol"
-  >
-    <a-form-model-item label="问题类别" prop="questionCategoryCode">
-      <a-select v-model="form.questionCategoryCode">
-        <a-select-option
-          v-for="(obj, index) in question"
-          :key="index"
-          :value="obj.value"
-        >
-          {{ obj.title }}
-        </a-select-option>
-      </a-select>
-    </a-form-model-item>
-    <a-form-model-item
-      v-if="form.questionCategoryCode === '1'"
-      label=" 产品类别类型"
-      prop="type"
+  <div class="work-add-container">
+    <a-form-model
+      ref="ruleForm"
+      :model="form"
+      :rules="rules"
+      :label-col="labelCol"
+      :wrapper-col="wrapperCol"
     >
-      <a-radio-group v-model="form.type">
-        <div class="inline">
-          <a-radio
-            v-for="(obj, index) in typeForm"
+      <a-form-model-item label="问题类别" prop="questionCategoryCode">
+        <a-select v-model="form.questionCategoryCode">
+          <a-select-option
+            v-for="(obj, index) in question"
             :key="index"
             :value="obj.value"
           >
             {{ obj.title }}
-          </a-radio>
+          </a-select-option>
+        </a-select>
+      </a-form-model-item>
+      <a-form-model-item
+        v-if="form.questionCategoryCode === '1'"
+        label=" 产品类别类型"
+        prop="type"
+      >
+        <a-radio-group v-model="form.type">
+          <div class="inline">
+            <a-radio
+              v-for="(obj, index) in typeForm"
+              :key="index"
+              :value="obj.value"
+            >
+              {{ obj.title }}
+            </a-radio>
+          </div>
+        </a-radio-group>
+      </a-form-model-item>
+      <a-form-model-item
+        v-if="form.questionCategoryCode === '1'"
+        :label="serverIp"
+      >
+        {{ form.extParam.ip }}
+      </a-form-model-item>
+      <a-form-model-item label="问题标题" prop="title">
+        <a-input v-model="form.title" />
+      </a-form-model-item>
+      <a-form-model-item label="问题描述" prop="description">
+        <a-input v-model="form.description" type="textarea" />
+      </a-form-model-item>
+      <a-form-model-item label="服务器端口">
+        <a-input v-model="form.extParam.port" />
+      </a-form-model-item>
+      <a-form-model-item label="服务器账号">
+        <a-input v-model="form.extParam.username" />
+      </a-form-model-item>
+      <a-form-model-item label="服务器密码">
+        <a-input v-model="form.extParam.password" />
+      </a-form-model-item>
+      <a-form-model-item label="提单人">
+        {{ userRealInfo.corporationCode }}
+      </a-form-model-item>
+      <a-form-model-item label="手机号码" prop="phoneNumber">
+        <div class="inline">
+          <a-input
+            class="input"
+            v-model="form.phoneNumber"
+            placeholder="请填您的手机号码"
+          />
+          <a-button type="primary" @click="addPhone"> 默认手机号码 </a-button>
         </div>
-      </a-radio-group>
-    </a-form-model-item>
-    <a-form-model-item
-      v-if="form.questionCategoryCode === '1'"
-      :label="serverIp"
-    >
-      {{ form.extParam.ip }}
-    </a-form-model-item>
-    <a-form-model-item label="问题标题" prop="title">
-      <a-input v-model="form.title" />
-    </a-form-model-item>
-    <a-form-model-item label="问题描述" prop="description">
-      <a-input v-model="form.description" type="textarea" />
-    </a-form-model-item>
-    <a-form-model-item label="服务器端口">
-      <a-input v-model="form.extParam.port" />
-    </a-form-model-item>
-    <a-form-model-item label="服务器账号">
-      <a-input v-model="form.extParam.username" />
-    </a-form-model-item>
-    <a-form-model-item label="服务器密码">
-      <a-input v-model="form.extParam.password" />
-    </a-form-model-item>
-    <a-form-model-item label="提单人">
-      {{ userRealInfo.corporationCode }}
-    </a-form-model-item>
-    <a-form-model-item
-      :wrapper-col="{ span: 8 }"
-      label="手机号码"
-      prop="phoneNumber"
-    >
-      <div class="inline">
-        <a-input
-          :style="{ marginRight: '10px' }"
-          v-model="form.phoneNumber"
-          placeholder="请填您的手机号码"
+      </a-form-model-item>
+      <a-form-model-item label="QQ号码" prop="qqNumber">
+        <div class="inline">
+          <a-input
+            class="input"
+            v-model="form.qqNumber"
+            placeholder="请填您的QQ号"
+          />
+          <a-button type="primary" @click="addQQ"> 默认QQ号码 </a-button>
+        </div>
+      </a-form-model-item>
+      <a-form-model-item label="附件上传">
+        <Upload
+          :defaultFile="form.url"
+          replaceUrl="formService"
+          @change="imgChange"
         />
-        <a-button type="primary" @click="addPhone()"> 默认手机号码 </a-button>
-      </div>
-    </a-form-model-item>
-    <a-form-model-item
-      :wrapper-col="{ span: 8 }"
-      label="QQ号码"
-      prop="qqNumber"
-    >
-      <div class="inline">
-        <a-input
-          :style="{ marginRight: '10px' }"
-          v-model="form.qqNumber"
-          placeholder="请填您的QQ号"
-        />
-        <a-button type="primary" @click="addQQ()"> 默认QQ号码 </a-button>
-      </div>
-    </a-form-model-item>
-    <a-form-model-item label="附件上传">
-      <Upload :defaultFile="form.url" @change="imgChange" />
-    </a-form-model-item>
-    <a-form-model-item :wrapper-col="{ span: 14, offset: 4 }">
-      <a-button type="primary" @click="onSubmit"> 确认工单信息，提交 </a-button>
-    </a-form-model-item>
-  </a-form-model>
+      </a-form-model-item>
+      <a-form-model-item :wrapper-col="{ span: 10, offset: 4 }">
+        <a-button type="primary" @click="onSubmit">
+          确认工单信息，提交
+        </a-button>
+      </a-form-model-item>
+    </a-form-model>
+  </div>
 </template>
 
 <script>
-import Upload from "@/components/Upload/index.vue";
 import { mapState } from "vuex";
+import Upload from "@/components/Upload/index.vue";
 export default {
   props: {
     classId: { type: Number, default: 0 },
@@ -109,7 +109,7 @@ export default {
   data() {
     return {
       labelCol: { span: 4 },
-      wrapperCol: { span: 8 },
+      wrapperCol: { span: 10 },
       question: [
         { value: "1", title: "服务器类问题" },
         { value: "2", title: "财务类问题" },
@@ -150,49 +150,49 @@ export default {
         submitCode: "",
         phoneNumber: "",
         qqNumber: "",
-        url: ""
+        url: []
       },
       rules: {
         questionCategoryCode: [
           {
             required: true,
-            message: "该项不能为空",
+            message: "请选择问题类别",
             trigger: "change"
           }
         ],
         title: [
           {
             required: true,
-            message: "该项不能为空",
-            trigger: "blur"
+            message: "请输入问题标题",
+            trigger: ["change", "blur"]
           }
         ],
         type: [
           {
             required: true,
-            message: "该项不能为空",
+            message: "请选择产品类别类型",
             trigger: "change"
           }
         ],
         description: [
           {
             required: true,
-            message: "该项不能为空",
-            trigger: "blur"
+            message: "请输入问题描述",
+            trigger: ["change", "blur"]
           }
         ],
         phoneNumber: [
           {
             required: true,
-            message: "该项不能为空",
-            trigger: "blur"
+            message: "请输入手机号码",
+            trigger: ["change", "blur"]
           }
         ],
         qqNumber: [
           {
             required: true,
-            message: "该项不能为空",
-            trigger: "blur"
+            message: "请输入QQ号码",
+            trigger: ["change", "blur"]
           }
         ]
       }
@@ -221,30 +221,26 @@ export default {
     }
   },
   methods: {
+    // 提交
     onSubmit() {
       this.$refs.ruleForm.validate((valid) => {
         if (valid) {
-          console.log(this.form, "222222");
-          this.$store.dispatch("user/submitForm", this.form).then((res) => {
-            console.log(res.data);
-          });
+          const data = {
+            ...this.form,
+            submitCode: this.userRealInfo.corporationCode,
+            submitName: this.userRealInfo.corporationName
+          };
+          this.$store
+            .dispatch("workorder/submitWorkOrder", data)
+            .then((res) => {
+              console.log(res.data);
+            });
         }
       });
     },
-    // getUser() {
-    //   this.$store.dispatch("user/getUserActualName").then((res) => {
-    //     if (!res.data) {
-    //       return;
-    //     }
-    //     console.log(res.data, "1111111111111");
-    //     this.form.adminCode = res.data.corporationCode;
-    //     this.phoneNum = res.data.phoneNumber;
-    //   });
-    // },
     // 图片上传
     imgChange({ urlList, firstImageUrl }) {
-      // console.log("上传图片回调", urlList, firstImageUrl);
-      this.form.url = urlList.toString();
+      this.form.url = [...urlList];
     },
     // 默认手机号
     addPhone() {
@@ -252,7 +248,6 @@ export default {
     },
     // 默认QQ号
     addQQ() {
-      console.log(this.userRealInfo, "222222222");
       this.form.qqNumber = "1";
     },
     // 重置表单
@@ -277,8 +272,14 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.inline {
-  display: flex;
-  justify-content: space-between;
+.work-add-container {
+  padding-bottom: 50px;
+  .inline {
+    display: flex;
+    .input {
+      width: 210px;
+      margin-right: 10px;
+    }
+  }
 }
 </style>

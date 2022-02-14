@@ -3,7 +3,7 @@
     <!-- 头部标题 -->
     <DetailHeader title="工单详情" />
     <!-- 步骤组件 -->
-    <Step :step="step" />
+    <Step :step="step" type="myDetail" />
     <!-- 头部信息 -->
     <Detail />
     <!-- 沟通记录 -->

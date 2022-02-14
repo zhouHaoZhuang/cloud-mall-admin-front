@@ -4,7 +4,7 @@
       class="step-cont margin"
       :class="{ chooseClick: step === 1, choosedClick: step === 4 }"
     >
-      ①工单受理
+      {{ text1 }}
       <span class="step-arrow-right"></span>
     </div>
     <div
@@ -12,7 +12,8 @@
       :class="{ chooseClick: step === 2, choosedClick: step === 4 }"
     >
       <span class="step-arrow-left"></span>
-      ②工单处理中
+
+      {{ text2 }}
       <span class="step-arrow-right"></span>
     </div>
     <div
@@ -20,12 +21,14 @@
       :class="{ chooseClick: step === 3, choosedClick: step === 4 }"
     >
       <span class="step-arrow-left"></span>
-      ③工单完成确认
+
+      {{ text3 }}
       <span class="step-arrow-right"></span>
     </div>
     <div class="step-cont" :class="{ chooseClick: step === 4 }">
       <span class="step-arrow-left"></span>
-      ④用户评价
+
+      {{ text4 }}
     </div>
   </div>
 </template>
@@ -33,10 +36,53 @@
 <script>
 export default {
   props: {
+    // 类型
+    type: {
+      type: String,
+      default: "submit"
+    },
     // 进度
     step: {
       type: Number,
       default: 1
+    }
+  },
+  computed: {
+    text1() {
+      if (this.type === "submit") {
+        return "①选择问题所属产品 ";
+      }
+      if (this.type === "myDetail") {
+        return "①工单受理 ";
+      }
+      return "";
+    },
+    text2() {
+      if (this.type === "submit") {
+        return "②选择问题类别";
+      }
+      if (this.type === "myDetail") {
+        return "②工单处理中";
+      }
+      return "";
+    },
+    text3() {
+      if (this.type === "submit") {
+        return "③选择解决方案";
+      }
+      if (this.type === "myDetail") {
+        return "③工单完成确认";
+      }
+      return "";
+    },
+    text4() {
+      if (this.type === "submit") {
+        return "④创建工单";
+      }
+      if (this.type === "myDetail") {
+        return "④用户评价";
+      }
+      return "";
     }
   },
   data() {
