@@ -3,21 +3,34 @@
     <!-- 头部标题 -->
     <DetailHeader title="工单详情" />
     <!-- 步骤组件 -->
+    <Step :step="step" />
     <!-- 头部信息 -->
+    <Detail />
     <!-- 沟通记录 -->
+    <Record />
     <!-- 发表回复 -->
+    <Reply />
   </div>
 </template>
 
 <script>
 import DetailHeader from "@/components/Common/detailHeader";
+import Step from "@/components/Domain/step";
+import Detail from "@/components/Domain/detail";
+import Record from "@/components/Domain/record";
+import Reply from "@/components/Domain/reply";
 export default {
   components: {
-    DetailHeader
+    DetailHeader,
+    Step,
+    Detail,
+    Record,
+    Reply
   },
   data() {
     return {
-      time: null
+      time: null,
+      step: 1
     };
   },
   created() {
@@ -52,5 +65,6 @@ export default {
 
 <style lang="less" scoped>
 .work-detail-container {
+  padding-bottom: 50px;
 }
 </style>

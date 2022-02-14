@@ -162,9 +162,6 @@ export default {
   created() {
     this.getList();
   },
-  beforeDestroy() {
-    this.time && clearInterval(this.time);
-  },
   methods: {
     // 获取我的工单列表
     getList() {

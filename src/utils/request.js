@@ -26,6 +26,8 @@ const errorHandler = (error) => {
 
 // request interceptor 请求拦截
 request.interceptors.request.use(async (config) => {
+  // 携带system区分不同项目
+  config.headers.system = "idc";
   // 多个请求地址兼容
   // 支付请求地址
   if (config.pay) {
@@ -34,6 +36,7 @@ request.interceptors.request.use(async (config) => {
   // form，新的服务接口请求地址
   if (config.formService) {
     config.baseURL = env.FORM_BASE_URL;
+    config.headers.system = "fs";
   }
   config.cancelToken = axiosSource.token;
   // token
@@ -61,8 +64,6 @@ request.interceptors.request.use(async (config) => {
   // 携带domain
   config.headers.domain = getDomainUrl();
   // config.headers.domain = 'ydidc.com'
-  // 携带system区分不同项目
-  config.headers.system = "idc";
   // 头部携带ip
   const ip = localStorage.getItem("Ip");
   config.headers["ip"] = ip;
