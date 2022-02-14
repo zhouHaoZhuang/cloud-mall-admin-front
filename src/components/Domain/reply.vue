@@ -12,6 +12,7 @@
         <a-input
           v-model="form.description"
           type="textarea"
+          allowClear
           :maxLength="2000"
           placeholder="请输入您的问题描述情况"
         />
