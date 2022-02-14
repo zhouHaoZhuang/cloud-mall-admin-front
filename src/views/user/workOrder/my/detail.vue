@@ -5,11 +5,11 @@
     <!-- 步骤组件 -->
     <Step :step="step" type="myDetail" />
     <!-- 头部信息 -->
-    <Detail :detail="detail" />
+    <Detail :detail="detail" @success="detailSuccess" />
     <!-- 沟通记录 -->
-    <Record :detail="detail" />
+    <Record :recordList="recordList" />
     <!-- 发表回复 -->
-    <Reply :detail="detail" />
+    <Reply :detail="detail" @success="getRecord" />
   </div>
 </template>
 
@@ -31,11 +31,13 @@ export default {
     return {
       time: null,
       step: 1,
-      detail: {}
+      detail: {},
+      recordList: []
     };
   },
   created() {
-    // this.getDetail();
+    this.getDetail();
+    this.getRecord();
     // this.startTime();
   },
   beforeDestroy() {
@@ -47,11 +49,27 @@ export default {
       this.$store
         .dispatch("workorder/workOrderDetail", {
           queryType: 1,
-          wordOrderNo: this.$route.query.wordOrderNo
+          workOrderNo: this.$route.query.workOrderNo
         })
         .then((res) => {
           this.detail = { ...res.data };
         });
+    },
+    // 获取消息记录
+    getRecord() {
+      this.$store
+        .dispatch("workorder/messageList", {
+          currentPage: 1,
+          pageSize: 999,
+          workOrderNo: this.$route.query.workOrderNo
+        })
+        .then((res) => {
+          this.detail = { ...res.data };
+        });
+    },
+    // 头部操作后的回调
+    detailSuccess() {
+      this.getDetail();
     },
     // 定时轮询
     startTime() {

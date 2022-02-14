@@ -18,10 +18,17 @@
         />
       </a-form-model-item>
       <a-form-model-item label="附件上传">
-        <Upload :defaultFile="form.img" :limit="5" />
+        <Upload
+          :defaultFile="form.replyUrl"
+          :limit="5"
+          replaceUrl="formService"
+          @change="imgChange"
+        />
       </a-form-model-item>
       <a-form-model-item :wrapper-col="{ span: 14, offset: 3 }">
-        <a-button type="primary" @click="onSubmit"> 继续提问 </a-button>
+        <a-button type="primary" :loading="loading" @click="onSubmit">
+          继续提问
+        </a-button>
       </a-form-model-item>
     </a-form-model>
   </div>
@@ -47,7 +54,7 @@ export default {
       other: "",
       form: {
         description: "",
-        img: ""
+        replyUrl: []
       },
       rules: {
         description: [
@@ -57,14 +64,42 @@ export default {
             trigger: ["change", "blur"]
           }
         ]
-      }
+      },
+      loading: false
     };
   },
   methods: {
+    // 图片上传
+    imgChange({ urlList, firstImageUrl }) {
+      this.form.replyUrl = [...urlList];
+    },
+    // 重置表单
+    resetForm() {
+      this.form = {
+        description: "",
+        replyUrl: []
+      };
+    },
+    // 提交
     onSubmit() {
       this.$refs.ruleForm.validate((valid) => {
         if (valid) {
-          console.log(15);
+          this.loading = true;
+          const data = {
+            ...this.form,
+            workOrderNo: this.detail.workOrderNo,
+            replyUrl: this.form.replyUrl.toString()
+          };
+          this.$store
+            .dispatch("workorder/sendMessage", data)
+            .then((res) => {
+              this.$message.success("提交成功");
+              this.resetForm()
+              this.$emit("success");
+            })
+            .finally(() => {
+              this.loading = false;
+            });
         }
       });
     }

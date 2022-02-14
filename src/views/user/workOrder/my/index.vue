@@ -48,32 +48,44 @@
       >
         <!-- 工单编号 -->
         <div slot="workOrderNo" slot-scope="text, record">
-          <a-button type="link" @click="handleSelectWorkOrder(record)">
+          <a-button
+            class="btn-link"
+            type="link"
+            @click="handleSelectWorkOrder(record)"
+          >
             {{ text }}
           </a-button>
         </div>
         <!-- 问题标题 -->
-        <div slot="titleee" slot-scope="text, record">
-          <a-button type="link" @click="handleSelectWorkOrder(record)">
+        <div slot="titleSlot" slot-scope="text, record">
+          <a-button
+            class="btn-link"
+            type="link"
+            @click="handleSelectWorkOrder(record)"
+          >
             {{ text }}
           </a-button>
+        </div>
+        <!-- 创建时间 -->
+        <div slot="createTime" slot-scope="text">
+          {{ text | formatDate }}
         </div>
         <!-- 状态 -->
         <div slot="status" slot-scope="text">
           <!-- 待接单 -->
-          <div class="wait status">
+          <div v-if="text === 1" class="wait status">
             <Iconfont class="icon" type="icon-daichuli" />
-            {{ workOrderStatusEnum[text] }}测试二年析
+            {{ workOrderStatusEnum[text] }}
           </div>
           <!-- 处理中 -->
-          <div class="center status">
+          <div v-if="text === 2" class="center status">
             <Iconfont class="icon" type="icon-ic_wait" />
-            {{ workOrderStatusEnum[text] }}测试二年析
+            {{ workOrderStatusEnum[text] }}
           </div>
           <!-- 处理完成 -->
-          <div class="ok status">
+          <div v-if="text === 3" class="ok status">
             <Iconfont class="icon" type="icon-wancheng" />
-            {{ workOrderStatusEnum[text] }}测试二年析
+            {{ workOrderStatusEnum[text] }}
           </div>
         </div>
         <!-- 操作 -->
@@ -114,7 +126,7 @@ export default {
           title: "问题标题",
           dataIndex: "title",
           width: 150,
-          scopedSlots: { customRender: "titleee" }
+          scopedSlots: { customRender: "titleSlot" }
         },
         {
           title: "问题类型",
@@ -234,6 +246,9 @@ export default {
         cursor: pointer;
       }
     }
+  }
+  .btn-link {
+    padding: 0;
   }
   .status {
     display: flex;

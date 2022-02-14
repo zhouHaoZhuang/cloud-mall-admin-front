@@ -45,7 +45,7 @@
         <a-input v-model="form.title" />
       </a-form-model-item>
       <a-form-model-item label="问题描述" prop="description">
-        <a-input v-model="form.description" type="textarea" />
+        <a-input v-model="form.description" type="textarea" :maxLength="2000" />
       </a-form-model-item>
       <a-form-model-item label="服务器端口">
         <a-input v-model="form.extParam.port" />

@@ -58,7 +58,7 @@ const workorder = {
     // 工单详情
     workOrderDetail({ commit, state }, params) {
       return request({
-        url: `/workOrder/${params.wordOrderNo}`,
+        url: `/workOrder/${params.workOrderNo}`,
         method: "get",
         params,
         formService: true
@@ -67,7 +67,7 @@ const workorder = {
     // 关闭工单
     closeWorkOrder({ commit, state }, params) {
       return request({
-        url: `/workOrder/close/${params.wordOrderNo}`,
+        url: `/workOrder/close/${params.workOrderNo}`,
         method: "get",
         formService: true
       });

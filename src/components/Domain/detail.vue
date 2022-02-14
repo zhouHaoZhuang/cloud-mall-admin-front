@@ -3,38 +3,48 @@
     <div class="item">
       <div class="label">问题标题：</div>
       <div class="value">
-        {{detail.title}}
+        {{ detail.title }}
       </div>
     </div>
     <div class="item">
       <div class="label">工单编号：</div>
       <div class="value">
-         {{detail.workOrderNo}}
+        {{ detail.workOrderNo }}
       </div>
     </div>
     <div class="item">
       <div class="label">提交时间：</div>
       <div class="value">
-         {{detail.createTime}}
+        {{ detail.createTime | formatDate }}
       </div>
     </div>
     <div class="item">
       <div class="label">工单状态：</div>
       <div class="value">
         <!-- 待接单 -->
-        <div class="wait status">{{ workOrderStatusEnum[detail.status] }}</div>
+        <div v-if="detail.status === 1" class="wait status">
+          {{ workOrderStatusEnum[detail.status] }}
+        </div>
         <!-- 处理中 -->
-        <div class="center status">
+        <div v-if="detail.status === 2" class="center status">
           {{ workOrderStatusEnum[detail.status] }}
         </div>
         <!-- 处理完成 -->
-        <div class="ok status">{{ workOrderStatusEnum[detail.status] }}</div>
+        <div v-if="detail.status === 3" class="ok status">
+          {{ workOrderStatusEnum[detail.status] }}
+        </div>
       </div>
     </div>
     <!-- 按钮盒子 -->
     <div class="btns-wrap">
-      <a-button @click="handleCloseWorkOrder"> 关闭工单 </a-button>
-      <a-button @click="handleJumpComment"> 评价工单 </a-button>
+      <a-button
+        v-if="detail.status !== 3"
+        :loading="loading"
+        @click="handleCloseWorkOrder"
+      >
+        关闭工单
+      </a-button>
+      <a-button v-else @click="handleJumpComment"> 评价工单 </a-button>
     </div>
     <!-- 投诉盒子 -->
     <!-- <div class="complaint-wrap">
@@ -45,7 +55,6 @@
 </template>
 
 <script>
-import moment from "moment";
 import { workOrderStatusEnum } from "@/utils/enum";
 export default {
   props: {
@@ -57,18 +66,33 @@ export default {
   },
   data() {
     return {
-      workOrderStatusEnum
+      workOrderStatusEnum,
+      loading: false
     };
   },
   methods: {
     // 关闭工单
-    handleCloseWorkOrder() {},
+    handleCloseWorkOrder() {
+      this.loading = true;
+      this.$store
+        .dispatch("workorder/submitWorkOrder", {
+          workOrderNo: this.detail.workOrderNo
+        })
+        .then((res) => {
+          this.$message.success("关闭工单成功");
+          this.$emit("success");
+        })
+        .finally(() => {
+          this.loading = false;
+        });
+    },
     // 跳转评价工单
     handleJumpComment() {
       this.$router.push({
         path: "/user/workOrder/comment",
         query: {
-          workOrderNo: 132
+          workOrderNo: this.detail.workOrderNo,
+          title: this.detail.title
         }
       });
     },
@@ -91,6 +115,7 @@ export default {
   position: relative;
   .item {
     width: 33.33%;
+    display: flex;
     .label {
       color: #a0a2a3;
     }
