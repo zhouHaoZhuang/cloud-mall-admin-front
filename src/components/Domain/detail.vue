@@ -73,18 +73,23 @@ export default {
   methods: {
     // 关闭工单
     handleCloseWorkOrder() {
-      this.loading = true;
-      this.$store
-        .dispatch("workorder/submitWorkOrder", {
-          workOrderNo: this.detail.workOrderNo
-        })
-        .then((res) => {
-          this.$message.success("关闭工单成功");
-          this.$emit("success");
-        })
-        .finally(() => {
-          this.loading = false;
-        });
+      this.$confirm({
+        title: "确认要关闭工单吗？",
+        onOk: () => {
+          this.loading = true;
+          this.$store
+            .dispatch("workorder/closeWorkOrder", {
+              workOrderNo: this.detail.workOrderNo
+            })
+            .then((res) => {
+              this.$message.success("关闭工单成功");
+              this.$emit("success");
+            })
+            .finally(() => {
+              this.loading = false;
+            });
+        }
+      });
     },
     // 跳转评价工单
     handleJumpComment() {

@@ -64,7 +64,13 @@ export default {
           workOrderNo: this.$route.query.workOrderNo
         })
         .then((res) => {
-          this.detail = { ...res.data };
+          // this.recordList = [...res.data.list];
+          this.recordList = res.data.list.map((ele) => {
+            return {
+              ...ele,
+              replyUrl: ele.replyUrl.split(",")
+            };
+          });
         });
     },
     // 头部操作后的回调

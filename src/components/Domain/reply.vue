@@ -8,9 +8,9 @@
       :label-col="labelCol"
       :wrapper-col="wrapperCol"
     >
-      <a-form-model-item label="问题描述" prop="description">
+      <a-form-model-item label="问题描述" prop="replyDetail">
         <a-input
-          v-model="form.description"
+          v-model="form.replyDetail"
           type="textarea"
           allowClear
           :maxLength="2000"
@@ -53,11 +53,11 @@ export default {
       wrapperCol: { span: 14 },
       other: "",
       form: {
-        description: "",
+        replyDetail: "",
         replyUrl: []
       },
       rules: {
-        description: [
+        replyDetail: [
           {
             required: true,
             message: "请输入问题描述",
@@ -76,7 +76,7 @@ export default {
     // 重置表单
     resetForm() {
       this.form = {
-        description: "",
+        replyDetail: "",
         replyUrl: []
       };
     },
@@ -87,6 +87,8 @@ export default {
           this.loading = true;
           const data = {
             ...this.form,
+            identityType: 1,
+            secret: 0,
             workOrderNo: this.detail.workOrderNo,
             replyUrl: this.form.replyUrl.toString()
           };
@@ -94,7 +96,7 @@ export default {
             .dispatch("workorder/sendMessage", data)
             .then((res) => {
               this.$message.success("提交成功");
-              this.resetForm()
+              this.resetForm();
               this.$emit("success");
             })
             .finally(() => {
