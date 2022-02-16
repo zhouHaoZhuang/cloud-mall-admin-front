@@ -23,6 +23,19 @@
         <a slot="name" slot-scope="text">{{ text }}</a>
       </a-table>
     </div>
+    <div class="alert-warn-lg margin-top-70 margin-bottom-20">
+      <div class="tip-title">5天无理由退款说明：</div>
+      <ul class="ny-panel-list">
+        <li>1. 浙江云盾承诺自购买之日起，5天无理由退款</li>
+        <li>2. 每个用户限退云服务器1台</li>
+        <li>3. 退还实付金额，已使用代金券不退还</li>
+        <li>
+          4.
+          活动购买的云服务器申请5天无理由退款后，赠品（代金券、延长服务期等）将作废清零
+        </li>
+        <li>5. 活动规则中说明“不支持5天无理由退款”无法申请退款</li>
+      </ul>
+    </div>
   </div>
 </template>
 
@@ -142,5 +155,38 @@ export default {
   color: #f60;
   font-size: 13px;
   margin-bottom: 20px;
+}
+.margin-top-70 {
+  margin-top: 70px;
+}
+.margin-bottom-20{
+  margin-bottom: 20px;
+}
+.alert-warn-lg .tip-title {
+  position: relative;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 10px;
+  padding-left: 10px;
+  margin-bottom: 10px;
+  font-weight: bold;
+  color: #ff6600;
+  font-size: 14px;
+}
+.alert-warn-lg .tip-title:after {
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  content: "";
+  width: 80px;
+  height: 2px;
+  background: #ff6600;
+}
+.ny-panel-list {
+  line-height: 2.5;
+  padding: 10px;
+  li {
+    list-style: none;
+    color: #4d4d4d;
+  }
 }
 </style>
