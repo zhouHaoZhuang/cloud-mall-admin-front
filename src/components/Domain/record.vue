@@ -13,12 +13,14 @@
             <img v-else src="@/assets/img/workOrder/customer.png" alt="" />
           </div>
           <div class="info-box">
-            <div :class="`top-title ${getClassName(item.identityType)}`">问题描述</div>
+            <div :class="`top-title ${getClassName(item.identityType)}`">
+              问题描述
+            </div>
             <div class="info-txt">
               {{ item.replyDetail }}
             </div>
             <div class="info-img">
-              <img src="" alt="" />
+              <img v-for="ele in item.replyUrl" :key="ele" :src="ele" alt="" />
             </div>
           </div>
         </div>
