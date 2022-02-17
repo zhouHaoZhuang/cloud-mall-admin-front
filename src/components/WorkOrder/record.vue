@@ -21,10 +21,10 @@
             </div>
             <div class="info-img">
               <img
-                v-for="(ele, index) in item.replyUrl"
+                v-for="ele in item.replyUrl"
                 :key="ele"
                 :src="ele"
-                :preview="index"
+                preview="1"
                 alt=""
               />
             </div>

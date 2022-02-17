@@ -14,7 +14,6 @@ Vue.use(VueClipboard);
 // 图片预览组件
 import preview from "vue-photo-preview";
 import "vue-photo-preview/dist/skin.css";
-Vue.use(preview)
 // 全局样式
 import "./global.less"; // global style
 // 自定义指令+过滤器
@@ -31,6 +30,8 @@ const IconFont = Icon.createFromIconfontCN({
   scriptUrl: "//at.alicdn.com/t/font_3142322_qmq2qa72k2.js"
 });
 Vue.component("Iconfont", IconFont);
+// 图片预览组件
+Vue.use(preview);
 
 // 全局挂载请求列表兼容方法---请求列表通过此方法走筛选
 Vue.prototype.$getList = utilsFun.getList;

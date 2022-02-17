@@ -69,6 +69,7 @@ export default {
               replyUrl: ele.replyUrl ? ele.replyUrl.split(",") : []
             };
           });
+          this.$previewRefresh();
         });
     },
     // 头部操作后的回调
