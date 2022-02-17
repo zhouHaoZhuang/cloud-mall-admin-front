@@ -10,16 +10,16 @@
       <a-form-model-item label="问题类别" prop="questionCategoryCode">
         <a-select v-model="form.questionCategoryCode">
           <a-select-option
-            v-for="(obj, index) in question"
-            :key="index"
-            :value="obj.value"
+            v-for="item in questionCategoryList"
+            :key="item.id"
+            :value="item.id"
           >
-            {{ obj.title }}
+            {{ item.name }}
           </a-select-option>
         </a-select>
       </a-form-model-item>
       <a-form-model-item
-        v-if="form.questionCategoryCode === '1'"
+        v-if="getIsCloudQuestion"
         label=" 产品类别类型"
         prop="type"
       >
@@ -36,16 +36,31 @@
         </a-radio-group>
       </a-form-model-item>
       <a-form-model-item
-        v-if="form.questionCategoryCode === '1'"
-        :label="serverIp"
+        class="form-label-before"
+        v-if="getIsCloudQuestion"
+        :label="labelName"
+        prop="ip"
       >
-        {{ form.extParam.ip }}
+        <a-select v-model="form.extParam.ip" placeholder="请选择" allowClear>
+          <a-select-option
+            v-for="item in cloudList"
+            :key="item.id"
+            :value="item.outIp"
+          >
+            {{ item.outIp }}
+          </a-select-option>
+        </a-select>
       </a-form-model-item>
       <a-form-model-item label="问题标题" prop="title">
-        <a-input v-model="form.title" />
+        <a-input v-model="form.title" placeholder="请填写问题标题" />
       </a-form-model-item>
       <a-form-model-item label="问题描述" prop="description">
-        <a-input v-model="form.description" type="textarea" :maxLength="2000" />
+        <a-input
+          v-model="form.description"
+          type="textarea"
+          :maxLength="2000"
+          placeholder="请描述您的问题"
+        />
       </a-form-model-item>
       <a-form-model-item label="服务器端口">
         <a-input v-model="form.extParam.port" />
@@ -59,25 +74,25 @@
       <a-form-model-item label="提单人">
         {{ userRealInfo.corporationCode }}
       </a-form-model-item>
-      <a-form-model-item label="手机号码" prop="phoneNumber">
-        <div class="inline">
-          <a-input
-            class="input"
-            v-model="form.phoneNumber"
-            placeholder="请填您的手机号码"
-          />
-          <a-button type="primary" @click="addPhone"> 默认手机号码 </a-button>
-        </div>
+      <a-form-model-item
+        class="inline-wrap"
+        label="手机号码"
+        prop="phoneNumber"
+      >
+        <a-input
+          class="input"
+          v-model="form.phoneNumber"
+          placeholder="请填您的手机号码"
+        />
+        <a-button type="primary" @click="addPhone"> 默认手机号码 </a-button>
       </a-form-model-item>
-      <a-form-model-item label="QQ号码" prop="qqNumber">
-        <div class="inline">
-          <a-input
-            class="input"
-            v-model="form.qqNumber"
-            placeholder="请填您的QQ号"
-          />
-          <a-button type="primary" @click="addQQ"> 默认QQ号码 </a-button>
-        </div>
+      <a-form-model-item class="inline-wrap" label="QQ号码" prop="qqNumber">
+        <a-input
+          class="input"
+          v-model="form.qqNumber"
+          placeholder="请填您的QQ号"
+        />
+        <a-button type="primary" @click="addQQ"> 默认QQ号码 </a-button>
       </a-form-model-item>
       <a-form-model-item label="附件上传">
         <Upload
@@ -101,46 +116,36 @@ import { mapState } from "vuex";
 import Upload from "@/components/Upload/index.vue";
 export default {
   props: {
-    classId: { type: Number, default: 0 },
-    choose: { type: Number, default: 0 }
+    questionCategoryCode: { type: [Number, String], default: 0 },
+    activeKey: { type: Number, default: 0 },
+    questionCategoryList: {
+      type: Array,
+      default: () => []
+    }
   },
   components: {
     Upload
   },
   data() {
+    const validateIp = (rule, value, callback) => {
+      if (!this.form.extParam.ip) {
+        callback(new Error("请选择服务器ip"));
+      } else {
+        callback();
+      }
+    };
     return {
       labelCol: { span: 4 },
       wrapperCol: { span: 10 },
-      question: [
-        { value: "1", title: "服务器类问题" },
-        { value: "2", title: "财务类问题" },
-        { value: "3", title: "合同类问题" },
-        { value: "4", title: "会员账号问题" },
-        { value: "5", title: "售前类问题" },
-        { value: "6", title: "备案类问题" },
-        { value: "7", title: "商标类问题" }
-      ],
-      typeForm: [
-        { value: "1", title: "云服务器" },
-        { value: "2", title: "服务器托管" },
-        { value: "3", title: "虚拟主机" },
-        { value: "4", title: "负载均衡" },
-        { value: "5", title: "裸金属服务器" },
-        { value: "6", title: "云数据库" }
-      ],
+      typeForm: [{ value: "1", title: "云服务器" }],
       serverForm: {
-        1: "服务器IP",
-        2: "托管服务器IP",
-        3: "虚拟主机IP",
-        4: "负载均衡实例IP",
-        5: "裸金属服务器IP",
-        6: "云数据库IP"
+        1: "服务器IP"
       },
-      serverIp: "服务器IP",
+      labelName: "服务器IP",
       form: {
-        questionCategoryCode: this.classId,
+        questionCategoryCode: this.questionCategoryCode,
         extParam: {
-          ip: "无",
+          ip: undefined,
           password: "",
           port: "",
           username: ""
@@ -159,6 +164,12 @@ export default {
             required: true,
             message: "请选择问题类别",
             trigger: "change"
+          }
+        ],
+        ip: [
+          {
+            validator: validateIp,
+            trigger: ["change", "blur"]
           }
         ],
         title: [
@@ -197,18 +208,26 @@ export default {
           }
         ]
       },
-      loading: false
+      loading: false,
+      cloudList: []
     };
   },
   computed: {
     ...mapState({
       userRealInfo: (state) => state.user.userRealInfo
-    })
+    }),
+    // 判读是否是服务器类问题
+    getIsCloudQuestion() {
+      const newObj = this.questionCategoryList.find(
+        (ele) => ele.id === this.form.questionCategoryCode
+      );
+      return newObj && newObj.name === "服务器类问题";
+    }
   },
   watch: {
-    choose: {
+    activeKey: {
       handler(newVal) {
-        if (newVal === "4") {
+        if (newVal === 4) {
           this.resetForm();
         }
       },
@@ -216,24 +235,32 @@ export default {
     },
     "form.type": {
       handler(newVal) {
-        this.serverIp = this.serverForm[newVal];
+        this.labelName = this.serverForm[newVal];
       },
       immediate: true,
       deep: true
+    },
+    getIsCloudQuestion: {
+      handler(newVal) {
+        if (newVal) {
+          this.getList();
+        }
+      },
+      immediate: true
     }
   },
   methods: {
-    // 获取问题类别
-    getProblemTypeList() {
-      this.$store.dispatch("workorder/problemTypeList", {}).then((res) => {});
-    },
-    // 获取产品类别类型
-    getProductTypeList() {
-      this.$store.dispatch("workorder/productTypeList", {}).then((res) => {});
-    },
-    // 获取对应产品类别类型的数据
-    getProductTypeIp() {
-      this.$store.dispatch("workorder/productTypeIp", {}).then((res) => {});
+    // 获取用户拥有的服务器列表
+    getList() {
+      this.$store
+        .dispatch("cloud/cloudList", {
+          createTimeSort: "desc",
+          currentPage: 1,
+          pageSize: 999
+        })
+        .then((res) => {
+          this.cloudList = [...res.data.list];
+        });
     },
     // 提交
     onSubmit() {
@@ -265,16 +292,18 @@ export default {
     // 默认手机号
     addPhone() {
       this.form.phoneNumber = this.userRealInfo.phoneNumber;
+      this.$refs.ruleForm.validateField("phoneNumber");
     },
     // 默认QQ号
     addQQ() {
-      this.form.qqNumber = "1";
+      this.form.qqNumber = this.userRealInfo.qqNumber;
+      this.$refs.ruleForm.validateField("qqNumber");
     },
     // 重置表单
     resetForm() {
       this.form = {
-        questionCategoryCode: this.classId,
-        extParam: { ip: "无", password: "", port: "", username: "" },
+        questionCategoryCode: this.questionCategoryCode,
+        extParam: { ip: undefined, password: "", port: "", username: "" },
         title: "",
         type: "1",
         description: "",
@@ -295,6 +324,9 @@ export default {
 .work-add-container {
   padding-bottom: 50px;
   .inline {
+    display: flex;
+  }
+  .inline-wrap {
     display: flex;
     .input {
       width: 210px;

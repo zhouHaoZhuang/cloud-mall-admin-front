@@ -59,13 +59,11 @@ export default {
     getRecord() {
       this.$store
         .dispatch("workorder/messageList", {
-          currentPage: 1,
-          pageSize: 999,
+          queryType: 1,
           workOrderNo: this.$route.query.workOrderNo
         })
         .then((res) => {
-          // this.recordList = [...res.data.list];
-          this.recordList = res.data.list.map((ele) => {
+          this.recordList = res.data.map((ele) => {
             return {
               ...ele,
               replyUrl: ele.replyUrl.split(",")

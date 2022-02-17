@@ -9,11 +9,11 @@ const workorder = {
   actions: {
     // 提交工单-----start
     // 问题类别列表
-    problemTypeList({ commit, state }, params) {
+    problemTypeList({ commit, state }, data) {
       return request({
-        url: `/workOrderReply`,
-        method: "get",
-        params,
+        url: "/questionCategory/getList",
+        method: "post",
+        data,
         formService: true
       });
     },

@@ -130,9 +130,8 @@ export default {
         },
         {
           title: "问题类型",
-          dataIndex: "title1",
-          width: 150,
-          scopedSlots: { customRender: "title1" }
+          dataIndex: "questionCategoryName",
+          width: 150
         },
         {
           title: "提交时间",
