@@ -7,7 +7,9 @@
         服务器升级后，到期时间不变，差价的计算精确到天；升级价格计算公式：(升级配置价格[月]
         - 原始配置价格[月]) * 12 / 365 * 到期剩余天数。
       </span>
-      <span v-else>降低配置</span>
+      <span v-else>
+        实例必须处于已停止（Stopped）状态每台实例降低配置次数不能超过三次。
+      </span>
     </div>
     <a-tabs v-model="tabKey" @change="handleTabChange">
       <a-tab-pane key="1" tab="实例规格"> </a-tab-pane>
@@ -144,7 +146,17 @@ export default {
         tradePrice: "0.00元"
       },
       priceLoading: true,
-      tabKey: "1"
+      tabKey: "1",
+      // 保存旧配置
+      // 实例规格
+      example: {
+        cpu: undefined,
+        memory: undefined
+      },
+      // 数据盘块数
+      dataSidkCount: undefined,
+      // 带宽
+      oldBandwidth: undefined
     };
   },
   computed: {
@@ -182,6 +194,11 @@ export default {
               cpu: res.data.cpu,
               memory: res.data.memory
             };
+            // 保存旧配置
+            this.example = {
+              cpu: res.data.cpu,
+              memory: res.data.memory
+            };
             this.getCpu();
           }
           if (this.tabKey === "2") {
@@ -196,6 +213,8 @@ export default {
                 };
               })
             };
+            // 保存旧配置
+            this.dataSidkCount = res.data.dataDisk.length;
           }
           if (this.tabKey === "3") {
             this.form = {
@@ -208,6 +227,8 @@ export default {
               this.minBandwidth = 1;
               this.maxBandwidth = res.data.internetMaxBandwidthOut;
             }
+            // 保存旧配置
+            this.oldBandwidth = res.data.internetMaxBandwidthOut;
           }
         });
     },
