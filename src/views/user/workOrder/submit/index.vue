@@ -69,7 +69,7 @@
 
 <script>
 import Add from "@/views/user/workOrder/submit/add.vue";
-import Step from "@/components/Domain/step";
+import Step from "@/components/WorkOrder/step";
 export default {
   components: { Add, Step },
   data() {

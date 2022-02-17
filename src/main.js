@@ -11,6 +11,10 @@ import "ant-design-vue/dist/antd.css";
 // 复制文本插件
 import VueClipboard from "vue-clipboard2";
 Vue.use(VueClipboard);
+// 图片预览组件
+import preview from "vue-photo-preview";
+import "vue-photo-preview/dist/skin.css";
+Vue.use(preview)
 // 全局样式
 import "./global.less"; // global style
 // 自定义指令+过滤器

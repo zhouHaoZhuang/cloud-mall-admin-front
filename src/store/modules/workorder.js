@@ -93,7 +93,7 @@ const workorder = {
     // 评价工单
     commentWorkOrder({ commit, state }, data) {
       return request({
-        url: "/workOrderReply",
+        url: "/evaluate/addEvaluate",
         method: "post",
         data,
         formService: true

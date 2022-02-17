@@ -44,7 +44,12 @@
       >
         关闭工单
       </a-button>
-      <a-button v-else @click="handleJumpComment"> 评价工单 </a-button>
+      <a-button
+        v-if="detail.status === 3 && detail.evaluateStatus === 0"
+        @click="handleJumpComment"
+      >
+        评价工单
+      </a-button>
     </div>
     <!-- 投诉盒子 -->
     <!-- <div class="complaint-wrap">
@@ -97,7 +102,8 @@ export default {
         path: "/user/workOrder/comment",
         query: {
           workOrderNo: this.detail.workOrderNo,
-          title: this.detail.title
+          title: this.detail.title,
+          channelCode: this.detail.channelCode
         }
       });
     },

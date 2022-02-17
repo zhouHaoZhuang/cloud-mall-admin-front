@@ -15,10 +15,10 @@
 
 <script>
 import DetailHeader from "@/components/Common/detailHeader";
-import Step from "@/components/Domain/step";
-import Detail from "@/components/Domain/detail";
-import Record from "@/components/Domain/record";
-import Reply from "@/components/Domain/reply";
+import Step from "@/components/WorkOrder/step";
+import Detail from "@/components/WorkOrder/detail";
+import Record from "@/components/WorkOrder/record";
+import Reply from "@/components/WorkOrder/reply";
 export default {
   components: {
     DetailHeader,
@@ -66,7 +66,7 @@ export default {
           this.recordList = res.data.map((ele) => {
             return {
               ...ele,
-              replyUrl: ele.replyUrl.split(",")
+              replyUrl: ele.replyUrl ? ele.replyUrl.split(",") : []
             };
           });
         });

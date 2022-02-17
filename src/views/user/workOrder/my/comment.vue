@@ -11,20 +11,24 @@
       :label-col="labelCol"
       :wrapper-col="wrapperCol"
     >
-      <a-form-model-item label="工单编号"> </a-form-model-item>
-      <a-form-model-item label="问题标题"> </a-form-model-item>
-      <a-form-model-item label="服务评分" prop="rateValue">
-        <a-rate v-model="form.rateValue" />
-        <span v-if="form.rateValue" class="rate-txt">
-          {{ form.rateValue }}
+      <a-form-model-item label="工单编号">
+        {{ this.$route.query.workOrderNo }}
+      </a-form-model-item>
+      <a-form-model-item label="问题标题">
+        {{ this.$route.query.title }}
+      </a-form-model-item>
+      <a-form-model-item label="服务评分" prop="totalPoint">
+        <a-rate v-model="form.totalPoint" />
+        <span v-if="form.totalPoint" class="rate-txt">
+          {{ form.totalPoint }}
           <span>[</span>
           {{ rateTxt }}
           <span>]</span>
         </span>
       </a-form-model-item>
-      <a-form-model-item label="您的评价" prop="description">
+      <a-form-model-item label="您的评价" prop="evaluateDetail">
         <a-input
-          v-model="form.description"
+          v-model="form.evaluateDetail"
           type="textarea"
           allowClear
           :maxLength="2000"
@@ -66,7 +70,7 @@ export default {
   },
   computed: {
     rateTxt() {
-      const value = this.form.rateValue;
+      const value = this.form.totalPoint;
       if (value === 1) {
         return "非常不满意";
       }
@@ -97,12 +101,11 @@ export default {
       wrapperCol: { span: 14 },
       other: "",
       form: {
-        rateValue: 0,
-        description: "",
-        img: ""
+        totalPoint: 0,
+        evaluateDetail: ""
       },
       rules: {
-        rateValue: [
+        totalPoint: [
           {
             required: true,
             message: "请选择评分",
@@ -113,7 +116,7 @@ export default {
             trigger: "change"
           }
         ],
-        description: [
+        evaluateDetail: [
           {
             required: true,
             message: "请填写您的评价",
@@ -132,10 +135,14 @@ export default {
           this.loading = true;
           this.$store
             .dispatch("workorder/commentWorkOrder", {
-              queryType: 1,
-              wordOrderNo: this.$route.query.wordOrderNo
+              ...this.form,
+              workOrderNo: this.$route.query.workOrderNo,
+              channelCode: this.$route.query.channelCode
             })
-            .then((res) => {})
+            .then((res) => {
+              this.$message.success("评价成功");
+              this.$router.back();
+            })
             .finally(() => {
               this.loading = false;
             });

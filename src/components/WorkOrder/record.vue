@@ -20,7 +20,13 @@
               {{ item.replyDetail }}
             </div>
             <div class="info-img">
-              <img v-for="ele in item.replyUrl" :key="ele" :src="ele" alt="" />
+              <img
+                v-for="(ele, index) in item.replyUrl"
+                :key="ele"
+                :src="ele"
+                :preview="index"
+                alt=""
+              />
             </div>
           </div>
         </div>
