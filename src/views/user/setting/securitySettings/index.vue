@@ -18,10 +18,7 @@
           <span class="user-key">安全级别：</span>
           <a-rate v-model="reatNum" allow-half disabled />
           <span class="Security-level">
-            {{
-              reatList[reatNum]
-            }}
-            建议您启动全部安全设置，以保障账户及资金安全。
+            {{ reatList[reatNum] }}
           </span>
         </p>
       </div>
@@ -91,11 +88,11 @@ export default {
   data() {
     return {
       reatList: {
-        1: "低",
-        2: "低",
-        3: "中",
-        4: "高",
-        5: "高"
+        1: "低，由于您的安全级别目前为低，建议您开启安全防护",
+        2: "较低，由于您的安全级别目前为较低，建议您开启安全防护",
+        3: "中，由于您的安全级别目前为中，建议您开启剩余安全防护",
+        4: "较高，您的安全级别目前较高",
+        5: "高，您的安全级别目前为高，暂无其他风险"
       }
     };
   },
