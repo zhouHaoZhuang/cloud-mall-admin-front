@@ -96,25 +96,6 @@ export const getList = (request, listQuery) => {
   });
 };
 
-// 处理浏览器地址栏地址，截取地址中段,不需要http:// or https://和com后地址
-export const getWindowUrl = (url) => {
-  const newUrl = url.includes("http://")
-    ? url.replace("http://", "")
-    : url.replace("https://", "");
-  const str = newUrl.substring(0, newUrl.indexOf("/"));
-  const index1 = str.lastIndexOf(".");
-  const index2 = str.lastIndexOf(".", index1 - 1);
-  const result = str.substring(index2 + 1);
-  return result;
-};
-
-// 根据环境返回domain地址--后端需要请求头携带浏览器地址，字段：domain
-export const getDomainUrl = () => {
-  return process.env.VUE_APP_ENV === "dev"
-    ? env.DOMAIN_URL
-    : getWindowUrl(window.location.href);
-};
-
 // 处理服务器询价或者其他操作时，时长+单位的字段
 export const setBuyTimeData = (time) => {
   if (time <= 9) {
@@ -166,9 +147,72 @@ export const openAlipayPay = (form) => {
   // document.forms[0].submit();
 };
 
+// 处理浏览器地址栏地址，截取地址中段,不需要http:// or https://和com后地址
+export const getWindowUrl = (url) => {
+  const newUrl = url.includes("http://")
+    ? url.replace("http://", "")
+    : url.replace("https://", "");
+  const str = newUrl.substring(0, newUrl.indexOf("/"));
+  const index1 = str.lastIndexOf(".");
+  const index2 = str.lastIndexOf(".", index1 - 1);
+  const result = str.substring(index2 + 1);
+  return result;
+};
+
+// 根据环境返回domain地址--后端需要请求头携带浏览器地址，字段：domain
+export const getDomainUrl = () => {
+  return process.env.VUE_APP_ENV === "local" ||
+    process.env.VUE_APP_ENV === "dev"
+    ? env.DOMAIN_URL
+    : getWindowUrl(window.location.href);
+};
+
 // 跳转云商城
 export const jumpCloudMall = (url, type) => {
   window.open(env.MALL_URL + url, type ? "_blank" : "_self");
+};
+
+// 跳转云商城的url地址生成
+export const getIdcMallUrl = () => {
+  const url = window.location.href;
+  const newUrl = url.includes("http://")
+    ? url.replace("http://", "")
+    : url.replace("https://", "");
+  const result = newUrl
+    .substring(0, newUrl.indexOf("/"))
+    .replace("/console", "");
+  const newResult = `${
+    url.includes("http://") ? "http://" : "https://"
+  }${result}`;
+  return newResult;
+};
+
+// 订单详情支付生成支付宝回调地址
+export const getAliPayCallBack = (id) => {
+  if (process.env.VUE_APP_ENV === "local") {
+    return "";
+  }
+  const url = window.location.href;
+  const index = url.indexOf(".com") !== -1 ? url.indexOf(".com") + 4 : -1;
+  const result =
+    index !== -1
+      ? `${url.substring(0, index)}/console/user/finance/orderDetail?id=${id}`
+      : "";
+  return result;
+};
+
+// 充值页面支付生成支付宝回调地址
+export const getRechargeAliPayCallBack = () => {
+  if (process.env.VUE_APP_ENV === "local") {
+    return "";
+  }
+  const url = window.location.href;
+  const index = url.indexOf(".com") !== -1 ? url.indexOf(".com") + 4 : -1;
+  const result =
+    index !== -1
+      ? `${url.substring(0, index)}/console/user/finance/recharge`
+      : "";
+  return result;
 };
 
 // 处理cpu+内存数据  data:默认数组  company:单位
@@ -184,45 +228,4 @@ export const setCpuOrDiskData = (data, company) => {
   } else {
     return [];
   }
-};
-
-// 跳转云商城的url地址生成
-export const getIdcMallUrl = () => {
-  const url = window.location.href;
-  const newUrl = url.includes("http://")
-    ? url.replace("http://", "")
-    : url.replace("https://", "");
-  const result = newUrl
-    .substring(0, newUrl.indexOf("/"))
-    .replace("console.", "");
-  const newResult = `${
-    url.includes("http://") ? "http://" : "https://"
-  }www.${result}`;
-  return newResult;
-};
-
-// 订单详情支付生成支付宝回调地址
-export const getAliPayCallBack = (id) => {
-  if (process.env.VUE_APP_ENV === "dev") {
-    return "";
-  }
-  const url = window.location.href;
-  const index = url.indexOf(".com") !== -1 ? url.indexOf(".com") + 4 : -1;
-  const result =
-    index !== -1
-      ? `${url.substring(0, index)}/#/user/finance/orderDetail?id=${id}`
-      : "";
-  return result;
-};
-
-// 充值页面支付生成支付宝回调地址
-export const getRechargeAliPayCallBack = () => {
-  if (process.env.VUE_APP_ENV === "dev") {
-    return "";
-  }
-  const url = window.location.href;
-  const index = url.indexOf(".com") !== -1 ? url.indexOf(".com") + 4 : -1;
-  const result =
-    index !== -1 ? `${url.substring(0, index)}/#/user/finance/recharge` : "";
-  return result;
 };

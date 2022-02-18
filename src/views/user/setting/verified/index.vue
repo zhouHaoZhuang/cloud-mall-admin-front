@@ -133,7 +133,7 @@
         </p>
         <p class="verified-info-key">
           如果您的认证信息发生变更，可
-          <a href="/#/user/setting/changerealname">修改认证资料 ></a>
+          <a href="/console/user/setting/changerealname">修改认证资料 ></a>
         </p>
       </div>
     </div>

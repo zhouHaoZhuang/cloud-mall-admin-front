@@ -29,10 +29,6 @@ request.interceptors.request.use(async (config) => {
   // 携带system区分不同项目
   config.headers.system = "idc";
   // 多个请求地址兼容
-  // 支付请求地址
-  if (config.pay) {
-    config.baseURL = env.PAY_BASE_URL;
-  }
   // form，新的服务接口请求地址
   if (config.formService) {
     config.baseURL = env.FORM_BASE_URL;
