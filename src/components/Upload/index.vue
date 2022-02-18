@@ -88,7 +88,7 @@ export default {
     // 图片大小限制
     size: {
       type: Number,
-      default: 100
+      default: 5
     }
   },
   data() {
