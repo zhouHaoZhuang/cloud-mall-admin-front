@@ -11,8 +11,8 @@
       <a-steps :current="current" direction="vertical" disabled>
         <a-step disabled>
           <div slot="title" class="stepInfo">
-            <p>汇款至{{companyName}}银行账户</p>
-            <p>线下汇款直接向{{companyName}}的账户汇款，汇款账号如下：</p>
+            <p>汇款至{{ companyName }}银行账户</p>
+            <p>线下汇款直接向{{ companyName }}的账户汇款，汇款账号如下：</p>
           </div>
           <div slot="description">
             <div>
@@ -89,11 +89,15 @@
                   label="汇款凭证"
                   prop="voucher"
                 >
-                  <Upload :defaultFile="form.voucher" @change="imgChange" />
+                  <Upload
+                    :size="5"
+                    :defaultFile="form.voucher"
+                    @change="imgChange"
+                  />
                 </a-form-model-item>
                 <div class="uploadInfo">
                   <p>彩色扫描件</p>
-                  <p>JPG或PNG格式，文件大小不超过1MB</p>
+                  <p>JPG或PNG格式，文件大小不超过5MB</p>
                   <p>汇款凭证不能为空</p>
                 </div>
                 <a-form-model-item :wrapper-col="{ span: 14, offset: 2 }">
@@ -209,13 +213,13 @@ export default {
           }
         ]
       },
-      companyName: "",
+      companyName: ""
     };
   },
   props: ["change"],
   created() {
     this.getInfo();
-    this.getCompanyInfo()
+    this.getCompanyInfo();
   },
   methods: {
     imgChange({ urlList, firstImageUrl }) {
