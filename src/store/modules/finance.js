@@ -21,7 +21,6 @@ const finance = {
         url: `/customerAccountLog/channel`,
         method: "post",
         data
-        // pay:true
       });
     },
     selectList({ commit, state }, params) {
