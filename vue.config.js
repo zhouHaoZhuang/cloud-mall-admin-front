@@ -33,11 +33,11 @@ module.exports = {
     port: 8000 //自定义项目运行端口
     // open: "true",  //自动打开浏览器
     // proxy: {
-    //   '/api': { //此处要与 /services/api.js 中的 API_PROXY_PREFIX 值保持一致
-    //     target: process.env.VUE_APP_API_BASE_URL,
+    //   "/api": {
+    //     target: "http://site.ydidc.com/server",
     //     changeOrigin: true,
     //     pathRewrite: {
-    //       '^/api': ''
+    //       "^/api": ""
     //     }
     //   }
     // }
