@@ -1,22 +1,21 @@
 import { getIdcMallUrl } from "../utils/index";
 // 默认请求地址
 const baseUrl = {
-  // dev: "http://216d7872i4.qicp.vip",
-  dev: "http://ims.dev.ydidc.com",
-  test: "http://ims.test.ydidc.com",
-  prod: "http://ims.prod.ydidc.com"
+  dev: "http://site.ydidc.com/server",
+  test: "http://www.zjyundun.com/server",
+  prod: "http://www.zjyundun.com/server"
 };
 // 支付相关请求地址
 const payBaseUrl = {
-  dev: "http://pay.dev.ydidc.com",
-  test: "http://pay.test.ydidc.com",
-  prod: "http://pay.prod.ydidc.com"
+  dev: "http://www.ydidc.com/server/pay",
+  test: "http://www.zjyundun.com/server/pay",
+  prod: "http://www.zjyundun.com/server/pay"
 };
 // form服务接口请求地址
 const formBaseUrl = {
-  dev: "http://form.dev.ydidc.com",
-  test: "http://form.test.ydidc.com",
-  prod: "http://form.prod.ydidc.com"
+  dev: "http://www.ydidc.com/server/form",
+  test: "http://www.zjyundun.com/server/form",
+  prod: "http://www.zjyundun.com/server/form"
 };
 // 跳转云商城地址
 const cloudMallUrl = {
@@ -31,9 +30,6 @@ function getCloudMallUrl() {
 // 请求头携带domain参数
 const domains = {
   dev: "localhost"
-  // test: 'http://test.com',
-  // preprod: 'http://preprod.com',
-  // prod: 'http://prod.com'
 };
 // authing接口参数
 const authingReq = {
