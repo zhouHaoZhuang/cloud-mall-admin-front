@@ -48,7 +48,12 @@
 <script>
 import lrz from "lrz";
 import env from "@/config/env";
-import { base64ToFile, getBase64Str, getDomainUrl } from "@/utils/index";
+import {
+  base64ToFile,
+  getBase64Str,
+  getDomainUrl,
+  imgUrlToBase64
+} from "@/utils/index";
 export default {
   props: {
     // 发送到后台的文件名
@@ -96,9 +101,7 @@ export default {
       previewVisible: false,
       previewImage: "",
       imageList: [],
-      fileList: [],
-      // base64字符串对象数组
-      base64List: []
+      fileList: []
     };
   },
   computed: {
@@ -134,7 +137,6 @@ export default {
         if (!this.defaultFile) {
           this.imageList = [];
           this.fileList = [];
-          this.base64List = [];
           return;
         }
         const newDefaultFile = Array.isArray(this.defaultFile)
@@ -146,12 +148,11 @@ export default {
             uid: -index - 1,
             name: `image${index}.png`,
             status: "done",
-            url: typeof item === "string" ? item : item.fileContents
+            url: item
           };
         });
         this.imageList = this.$clonedeep(newImgList);
         this.fileList = this.$clonedeep(newImgList);
-        this.base64List = this.$clonedeep(newDefaultFile);
       },
       deep: true,
       immediate: true
@@ -184,9 +185,6 @@ export default {
           width: 1920
         }).then((res) => {
           const file = base64ToFile(res.base64, res.origin.name);
-          this.base64List.push({
-            ...getBase64Str(res.base64, res.file.type)
-          });
           resolve(file);
         });
       });
@@ -223,10 +221,23 @@ export default {
             url: item.url || item.response?.data
           };
         });
-        this.$emit("change", {
-          urlList, // 图片列表
-          firstImageUrl, // 图片列表第一张图片
-          base64List: this.base64List // base64字符串对象数组
+        let reqArr = [];
+        // 请求多个或单个数据
+        urlList.forEach((ele) => {
+          reqArr.push(imgUrlToBase64(ele));
+        });
+        Promise.all(reqArr).then((result) => {
+          console.log(result);
+          const base64List = result.map((ele) => {
+            return {
+              ...getBase64Str(ele)
+            };
+          });
+          this.$emit("change", {
+            urlList, // 图片列表
+            firstImageUrl, // 图片列表第一张图片
+            base64List // base64字符串对象数组
+          });
         });
       }
     },
@@ -235,15 +246,27 @@ export default {
       const index = this.imageList.findIndex((item) => item.uid === data.uid);
       this.imageList.splice(index, 1);
       this.fileList.splice(index, 1);
-      this.base64List.splice(index, 1);
       const urlList =
         this.fileList.map((item) => item.response?.data || item.url) || [];
       const firstImageUrl =
         urlList.length && urlList.length > 0 ? urlList[0] : "";
-      this.$emit("change", {
-        urlList, // 图片列表
-        firstImageUrl, // 图片列表第一张图片
-        base64List: this.base64List // base64字符串对象数组
+
+      let reqArr = [];
+      // 请求多个或单个数据
+      urlList.forEach((ele) => {
+        reqArr.push(imgUrlToBase64(ele));
+      });
+      Promise.all(reqArr).then((result) => {
+        const base64List = result.map((ele) => {
+          return {
+            ...getBase64Str(ele)
+          };
+        });
+        this.$emit("change", {
+          urlList, // 图片列表
+          firstImageUrl, // 图片列表第一张图片
+          base64List // base64字符串对象数组
+        });
       });
     }
   }

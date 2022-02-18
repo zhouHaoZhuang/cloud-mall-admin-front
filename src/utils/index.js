@@ -20,14 +20,34 @@ export function base64ToFile(base64, filename) {
 }
 // 获取并返回图片base64字符串对象
 export function getBase64Str(base64, type) {
-  const fileContents = base64;
-  const index = type.indexOf("/");
-  const fileSuffix = type.substring(index + 1);
+  const arr = base64.split(",");
+  const fileContents = arr[1];
+  const fileSuffix = arr[0];
   return {
     fileContents,
     fileSuffix
   };
 }
+
+// 将网络地址图片转换为base64
+export const imgUrlToBase64 = (imgUrl) => {
+  let image = new Image();
+  image.crossOrigin = "anonymous"; //解决跨域问题
+  image.src = imgUrl;
+  return new Promise((resolve) => {
+    image.onload = function () {
+      //image.onload为异步加载
+      let canvas = document.createElement("canvas");
+      canvas.width = image.width;
+      canvas.height = image.height;
+      let context = canvas.getContext("2d");
+      context.drawImage(image, 0, 0, image.width, image.height);
+      //这里的base64Url就是base64类型
+      //使用toDataUrl将图片转换成jpeg的格式,不要把图片压缩成png，因为压缩成png后base64的字符串可能比不转换前的长！
+      resolve(canvas.toDataURL("image/jpeg", 1));
+    };
+  });
+};
 // 请求列表时前端要替后端做适配，并且有点多，封装请求列表时带有搜索的接口
 // request: 调用vuex的actions名   listQuery: 传递给后端的参数
 // 设置需要处理为精确查询的名单
@@ -74,25 +94,6 @@ export const getList = (request, listQuery) => {
         reject(err);
       });
   });
-};
-
-// 处理浏览器地址栏地址，截取地址中段,不需要http:// or https://和com后地址
-export const getWindowUrl = (url) => {
-  const newUrl = url.includes("http://")
-    ? url.replace("http://", "")
-    : url.replace("https://", "");
-  const str = newUrl.substring(0, newUrl.indexOf("/"));
-  const index1 = str.lastIndexOf(".");
-  const index2 = str.lastIndexOf(".", index1 - 1);
-  const result = str.substring(index2 + 1);
-  return result;
-};
-
-// 根据环境返回domain地址--后端需要请求头携带浏览器地址，字段：domain
-export const getDomainUrl = () => {
-  return process.env.VUE_APP_ENV === "dev"
-    ? env.DOMAIN_URL
-    : getWindowUrl(window.location.href);
 };
 
 // 处理服务器询价或者其他操作时，时长+单位的字段
@@ -146,9 +147,72 @@ export const openAlipayPay = (form) => {
   // document.forms[0].submit();
 };
 
+// 处理浏览器地址栏地址，截取地址中段,不需要http:// or https://和com后地址
+export const getWindowUrl = (url) => {
+  const newUrl = url.includes("http://")
+    ? url.replace("http://", "")
+    : url.replace("https://", "");
+  const str = newUrl.substring(0, newUrl.indexOf("/"));
+  const index1 = str.lastIndexOf(".");
+  const index2 = str.lastIndexOf(".", index1 - 1);
+  const result = str.substring(index2 + 1);
+  return result;
+};
+
+// 根据环境返回domain地址--后端需要请求头携带浏览器地址，字段：domain
+export const getDomainUrl = () => {
+  return process.env.VUE_APP_ENV === "local" ||
+    process.env.VUE_APP_ENV === "dev"
+    ? env.DOMAIN_URL
+    : getWindowUrl(window.location.href);
+};
+
 // 跳转云商城
 export const jumpCloudMall = (url, type) => {
   window.open(env.MALL_URL + url, type ? "_blank" : "_self");
+};
+
+// 跳转云商城的url地址生成
+export const getIdcMallUrl = () => {
+  const url = window.location.href;
+  const newUrl = url.includes("http://")
+    ? url.replace("http://", "")
+    : url.replace("https://", "");
+  const result = newUrl
+    .substring(0, newUrl.indexOf("/"))
+    .replace("/console", "");
+  const newResult = `${
+    url.includes("http://") ? "http://" : "https://"
+  }${result}`;
+  return newResult;
+};
+
+// 订单详情支付生成支付宝回调地址
+export const getAliPayCallBack = (id) => {
+  if (process.env.VUE_APP_ENV === "local") {
+    return "";
+  }
+  const url = window.location.href;
+  const index = url.indexOf(".com") !== -1 ? url.indexOf(".com") + 4 : -1;
+  const result =
+    index !== -1
+      ? `${url.substring(0, index)}/console/user/finance/orderDetail?id=${id}`
+      : "";
+  return result;
+};
+
+// 充值页面支付生成支付宝回调地址
+export const getRechargeAliPayCallBack = () => {
+  if (process.env.VUE_APP_ENV === "local") {
+    return "";
+  }
+  const url = window.location.href;
+  const index = url.indexOf(".com") !== -1 ? url.indexOf(".com") + 4 : -1;
+  const result =
+    index !== -1
+      ? `${url.substring(0, index)}/console/user/finance/recharge`
+      : "";
+  return result;
 };
 
 // 处理cpu+内存数据  data:默认数组  company:单位
@@ -164,45 +228,4 @@ export const setCpuOrDiskData = (data, company) => {
   } else {
     return [];
   }
-};
-
-// 跳转云商城的url地址生成
-export const getIdcMallUrl = () => {
-  const url = window.location.href;
-  const newUrl = url.includes("http://")
-    ? url.replace("http://", "")
-    : url.replace("https://", "");
-  const result = newUrl
-    .substring(0, newUrl.indexOf("/"))
-    .replace("console.", "");
-  const newResult = `${
-    url.includes("http://") ? "http://" : "https://"
-  }www.${result}`;
-  return newResult;
-};
-
-// 订单详情支付生成支付宝回调地址
-export const getAliPayCallBack = (id) => {
-  if (process.env.VUE_APP_ENV === "dev") {
-    return "";
-  }
-  const url = window.location.href;
-  const index = url.indexOf(".com") !== -1 ? url.indexOf(".com") + 4 : -1;
-  const result =
-    index !== -1
-      ? `${url.substring(0, index)}/#/user/finance/orderDetail?id=${id}`
-      : "";
-  return result;
-};
-
-// 充值页面支付生成支付宝回调地址
-export const getRechargeAliPayCallBack = () => {
-  if (process.env.VUE_APP_ENV === "dev") {
-    return "";
-  }
-  const url = window.location.href;
-  const index = url.indexOf(".com") !== -1 ? url.indexOf(".com") + 4 : -1;
-  const result =
-    index !== -1 ? `${url.substring(0, index)}/#/user/finance/recharge` : "";
-  return result;
 };

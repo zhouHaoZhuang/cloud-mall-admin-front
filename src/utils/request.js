@@ -13,6 +13,7 @@ const authenticationClient = new AuthenticationClient({
 const request = axios.create({
   // API 请求的默认前缀
   baseURL: env.BASE_URL,
+  // baseURL: '/api',
   timeout: 10000 // 请求超时时间
 });
 // 下载的请求地址
@@ -29,10 +30,6 @@ request.interceptors.request.use(async (config) => {
   // 携带system区分不同项目
   config.headers.system = "idc";
   // 多个请求地址兼容
-  // 支付请求地址
-  if (config.pay) {
-    config.baseURL = env.PAY_BASE_URL;
-  }
   // form，新的服务接口请求地址
   if (config.formService) {
     config.baseURL = env.FORM_BASE_URL;

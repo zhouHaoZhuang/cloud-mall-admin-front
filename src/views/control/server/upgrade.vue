@@ -7,7 +7,9 @@
         服务器升级后，到期时间不变，差价的计算精确到天；升级价格计算公式：(升级配置价格[月]
         - 原始配置价格[月]) * 12 / 365 * 到期剩余天数。
       </span>
-      <span v-else>降低配置</span>
+      <span v-else>
+        实例必须处于已停止（Stopped）状态每台实例降低配置次数不能超过三次。
+      </span>
     </div>
     <a-tabs v-model="tabKey" @change="handleTabChange">
       <a-tab-pane key="1" tab="实例规格"> </a-tab-pane>
@@ -102,9 +104,7 @@
         <div class="price">{{ price.tradePrice }}</div>
       </a-form-model-item>
       <a-form-model-item :wrapper-col="{ span: 10, offset: 5 }">
-        <a-button :disabled="priceLoading" type="primary" @click="handleSubmit">
-          确认提交
-        </a-button>
+        <a-button type="primary" @click="handleSubmit"> 确认提交 </a-button>
       </a-form-model-item>
     </a-form-model>
   </div>
@@ -144,7 +144,17 @@ export default {
         tradePrice: "0.00元"
       },
       priceLoading: true,
-      tabKey: "1"
+      tabKey: "1",
+      // 保存旧配置
+      // 实例规格
+      example: {
+        cpu: undefined,
+        memory: undefined
+      },
+      // 数据盘块数
+      dataSidkCount: undefined,
+      // 带宽
+      oldBandwidth: undefined
     };
   },
   computed: {
@@ -182,6 +192,11 @@ export default {
               cpu: res.data.cpu,
               memory: res.data.memory
             };
+            // 保存旧配置
+            this.example = {
+              cpu: res.data.cpu,
+              memory: res.data.memory
+            };
             this.getCpu();
           }
           if (this.tabKey === "2") {
@@ -196,6 +211,8 @@ export default {
                 };
               })
             };
+            // 保存旧配置
+            this.dataSidkCount = res.data.dataDisk.length;
           }
           if (this.tabKey === "3") {
             this.form = {
@@ -208,6 +225,8 @@ export default {
               this.minBandwidth = 1;
               this.maxBandwidth = res.data.internetMaxBandwidthOut;
             }
+            // 保存旧配置
+            this.oldBandwidth = res.data.internetMaxBandwidthOut;
           }
         });
     },
@@ -336,11 +355,32 @@ export default {
     handleCpuChange(val) {
       this.getDisk(true);
     },
+    // 提交前校验是否有修改配置，没有修改需要驳回提交
+    verifyChange(data) {
+      if (this.tabKey === "1") {
+        return (
+          this.example.cpu !== data.cpu && this.example.memory !== data.memory
+        );
+      }
+      if (this.tabKey === "2") {
+        return this.form.dataDisk.length !== this.dataSidkCount;
+      }
+      if (this.tabKey === "3") {
+        return data.internetMaxBandwidthOut !== this.oldBandwidth;
+      }
+    },
     // 确认提交
     handleSubmit() {
+      const data = this.getParams();
+      // 校验是否修改了配置
+      const isChange = this.verifyChange(data);
+      if (!isChange) {
+        this.$message.warning("没有调整配置");
+        return;
+      }
       this.priceLoading = true;
       this.$store
-        .dispatch("cloud/cloudUpgrade", this.getParams())
+        .dispatch("cloud/cloudUpgrade", data)
         .then((res) => {
           if (this.isUpgrade) {
             this.$message.success("提交升级配置订单成功");

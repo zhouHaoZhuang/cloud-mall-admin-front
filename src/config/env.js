@@ -1,42 +1,39 @@
 import { getIdcMallUrl } from "../utils/index";
 // 默认请求地址
 const baseUrl = {
-  // dev: "http://216d7872i4.qicp.vip",
-  dev: "http://ims.dev.ydidc.com",
-  test: "http://ims.test.ydidc.com",
-  prod: "http://ims.prod.ydidc.com"
-};
-// 支付相关请求地址
-const payBaseUrl = {
-  dev: "http://pay.dev.ydidc.com",
-  test: "http://pay.test.ydidc.com",
-  prod: "http://pay.prod.ydidc.com"
+  local: "http://site.ydidc.com/server",
+  dev: "http://site.ydidc.com/server",
+  test: "http://www.zjyundun.com/server",
+  prod: "http://www.zjyundun.com/server"
 };
 // form服务接口请求地址
 const formBaseUrl = {
-  dev: "http://form.dev.ydidc.com",
-  test: "http://form.test.ydidc.com",
-  prod: "http://form.prod.ydidc.com"
+  local: "http://www.ydidc.com/server/form",
+  dev: "http://www.ydidc.com/server/form",
+  test: "http://www.zjyundun.com/server/form",
+  prod: "http://www.zjyundun.com/server/form"
 };
 // 跳转云商城地址
 const cloudMallUrl = {
-  dev: "http://192.168.12.30:3000"
+  local: "http://192.168.12.30:3000"
 };
 // 获取云商城地址
 function getCloudMallUrl() {
-  return process.env.VUE_APP_ENV === "dev"
+  return process.env.VUE_APP_ENV === "local"
     ? cloudMallUrl[process.env.VUE_APP_ENV]
     : getIdcMallUrl();
 }
 // 请求头携带domain参数
 const domains = {
+  local: "localhost",
   dev: "localhost"
-  // test: 'http://test.com',
-  // preprod: 'http://preprod.com',
-  // prod: 'http://prod.com'
 };
 // authing接口参数
 const authingReq = {
+  local: {
+    appId: "619c93dc69a93fbb8a1faf8c",
+    appHost: "https://resource-poor.authing.cn"
+  },
   dev: {
     appId: "619c93dc69a93fbb8a1faf8c",
     appHost: "https://resource-poor.authing.cn"
@@ -53,7 +50,6 @@ const authingReq = {
 
 export default {
   BASE_URL: baseUrl[process.env.VUE_APP_ENV],
-  PAY_BASE_URL: payBaseUrl[process.env.VUE_APP_ENV],
   FORM_BASE_URL: formBaseUrl[process.env.VUE_APP_ENV],
   MALL_URL: getCloudMallUrl(),
   DOMAIN_URL: domains[process.env.VUE_APP_ENV],
