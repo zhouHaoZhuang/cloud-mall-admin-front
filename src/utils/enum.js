@@ -31,7 +31,7 @@ export const regionEnum = {
 };
 // 订单状态
 export const orderStatusEnum = {
-  "-3": "服务器创建异常",
+  "-3": "操作服务器异常",
   "-1": "交易关闭",
   1: "待支付",
   3: "支付中",
