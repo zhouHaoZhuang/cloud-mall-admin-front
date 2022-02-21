@@ -8,7 +8,8 @@ const user = {
     token: "",
     userInfo: {},
     userRealInfo: {},
-    perms: []
+    perms: [],
+    allConfig:{}
   },
 
   mutations: {
@@ -17,6 +18,9 @@ const user = {
     },
     SET_USERINFO: (state, userInfo) => {
       state.userInfo = { ...userInfo };
+    },
+    SET_ALLCONFIG: (state, allConfig) => {
+      state.allConfig = { ...allConfig };
     },
     SET_USERREALINFO: (state, userRealInfo) => {
       state.userRealInfo = { ...userRealInfo };
@@ -110,6 +114,24 @@ const user = {
         })
           .then((res) => {
             commit("SET_USERREALINFO", {
+              ...res.data
+            });
+            resolve();
+          })
+          .catch((error) => {
+            reject(error);
+          });
+      });
+    },
+    // 获取其他全局配置
+    getAllConfig({ commit, state }) {
+      return new Promise((resolve, reject) => {
+        request({
+          url: "/ccConfigRelation/selectCcConfigConfigRelation",
+          method: "get"
+        })
+          .then((res) => {
+            commit("SET_ALLCONFIG", {
               ...res.data
             });
             resolve();

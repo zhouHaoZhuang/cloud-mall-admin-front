@@ -1,147 +1,153 @@
 <template>
   <div>
-    <h2 class="verified-title">实名认证</h2>
-    <div class="verified-top-nav">
-      <span :class="{ chooseClick: choose == 1 }">①填写认证资料</span>
-      <span :class="{ chooseClick: choose == 2 }">②确认认证信息</span>
-      <!-- <span :class="{ chooseClick: choose == 3 }">③实名认证信息</span> -->
-    </div>
-    <div v-if="choose == 1">
-      <p class="phone-hint">
-        您选择了“手机号码认证方式”进行实名认证，请填写一下信息：
-      </p>
-      <a-form-model
-        ref="ruleForm"
-        :model="form"
-        :rules="rules"
-        :label-col="labelCol"
-        :wrapper-col="wrapperCol"
-      >
-        <a-form-model-item label="验证方式">
-          <a-radio-group v-model="form.checkType">
-            <a-radio
-              :value="index * 1"
-              v-for="(item, index) in verifyTypeEnum"
-              :key="index"
-            >
-              {{ item }}
-            </a-radio>
-          </a-radio-group>
-        </a-form-model-item>
-        <a-form-model-item label="真实姓名" prop="name">
-          <a-input v-model="form.name" />
-          请填写您本人的真实姓名，否则无法验证通过
-        </a-form-model-item>
-        <a-form-model-item label="身份证号码" prop="idNo">
-          <a-input v-model="form.idNo" />
-          请填写您本人的真实身份证号码，否则无法验证通过
-        </a-form-model-item>
-        <a-form-model-item :wrapper-col="{ span: 14, offset: 6 }">
-          <a-button type="primary" @click="choose = 2" :disabled="nextAudit">
-            下一步
-          </a-button>
-          <!-- <a-button style="margin-left: 10px"> 返回上一步 </a-button> -->
-        </a-form-model-item>
-      </a-form-model>
-      <div class="warm-tips">
-        <h3>温馨提示：</h3>
-        <p class="warm-tips-first-p">
-          1，请确保姓名、身份证号码完全正确，请勿使用他人身份信息进行认证，否则会认证失败
-        </p>
-        <p>2，请勿使用虚假信息认证，否则浙江云盾有权注销您的实名认证申请</p>
-        <p>3，浙江云盾会加密保存您的认证资料，绝不会泄露用户隐私，请放心认证</p>
-        <p>
-          4，所填写资料仅用于实名认证，不会开通其他任何附加服务，浙江云盾工作人员不会向您索要短信验证码，谨防上当
-        </p>
+    <div v-if="allConfig.persona_real_authentication == '1'">
+      <h2 class="verified-title">实名认证</h2>
+      <div class="verified-top-nav">
+        <span :class="{ chooseClick: choose == 1 }">①填写认证资料</span>
+        <span :class="{ chooseClick: choose == 2 }">②确认认证信息</span>
+        <!-- <span :class="{ chooseClick: choose == 3 }">③实名认证信息</span> -->
       </div>
-    </div>
-    <div v-if="choose == 2">
-      <div class="alert-warn">
-        <span>
-          如果姓名不正确，或者身份证号码错误，浙江云盾将取消您的实名认证，请仔细核对后提交！
-        </span>
-      </div>
-      <a-form-model
-        :model="form"
-        :label-col="labelCol"
-        :wrapper-col="wrapperCol"
-      >
-        <a-form-model-item label="验证方式">
-          <span>{{ verifyTypeEnum[form.checkType] }}</span>
-        </a-form-model-item>
-        <a-form-model-item label="真实姓名">
-          <span>{{ form.name }}</span>
-        </a-form-model-item>
-        <a-form-model-item label="身份证号码">
-          <span>{{ form.idNo }}</span>
-        </a-form-model-item>
-        <a-form-model-item label="" :wrapper-col="{ span: 14, offset: 4 }">
-          <a-checkbox-group v-model="form.type">
-            <a-checkbox value="1" name="type">确认如上信息属实</a-checkbox>
-          </a-checkbox-group>
-        </a-form-model-item>
-        <a-form-model-item :wrapper-col="{ span: 14, offset: 4 }">
-          <a-button type="primary" @click="submit" :disabled="Review">
-            提交审核
-          </a-button>
-          <a-button style="margin-left: 10px" @click="choose = 1">
-            上一步
-          </a-button>
-        </a-form-model-item>
-      </a-form-model>
-      <a-modal
-        title="请扫描下方二维码"
-        :visible="visible"
-        :confirm-loading="confirmLoading"
-        @ok="handleOk"
-        @cancel="handleCancel"
-        forceRender
-      >
-        <!-- <p>{{ ModalText }}</p> -->
-        <div class="qrcodeDom">
-          <div id="qrcodeDom"></div>
-          <p v-if="endTime">
-            请在<span>{{ endTime }}</span
-            >前扫码完成验证
+      <div v-if="choose == 1">
+        <p class="phone-hint">
+          您选择了“手机号码认证方式”进行实名认证，请填写一下信息：
+        </p>
+        <a-form-model
+          ref="ruleForm"
+          :model="form"
+          :rules="rules"
+          :label-col="labelCol"
+          :wrapper-col="wrapperCol"
+        >
+          <a-form-model-item label="验证方式">
+            <a-radio-group v-model="form.checkType">
+              <a-radio
+                :value="index * 1"
+                v-for="(item, index) in verifyTypeEnum"
+                :key="index"
+              >
+                {{ item }}
+              </a-radio>
+            </a-radio-group>
+          </a-form-model-item>
+          <a-form-model-item label="真实姓名" prop="name">
+            <a-input v-model="form.name" />
+            请填写您本人的真实姓名，否则无法验证通过
+          </a-form-model-item>
+          <a-form-model-item label="身份证号码" prop="idNo">
+            <a-input v-model="form.idNo" />
+            请填写您本人的真实身份证号码，否则无法验证通过
+          </a-form-model-item>
+          <a-form-model-item :wrapper-col="{ span: 14, offset: 6 }">
+            <a-button type="primary" @click="choose = 2" :disabled="nextAudit">
+              下一步
+            </a-button>
+            <!-- <a-button style="margin-left: 10px"> 返回上一步 </a-button> -->
+          </a-form-model-item>
+        </a-form-model>
+        <div class="warm-tips">
+          <h3>温馨提示：</h3>
+          <p class="warm-tips-first-p">
+            1，请确保姓名、身份证号码完全正确，请勿使用他人身份信息进行认证，否则会认证失败
+          </p>
+          <p>2，请勿使用虚假信息认证，否则浙江云盾有权注销您的实名认证申请</p>
+          <p>
+            3，浙江云盾会加密保存您的认证资料，绝不会泄露用户隐私，请放心认证
+          </p>
+          <p>
+            4，所填写资料仅用于实名认证，不会开通其他任何附加服务，浙江云盾工作人员不会向您索要短信验证码，谨防上当
           </p>
         </div>
-      </a-modal>
-    </div>
-    <div v-if="choose == 3" class="verified-info">
-      <img class="user-img" src="@/assets/img/auth_icon_success.png" alt="" />
-      <div class="verified-info-word">
-        <h3>恭喜您已通过浙江云盾实名认证！</h3>
-        <p>
-          <span class="verified-info-key">认证途径：</span>
-          <span>浙江云盾认证</span>
-        </p>
-        <p>
-          <span class="verified-info-key">真实姓名：</span>
-          <span>*勇</span>
-        </p>
-        <p>
-          <span class="verified-info-key">认证时间：</span>
-          <span>2021-06-12 15:55:51</span>
-        </p>
-        <p>
-          <span class="verified-info-key">证件号码：</span>
-          <span>610431*******3016</span>
-        </p>
-        <p>
-          <span class="verified-info-key">认证版本：</span>
-          <span><img src="@/assets/img/auth_level_2.png" alt="" /></span>
-        </p>
-        <p class="verified-info-key">
-          如果您的认证信息发生变更，可
-          <a href="/console/user/setting/changerealname">修改认证资料 ></a>
-        </p>
+      </div>
+      <div v-if="choose == 2">
+        <div class="alert-warn">
+          <span>
+            如果姓名不正确，或者身份证号码错误，浙江云盾将取消您的实名认证，请仔细核对后提交！
+          </span>
+        </div>
+        <a-form-model
+          :model="form"
+          :label-col="labelCol"
+          :wrapper-col="wrapperCol"
+        >
+          <a-form-model-item label="验证方式">
+            <span>{{ verifyTypeEnum[form.checkType] }}</span>
+          </a-form-model-item>
+          <a-form-model-item label="真实姓名">
+            <span>{{ form.name }}</span>
+          </a-form-model-item>
+          <a-form-model-item label="身份证号码">
+            <span>{{ form.idNo }}</span>
+          </a-form-model-item>
+          <a-form-model-item label="" :wrapper-col="{ span: 14, offset: 4 }">
+            <a-checkbox-group v-model="form.type">
+              <a-checkbox value="1" name="type">确认如上信息属实</a-checkbox>
+            </a-checkbox-group>
+          </a-form-model-item>
+          <a-form-model-item :wrapper-col="{ span: 14, offset: 4 }">
+            <a-button type="primary" @click="submit" :disabled="Review">
+              提交审核
+            </a-button>
+            <a-button style="margin-left: 10px" @click="choose = 1">
+              上一步
+            </a-button>
+          </a-form-model-item>
+        </a-form-model>
+        <a-modal
+          title="请扫描下方二维码"
+          :visible="visible"
+          :confirm-loading="confirmLoading"
+          @ok="handleOk"
+          @cancel="handleCancel"
+          forceRender
+        >
+          <!-- <p>{{ ModalText }}</p> -->
+          <div class="qrcodeDom">
+            <div id="qrcodeDom"></div>
+            <p v-if="endTime">
+              请在<span>{{ endTime }}</span
+              >前扫码完成验证
+            </p>
+          </div>
+        </a-modal>
+      </div>
+      <div v-if="choose == 3" class="verified-info">
+        <img class="user-img" src="@/assets/img/auth_icon_success.png" alt="" />
+        <div class="verified-info-word">
+          <h3>恭喜您已通过浙江云盾实名认证！</h3>
+          <p>
+            <span class="verified-info-key">认证途径：</span>
+            <span>浙江云盾认证</span>
+          </p>
+          <p>
+            <span class="verified-info-key">真实姓名：</span>
+            <span>*勇</span>
+          </p>
+          <p>
+            <span class="verified-info-key">认证时间：</span>
+            <span>2021-06-12 15:55:51</span>
+          </p>
+          <p>
+            <span class="verified-info-key">证件号码：</span>
+            <span>610431*******3016</span>
+          </p>
+          <p>
+            <span class="verified-info-key">认证版本：</span>
+            <span><img src="@/assets/img/auth_level_2.png" alt="" /></span>
+          </p>
+          <p class="verified-info-key">
+            如果您的认证信息发生变更，可
+            <a href="/console/user/setting/changerealname">修改认证资料 ></a>
+          </p>
+        </div>
       </div>
     </div>
+    <div v-else>未开启实名认证功能</div>
   </div>
 </template>
 
 <script>
 import { verifyTypeEnum } from "@/utils/enum";
+import { mapState } from "vuex";
 import QRCode from "qrcodejs2";
 import moment from "moment";
 export default {
@@ -216,6 +222,11 @@ export default {
     choose(newVal, oldVal) {
       console.log(this.form);
     }
+  },
+  computed: {
+    ...mapState({
+      allConfig: (state) => state.user.allConfig
+    })
   },
   methods: {
     // 链接生成二维码

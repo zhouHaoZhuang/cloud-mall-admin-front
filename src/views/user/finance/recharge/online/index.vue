@@ -38,6 +38,7 @@
   </div>
 </template>
 <script>
+import { mapState } from "vuex";
 import RechargeBtn from "@/components/Finance/rechargeBtn";
 export default {
   components: {
@@ -68,6 +69,11 @@ export default {
   },
   beforeDestroy() {
     this.time && clearInterval(this.time);
+  },
+  computed: {
+    ...mapState({
+      allConfig: (state) => state.user.allConfig
+    })
   },
   methods: {
     // 查询余额
