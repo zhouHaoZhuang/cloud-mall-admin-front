@@ -38,7 +38,7 @@ export default {
   created() {
     this.getDetail();
     this.getRecord();
-    // this.startTime();
+    this.startTime();
   },
   beforeDestroy() {
     this.time && clearInterval(this.time);
