@@ -42,7 +42,8 @@
       <a-button class="settings-change" type="link">修改</a-button>
     </div>
     <div class="settings-info">
-      <img src="@/assets/img/iconemail.png" alt="" />
+      <img v-if="email.length > 1" src="@/assets/img/iconemailatv.png" alt="" />
+      <img v-else src="@/assets/img/iconemail.png" alt="" />
       <span class="settings-info-type">邮箱绑定</span>
       <span class="settings-info-desc">
         绑定认证后可用于邮箱找回密码、接收订单提醒等，保障您的账户安全。
@@ -71,7 +72,8 @@
       <a-button class="settings-change settings-start">立即启用</a-button>
     </div>
     <div class="settings-info">
-      <img src="@/assets/img/icon-identity-success.png" alt="" />
+      <img v-if="realName.length>1" src="@/assets/img/icon-identity-success.png" alt="" />
+      <img v-else src="@/assets/img/icon-identity.png" alt="" />
       <span class="settings-info-type">实名认证</span>
       <span class="settings-info-desc"> 您的实名认证信息：{{ realName }} </span>
       <a-button class="settings-change" type="link" @click="realNameClick">
@@ -95,6 +97,9 @@ export default {
         5: "高，您的安全级别目前为高，暂无其他风险"
       }
     };
+  },
+  activated(){
+    this.$store.dispatch('user/getUserInfo')
   },
   computed: {
     ...mapState({
