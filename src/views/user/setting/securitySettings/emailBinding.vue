@@ -67,6 +67,7 @@ export default {
           // console.log('submit!', this.form);
           this.$store.dispatch("user/emailBinding", this.form.email).then(() => {
             this.$message.success("绑定成功");
+            this.$router.back()
           });
         } 
       });
