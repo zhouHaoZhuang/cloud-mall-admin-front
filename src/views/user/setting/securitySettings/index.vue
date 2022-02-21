@@ -16,9 +16,9 @@
         </p>
         <p>
           <span class="user-key">安全级别：</span>
-          <a-rate :default-value="2.5" allow-half disabled />
+          <a-rate v-model="reatNum" allow-half disabled />
           <span class="Security-level">
-            中 建议您启动全部安全设置，以保障账户及资金安全。
+            {{ reatList[reatNum] }}
           </span>
         </p>
       </div>
@@ -51,14 +51,16 @@
         type="link"
         class="settings-change settings-start"
         v-if="email.length > 1"
-        >已绑定</a-button
       >
+        已绑定
+      </a-button>
       <a-button
         class="settings-change settings-start"
         @click="emailBinding"
         v-else
-        >立即启用</a-button
       >
+        立即启用
+      </a-button>
     </div>
     <div class="settings-info">
       <img src="@/assets/img/icon-security-undone.png" alt="" />
@@ -83,6 +85,17 @@
 import { mapState } from "vuex";
 
 export default {
+  data() {
+    return {
+      reatList: {
+        1: "低，由于您的安全级别目前为低，建议您开启安全防护",
+        2: "较低，由于您的安全级别目前为较低，建议您开启安全防护",
+        3: "中，由于您的安全级别目前为中，建议您开启剩余安全防护",
+        4: "较高，您的安全级别目前较高",
+        5: "高，您的安全级别目前为高，暂无其他风险"
+      }
+    };
+  },
   computed: {
     ...mapState({
       userRealInfo: (state) => state.user.userRealInfo
@@ -91,7 +104,7 @@ export default {
       if (this.userRealInfo && this.userRealInfo.realName) {
         return "*" + this.userRealInfo.realName.slice(1);
       } else {
-        return "----";
+        return "";
       }
     },
     phoneNumber() {
@@ -108,7 +121,7 @@ export default {
     email() {
       if (this.userRealInfo && this.userRealInfo.email) {
         return this.userRealInfo.email;
-      }else{
+      } else {
         return "";
       }
     },
@@ -125,6 +138,19 @@ export default {
       } else {
         return "";
       }
+    },
+    reatNum() {
+      let rest = 1;
+      if (this.phoneNumber.length == 10) {
+        rest++;
+      }
+      if (this.email.length > 1) {
+        rest++;
+      }
+      if (this.realName.length > 1) {
+        rest++;
+      }
+      return rest;
     }
   },
   methods: {

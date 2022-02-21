@@ -70,10 +70,10 @@ export const snapshotMonthEnum = {
 };
 // 线下汇款审核状态
 export const offlineRemittance = {
-  0: "待支付",
-  1: "已取消",
-  2: "支付失败",
-  9: "支付完成"
+  0: "待审核",
+  1: "待充值",
+  2: "未通过审核",
+  9: "通过审核"
 };
 // 收支明细
 export const detailsMap = {
