@@ -8,8 +8,8 @@ const baseUrl = {
 };
 // form服务接口请求地址
 const formBaseUrl = {
-  local: "http://www.ydidc.com/server/form",
-  dev: "http://www.ydidc.com/server/form",
+  local: "http://site.ydidc.com/server/form",
+  dev: "http://site.ydidc.com/server/form",
   test: "http://www.zjyundun.com/server/form",
   prod: "http://www.zjyundun.com/server/form"
 };
