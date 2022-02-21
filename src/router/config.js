@@ -158,13 +158,13 @@ const options = [
                 component: RouteView,
                 meta: {},
                 children: [
-                  {
-                    path: "apply",
-                    name: "退款申请",
-                    component: () =>
-                      import("@/views/user/finance/refund/apply"),
-                    meta: {}
-                  },
+                  // {
+                  //   path: "apply",
+                  //   name: "退款申请",
+                  //   component: () =>
+                  //     import("@/views/user/finance/refund/apply"),
+                  //   meta: {}
+                  // },
                   {
                     path: "record",
                     name: "退订记录",
