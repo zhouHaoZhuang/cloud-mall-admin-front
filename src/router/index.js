@@ -20,6 +20,6 @@ const loginIgnore = {
 
 // 初始化路由实例
 function initRouter() {
-  return new Router({ mode: "history", base: "/console", routes: options });
+  return new Router({ mode: "history", base: "/console/", routes: options });
 }
 export { loginIgnore, initRouter };
