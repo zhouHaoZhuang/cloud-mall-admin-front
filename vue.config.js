@@ -122,7 +122,7 @@ module.exports = {
       }
     }
   },
-  publicPath: "/",
+  publicPath: "/console",
   outputDir: "dist",
   assetsDir: "static",
   productionSourceMap: false,
