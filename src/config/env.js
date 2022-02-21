@@ -1,10 +1,10 @@
 import { getIdcMallUrl } from "../utils/index";
 // 默认请求地址
 const baseUrl = {
-  local: "http://site.ydidc.com/server",
-  dev: "http://site.ydidc.com/server",
-  test: "http://www.zjyundun.com/server",
-  prod: "http://www.zjyundun.com/server"
+  local: "http://i.ydidc.com/server",
+  dev: "http://i.ydidc.com/server",
+  test: "http://i.zjyundun.com/server",
+  prod: "http://i.zjyundun.com/server"
 };
 // form服务接口请求地址
 const formBaseUrl = {
