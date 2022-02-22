@@ -99,13 +99,15 @@ export default {
         })
         .then((res) => {
           const data = res.data.list;
-          this.questionCategoryList = [...data];
-          // 1: "技术类问题"
-          // 2: "账户和财务类"
-          // 3: "其他咨询类"
           const sortArray = (n1, n2) => {
             return n1.sort - n2.sort;
           };
+          this.questionCategoryList = data
+            .filter((item) => item.status === 1)
+            .sort(sortArray);
+          // 1: "技术类问题"
+          // 2: "账户和财务类"
+          // 3: "其他咨询类"
           this.technologyList = data
             .filter(
               (item) => item.classification * 1 === 1 && item.status === 1

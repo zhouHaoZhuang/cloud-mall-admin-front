@@ -43,7 +43,8 @@ export const tradeTypeEnum = {
   15: "云服务续费",
   25: "云服务升配",
   35: "云服务降配",
-  45: "交易关闭"
+  45: "交易关闭",
+  55: "服务器退订"
 };
 // 创建快照-选择时长-按天
 export const snapshotDayEnum = {

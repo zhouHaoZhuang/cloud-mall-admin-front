@@ -232,7 +232,7 @@ export default {
     // 判读是否是服务器类问题
     getIsCloudQuestion() {
       const newObj = this.questionCategoryList.find(
-        (ele) => ele.id === this.form.questionCategoryCode
+        (ele) => ele.code === this.form.questionCategoryCode
       );
       return newObj && newObj.name.indexOf("服务器") !== -1;
     }
