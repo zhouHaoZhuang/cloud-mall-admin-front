@@ -12,12 +12,11 @@ const refund = {
       });
     },
     // 获取退订记录
-    getRecord({ commit, state }, params) {
-      console.log(state);
+    getRecord({ commit, state }, data) {
       return request({
-        url: `/tcOrder`,
-        method: "get",
-        params,
+        url: `/tcOrder/unSubscrube/list`,
+        method: "post",
+        data,
       });
     },
   },
