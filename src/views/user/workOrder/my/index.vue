@@ -109,6 +109,7 @@ export default {
       listQuery: {
         key: "workOrderNo",
         search: "",
+        submitTimeSort: "desc",
         currentPage: 1,
         pageSize: 10,
         total: 0

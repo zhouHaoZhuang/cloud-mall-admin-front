@@ -81,7 +81,9 @@
       >
         <a-input
           class="input"
+          v-number-evolution
           v-model="form.phoneNumber"
+          :max-length="11"
           placeholder="请填您的手机号码"
         />
         <a-button type="primary" @click="addPhone"> 默认手机号码 </a-button>
@@ -89,7 +91,9 @@
       <a-form-model-item class="inline-wrap" label="QQ号码" prop="qqNumber">
         <a-input
           class="input"
+          v-number-evolution
           v-model="form.qqNumber"
+          :max-length="20"
           placeholder="请填您的QQ号"
         />
         <a-button type="primary" @click="addQQ"> 默认QQ号码 </a-button>
@@ -134,7 +138,15 @@ export default {
         callback();
       }
     };
+    const validatePhone = (rule, value, callback) => {
+      if (!this.phoneReg.test(value)) {
+        callback(new Error("手机号格式不正确"));
+      }
+      callback();
+    };
     return {
+      phoneReg:
+        /^(13[0-9]|14[01456879]|15[0-3,5-9]|16[2567]|17[0-8]|18[0-9]|19[0-3,5-9])\d{8}$/,
       labelCol: { span: 4 },
       wrapperCol: { span: 10 },
       typeForm: [{ value: "1", title: "云服务器" }],
@@ -198,7 +210,8 @@ export default {
             required: true,
             message: "请输入手机号码",
             trigger: ["change", "blur"]
-          }
+          },
+          { validator: validatePhone, trigger: ["change", "blur"] }
         ],
         qqNumber: [
           {
@@ -323,6 +336,7 @@ export default {
 <style lang="less" scoped>
 .work-add-container {
   padding-bottom: 50px;
+  min-width: 820px;
   .inline {
     display: flex;
   }

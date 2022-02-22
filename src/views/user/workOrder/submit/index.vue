@@ -15,7 +15,7 @@
           v-for="item in technologyList"
           :key="item.id"
           class="cont"
-          @click="addWorkorder(item.id)"
+          @click="addWorkorder(item.code)"
         >
           <div class="left">
             <img :src="item.icon" alt="" />
@@ -32,7 +32,7 @@
           v-for="item in accountList"
           :key="item.id"
           class="cont"
-          @click="addWorkorder(item.id)"
+          @click="addWorkorder(item.code)"
         >
           <div class="left">
             <img :src="item.icon" alt="" />
@@ -49,7 +49,7 @@
           v-for="item in otherList"
           :key="item.id"
           class="cont"
-          @click="addWorkorder(item.id)"
+          @click="addWorkorder(item.code)"
         >
           <div class="left">
             <img :src="item.icon" alt="" />
@@ -125,9 +125,9 @@ export default {
         });
     },
     // 跳转提交工单表单页
-    addWorkorder(id) {
+    addWorkorder(code) {
       this.activeKey = 4;
-      this.questionCategoryCode = id;
+      this.questionCategoryCode = code;
     },
     // 提交工单成功回调
     addWorkorderCallBack() {
