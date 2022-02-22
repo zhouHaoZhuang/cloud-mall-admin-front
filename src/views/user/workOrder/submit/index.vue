@@ -34,7 +34,9 @@
           class="cont"
           @click="addWorkorder(item.id)"
         >
-          <div class="left"></div>
+          <div class="left">
+            <img :src="item.icon" alt="" />
+          </div>
           <div class="right">
             <p class="title">{{ item.name }}</p>
             <p class="text">{{ item.description }}</p>
@@ -49,7 +51,9 @@
           class="cont"
           @click="addWorkorder(item.id)"
         >
-          <div class="left"></div>
+          <div class="left">
+            <img :src="item.icon" alt="" />
+          </div>
           <div class="right">
             <p class="title">{{ item.name }}</p>
             <p class="text">{{ item.description }}</p>
@@ -99,13 +103,18 @@ export default {
           // 1: "技术类问题"
           // 2: "账户和财务类"
           // 3: "其他咨询类"
-          this.technologyList = data.filter(
-            (item) => item.classification * 1 === 1
-          );
-          this.accountList = data.filter(
-            (item) => item.classification * 1 === 2
-          );
-          this.otherList = data.filter((item) => item.classification * 1 === 3);
+          const sortArray = (n1, n2) => {
+            return n1.sort - n2.sort;
+          };
+          this.technologyList = data
+            .filter((item) => item.classification * 1 === 1)
+            .sort(sortArray);
+          this.accountList = data
+            .filter((item) => item.classification * 1 === 2)
+            .sort(sortArray);
+          this.otherList = data
+            .filter((item) => item.classification * 1 === 3)
+            .sort(sortArray);
           console.log(this.technologyList, this.accountList, this.otherList);
         });
     },

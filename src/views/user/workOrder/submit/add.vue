@@ -221,7 +221,7 @@ export default {
       const newObj = this.questionCategoryList.find(
         (ele) => ele.id === this.form.questionCategoryCode
       );
-      return newObj && newObj.name === "服务器类问题";
+      return newObj && newObj.name.indexOf("服务器") !== -1;
     }
   },
   watch: {
