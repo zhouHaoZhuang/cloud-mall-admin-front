@@ -107,13 +107,19 @@ export default {
             return n1.sort - n2.sort;
           };
           this.technologyList = data
-            .filter((item) => item.classification * 1 === 1)
+            .filter(
+              (item) => item.classification * 1 === 1 && item.status === 1
+            )
             .sort(sortArray);
           this.accountList = data
-            .filter((item) => item.classification * 1 === 2)
+            .filter(
+              (item) => item.classification * 1 === 2 && item.status === 1
+            )
             .sort(sortArray);
           this.otherList = data
-            .filter((item) => item.classification * 1 === 3)
+            .filter(
+              (item) => item.classification * 1 === 3 && item.status === 1
+            )
             .sort(sortArray);
           console.log(this.technologyList, this.accountList, this.otherList);
         });
