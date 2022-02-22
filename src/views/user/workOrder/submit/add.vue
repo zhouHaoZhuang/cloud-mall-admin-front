@@ -11,8 +11,8 @@
         <a-select v-model="form.questionCategoryCode">
           <a-select-option
             v-for="item in questionCategoryList"
-            :key="item.id"
-            :value="item.id"
+            :key="item.code"
+            :value="item.code"
           >
             {{ item.name }}
           </a-select-option>
