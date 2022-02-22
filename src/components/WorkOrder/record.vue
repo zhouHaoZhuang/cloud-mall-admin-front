@@ -14,7 +14,9 @@
           </div>
           <div class="info-box">
             <div :class="`top-title ${getClassName(item.identityType)}`">
-              问题描述
+              <span v-if="item.identityType === 1">企业客户</span>
+              <span v-if="item.identityType === 2">渠道商</span>
+              <span v-if="item.identityType === 3">云盾客服</span>
             </div>
             <div class="info-txt">
               {{ item.replyDetail }}
