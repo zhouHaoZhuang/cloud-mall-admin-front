@@ -199,8 +199,6 @@ export default {
           Array.isArray(res.data) && res.data.length > 0
             ? res.data[0].typeFamily
             : undefined;
-        // 保存旧配置
-        this.example.specFamily = this.form.specFamily;
         this.getCpu();
       });
     },
@@ -219,11 +217,15 @@ export default {
           if (this.tabKey === "1") {
             this.form = {
               cpu: res.data.cpu,
-              memory: res.data.memory
+              memory: res.data.memory,
+              specFamily: res.data.instanceTypeFamily
             };
             // 保存旧配置
-            this.example.cpu = res.data.cpu;
-            this.example.memory = res.data.memory;
+            this.example = {
+              cpu: res.data.cpu,
+              memory: res.data.memory,
+              specFamily: res.data.instanceTypeFamily
+            };
             this.getTypeList();
           }
           if (this.tabKey === "2") {
@@ -294,7 +296,7 @@ export default {
         });
     },
     // 获取地域对应的内存信息
-    getDisk(isGetRegion) {
+    getDisk() {
       this.$store
         .dispatch("cloud/getAddressDisk", {
           regionId: this.detail.regionId,
@@ -307,7 +309,9 @@ export default {
           this.memoryData = [...setCpuOrDiskData(newData, "G")];
           this.form.memory =
             this.memoryData.length > 0 ? this.memoryData[0].value : undefined;
-          if (isGetRegion) {
+          // 校验是否修改了配置
+          const isChange = this.verifyChange(this.form);
+          if (isChange) {
             this.getRegionData();
           }
         });
@@ -391,11 +395,13 @@ export default {
     },
     // 提交前校验是否有修改配置，没有修改需要驳回提交
     verifyChange(data) {
+      console.log(this.example, data, this.tabKey);
       if (this.tabKey === "1") {
+        if (this.example.specFamily !== data.specFamily) {
+          return true;
+        }
         return (
-          this.example.specFamily !== data.specFamily &&
-          this.example.cpu !== data.cpu &&
-          this.example.memory !== data.memory
+          this.example.cpu !== data.cpu && this.example.memory !== data.memory
         );
       }
       if (this.tabKey === "2") {
