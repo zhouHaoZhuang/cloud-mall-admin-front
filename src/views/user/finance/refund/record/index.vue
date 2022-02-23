@@ -64,8 +64,8 @@ export default {
         },
         {
           title: "退款金额",
-          dataIndex: "amount",
-          key: "amount"
+          dataIndex: "actualAmount",
+          key: "actualAmount"
         },
         {
           title: "申请日期",
