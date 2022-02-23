@@ -16,18 +16,28 @@
         :data-source="data"
         :loading="loading"
         :pagination="paginationProps"
+        rowKey="id"
       >
         <a slot="name" slot-scope="text">{{ text }}</a>
+        <div slot="createTime" slot-scope="text">
+          {{ text | formatDate }}
+        </div>
+        <div slot="tradeStatus" slot-scope="text">
+          {{ orderStatusEnum[text] }}
+        </div>
       </a-table>
     </div>
   </div>
 </template>
 
 <script>
+import { orderStatusEnum } from "@/utils/enum.js";
+
 export default {
   data() {
     return {
       cutover: "0",
+      orderStatusEnum,
       topList: [
         {
           title: "云服务器",
@@ -37,28 +47,42 @@ export default {
       data: [],
       columns: [
         {
+          title: "产品名称",
+          dataIndex: "productName"
+        },
+        {
           title: "订单编号",
-          key: "name"
+          dataIndex: "orderNo"
         },
         {
           title: "IP地址",
-          key: "type"
+          dataIndex: "outIp",
+          key: "outIp",
+          scopedSlots: {
+            customRender: "outIp"
+          }
         },
         {
           title: "退款金额",
+          dataIndex: "amount",
           key: "amount"
         },
         {
           title: "申请日期",
-          key: "applydate"
+          dataIndex: "createTime",
+          key: "createTime",
+          scopedSlots: { customRender: "createTime" }
+        },
+        {
+          title: "退款原因",
+          dataIndex: "remark",
+          key: "remark"
         },
         {
           title: "状态",
-          key: "status"
-        },
-        {
-          title: "操作",
-          key: "action"
+          dataIndex: "tradeStatus",
+          key: "tradeStatus",
+          scopedSlots: { customRender: "tradeStatus" }
         }
       ],
       loading: false,
@@ -69,6 +93,7 @@ export default {
         total: 0
       },
       paginationProps: {
+        showQuickJumper: true,
         showSizeChanger: true,
         total: 1,
         showTotal: (total, range) =>
@@ -81,7 +106,7 @@ export default {
     };
   },
   created() {
-    // this.getList();
+    this.getList();
   },
   methods: {
     //查询数据表格
@@ -89,6 +114,8 @@ export default {
       this.loading = true;
       this.$getList("refund/getRecord", this.listQuery)
         .then((res) => {
+          screen;
+          console.log(res);
           this.data = [...res.data.list];
           this.paginationProps.total = res.data.totalCount * 1;
         })
