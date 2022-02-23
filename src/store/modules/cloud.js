@@ -29,6 +29,13 @@ const cloud = {
         method: "get"
       });
     },
+    // 查询分类列表
+    typeList({ commit, state }) {
+      return request({
+        url: "/index/getSpecFamily",
+        method: "get"
+      });
+    },
     // 产品续费时询价
     cloudRenewPrice({ commit, state }, data) {
       return request({
@@ -120,7 +127,7 @@ const cloud = {
     // 获取单个地域对应的cpu信息
     getAddressCpu({ commit, state }, params) {
       return request({
-        url: `/index/query/property/value/${params.regionId}`,
+        url: `/index/query/property/cpu`,
         method: "get",
         params
       });
