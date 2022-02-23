@@ -18,6 +18,17 @@
     </a-tabs>
     <a-form-model :model="form" :label-col="labelCol" :wrapper-col="wrapperCol">
       <a-form-model-item label="IP地址"> {{ detail.outIp }} </a-form-model-item>
+      <a-form-model-item v-if="tabKey === '1'" label="分类">
+        <a-radio-group v-model="form.specFamily" @change="typeChange">
+          <a-radio
+            v-for="item in typeList"
+            :key="item.typeFamily"
+            :value="item.typeFamily"
+          >
+            {{ item.typeFamily }}
+          </a-radio>
+        </a-radio-group>
+      </a-form-model-item>
       <a-form-model-item class="cpu-wrap" v-if="tabKey === '1'" label="CPU">
         <a-select
           style="width: 160px"
@@ -129,6 +140,7 @@ export default {
       labelCol: { span: 5 },
       wrapperCol: { span: 19 },
       form: {
+        specFamily: undefined,
         cpu: undefined,
         memory: undefined,
         dataDisk: [],
@@ -154,7 +166,8 @@ export default {
       // 数据盘块数
       dataSidkCount: undefined,
       // 带宽
-      oldBandwidth: undefined
+      oldBandwidth: undefined,
+      typeList: []
     };
   },
   computed: {
@@ -169,7 +182,6 @@ export default {
   watch: {
     $route: {
       handler(newVal) {
-        console.log(newVal);
         this.type = newVal.query.type;
       },
       immediate: true
@@ -179,6 +191,23 @@ export default {
     this.getDetail();
   },
   methods: {
+    // 获取分类列表
+    getTypeList() {
+      this.$store.dispatch("cloud/typeList").then((res) => {
+        this.typeList = [...res.data];
+        this.form.specFamily =
+          Array.isArray(res.data) && res.data.length > 0
+            ? res.data[0].typeFamily
+            : undefined;
+        // 保存旧配置
+        this.example.specFamily = this.form.specFamily;
+        this.getCpu();
+      });
+    },
+    // 分类change
+    typeChange() {
+      this.getCpu();
+    },
     // 获取服务器实例详情
     getDetail() {
       this.$store
@@ -193,11 +222,9 @@ export default {
               memory: res.data.memory
             };
             // 保存旧配置
-            this.example = {
-              cpu: res.data.cpu,
-              memory: res.data.memory
-            };
-            this.getCpu();
+            this.example.cpu = res.data.cpu;
+            this.example.memory = res.data.memory;
+            this.getTypeList();
           }
           if (this.tabKey === "2") {
             this.form = {
@@ -248,16 +275,21 @@ export default {
     // 获取地域对应的cpu信息
     getCpu() {
       this.$store
-        .dispatch("cloud/getAddressCpu", { regionId: this.detail.regionId })
+        .dispatch("cloud/getAddressCpu", {
+          regionId: this.detail.regionId,
+          specFamily: this.form.specFamily
+        })
         .then((res) => {
-          const newRes =
-            res.data && res.data.cpuCoreCount ? res.data.cpuCoreCount : [];
-          const newData = this.returnCpuOrDiskData(newRes, this.form.cpu);
+          const newRes = res.data ? res.data : [];
+          const newData = this.returnCpuOrDiskData(newRes, this.example.cpu);
           this.cpuData = [...setCpuOrDiskData(newData, "核")];
           if (this.cpuData.length > 0) {
+            this.form.cpu = this.cpuData[0].value;
             this.getDisk();
           } else {
             this.memoryData = [];
+            this.form.cpu = undefined;
+            this.form.memory = undefined;
           }
         });
     },
@@ -266,16 +298,16 @@ export default {
       this.$store
         .dispatch("cloud/getAddressDisk", {
           regionId: this.detail.regionId,
+          specFamily: this.form.specFamily,
           cpuCoreCount: this.form.cpu
         })
         .then((res) => {
           const newRes = res.data ? res.data : [];
-          const newData = this.returnCpuOrDiskData(newRes, this.detail.memory);
+          const newData = this.returnCpuOrDiskData(newRes, this.example.memory);
           this.memoryData = [...setCpuOrDiskData(newData, "G")];
+          this.form.memory =
+            this.memoryData.length > 0 ? this.memoryData[0].value : undefined;
           if (isGetRegion) {
-            this.form.memory =
-              (this.memoryData.length > 0 && this.memoryData[0].value) ||
-              undefined;
             this.getRegionData();
           }
         });
@@ -305,6 +337,7 @@ export default {
       this.$store
         .dispatch("cloud/getRegionDetail", {
           regionId: this.detail.regionId,
+          specFamily: this.form.specFamily,
           cpuCoreCount: this.form.cpu,
           memorySize: this.form.memory
         })
@@ -324,6 +357,7 @@ export default {
           ? this.form.dataDisk.filter((ele) => !ele.old)
           : undefined;
       return {
+        specFamily: this.form.specFamily,
         cpu: this.form.cpu,
         memory: this.form.memory,
         dataDisk: newDataDisk,
@@ -359,7 +393,9 @@ export default {
     verifyChange(data) {
       if (this.tabKey === "1") {
         return (
-          this.example.cpu !== data.cpu && this.example.memory !== data.memory
+          this.example.specFamily !== data.specFamily &&
+          this.example.cpu !== data.cpu &&
+          this.example.memory !== data.memory
         );
       }
       if (this.tabKey === "2") {
