@@ -13,7 +13,7 @@
       </div>
     </div>
     <div class="item">
-      <div class="label">提交时间：</div>
+      <div class="label">创建时间：</div>
       <div class="value">
         {{ detail.createTime | formatDate }}
       </div>

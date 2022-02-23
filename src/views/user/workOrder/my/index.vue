@@ -18,7 +18,6 @@
             <a-select v-model="listQuery.key" style="width: 100px">
               <a-select-option value="workOrderNo"> 工单编号 </a-select-option>
               <a-select-option value="title"> 问题标题 </a-select-option>
-              <a-select-option value="description"> 问题内容 </a-select-option>
             </a-select>
             <a-input-search
               v-model="listQuery.search"
@@ -135,7 +134,7 @@ export default {
           width: 150
         },
         {
-          title: "提交时间",
+          title: "创建时间",
           dataIndex: "createTime",
           width: 150,
           sorter: (a, b) => moment(a.createTime) - moment(b.createTime),

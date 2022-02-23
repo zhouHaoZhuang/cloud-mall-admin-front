@@ -147,9 +147,12 @@
           <div>带宽：{{ record.internetMaxBandwidthOut }}Mbps</div>
         </div>
         <!-- 类型/到期时间 -->
-        <div slot="endTimeStr" slot-scope="text">
+        <div slot="endTimeStr" slot-scope="text, record">
           <div>包年包月</div>
-          <div>{{ text }}</div>
+          <div v-if="record.releaseDays">
+            {{ record.releaseDays }}
+          </div>
+          <div v-else>{{ text }}</div>
         </div>
         <!-- 自动续费/周期 -->
         <div slot="autoRenew" slot-scope="text, record">
