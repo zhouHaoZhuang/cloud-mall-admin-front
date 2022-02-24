@@ -1,40 +1,45 @@
 <template>
   <div class="online">
-    <div class="warn">
-      <p>1、充值最小金额1.00元</p>
-      <p>
-        2、支付过程中浏览器会有几次跳转，支付完成之前请勿关闭浏览器，否则可能造成支付失败
-      </p>
-      <p>3、如充值后款项没有到账，请联系在线客服帮助处理，或提交工单</p>
-    </div>
-    <h1>
-      <span>账户余额：</span><span>{{ balanceData.userAmount }} 元</span>
-    </h1>
-    <!-- <p>暂未开启充值</p> -->
-    <div>
-      <span> 充值金额： </span>
-      <a-input-number
-        style="width: 180px"
-        v-number-evolution="{
-          min: 1,
-          max: 9999999,
-          value: 2
-        }"
-        v-model="rechargeBtnForm.totalAmount"
-      />
-    </div>
-    <div class="paymentMethod">
-      <span class="paymentMethod-type">支付方式：</span>
-      <!-- <div class="WeChatply">
+    <div v-if="allConfig.online_pay">
+      <div class="warn">
+        <p>1、充值最小金额1.00元</p>
+        <p>
+          2、支付过程中浏览器会有几次跳转，支付完成之前请勿关闭浏览器，否则可能造成支付失败
+        </p>
+        <p>3、如充值后款项没有到账，请联系在线客服帮助处理，或提交工单</p>
+      </div>
+      <h1>
+        <span>账户余额：</span><span>{{ balanceData.userAmount }} 元</span>
+      </h1>
+      <!-- <p>暂未开启充值</p> -->
+      <div>
+        <span> 充值金额： </span>
+        <a-input-number
+          style="width: 180px"
+          v-number-evolution="{
+            min: allConfig.min_recharge,
+            max: 9999999,
+            value: 2
+          }"
+          v-model="rechargeBtnForm.totalAmount"
+        />
+      </div>
+      <div class="paymentMethod">
+        <span class="paymentMethod-type">支付方式：</span>
+        <!-- <div class="WeChatply">
         <img width="30px" src="@/assets/img/pay/WeChat.png" />
         <span>微信支付</span>
       </div> -->
-      <div class="WeChatply Alipay">
-        <img width="40px" src="@/assets/img/pay/Alipay.png" />
-        <span>支付宝支付</span>
+        <div class="WeChatply Alipay" v-if="allConfig.alipay_switch">
+          <img width="40px" src="@/assets/img/pay/Alipay.png" />
+          <span>支付宝支付</span>
+        </div>
       </div>
+      <RechargeBtn :form="rechargeBtnForm" @success="startTime" />
     </div>
-    <RechargeBtn :form="rechargeBtnForm" @success="startTime" />
+    <div v-else>
+      <p>暂未开启订单在线充值，无法使用在线支付功能</p>
+    </div>
   </div>
 </template>
 <script>
