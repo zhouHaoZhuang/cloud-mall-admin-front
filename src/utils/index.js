@@ -153,7 +153,7 @@ export const getWindowUrl = (url) => {
     ? url.replace("http://", "")
     : url.replace("https://", "");
   const str = newUrl.substring(0, newUrl.indexOf("/"));
-  const result = `${url.includes("http://") ? "http://" : "https://"}${str}`;
+  const result = `${str}`;
   // 下方注释为截取.com
   // const index1 = str.lastIndexOf(".");
   // const index2 = str.lastIndexOf(".", index1 - 1);
