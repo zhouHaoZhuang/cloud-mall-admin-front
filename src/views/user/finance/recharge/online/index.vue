@@ -112,42 +112,13 @@ export default {
     border-radius: 2px;
     color: #ff660a;
     font-size: 12px;
-
     > p {
       margin-bottom: 10px;
     }
-
     > p:last-child {
       margin-bottom: 0;
     }
   }
-
-  > h1 {
-    margin: 20px 0 30px 0;
-
-    > span {
-      display: inline-block;
-    }
-
-    > span:first-child {
-      width: 135px;
-      height: 30px;
-      text-align: right;
-      font-size: 12px;
-      padding-right: 10px;
-    }
-
-    > span:last-child {
-      width: 100px;
-      height: 30px;
-      line-height: 30px;
-      text-align: left;
-      font-weight: bold;
-      font-size: 16px;
-      color: #ff6600;
-    }
-  }
-
   > p {
     font-size: 12px;
   }
@@ -175,6 +146,29 @@ export default {
 
   .Alipay {
     border-color: #0af;
+  }
+}
+h1 {
+  margin: 20px 0 30px 0;
+  > span {
+    display: inline-block;
+  }
+  > span:first-child {
+    width: 135px;
+    height: 30px;
+    text-align: right;
+    font-size: 18px;
+    padding-right: 10px;
+  }
+
+  > span:last-child {
+    width: 100px;
+    height: 30px;
+    line-height: 30px;
+    text-align: left;
+    font-weight: bold;
+    font-size: 25px;
+    color: #ff6600;
   }
 }
 </style>
