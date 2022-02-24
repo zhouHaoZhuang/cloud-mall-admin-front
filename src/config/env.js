@@ -1,17 +1,17 @@
 import { getIdcMallUrl } from "../utils/index";
 // 默认请求地址
 const baseUrl = {
-  local: "http://site.ydidc.com/server",
-  dev: "http://site.ydidc.com/server",
-  test: "http://i.zjyundun.com/server",
-  prod: "http://i.zjyundun.com/server"
+  local: "/server",
+  dev: "/server",
+  test: "/server",
+  prod: "/server"
 };
 // form服务接口请求地址
 const formBaseUrl = {
-  local: "http://site.ydidc.com/server/form",
-  dev: "http://site.ydidc.com/server/form",
-  test: "http://www.zjyundun.com/server/form",
-  prod: "http://www.zjyundun.com/server/form"
+  local: "/form",
+  dev: "/server/form",
+  test: "/server/form",
+  prod: "/server/form"
 };
 // 跳转云商城地址
 const cloudMallUrl = {
@@ -25,8 +25,7 @@ function getCloudMallUrl() {
 }
 // 请求头携带domain参数
 const domains = {
-  local: "localhost",
-  dev: "localhost"
+  local: "localhost"
 };
 
 export default {
