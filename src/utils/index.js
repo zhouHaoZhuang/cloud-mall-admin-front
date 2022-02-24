@@ -163,8 +163,7 @@ export const getWindowUrl = (url) => {
 
 // 根据环境返回domain地址--后端需要请求头携带浏览器地址，字段：domain
 export const getDomainUrl = () => {
-  return process.env.VUE_APP_ENV === "local" ||
-    process.env.VUE_APP_ENV === "dev"
+  return process.env.VUE_APP_ENV === "local"
     ? env.DOMAIN_URL
     : getWindowUrl(window.location.href);
 };
