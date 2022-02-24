@@ -1,6 +1,4 @@
 import request from "@/utils/request";
-const { AuthenticationClient } = require("authing-js-sdk");
-import env from "@/config/env";
 
 const user = {
   namespaced: true,
@@ -9,7 +7,7 @@ const user = {
     userInfo: {},
     userRealInfo: {},
     perms: [],
-    allConfig:{}
+    allConfig: {}
   },
 
   mutations: {
@@ -73,12 +71,6 @@ const user = {
         commit("SET_TOKEN", "");
         commit("SET_USERINFO", {});
         commit("SET_PERMS", []);
-        // const authenticationClient = new AuthenticationClient({
-        //   appId: env.appId,
-        //   appHost: env.appHost,
-        //   token: state.token
-        // });
-        // authenticationClient.logout();
         resolve();
       });
     },
@@ -151,18 +143,18 @@ const user = {
     },
     // 获取用户信息
     getUserInfo({ commit, state }) {
-      const authenticationClient = new AuthenticationClient({
-        appId: env.appId,
-        appHost: env.appHost,
-        token: state.token
-      });
-      authenticationClient.getCurrentUser().then((user) => {
-        // console.log("查看信息", user);
-        commit("SET_USERINFO", {
-          ...user
-          // username: user.username.substring(0, 11)
-        });
-        commit("SET_PERMS", ["*"]);
+      return new Promise((resolve, reject) => {
+        request({
+          url: "/uc/getByToken",
+          method: "get"
+        })
+          .then((res) => {
+            commit("SET_USERINFO", res.data);
+            resolve(res.data);
+          })
+          .catch((error) => {
+            reject(error);
+          });
       });
     }
   }

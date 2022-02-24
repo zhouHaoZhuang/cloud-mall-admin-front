@@ -28,30 +28,10 @@ const domains = {
   local: "localhost",
   dev: "localhost"
 };
-// authing接口参数
-const authingReq = {
-  local: {
-    appId: "619c93dc69a93fbb8a1faf8c",
-    appHost: "https://resource-poor.authing.cn"
-  },
-  dev: {
-    appId: "619c93dc69a93fbb8a1faf8c",
-    appHost: "https://resource-poor.authing.cn"
-  },
-  test: {
-    appId: "61cc1320c33bcb838eafe6cb",
-    appHost: "https://idc.authing.cn"
-  },
-  prod: {
-    appId: "",
-    appHost: ""
-  }
-};
 
 export default {
   BASE_URL: baseUrl[process.env.VUE_APP_ENV],
   FORM_BASE_URL: formBaseUrl[process.env.VUE_APP_ENV],
   MALL_URL: getCloudMallUrl(),
-  DOMAIN_URL: domains[process.env.VUE_APP_ENV],
-  ...authingReq[process.env.VUE_APP_ENV]
+  DOMAIN_URL: domains[process.env.VUE_APP_ENV]
 };
