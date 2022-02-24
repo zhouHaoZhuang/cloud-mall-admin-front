@@ -28,7 +28,7 @@ request.interceptors.request.use(async (config) => {
   if (config.formService) {
     config.baseURL = env.FORM_BASE_URL;
     config.headers.system = "fs";
-    config.headers["authing-id"] = store.state.user.userInfo.id;
+    config.headers["authing-id"] = store.state.user.userInfo.userCode;
   }
   config.cancelToken = axiosSource.token;
   // token
