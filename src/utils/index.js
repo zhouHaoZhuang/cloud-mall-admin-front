@@ -147,15 +147,17 @@ export const openAlipayPay = (form) => {
   // document.forms[0].submit();
 };
 
-// 处理浏览器地址栏地址，截取地址中段,不需要http:// or https://和com后地址
+// 处理浏览器地址栏地址，获取请求头domain参数
 export const getWindowUrl = (url) => {
   const newUrl = url.includes("http://")
     ? url.replace("http://", "")
     : url.replace("https://", "");
   const str = newUrl.substring(0, newUrl.indexOf("/"));
-  const index1 = str.lastIndexOf(".");
-  const index2 = str.lastIndexOf(".", index1 - 1);
-  const result = str.substring(index2 + 1);
+  const result = `${url.includes("http://") ? "http://" : "https://"}${str}`;
+  // 下方注释为截取.com
+  // const index1 = str.lastIndexOf(".");
+  // const index2 = str.lastIndexOf(".", index1 - 1);
+  // const result = str.substring(index2 + 1);
   return result;
 };
 
