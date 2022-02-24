@@ -25,7 +25,7 @@ function getCloudMallUrl() {
 }
 // 请求头携带domain参数
 const domains = {
-  local: "localhost"
+  local: "t946464351140401152.site.ydidc.com"
 };
 
 export default {
