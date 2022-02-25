@@ -291,6 +291,7 @@ export default {
             this.form.cpu = this.cpuData[0].value;
             this.getDisk();
           } else {
+            this.$message.warning("没有可用的实例信息");
             this.memoryData = [];
             this.form.cpu = undefined;
             this.form.memory = undefined;
@@ -313,6 +314,9 @@ export default {
           this.memoryData = [...setCpuOrDiskData(newData, "G")];
           this.form.memory =
             this.memoryData.length > 0 ? this.memoryData[0].value : undefined;
+          if (this.memoryData.length === 0) {
+            this.$message.warning("没有可用的实例信息");
+          }
           // 校验是否修改了配置
           const isChange = this.verifyChange(this.form);
           if (isChange) {
