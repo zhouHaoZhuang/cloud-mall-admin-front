@@ -43,7 +43,7 @@
               :key="item.typeFamily"
               :value="item.typeFamily"
             >
-              {{ item.typeFamily }}
+              {{ item.description }}
             </a-radio>
           </a-radio-group>
         </a-form-model-item>
