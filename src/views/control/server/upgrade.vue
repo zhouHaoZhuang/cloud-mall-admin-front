@@ -317,6 +317,8 @@ export default {
           const isChange = this.verifyChange(this.form);
           if (isChange) {
             this.getRegionData();
+          } else {
+            this.price.tradePrice = "0.00元";
           }
         });
     },
@@ -373,6 +375,7 @@ export default {
         dataDisk: newDataDisk,
         id: this.$route.query.id,
         instanceType: this.form.instanceType,
+        instanceTypeFamily: this.detail.instanceTypeFamily,
         internetMaxBandwidthOut: this.form.internetMaxBandwidthOut,
         type: this.type
       };
@@ -407,7 +410,7 @@ export default {
           return true;
         }
         return (
-          this.example.cpu !== data.cpu && this.example.memory !== data.memory
+          this.example.cpu !== data.cpu || this.example.memory !== data.memory
         );
       }
       if (this.tabKey === "2") {
