@@ -32,22 +32,22 @@ module.exports = {
   devServer: {
     port: 8000, //自定义项目运行端口
     // open: "true",  //自动打开浏览器
-    proxy: {
-      "/server": {
-        target: "http://site.ydidc.com/server",
-        changeOrigin: true,
-        pathRewrite: {
-          "^/server": ""
-        }
-      },
-      "/form": {
-        target: "http://site.ydidc.com/server/form",
-        changeOrigin: true,
-        pathRewrite: {
-          "^/form": ""
-        }
-      }
-    }
+    // proxy: {
+    //   "/server": {
+    //     target: "http://site.ydidc.com/server",
+    //     changeOrigin: true,
+    //     pathRewrite: {
+    //       "^/server": ""
+    //     }
+    //   },
+    //   "/form": {
+    //     target: "http://site.ydidc.com/server/form",
+    //     changeOrigin: true,
+    //     pathRewrite: {
+    //       "^/form": ""
+    //     }
+    //   }
+    // }
   },
   configureWebpack: (config) => {
     config.entry.app = ["babel-polyfill", "whatwg-fetch", "./src/main.js"];
