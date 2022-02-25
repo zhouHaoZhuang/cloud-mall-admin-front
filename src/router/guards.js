@@ -31,6 +31,10 @@ const loginGuard = (to, from, next, options) => {
   if (token) {
     store.commit("user/SET_TOKEN", token);
   }
+  // 每次进入登录页面清除缓存
+  if (to.path === "/login") {
+    localStorage.clear();
+  }
   if (!loginIgnore.includes(to) && !token) {
     // 执行退出
     store.dispatch("user/logout");
