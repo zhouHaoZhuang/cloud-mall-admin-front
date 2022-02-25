@@ -279,7 +279,9 @@ export default {
       this.$store
         .dispatch("cloud/getAddressCpu", {
           regionId: this.detail.regionId,
-          specFamily: this.form.specFamily
+          specFamily: this.form.specFamily,
+          operatorType: this.isUpgrade ? "upgrade" : "downgrade",
+          instanceId: this.detail.instanceId
         })
         .then((res) => {
           const newRes = res.data ? res.data : [];
@@ -301,7 +303,9 @@ export default {
         .dispatch("cloud/getAddressDisk", {
           regionId: this.detail.regionId,
           specFamily: this.form.specFamily,
-          cpuCoreCount: this.form.cpu
+          cpuCoreCount: this.form.cpu,
+          operatorType: this.isUpgrade ? "upgrade" : "downgrade",
+          instanceId: this.detail.instanceId
         })
         .then((res) => {
           const newRes = res.data ? res.data : [];
@@ -343,7 +347,9 @@ export default {
           regionId: this.detail.regionId,
           specFamily: this.form.specFamily,
           cpuCoreCount: this.form.cpu,
-          memorySize: this.form.memory
+          memorySize: this.form.memory,
+          operatorType: this.isUpgrade ? "upgrade" : "downgrade",
+          instanceId: this.detail.instanceId
         })
         .then((res) => {
           if (res.data && res.data.length > 0) {
