@@ -44,7 +44,10 @@
       >
         关闭工单
       </a-button>
-      <a-button v-if="detail.evaluateStatus === 0" @click="handleJumpComment">
+      <a-button
+        v-if="detail.evaluateStatus === 0 && detail.status === 3"
+        @click="handleJumpComment"
+      >
         评价工单
       </a-button>
     </div>
