@@ -279,7 +279,9 @@ export default {
       this.$store
         .dispatch("cloud/getAddressCpu", {
           regionId: this.detail.regionId,
-          specFamily: this.form.specFamily
+          specFamily: this.form.specFamily,
+          operatorType: this.isUpgrade ? "upgrade" : "downgrade",
+          instanceId: this.detail.instanceId
         })
         .then((res) => {
           const newRes = res.data ? res.data : [];
@@ -301,7 +303,9 @@ export default {
         .dispatch("cloud/getAddressDisk", {
           regionId: this.detail.regionId,
           specFamily: this.form.specFamily,
-          cpuCoreCount: this.form.cpu
+          cpuCoreCount: this.form.cpu,
+          operatorType: this.isUpgrade ? "upgrade" : "downgrade",
+          instanceId: this.detail.instanceId
         })
         .then((res) => {
           const newRes = res.data ? res.data : [];
@@ -313,6 +317,8 @@ export default {
           const isChange = this.verifyChange(this.form);
           if (isChange) {
             this.getRegionData();
+          } else {
+            this.price.tradePrice = "0.00元";
           }
         });
     },
@@ -343,7 +349,9 @@ export default {
           regionId: this.detail.regionId,
           specFamily: this.form.specFamily,
           cpuCoreCount: this.form.cpu,
-          memorySize: this.form.memory
+          memorySize: this.form.memory,
+          operatorType: this.isUpgrade ? "upgrade" : "downgrade",
+          instanceId: this.detail.instanceId
         })
         .then((res) => {
           if (res.data && res.data.length > 0) {
@@ -367,6 +375,7 @@ export default {
         dataDisk: newDataDisk,
         id: this.$route.query.id,
         instanceType: this.form.instanceType,
+        instanceTypeFamily: this.detail.instanceTypeFamily,
         internetMaxBandwidthOut: this.form.internetMaxBandwidthOut,
         type: this.type
       };
@@ -401,7 +410,7 @@ export default {
           return true;
         }
         return (
-          this.example.cpu !== data.cpu && this.example.memory !== data.memory
+          this.example.cpu !== data.cpu || this.example.memory !== data.memory
         );
       }
       if (this.tabKey === "2") {

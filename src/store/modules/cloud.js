@@ -127,7 +127,7 @@ const cloud = {
     // 获取单个地域对应的cpu信息
     getAddressCpu({ commit, state }, params) {
       return request({
-        url: `/index/query/property/cpu`,
+        url: `/scEcsStock/query/modify/cpu`,
         method: "get",
         params
       });
@@ -135,7 +135,7 @@ const cloud = {
     // 获取单个地域对应的内存信息
     getAddressDisk({ commit, state }, params) {
       return request({
-        url: "/index/query/property/memory",
+        url: "/scEcsStock/query/modify/memory",
         method: "get",
         params
       });
@@ -143,7 +143,7 @@ const cloud = {
     // 获取对应的实例和实例属性，属性值
     getRegionDetail({ commit, state }, params) {
       return request({
-        url: "/index/instance",
+        url: "/scEcsStock/query/modify/instance",
         method: "get",
         params
       });

@@ -15,7 +15,7 @@ const formBaseUrl = {
 };
 // 跳转云商城地址
 const cloudMallUrl = {
-  local: "http://192.168.12.30:3000"
+  local: "http://192.168.12.47:3000"
 };
 // 获取云商城地址
 function getCloudMallUrl() {
@@ -25,7 +25,7 @@ function getCloudMallUrl() {
 }
 // 请求头携带domain参数
 const domains = {
-  local: "t946464351140401152.site.ydidc.com"
+  local: "t946471742443573248.site.ydidc.com"
 };
 
 export default {
