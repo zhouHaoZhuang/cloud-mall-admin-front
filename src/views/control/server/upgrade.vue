@@ -12,122 +12,135 @@
       </span>
     </div>
     <a-tabs v-model="tabKey" @change="handleTabChange">
-      <a-tab-pane key="1" tab="实例规格"> </a-tab-pane>
-      <a-tab-pane v-if="isUpgrade" key="2" tab="SSD数据盘"> </a-tab-pane>
-      <a-tab-pane key="3" tab="公网带宽"> </a-tab-pane>
+      <a-tab-pane key="1" tab="实例规格" :disabled="spinning"> </a-tab-pane>
+      <a-tab-pane v-if="isUpgrade" key="2" tab="SSD数据盘" :disabled="spinning">
+      </a-tab-pane>
+      <a-tab-pane key="3" tab="公网带宽" :disabled="spinning"> </a-tab-pane>
     </a-tabs>
-    <a-form-model :model="form" :label-col="labelCol" :wrapper-col="wrapperCol">
-      <a-form-model-item label="IP地址"> {{ detail.outIp }} </a-form-model-item>
-      <a-form-model-item label="当前规格">
-        <span style="margin-right: 20px">
-          CPU：
-          {{ example.cpu }}核
-        </span>
-        <span>
-          内存：
-          {{ example.memory }}G
-        </span>
-      </a-form-model-item>
-      <a-form-model-item v-if="tabKey === '1'" label="分类">
-        <a-radio-group v-model="form.specFamily" @change="typeChange">
-          <a-radio
-            v-for="item in typeList"
-            :key="item.typeFamily"
-            :value="item.typeFamily"
+    <a-spin :spinning="spinning">
+      <a-form-model
+        :model="form"
+        :label-col="labelCol"
+        :wrapper-col="wrapperCol"
+      >
+        <a-form-model-item label="IP地址">
+          {{ detail.outIp }}
+        </a-form-model-item>
+        <a-form-model-item label="当前规格">
+          <span style="margin-right: 20px">
+            CPU：
+            {{ example.cpu }}核
+          </span>
+          <span>
+            内存：
+            {{ example.memory }}G
+          </span>
+        </a-form-model-item>
+        <a-form-model-item v-if="tabKey === '1'" label="分类">
+          <a-radio-group v-model="form.specFamily" @change="typeChange">
+            <a-radio
+              v-for="item in typeList"
+              :key="item.typeFamily"
+              :value="item.typeFamily"
+            >
+              {{ item.typeFamily }}
+            </a-radio>
+          </a-radio-group>
+        </a-form-model-item>
+        <a-form-model-item class="cpu-wrap" v-if="tabKey === '1'" label="CPU">
+          <a-select
+            style="width: 160px"
+            v-model="form.cpu"
+            placeholder="请选择"
+            @change="handleCpuChange"
           >
-            {{ item.typeFamily }}
-          </a-radio>
-        </a-radio-group>
-      </a-form-model-item>
-      <a-form-model-item class="cpu-wrap" v-if="tabKey === '1'" label="CPU">
-        <a-select
-          style="width: 160px"
-          v-model="form.cpu"
-          placeholder="请选择"
-          @change="handleCpuChange"
+            <a-select-option
+              v-for="item in cpuData"
+              :key="item.value"
+              :value="item.value"
+            >
+              {{ item.title }}
+            </a-select-option>
+          </a-select>
+        </a-form-model-item>
+        <a-form-model-item
+          class="memory-wrap"
+          v-if="tabKey === '1'"
+          label="内存"
         >
-          <a-select-option
-            v-for="item in cpuData"
-            :key="item.value"
-            :value="item.value"
+          <a-select
+            style="width: 160px"
+            v-model="form.memory"
+            placeholder="请选择"
+            @change="getRegionData"
           >
-            {{ item.title }}
-          </a-select-option>
-        </a-select>
-      </a-form-model-item>
-      <a-form-model-item class="memory-wrap" v-if="tabKey === '1'" label="内存">
-        <a-select
-          style="width: 160px"
-          v-model="form.memory"
-          placeholder="请选择"
-          @change="getRegionData"
-        >
-          <a-select-option
-            v-for="item in memoryData"
-            :key="item.value"
-            :value="item.value"
+            <a-select-option
+              v-for="item in memoryData"
+              :key="item.value"
+              :value="item.value"
+            >
+              {{ item.title }}
+            </a-select-option>
+          </a-select>
+        </a-form-model-item>
+        <a-form-model-item v-if="tabKey === '2'" label="SSD数据盘">
+          <div
+            v-for="(item, index) in form.dataDisk"
+            :key="item.id"
+            class="datasidk-item"
           >
-            {{ item.title }}
-          </a-select-option>
-        </a-select>
-      </a-form-model-item>
-      <a-form-model-item v-if="tabKey === '2'" label="SSD数据盘">
-        <div
-          v-for="(item, index) in form.dataDisk"
-          :key="item.id"
-          class="datasidk-item"
-        >
+            <div class="input-number-box">
+              <NumberInput
+                v-model="item.size"
+                :disabled="item.old"
+                :on-change="getPrice"
+              />
+            </div>
+            <div class="action-box">
+              <div v-if="item.default" class="add">
+                <div class="left-btn" @click="addDisk">
+                  <a-icon class="icon" type="plus-circle" theme="filled" />
+                  <span>添加数据盘</span>
+                </div>
+                <div class="info">
+                  还可以添加
+                  <span class="strong">{{ 4 - form.dataDisk.length }}</span>
+                  块数据盘
+                </div>
+              </div>
+              <div v-if="!item.old" class="del">
+                <div class="left-btn" @click="delDisk(index)">
+                  <a-icon class="icon" type="minus-circle" theme="filled" />
+                  <span class="txt">删除磁盘</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </a-form-model-item>
+        <a-form-model-item v-if="tabKey === '3'" label="公网带宽">
           <div class="input-number-box">
             <NumberInput
-              v-model="item.size"
-              :disabled="item.old"
+              v-if="minBandwidth && maxBandwidth"
+              v-model="form.internetMaxBandwidthOut"
+              company="M"
+              :step="1"
+              :min="minBandwidth"
+              :max="maxBandwidth"
               :on-change="getPrice"
             />
           </div>
-          <div class="action-box">
-            <div v-if="item.default" class="add">
-              <div class="left-btn" @click="addDisk">
-                <a-icon class="icon" type="plus-circle" theme="filled" />
-                <span>添加数据盘</span>
-              </div>
-              <div class="info">
-                还可以添加
-                <span class="strong">{{ 4 - form.dataDisk.length }}</span>
-                块数据盘
-              </div>
-            </div>
-            <div v-if="!item.old" class="del">
-              <div class="left-btn" @click="delDisk(index)">
-                <a-icon class="icon" type="minus-circle" theme="filled" />
-                <span class="txt">删除磁盘</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </a-form-model-item>
-      <a-form-model-item v-if="tabKey === '3'" label="公网带宽">
-        <div class="input-number-box">
-          <NumberInput
-            v-if="minBandwidth && maxBandwidth"
-            v-model="form.internetMaxBandwidthOut"
-            company="M"
-            :step="1"
-            :min="minBandwidth"
-            :max="maxBandwidth"
-            :on-change="getPrice"
-          />
-        </div>
-      </a-form-model-item>
-      <a-form-model-item label="到期时间">
-        {{ detail.endTimeStr }}
-      </a-form-model-item>
-      <a-form-model-item :label="isUpgrade ? '升级差价' : '降配差价'">
-        <div class="price">{{ price.tradePrice }}</div>
-      </a-form-model-item>
-      <a-form-model-item :wrapper-col="{ span: 10, offset: 5 }">
-        <a-button type="primary" @click="handleSubmit"> 确认提交 </a-button>
-      </a-form-model-item>
-    </a-form-model>
+        </a-form-model-item>
+        <a-form-model-item label="到期时间">
+          {{ detail.endTimeStr }}
+        </a-form-model-item>
+        <a-form-model-item :label="isUpgrade ? '升级差价' : '降配差价'">
+          <div class="price">{{ price.tradePrice }}</div>
+        </a-form-model-item>
+        <a-form-model-item :wrapper-col="{ span: 10, offset: 5 }">
+          <a-button type="primary" @click="handleSubmit"> 确认提交 </a-button>
+        </a-form-model-item>
+      </a-form-model>
+    </a-spin>
   </div>
 </template>
 
@@ -177,7 +190,8 @@ export default {
       dataSidkCount: undefined,
       // 带宽
       oldBandwidth: undefined,
-      typeList: []
+      typeList: [],
+      spinning: false
     };
   },
   computed: {
@@ -218,6 +232,7 @@ export default {
     },
     // 获取服务器实例详情
     getDetail() {
+      this.spinning = true;
       this.$store
         .dispatch("cloud/cloudDetail", { id: this.$route.query.id })
         .then((res) => {
@@ -269,6 +284,11 @@ export default {
             // 保存旧配置
             this.oldBandwidth = res.data.internetMaxBandwidthOut;
           }
+        })
+        .finally(() => {
+          setTimeout(() => {
+            this.spinning = false;
+          }, 1000);
         });
     },
     // 处理cpu+内存的数据，需要截取当前配置之后的数据
