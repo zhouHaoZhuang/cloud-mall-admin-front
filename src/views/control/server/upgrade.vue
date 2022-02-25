@@ -18,6 +18,16 @@
     </a-tabs>
     <a-form-model :model="form" :label-col="labelCol" :wrapper-col="wrapperCol">
       <a-form-model-item label="IP地址"> {{ detail.outIp }} </a-form-model-item>
+      <a-form-model-item label="当前规格">
+        <span style="margin-right: 20px">
+          CPU：
+          {{ example.cpu }}核
+        </span>
+        <span>
+          内存：
+          {{ example.memory }}G
+        </span>
+      </a-form-model-item>
       <a-form-model-item v-if="tabKey === '1'" label="分类">
         <a-radio-group v-model="form.specFamily" @change="typeChange">
           <a-radio
@@ -216,8 +226,10 @@ export default {
           };
           if (this.tabKey === "1") {
             this.form = {
-              cpu: res.data.cpu,
-              memory: res.data.memory,
+              // cpu: res.data.cpu,
+              // memory: res.data.memory,
+              cpu: undefined,
+              memory: undefined,
               specFamily: res.data.instanceTypeFamily
             };
             // 保存旧配置

@@ -62,7 +62,7 @@ const permsGuard = (to, from, next, options) => {
     // 获取网站信息
     store.dispatch("dashboard/getWebInfo");
     // 获取权限数据
-    // store.dispatch("user/getUserPerms");
+    store.dispatch("user/getUserPerms");
     // 获取其他全局配置
     store.dispatch("user/getAllConfig");
   }
