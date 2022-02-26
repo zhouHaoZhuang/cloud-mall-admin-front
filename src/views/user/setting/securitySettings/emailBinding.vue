@@ -15,15 +15,22 @@
         :wrapper-col="wrapperCol"
       >
         <a-form-model-item label="会员ID" prop="phone">
-          <span>{{corporationCode}}</span>
+          <span>{{ corporationCode }}</span>
         </a-form-model-item>
-        <a-form-model-item ref="email" label="邮箱账号" prop = 'email'>
-          <a-input v-model="form.email" style="width: 250px" type = 'email'/>
+        <a-form-model-item ref="email" label="邮箱账号" prop="email">
+          <a-input v-model="form.email" style="width: 250px" type="email" />
         </a-form-model-item>
-        <!-- <a-form-model-item label="验证码" prop="code">
+        <a-form-model-item label="验证码" prop="code">
           <a-input v-model="form.code" style="width: 250px"> </a-input>
-          <a-button style="margin-left: 10px;" type="primary"> 发送验证码 </a-button>
-        </a-form-model-item> -->
+          <a-button
+            style="margin-left: 10px"
+            type="primary"
+            @click="sendEmail"
+            :loading="loading"
+          >
+            {{ btnTxt }}
+          </a-button>
+        </a-form-model-item>
         <a-form-model-item :wrapper-col="{ span: 14, offset: 4 }">
           <a-button @click="onSubmit" type="primary"> 确认绑定邮箱 </a-button>
         </a-form-model-item>
@@ -39,14 +46,14 @@ export default {
       form: {
         name: "",
         code: "",
-        email: "",
+        email: ""
       },
       rules: {
         code: [{ required: true, message: "请输入验证码", trigger: "blur" }],
         email: [
           { required: true, message: "请输入邮箱账号", trigger: "blur" },
-          { type: "email", message: "您输入的邮箱格式不正确", trigger: "blur" },
-        ],
+          { type: "email", message: "您输入的邮箱格式不正确", trigger: "blur" }
+        ]
       },
       labelCol: {
         span: 4
@@ -55,22 +62,55 @@ export default {
         span: 8
       },
       corporationCode: "",
+      countdown: 0,
+      btnTxt: "发送验证码",
+      loading: false,
+      time: null,
+      timeCount: 60
     };
   },
   created() {
     this.corporationCode = this.$route.query.corporationCode;
+  },
+  beforeDestroy() {
+    clearInterval(this.time);
   },
   methods: {
     onSubmit() {
       this.$refs.ruleForm.validate((valid) => {
         if (valid) {
           // console.log('submit!', this.form);
-          this.$store.dispatch("user/emailBinding", this.form.email).then(() => {
+          this.$store.dispatch("user/emailBinding", this.form).then(() => {
             this.$message.success("绑定成功");
-            this.$router.back()
+            this.$router.back();
           });
-        } 
+        }
       });
+    },
+    sendEmail() {
+      if (this.form.email) {
+        this.loading = true;
+
+        this.$store.dispatch("user/sendEmail", this.form).then(() => {
+          this.$message.success("发送成功");
+          this.startTimer();
+        });
+      } else {
+        this.$message.error("请输入邮箱账号");
+      }
+    },
+    startTime() {
+      this.time = setInterval(() => {
+        if (this.timeCount - 1 === 0) {
+          clearInterval(this.time);
+          this.btnTxt = "获取验证码";
+          this.timeCount = 60;
+          this.loading = false;
+          return;
+        }
+        this.timeCount -= 1;
+        this.btnTxt = this.timeCount + "S";
+      }, 1000);
     }
   }
 };
@@ -92,6 +132,5 @@ export default {
 .return {
   display: flex;
   align-items: center;
-  
 }
 </style>
