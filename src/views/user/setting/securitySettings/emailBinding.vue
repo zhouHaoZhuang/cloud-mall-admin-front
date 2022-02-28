@@ -90,8 +90,8 @@ export default {
     sendEmail() {
       if (this.form.email) {
         this.loading = true;
-
         this.$store.dispatch("user/sendEmail", this.form).then(() => {
+          this.loading = false;
           this.$message.success("发送成功");
           this.startTimer();
         });
