@@ -2,7 +2,7 @@
   <div>
     <div v-if="allConfig.persona_real_authentication == '1'">
       <h2 class="verified-title">实名认证</h2>
-      <div class="verified-top-nav">
+      <div class="verified-top-nav" v-if="choose != 3">
         <span :class="{ chooseClick: choose == 1 }">①填写认证资料</span>
         <span :class="{ chooseClick: choose == 2 }">②确认认证信息</span>
         <!-- <span :class="{ chooseClick: choose == 3 }">③实名认证信息</span> -->
@@ -154,7 +154,7 @@ export default {
   data() {
     return {
       verifyTypeEnum,
-      choose: 1,
+      choose: 3,
       Review: true,
       labelCol: { span: 4 },
       wrapperCol: { span: 10 },
