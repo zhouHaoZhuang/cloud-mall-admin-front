@@ -52,7 +52,9 @@
             type="link"
             @click="handleSelectWorkOrder(record)"
           >
-            {{ text }}
+            <div class="btn-link-txt">
+              {{ text }}
+            </div>
           </a-button>
         </div>
         <!-- 问题标题 -->
@@ -62,7 +64,9 @@
             type="link"
             @click="handleSelectWorkOrder(record)"
           >
-            {{ text }}
+            <div class="btn-link-txt">
+              {{ text }}
+            </div>
           </a-button>
         </div>
         <!-- 创建时间 -->
@@ -248,6 +252,12 @@ export default {
   }
   .btn-link {
     padding: 0;
+  }
+  .btn-link-txt {
+    width: 150px;
+    text-align: left;
+    word-break: break-all;
+    white-space: normal;
   }
   .status {
     display: flex;
