@@ -87,6 +87,10 @@
           <div class="public-value">{{ detail.cpu }}核{{ detail.memory }}G</div>
         </div>
         <div class="public-item">
+          <div class="public-label">实例分类</div>
+          <div class="public-value">{{ detail.instanceTypeFamily }}</div>
+        </div>
+        <div class="public-item">
           <div class="public-label">SSD系统盘</div>
           <div class="public-value">{{ detail.systemSize }}G</div>
         </div>
@@ -98,7 +102,6 @@
           <div class="public-label">公网带宽</div>
           <div class="public-value">{{ detail.internetMaxBandwidthOut }}M</div>
         </div>
-        <div class="public-item"></div>
         <!-- <div class="public-item">
           <div class="public-label">防御峰值</div>
           <div class="public-value">{{ detail.instanceName }}</div>
