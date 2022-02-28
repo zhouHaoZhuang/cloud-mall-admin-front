@@ -4,7 +4,7 @@
       <template slot="content">
         <div>
           <span>您暂时没有站内消息</span>
-          <a href="/message">查看更多&gt;</a>
+          <a-button type='link' @click="$router.push('/message')">查看更多&gt;</a-button>
         </div>
       </template>
       <span><a-icon type="mail" /> 站内信</span>
