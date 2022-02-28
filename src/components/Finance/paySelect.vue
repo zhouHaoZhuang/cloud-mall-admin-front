@@ -58,7 +58,9 @@
     <div class="agreement">
       <a-checkbox v-model="agreeFlag" />
       <div class="txt">本人已同意</div>
-      <a-button type="link" size="small">《浙江云盾产品服务协议》</a-button>
+      <a-button type="link" size="small" @click="handleJumpService"
+        >《浙江云盾产品服务协议》</a-button
+      >
     </div>
     <!-- 支付按钮 -->
     <div class="pay-btn">
@@ -88,6 +90,7 @@
       <a-button
         class="btn"
         type="primary"
+        :loading="loading"
         :disabled="!agreeFlag"
         @click="handlePay"
       >
@@ -98,7 +101,7 @@
 </template>
 
 <script>
-import { openAlipayPay, getAliPayCallBack } from "@/utils/index";
+import { openAlipayPay, getAliPayCallBack, jumpCloudMall } from "@/utils/index";
 export default {
   props: {
     // 订单详情
@@ -152,6 +155,11 @@ export default {
     // 跳转充值
     handleJump() {
       this.$router.push("/user/finance/recharge");
+    },
+    // 跳转云商城服务协议
+    handleJumpService() {
+      const path = "/pc/passport/agreement";
+      jumpCloudMall(path, true);
     },
     // 根据支付方式返回后端所需参数
     getRequest() {
