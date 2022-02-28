@@ -250,7 +250,7 @@ export default {
       }
     }
   },
-  activated() {
+  created() {
     this.getCompanyInfo();
   },
   mounted() {
@@ -297,7 +297,7 @@ export default {
     // 获取公司信息
     getCompanyInfo() {
       this.$store.dispatch("user/getCompanyInfo").then((res) => {
-        console.log(res.data.companyName);
+        console.log(res.data.companyName,'----------');
         this.companyName = res.data.companyName;
       });
     },
