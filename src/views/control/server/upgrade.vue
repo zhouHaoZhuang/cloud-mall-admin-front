@@ -411,7 +411,8 @@ export default {
         dataDisk: newDataDisk,
         id: this.$route.query.id,
         instanceType: this.form.instanceType,
-        instanceTypeFamily: this.detail.instanceTypeFamily,
+        // instanceTypeFamily: this.detail.instanceTypeFamily,
+        instanceTypeFamily: this.form.specFamily,
         internetMaxBandwidthOut: this.form.internetMaxBandwidthOut,
         type: this.type
       };
