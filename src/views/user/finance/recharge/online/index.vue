@@ -1,8 +1,8 @@
 <template>
   <div class="online">
-    <div v-if="allConfig.online_pay">
+    <div v-if="allConfig.online_pay == '1'">
       <div class="warn">
-        <p>1、充值最小金额1.00元</p>
+        <p>1、充值最小金额{{allConfig.min_recharge}}元</p>
         <p>
           2、支付过程中浏览器会有几次跳转，支付完成之前请勿关闭浏览器，否则可能造成支付失败
         </p>
@@ -30,7 +30,7 @@
         <img width="30px" src="@/assets/img/pay/WeChat.png" />
         <span>微信支付</span>
       </div> -->
-        <div class="WeChatply Alipay" v-if="allConfig.alipay_switch">
+        <div class="WeChatply Alipay" v-if="allConfig.alipay_switch == '1'">
           <img width="40px" src="@/assets/img/pay/Alipay.png" />
           <span>支付宝支付</span>
         </div>
