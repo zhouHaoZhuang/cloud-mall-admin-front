@@ -91,11 +91,20 @@ const user = {
         data
       });
     },
-    // 绑定邮箱
-    emailBinding({ commit, state }, email) {
+    // 向邮箱发送验证码
+    sendEmail({ commit, state }, data) {
       return request({
-        url: `/user/bindEmail/${email}`,
-        method: "get"
+        url: `/sms/getCodeByEmail`,
+        method: "post",
+        data
+      });
+    },
+    // 绑定邮箱
+    emailBinding({ commit, state }, data) {
+      return request({
+        url: `/user/bindEmail`,
+        method: "post",
+        data
       });
     },
     // 获取用户真实信息
