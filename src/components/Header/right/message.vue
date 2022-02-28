@@ -4,7 +4,7 @@
       <template slot="content">
         <div>
           <span>您暂时没有站内消息</span>
-          <a href="#/message">查看更多&gt;</a>
+          <a href="/message">查看更多&gt;</a>
         </div>
       </template>
       <span><a-icon type="mail" /> 站内信</span>
