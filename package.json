@@ -18,6 +18,7 @@
     "@babel/plugin-proposal-optional-chaining": "^7.16.7",
     "ant-design-vue": "1.7.2",
     "axios": "^0.24.0",
+    "babel-plugin-transform-remove-console": "^6.9.4",
     "babel-polyfill": "^6.26.0",
     "compression-webpack-plugin": "5.0.1",
     "core-js": "^3.6.5",
