@@ -8,13 +8,17 @@
       </span>
       <a-menu slot="overlay">
         <a-menu-item>
-          <a href="/user/setting/security">安全设置</a>
+          <span @click="$router.push('/user/setting/security')">
+            安全设置
+          </span>
         </a-menu-item>
         <a-menu-item>
-          <a href="/user/setting/info">基本信息</a>
+          <span @click="$router.push('/user/setting/info')"> 基本信息 </span>
         </a-menu-item>
         <a-menu-item>
-          <a href="/user/setting/realname">实名认证</a>
+          <span @click="$router.push('/user/setting/realname')">
+            实名认证
+          </span>
         </a-menu-item>
         <!-- <a-menu-item>
           <a href="javascript:;">常用地址管理</a>
