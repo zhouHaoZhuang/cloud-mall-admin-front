@@ -2,7 +2,7 @@ import axios from "axios";
 import env from "@/config/env";
 import message from "ant-design-vue/es/message";
 import store from "@/store";
-import { getDomainUrl } from "@/utils/index";
+import { getDomainUrl, jumpCloudMall } from "@/utils/index";
 const axiosSource = axios.CancelToken.source();
 // 创建 axios 实例
 const request = axios.create({
@@ -66,6 +66,13 @@ request.interceptors.response.use((response) => {
   const errno = data.code;
   const errmsg = data.msg;
   if (errno !== "000000") {
+    // 判断是否登录失效
+    if (errno === "000001") {
+      message.warning("登录已失效，请重新登录");
+      store.dispatch("user/logout");
+      jumpCloudMall("/login-pc?out=1");
+      return Promise.reject(data);
+    }
     message.warning(errmsg);
     return Promise.reject(data);
   }
