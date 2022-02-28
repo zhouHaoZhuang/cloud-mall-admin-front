@@ -219,10 +219,10 @@ export default {
     getTypeList() {
       this.$store.dispatch("cloud/typeList").then((res) => {
         this.typeList = [...res.data];
-        this.form.specFamily =
-          Array.isArray(res.data) && res.data.length > 0
-            ? res.data[0].typeFamily
-            : undefined;
+        // this.form.specFamily =
+        //   Array.isArray(res.data) && res.data.length > 0
+        //     ? res.data[0].typeFamily
+        //     : undefined;
         this.getCpu();
       });
     },
