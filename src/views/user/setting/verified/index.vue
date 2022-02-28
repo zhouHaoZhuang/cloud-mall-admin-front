@@ -7,7 +7,7 @@
         <span :class="{ chooseClick: choose == 2 }">②确认认证信息</span>
         <!-- <span :class="{ chooseClick: choose == 3 }">③实名认证信息</span> -->
       </div>
-      <div v-if="choose == 1">
+      <div v-show="choose == 1">
         <p class="phone-hint">
           您选择了“手机号码认证方式”进行实名认证，请填写一下信息：
         </p>
@@ -38,7 +38,7 @@
             请填写您本人的真实身份证号码，否则无法验证通过
           </a-form-model-item>
           <a-form-model-item :wrapper-col="{ span: 14, offset: 6 }">
-            <a-button type="primary" @click="choose = 2" :disabled="nextAudit">
+            <a-button type="primary" @click="jumpNext" :disabled="nextAudit">
               下一步
             </a-button>
             <!-- <a-button style="margin-left: 10px"> 返回上一步 </a-button> -->
@@ -49,19 +49,29 @@
           <p class="warm-tips-first-p">
             1，请确保姓名、身份证号码完全正确，请勿使用他人身份信息进行认证，否则会认证失败
           </p>
-          <p>2，请勿使用虚假信息认证，否则浙江云盾有权注销您的实名认证申请</p>
           <p>
-            3，浙江云盾会加密保存您的认证资料，绝不会泄露用户隐私，请放心认证
+            2，请勿使用虚假信息认证，否则{{
+              companyName
+            }}有权注销您的实名认证申请
           </p>
           <p>
-            4，所填写资料仅用于实名认证，不会开通其他任何附加服务，浙江云盾工作人员不会向您索要短信验证码，谨防上当
+            3，{{
+              companyName
+            }}会加密保存您的认证资料，绝不会泄露用户隐私，请放心认证
+          </p>
+          <p>
+            4，所填写资料仅用于实名认证，不会开通其他任何附加服务，{{
+              companyName
+            }}工作人员不会向您索要短信验证码，谨防上当
           </p>
         </div>
       </div>
-      <div v-if="choose == 2">
+      <div v-show="choose == 2">
         <div class="alert-warn">
           <span>
-            如果姓名不正确，或者身份证号码错误，浙江云盾将取消您的实名认证，请仔细核对后提交！
+            如果姓名不正确，或者身份证号码错误，{{
+              companyName
+            }}将取消您的实名认证，请仔细核对后提交！
           </span>
         </div>
         <a-form-model
@@ -110,7 +120,7 @@
           </div>
         </a-modal>
       </div>
-      <div v-if="choose == 3" class="verified-info">
+      <div v-show="choose == 3" class="verified-info">
         <img class="user-img" src="@/assets/img/auth_icon_success.png" alt="" />
         <div class="verified-info-word">
           <h3>恭喜您已通过实名认证！</h3>
@@ -190,16 +200,16 @@ export default {
             trigger: "blur"
           },
           {
-            min: 18,
-            max: 18,
-            message: "身份证号码长度为18位",
+            pattern: /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/,
+            message: "身份证号码格式不对",
             trigger: "blur"
           }
         ]
       },
       ModalText: "Content of the modal",
       visible: false,
-      confirmLoading: false
+      confirmLoading: false,
+      companyName: ""
     };
   },
   watch: {
@@ -240,6 +250,9 @@ export default {
       }
     }
   },
+  activated() {
+    this.getCompanyInfo();
+  },
   mounted() {
     // console.log(this.userRealInfo, "zhenshi");
     if (this.userRealInfo && this.userRealInfo.realName) {
@@ -254,6 +267,13 @@ export default {
         width: 160,
         height: 160,
         text: `${this.textUrl}`
+      });
+    },
+    jumpNext() {
+      this.$refs.ruleForm.validate((valid) => {
+        if (valid) {
+          this.choose = 2;
+        }
       });
     },
     //点击开始进行转化
@@ -273,6 +293,13 @@ export default {
     handleCancel(e) {
       console.log("Clicked cancel button");
       this.visible = false;
+    },
+    // 获取公司信息
+    getCompanyInfo() {
+      this.$store.dispatch("user/getCompanyInfo").then((res) => {
+        console.log(res.data.companyName);
+        this.companyName = res.data.companyName;
+      });
     },
     submit() {
       this.$store.dispatch("realName/realName", this.form).then((res) => {
