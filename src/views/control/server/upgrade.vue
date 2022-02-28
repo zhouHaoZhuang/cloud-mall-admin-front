@@ -317,8 +317,8 @@ export default {
         })
         .then((res) => {
           const newRes = res.data ? res.data : [];
-          const newData = this.returnCpuOrDiskData(newRes, this.example.cpu);
-          this.cpuData = [...setCpuOrDiskData(newData, "核")];
+          // const newData = this.returnCpuOrDiskData(newRes, this.example.cpu);
+          this.cpuData = [...setCpuOrDiskData(newRes, "核")];
           if (this.cpuData.length > 0) {
             this.form.cpu = this.cpuData[0].value;
             this.getDisk();
@@ -342,8 +342,8 @@ export default {
         })
         .then((res) => {
           const newRes = res.data ? res.data : [];
-          const newData = this.returnCpuOrDiskData(newRes, this.example.memory);
-          this.memoryData = [...setCpuOrDiskData(newData, "G")];
+          // const newData = this.returnCpuOrDiskData(newRes, this.example.memory);
+          this.memoryData = [...setCpuOrDiskData(newRes, "G")];
           this.form.memory =
             this.memoryData.length > 0 ? this.memoryData[0].value : undefined;
           if (this.memoryData.length === 0) {
