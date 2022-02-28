@@ -2,7 +2,7 @@
   <div>
     <div v-if="allConfig.persona_real_authentication == '1'">
       <h2 class="verified-title">实名认证</h2>
-      <div class="verified-top-nav">
+      <div class="verified-top-nav" v-if="choose != 3">
         <span :class="{ chooseClick: choose == 1 }">①填写认证资料</span>
         <span :class="{ chooseClick: choose == 2 }">②确认认证信息</span>
         <!-- <span :class="{ chooseClick: choose == 3 }">③实名认证信息</span> -->
@@ -113,31 +113,31 @@
       <div v-if="choose == 3" class="verified-info">
         <img class="user-img" src="@/assets/img/auth_icon_success.png" alt="" />
         <div class="verified-info-word">
-          <h3>恭喜您已通过浙江云盾实名认证！</h3>
-          <p>
+          <h3>恭喜您已通过实名认证！</h3>
+          <!-- <p>
             <span class="verified-info-key">认证途径：</span>
             <span>浙江云盾认证</span>
-          </p>
+          </p> -->
           <p>
             <span class="verified-info-key">真实姓名：</span>
-            <span>*勇</span>
+            <span>{{ userRealInfo.realName }}</span>
           </p>
           <p>
             <span class="verified-info-key">认证时间：</span>
-            <span>2021-06-12 15:55:51</span>
+            <span>{{ userRealInfo.modifyTime | formatDate }}</span>
           </p>
           <p>
             <span class="verified-info-key">证件号码：</span>
-            <span>610431*******3016</span>
+            <span>{{ idNumber }}</span>
           </p>
           <p>
             <span class="verified-info-key">认证版本：</span>
             <span><img src="@/assets/img/auth_level_2.png" alt="" /></span>
           </p>
-          <p class="verified-info-key">
+          <!-- <p class="verified-info-key">
             如果您的认证信息发生变更，可
             <a href="/console/user/setting/changerealname">修改认证资料 ></a>
-          </p>
+          </p> -->
         </div>
       </div>
     </div>
@@ -225,8 +225,26 @@ export default {
   },
   computed: {
     ...mapState({
-      allConfig: (state) => state.user.allConfig
-    })
+      allConfig: (state) => state.user.allConfig,
+      userRealInfo: (state) => state.user.userRealInfo
+    }),
+    idNumber() {
+      if (this.userRealInfo && this.userRealInfo.idNumber) {
+        return (
+          this.userRealInfo.realName.slice(0, 3) +
+          "******" +
+          this.userRealInfo.realName.slice(14, 17)
+        );
+      } else {
+        return "";
+      }
+    }
+  },
+  mounted() {
+    // console.log(this.userRealInfo, "zhenshi");
+    if (this.userRealInfo && this.userRealInfo.realName) {
+      this.choose = 3;
+    }
   },
   methods: {
     // 链接生成二维码
