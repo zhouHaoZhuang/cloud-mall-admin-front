@@ -376,7 +376,7 @@ export default {
         {
           title: "实例名称",
           dataIndex: "instanceName",
-          width: 200,
+          width: 180,
           scopedSlots: { customRender: "instanceName" },
           select: true
         },
@@ -409,6 +409,12 @@ export default {
             title: "statusTitle",
             customRender: "runningStatus"
           },
+          select: true
+        },
+        {
+          title: "分类",
+          dataIndex: "instanceTypeFamily",
+          width: 90,
           select: true
         },
         {
