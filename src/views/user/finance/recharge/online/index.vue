@@ -162,7 +162,7 @@ h1 {
   }
 
   > span:last-child {
-    width: 100px;
+    width: 500px;
     height: 30px;
     line-height: 30px;
     text-align: left;
