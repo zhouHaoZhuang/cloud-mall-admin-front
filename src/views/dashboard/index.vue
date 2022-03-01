@@ -12,8 +12,11 @@
               <span>实名认证</span>
             </template>
             <div class="icon-item-imgs">
-              <img src="@/assets/img/dashboard/card.png" />
-              <!-- <img src="@/assets/img/dashboard/card-a.png" /> -->
+              <img
+                v-if="!userRealInfo.realName"
+                src="@/assets/img/dashboard/card.png"
+              />
+              <img v-else src="@/assets/img/dashboard/card-a.png" />
             </div>
           </a-tooltip>
         </div>
@@ -34,22 +37,25 @@
               <span>绑定邮箱</span>
             </template>
             <div class="icon-item-imgs">
-              <img src="@/assets/img/dashboard/email.png" />
-              <!-- <img src="@/assets/img/dashboard/email-a.png" /> -->
+              <img
+                v-if="!userRealInfo.email"
+                src="@/assets/img/dashboard/email.png"
+              />
+              <img v-else src="@/assets/img/dashboard/email-a.png" />
             </div>
           </a-tooltip>
         </div>
-        <div class="icon-item" @click="handleJump('/user/setting/security')">
+        <!-- <div class="icon-item" @click="handleJump('/user/setting/security')">
           <a-tooltip placement="bottom">
             <template slot="title">
               <span>设置密保问题</span>
             </template>
             <div class="icon-item-imgs">
               <img src="@/assets/img/dashboard/lock.png" />
-              <!-- <img src="@/assets/img/dashboard/lock-a.png" /> -->
+              <img src="@/assets/img/dashboard/lock-a.png" />
             </div>
           </a-tooltip>
-        </div>
+        </div> -->
       </div>
     </div>
     <!-- 主体 -->
@@ -155,7 +161,8 @@ require("echarts/theme/macarons"); //引入主题
 export default {
   computed: {
     ...mapState({
-      userInfo: (state) => state.user.userInfo
+      userInfo: (state) => state.user.userInfo,
+      userRealInfo: (state) => state.user.userRealInfo
     })
   },
   data() {
