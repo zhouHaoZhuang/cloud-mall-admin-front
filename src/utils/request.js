@@ -70,7 +70,7 @@ request.interceptors.response.use((response) => {
     if (errno === "000001") {
       message.warning("登录已失效，请重新登录");
       store.dispatch("user/logout");
-      jumpCloudMall("/login-pc?out=1");
+      jumpCloudMall("/login?out=1");
       return Promise.reject(data);
     }
     message.warning(errmsg);
