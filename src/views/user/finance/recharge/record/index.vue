@@ -98,7 +98,8 @@ export default {
           },
           sorter: (a, b) => {
             return (
-              new Date(a.payTime).getTime() - new Date(b.payTime).getTime()
+              new Date(a.createTime).getTime() -
+              new Date(b.createTime).getTime()
             );
           }
         }
