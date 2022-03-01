@@ -158,7 +158,7 @@ export default {
     },
     // 跳转云商城服务协议
     handleJumpService() {
-      const path = "/pc/passport/agreement";
+      const path = "/passport/agreement";
       jumpCloudMall(path, true);
     },
     // 根据支付方式返回后端所需参数

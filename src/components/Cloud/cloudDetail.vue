@@ -210,7 +210,7 @@ export default {
     },
     // 跳转云商城购买相同配置
     handleBuyCloud() {
-      const path = `/pc/cloud-price?cpu=${this.detail.cpu}&memory=${this.detail.memory}`;
+      const path = `/cloud-price?cpu=${this.detail.cpu}&memory=${this.detail.memory}`;
       console.log(this.detail, path);
       // jumpCloudMall(path, true);
     }

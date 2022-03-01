@@ -737,7 +737,7 @@ export default {
     },
     // 跳转云商城服务器购买页面
     handleJumpCloudPay() {
-      jumpCloudMall("/pc/cloud-price", true);
+      jumpCloudMall("/cloud-price", true);
     },
     // 跳转升级
     handleCloudUpgrade(record, type) {

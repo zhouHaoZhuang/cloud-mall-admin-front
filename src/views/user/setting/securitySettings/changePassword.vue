@@ -124,7 +124,7 @@ export default {
           this.$store.dispatch("user/changePassword", this.form).then(() => {
             this.$message.success("修改成功");
             this.$store.dispatch("user/logout").then((res) => {
-              jumpCloudMall("/login-pc?out=1");
+              jumpCloudMall("/login?out=1");
             });
           });
         } else {

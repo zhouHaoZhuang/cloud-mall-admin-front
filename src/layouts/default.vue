@@ -73,7 +73,7 @@ export default {
   methods: {
     // 跳转云商城首页
     handleJumpCloud() {
-      jumpCloudMall("/pc", true);
+      jumpCloudMall("/", true);
     }
   }
 };
