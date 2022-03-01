@@ -10,7 +10,7 @@
     <div class="btns">
       <div class="left">
         <a-space>
-          <a-button :disabled="disabledBtn">批量续费</a-button>
+          <!-- <a-button :disabled="disabledBtn">批量续费</a-button> -->
           <span>到期时间:</span>
           <a-select
             v-model="listQuery.residueDay"
