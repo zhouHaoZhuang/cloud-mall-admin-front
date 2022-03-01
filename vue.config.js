@@ -33,18 +33,18 @@ module.exports = {
     port: 8000, //自定义项目运行端口
     // open: "true",  //自动打开浏览器
     // proxy: {
-    //   "/server": {
-    //     target: "http://site.ydidc.com/server",
+    //   "/ims": {
+    //     target: "http://site.ydidc.com/ims",
     //     changeOrigin: true,
     //     pathRewrite: {
-    //       "^/server": ""
+    //       "^/ims": ""
     //     }
     //   },
-    //   "/form": {
-    //     target: "http://site.ydidc.com/server/form",
+    //   "/fs": {
+    //     target: "http://site.ydidc.com/fs",
     //     changeOrigin: true,
     //     pathRewrite: {
-    //       "^/form": ""
+    //       "^/fs": ""
     //     }
     //   }
     // }
