@@ -29,7 +29,13 @@
       <span class="settings-info-desc">
         安全性高的密码可以使账户更安全；互联网账号存在被盗风险，建议您定期更换密码
       </span>
-      <a class="settings-change" href="#/user/setting/changePassword">修改</a>
+      <a-button
+        type="link"
+        @click="$router.push('/user/setting/changePassword')"
+        class="settings-change"
+      >
+        修改
+      </a-button>
     </div>
     <div class="settings-info">
       <img src="@/assets/img/iconphone.png" alt="" />
@@ -39,7 +45,9 @@
           phoneNumber
         }}。绑定认证后可用于手机找回密码、接收手机动态验证码等，保障您的账户安全。
       </span>
-      <a-button class="settings-change" type="link">修改</a-button>
+      <a-button v-show="false" class="settings-change" type="link">
+        修改
+      </a-button>
     </div>
     <div class="settings-info">
       <img v-if="email.length > 1" src="@/assets/img/iconemailatv.png" alt="" />
@@ -69,10 +77,16 @@
       <span class="settings-info-desc">
         设置密保问题可以进一步提升您的账户安全性。是您找回登录密码的方式之一。
       </span>
-      <a-button class="settings-change settings-start">立即启用</a-button>
+      <a-button v-show="false" class="settings-change settings-start">
+        立即启用
+      </a-button>
     </div>
     <div class="settings-info">
-      <img v-if="realName.length>1" src="@/assets/img/icon-identity-success.png" alt="" />
+      <img
+        v-if="realName.length > 1"
+        src="@/assets/img/icon-identity-success.png"
+        alt=""
+      />
       <img v-else src="@/assets/img/icon-identity.png" alt="" />
       <span class="settings-info-type">实名认证</span>
       <span class="settings-info-desc"> 您的实名认证信息：{{ realName }} </span>
@@ -98,8 +112,8 @@ export default {
       }
     };
   },
-  activated(){
-    this.$store.dispatch('user/getUserInfo')
+  activated() {
+    this.$store.dispatch("user/getUserInfo");
   },
   computed: {
     ...mapState({

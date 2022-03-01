@@ -22,8 +22,8 @@
         </a-select>
       </div>
       <div class="help">
-        <a-icon type="folder-open" class="icon" />
-        <span>云服务器帮助文档</span>
+        <!-- <a-icon type="folder-open" class="icon" />
+        <span>云服务器帮助文档</span> -->
       </div>
     </div>
     <!-- 按钮操作 -->
@@ -31,7 +31,7 @@
       <div class="left">
         <a-space>
           <a-button type="primary" @click="handleJumpCloudPay">+新建</a-button>
-          <a-button :disabled="disabledBtn">批量续费</a-button>
+          <!-- <a-button :disabled="disabledBtn">批量续费</a-button> -->
           <a-input-group style="width: 400px" compact>
             <a-select v-model="listQuery.key" style="width: 100px">
               <a-select-option value="ip"> IP地址 </a-select-option>

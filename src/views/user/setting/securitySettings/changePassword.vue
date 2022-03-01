@@ -37,7 +37,7 @@
           >
             <a-icon slot="prefix" type="smile" />
           </a-input>
-          <CodeBtn :phone="form.phone" />
+          <CodeBtn codeType="3" :phone="form.phone" />
         </a-form-model-item>
         <a-form-model-item ref="name" label="新密码" prop="newPassword">
           <a-input-password v-model="form.newPassword" v-password-input />
@@ -120,6 +120,7 @@ export default {
       this.$refs.ruleForm.validate((valid) => {
         if (valid) {
           // console.log('submit!', this.form);
+          this.form.password = this.form.newPassword
           this.$store.dispatch("user/changePassword", this.form).then(() => {
             this.$message.success("修改成功");
             this.$store.dispatch("user/logout").then((res) => {
