@@ -18,6 +18,10 @@ export default {
     size: {
       type: String,
       default: "default"
+    },
+    codeType: {
+      type: String,
+      default: ""
     }
   },
   data() {
@@ -26,7 +30,8 @@ export default {
       time: null,
       timeCount: 60,
       loading: false,
-      phoneReg: /^(13[0-9]|14[01456879]|15[0-3,5-9]|16[2567]|17[0-8]|18[0-9]|19[0-3,5-9])\d{8}$/
+      phoneReg:
+        /^(13[0-9]|14[01456879]|15[0-3,5-9]|16[2567]|17[0-8]|18[0-9]|19[0-3,5-9])\d{8}$/
     };
   },
   beforeDestroy() {
@@ -45,11 +50,14 @@ export default {
       if (this.loading) return;
       this.loading = true;
       this.$store
-        .dispatch("user/sendCode", { receiver: this.phone })
-        .then(res => {
+        .dispatch("user/sendCode", {
+          receiverAccount: this.phone,
+          codeType: this.codeType
+        })
+        .then((res) => {
           this.startTime();
         })
-        .catch(err => {
+        .catch((err) => {
           this.loading = false;
         });
     },

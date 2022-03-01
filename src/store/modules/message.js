@@ -9,7 +9,7 @@ const message = {
     // 获取列表
     getList({ commit, state }, params) {
       return request({
-        url: '/messageRecord',
+        url: '/imMessageRecord',
         method: 'get',
         params,
       });
@@ -17,7 +17,7 @@ const message = {
     //  修改详细状态为已读
     changeList({ commit, state }, data) {
       return request({
-        url: `/messageRecord/update/${data.id}`,
+        url: `/imMessageRecord/update/${data.id}`,
         method: 'patch',
         data,
       });
@@ -25,7 +25,7 @@ const message = {
     // 全部已读接口
     readAll({ commit, state }, params) {
       return request({
-        url: '/messageRecord/updateAll',
+        url: '/imMessageRecord/updateAll',
         method: 'get',
         params,
       });
@@ -33,7 +33,7 @@ const message = {
     getOne({ commit, state }, params) {
       // console.log(params,'params');
       return request({
-        url: `/messageRecord/${params.id}`,
+        url: `/imMessageRecord/${params.id}`,
         method: 'get',
       });
     },

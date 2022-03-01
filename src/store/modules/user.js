@@ -78,7 +78,7 @@ const user = {
     // 发送验证码
     sendCode({ commit, state }, data) {
       return request({
-        url: "/sms/sendSms",
+        url: "/sms/sendMessage",
         method: "post",
         data
       });
