@@ -1,17 +1,17 @@
 import { getIdcMallUrl } from "../utils/index";
 // 默认请求地址
 const baseUrl = {
-  local: "http://site.ydidc.com/server",
-  dev: "/server",
-  test: "/server",
-  prod: "/server"
+  local: "http://site.ydidc.com/ims",
+  dev: "/ims",
+  test: "/ims",
+  prod: "/ims"
 };
 // form服务接口请求地址
 const formBaseUrl = {
-  local: "http://site.ydidc.com/server/form",
-  dev: "/server/form",
-  test: "/server/form",
-  prod: "/server/form"
+  local: "http://site.ydidc.com/fs",
+  dev: "/fs",
+  test: "/fs",
+  prod: "/fs"
 };
 // 跳转云商城地址
 const cloudMallUrl = {
