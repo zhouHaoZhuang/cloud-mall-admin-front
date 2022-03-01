@@ -71,15 +71,13 @@
         立即启用
       </a-button>
     </div>
-    <div class="settings-info">
+    <div class="settings-info" v-show="false">
       <img src="@/assets/img/icon-security-undone.png" alt="" />
       <span class="settings-info-type">密保问题</span>
       <span class="settings-info-desc">
         设置密保问题可以进一步提升您的账户安全性。是您找回登录密码的方式之一。
       </span>
-      <a-button v-show="false" class="settings-change settings-start">
-        立即启用
-      </a-button>
+      <a-button class="settings-change settings-start"> 立即启用 </a-button>
     </div>
     <div class="settings-info">
       <img
