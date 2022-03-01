@@ -1,6 +1,6 @@
 <template>
   <div class="work-reply-container">
-    <div class="title">发表回复1</div>
+    <div class="title">发表回复</div>
     <a-form-model
       ref="ruleForm"
       :model="form"
