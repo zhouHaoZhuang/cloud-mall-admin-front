@@ -5,7 +5,7 @@
       <div class="logo-wrap" @click="handleJumpCloud">
         <img v-if="menuOpen" :src="userCenterLogo" alt="" class="img img1" />
         <img v-else :src="userCenterMiniLogo" alt="" class="img img2" />
-        浙江云盾
+        {{ companyInfo.companyName }}
       </div>
       <SideMenu />
     </div>
@@ -47,6 +47,7 @@ export default {
       menuOpen: (state) => state.setting.menuOpen,
       leftOpen: (state) => state.setting.leftOpen,
       webInfo: (state) => state.dashboard.webInfo,
+      companyInfo: (state) => state.dashboard.companyInfo,
       userCenterLogo: (state) => state.dashboard.webInfo.userCenterLogo,
       userCenterMiniLogo: (state) => state.dashboard.webInfo.userCenterMiniLogo
     }),

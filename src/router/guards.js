@@ -65,6 +65,8 @@ const permsGuard = (to, from, next, options) => {
     store.dispatch("user/getUserActualName");
     // 获取网站信息
     store.dispatch("dashboard/getWebInfo");
+    // 获取公司信息
+    store.dispatch("dashboard/getCompanyInfo");
     // 获取权限数据
     store.dispatch("user/getUserPerms");
     // 获取其他全局配置
