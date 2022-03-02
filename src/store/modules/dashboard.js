@@ -4,13 +4,19 @@ const cloud = {
   namespaced: true,
   state: {
     // 网站信息
-    webInfo: {}
+    webInfo: {},
+    // 公司信息
+    companyInfo: {}
   },
 
   mutations: {
     // 保存网站设置信息
     saveWebInfo(state, payload) {
       state.webInfo = { ...payload };
+    },
+    // 保存公司信息
+    saveCompanyInfo(state, payload) {
+      state.companyInfo = { ...payload };
     }
   },
 
@@ -52,6 +58,22 @@ const cloud = {
         })
           .then((res) => {
             commit("saveWebInfo", res.data.list[0]);
+            resolve();
+          })
+          .catch((error) => {
+            reject(error);
+          });
+      });
+    },
+    // 获取公司信息
+    getCompanyInfo({ commit, state }) {
+      return new Promise((resolve, reject) => {
+        request({
+          url: "/ccCompanyInfo",
+          method: "get"
+        })
+          .then((res) => {
+            commit("saveCompanyInfo", res.data.list[0]);
             resolve();
           })
           .catch((error) => {

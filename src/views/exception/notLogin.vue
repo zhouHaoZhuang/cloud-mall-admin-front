@@ -50,7 +50,7 @@ export default {
     },
     // 跳转云商城
     autoJumpCloudMall() {
-      jumpCloudMall("/login-pc?out=1");
+      jumpCloudMall("/login?out=1");
     }
   }
 };

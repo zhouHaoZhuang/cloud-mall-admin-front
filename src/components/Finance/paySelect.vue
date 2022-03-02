@@ -59,7 +59,7 @@
       <a-checkbox v-model="agreeFlag" />
       <div class="txt">本人已同意</div>
       <a-button type="link" size="small" @click="handleJumpService"
-        >《浙江云盾产品服务协议》</a-button
+        >《{{ companyInfo.companyName }}产品服务协议》</a-button
       >
     </div>
     <!-- 支付按钮 -->
@@ -101,6 +101,7 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
 import { openAlipayPay, getAliPayCallBack, jumpCloudMall } from "@/utils/index";
 export default {
   props: {
@@ -138,6 +139,9 @@ export default {
     }
   },
   computed: {
+    ...mapState({
+      companyInfo: (state) => state.dashboard.companyInfo
+    }),
     // 判断账户余额是否足够支付当前订单
     getTotalAmountIsPay() {
       console.log(this.balanceData.userAmount, this.detail.discountAmount);
@@ -158,7 +162,7 @@ export default {
     },
     // 跳转云商城服务协议
     handleJumpService() {
-      const path = "/pc/passport/agreement";
+      const path = "/passport/agreement";
       jumpCloudMall(path, true);
     },
     // 根据支付方式返回后端所需参数

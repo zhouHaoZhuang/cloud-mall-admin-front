@@ -26,7 +26,7 @@
     <div class="alert-warn-lg margin-top-70 margin-bottom-20">
       <div class="tip-title">5天无理由退款说明：</div>
       <ul class="ny-panel-list">
-        <li>1. 浙江云盾承诺自购买之日起，5天无理由退款</li>
+        <li>1. {{ companyInfo.companyName }}承诺自购买之日起，5天无理由退款</li>
         <li>2. 每个用户限退云服务器1台</li>
         <li>3. 退还实付金额，已使用代金券不退还</li>
         <li>
@@ -40,7 +40,13 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
 export default {
+  computed: {
+    ...mapState({
+      companyInfo: (state) => state.dashboard.companyInfo
+    })
+  },
   data() {
     return {
       cutover: "0",
@@ -159,7 +165,7 @@ export default {
 .margin-top-70 {
   margin-top: 70px;
 }
-.margin-bottom-20{
+.margin-bottom-20 {
   margin-bottom: 20px;
 }
 .alert-warn-lg .tip-title {
