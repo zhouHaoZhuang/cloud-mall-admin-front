@@ -35,7 +35,7 @@
           <span>支付宝支付</span>
         </div>
       </div>
-      <RechargeBtn :form="rechargeBtnForm" @success="startTime" />
+      <RechargeBtn class="rechargeBtn" :form="rechargeBtnForm" @success="startTime" />
     </div>
     <div v-else>
       <p>暂未开启订单在线充值，无法使用在线支付功能</p>
@@ -122,19 +122,16 @@ export default {
   > p {
     font-size: 12px;
   }
-
   .paymentMethod {
     display: flex;
     margin-top: 10px;
     margin-bottom: 20px;
   }
-
   .paymentMethod-type {
     display: inline-block;
     margin-right: 5px;
     line-height: 36px;
   }
-
   .WeChatply {
     border: 1px solid #e6e6e6;
     display: flex;
@@ -143,7 +140,6 @@ export default {
     margin-right: 10px;
     padding: 2px;
   }
-
   .Alipay {
     border-color: #0af;
   }
@@ -160,7 +156,6 @@ h1 {
     font-size: 18px;
     padding-right: 10px;
   }
-
   > span:last-child {
     width: 500px;
     height: 30px;
@@ -170,5 +165,8 @@ h1 {
     font-size: 25px;
     color: #ff6600;
   }
+}
+.rechargeBtn{
+  margin-left: 75px;
 }
 </style>

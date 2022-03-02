@@ -16,7 +16,7 @@
         </p>
         <p>
           <span class="user-key">安全级别：</span>
-          <a-rate v-model="reatNum" allow-half disabled />
+          <a-rate v-model="reatNum" allow-half disabled :count="4" />
           <span class="Security-level">
             {{ reatList[reatNum] }}
           </span>
@@ -110,7 +110,7 @@ export default {
       }
     };
   },
-  activated() {
+  created() {
     this.$store.dispatch("user/getUserInfo");
   },
   computed: {

@@ -26,7 +26,7 @@
             style="margin-left: 10px"
             type="primary"
             @click="sendEmail"
-            :loading="loading"
+            :disabled="loading"
           >
             {{ btnTxt }}
           </a-button>
@@ -90,13 +90,15 @@ export default {
     sendEmail() {
       if (this.form.email) {
         this.loading = true;
-        this.$store.dispatch("user/sendEmail", this.form).then(() => {
-          this.loading = false;
-          this.$message.success("发送成功");
-          this.startTimer();
-        });
-      } else {
-        this.$message.error("请输入邮箱账号");
+        this.$store
+          .dispatch("user/sendEmail", this.form)
+          .then(() => {
+            this.$message.success("发送成功");
+            this.startTime();
+          })
+          .catch(() => {
+            this.loading = false;
+          });
       }
     },
     startTime() {
