@@ -115,7 +115,8 @@
             <div id="qrcodeDom"></div>
             <p v-if="endTime">
               请在<span>{{ endTime }}</span
-              >前使用{{ verificatio }}扫码完成验证
+              >前使用<span>{{ verificatio }}</span
+              >扫码完成验证
             </p>
           </div>
         </a-modal>
