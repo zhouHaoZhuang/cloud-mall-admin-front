@@ -209,8 +209,7 @@ export default {
       ModalText: "Content of the modal",
       visible: false,
       confirmLoading: false,
-      companyName: "",
-      verificatio: ""
+      companyName: ""
     };
   },
   watch: {
@@ -251,11 +250,11 @@ export default {
       }
     },
     verificatio() {
-      if (form.checkType == 0) {
+      if (this.form.checkType == 0) {
         return "支付宝";
-      }else if (form.checkType == 1) {
+      } else if (this.form.checkType == 1) {
         return "腾讯云";
-      }else if (form.checkType == 2) {
+      } else if (this.form.checkType == 2) {
         return "e签宝";
       }
     }
