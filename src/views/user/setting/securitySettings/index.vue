@@ -45,9 +45,7 @@
           phoneNumber
         }}。绑定认证后可用于手机找回密码、接收手机动态验证码等，保障您的账户安全。
       </span>
-      <a-button v-show="false" class="settings-change" type="link">
-        修改
-      </a-button>
+      <a-button class="settings-change" type="link"> 修改 </a-button>
     </div>
     <div class="settings-info">
       <img v-if="email.length > 1" src="@/assets/img/iconemailatv.png" alt="" />
