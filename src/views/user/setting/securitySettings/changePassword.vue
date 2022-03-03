@@ -56,6 +56,8 @@
 <script>
 import CodeBtn from "@/components/CodeBtn/index";
 import { jumpCloudMall } from "@/utils/index";
+import { mapState } from "vuex";
+
 export default {
   components: { CodeBtn },
   data() {
@@ -89,7 +91,22 @@ export default {
       },
       rules: {
         phone: [
-          { required: true, message: "请输入验证手机号", trigger: "blur" }
+          { required: true, message: "请输入验证手机号", trigger: "blur" },
+          {
+            pattern: /^1[3456789]\d{9}$/,
+            message: "手机号格式不正确",
+            trigger: "blur"
+          },
+          {
+            validator: (rule, value, callback) => {
+              if (value == this.userRealInfo.phoneNumber) {
+                callback(new Error("请输入当前登录手机号"));
+              } else {
+                callback();
+              }
+            },
+            trigger: "blur"
+          }
         ],
         code: [{ required: true, message: "请输入验证码", trigger: "blur" }],
         // newPassword: [
@@ -115,12 +132,17 @@ export default {
       }
     };
   },
+  computed: {
+    ...mapState({
+      userRealInfo: (state) => state.user.userRealInfo
+    })
+  },
   methods: {
     onSubmit() {
       this.$refs.ruleForm.validate((valid) => {
         if (valid) {
           // console.log('submit!', this.form);
-          this.form.password = this.form.newPassword
+          this.form.password = this.form.newPassword;
           this.$store.dispatch("user/changePassword", this.form).then(() => {
             this.$message.success("修改成功");
             this.$store.dispatch("user/logout").then((res) => {
