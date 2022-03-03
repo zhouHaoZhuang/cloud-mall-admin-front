@@ -257,6 +257,8 @@ export default {
         return "腾讯云";
       } else if (this.form.checkType == 2) {
         return "e签宝";
+      } else{
+        return "";
       }
     }
   },
