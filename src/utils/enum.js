@@ -115,7 +115,7 @@ export const regionDataEnum = {
 export const verifyTypeEnum = {
   0: "支付宝芝麻信用认证",
   1: "腾讯云认证",
-  2: "e签宝认证"
+  // 2: "e签宝认证"
 };
 // 充值方式map
 export const rechargeTypeMap = {
