@@ -4,7 +4,7 @@
       <a-button style="margin-right: 20px" @click="$router.back()">
         <a-icon type="left" />
       </a-button>
-      <span>绑定邮箱</span>
+      <span>修改绑定手机</span>
     </h2>
     <div>
       <a-form-model
@@ -17,10 +17,10 @@
         <a-form-model-item label="会员ID" prop="phone">
           <span>{{ corporationCode }}</span>
         </a-form-model-item>
-        <a-form-model-item ref="email" label="邮箱账号" prop="email">
-          <a-input v-model="form.email" style="width: 250px" type="email" />
+        <a-form-model-item ref="email" label="原手机号码" prop="email">
+          <span>{{ phoneNumber }}</span>
         </a-form-model-item>
-        <a-form-model-item label="验证码" prop="code">
+        <a-form-model-item label="手机验证码" prop="code">
           <a-input v-model="form.code" style="width: 250px"> </a-input>
           <a-button
             style="margin-left: 10px"
@@ -32,7 +32,7 @@
           </a-button>
         </a-form-model-item>
         <a-form-model-item :wrapper-col="{ span: 14, offset: 4 }">
-          <a-button @click="onSubmit" type="primary"> 确认绑定邮箱 </a-button>
+          <a-button @click="onSubmit" type="primary"> 确认</a-button>
         </a-form-model-item>
       </a-form-model>
     </div>
@@ -66,11 +66,13 @@ export default {
       btnTxt: "发送验证码",
       loading: false,
       time: null,
-      timeCount: 60
+      timeCount: 60,
+      phoneNumber: ""
     };
   },
   created() {
     this.corporationCode = this.$route.query.corporationCode;
+    this.phoneNumber = this.$route.query.phoneNumber;
   },
   beforeDestroy() {
     clearInterval(this.time);

@@ -46,7 +46,11 @@
                 :wrapper-col="wrapperCol"
               >
                 <a-form-model-item ref="amount" label="汇款金额" prop="amount">
-                  <a-input-number :min="1" v-model="form.amount" />元
+                  <a-input-number
+                    :min="1"
+                    v-model="form.amount"
+                    style="margin-right: 10px"
+                  />元
                 </a-form-model-item>
                 <a-form-model-item
                   ref="accountName"
@@ -79,9 +83,7 @@
                 >
                   <a-radio-group v-model="form.accountType">
                     <a-radio :value="2"> 线下充值 </a-radio>
-                    <a-radio :value="4"> 退款 </a-radio>
-                    <!-- <a-radio :value="3"> C </a-radio>
-                      <a-radio :value="4"> D </a-radio> -->
+                    <!-- <a-radio :value="4"> 退款 </a-radio> -->
                   </a-radio-group>
                 </a-form-model-item>
                 <a-form-model-item
@@ -94,12 +96,12 @@
                     :defaultFile="form.voucher"
                     @change="imgChange"
                   />
+                  <div slot="help">
+                    <p>彩色扫描件</p>
+                    <p>JPG或PNG格式，文件大小不超过5MB</p>
+                    <p>汇款凭证不能为空</p>
+                  </div>
                 </a-form-model-item>
-                <div class="uploadInfo">
-                  <p>彩色扫描件</p>
-                  <p>JPG或PNG格式，文件大小不超过5MB</p>
-                  <p>汇款凭证不能为空</p>
-                </div>
                 <a-form-model-item :wrapper-col="{ span: 14, offset: 2 }">
                   <a-button @click="submitForm" type="primary">
                     提交汇款记录
@@ -302,11 +304,6 @@ export default {
     .transfer420 {
       display: inline-block;
       width: 420px;
-    }
-    .uploadInfo {
-      font-size: 12px;
-      color: #999999;
-      margin-left: 120px;
     }
   }
 }

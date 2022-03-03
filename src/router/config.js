@@ -230,6 +230,17 @@ const options = [
                 }
               },
               {
+                path: "phoneBinding",
+                name: "手机绑定",
+                component: () =>
+                  import(
+                    "@/views/user/setting/securitySettings/phoneBinding.vue"
+                  ),
+                meta: {
+                  hiddenMenu: true // 不显示在左侧菜单
+                }
+              },
+              {
                 path: "info",
                 name: "基本资料",
                 component: () =>
