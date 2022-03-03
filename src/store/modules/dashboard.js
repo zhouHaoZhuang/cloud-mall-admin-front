@@ -57,7 +57,12 @@ const cloud = {
           method: "get"
         })
           .then((res) => {
-            commit("saveWebInfo", res.data.list[0]);
+            const newData = res.data.list[0];
+            commit("saveWebInfo", newData);
+            let fav = document.querySelector("link[rel*='icon']");
+            fav.setAttribute("rel", "icon");
+            fav.href = newData.websitieIcon;
+            document.head.appendChild(fav);
             resolve();
           })
           .catch((error) => {
