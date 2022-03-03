@@ -25,7 +25,7 @@
           <CodeBtn :phone="form.phone" />
         </a-form-model-item> -->
         <a-form-model-item label="验证手机号" prop="phone">
-          <a-input v-model="form.phone"></a-input>
+          <a-input v-number-evolution v-model="form.phone"></a-input>
         </a-form-model-item>
         <a-form-model-item label="验证码" prop="code">
           <a-input
@@ -94,12 +94,12 @@ export default {
           { required: true, message: "请输入验证手机号", trigger: "blur" },
           {
             pattern: /^1[3456789]\d{9}$/,
-            message: "手机号格式不正确",
+            message: "手机号码格式不正确",
             trigger: "blur"
           },
           {
             validator: (rule, value, callback) => {
-              if (value == this.userRealInfo.phoneNumber) {
+              if (value !== this.userRealInfo.phoneNumber) {
                 callback(new Error("请输入当前登录手机号"));
               } else {
                 callback();
