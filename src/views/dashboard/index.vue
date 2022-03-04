@@ -4,7 +4,7 @@
     <div class="header-user-info">
       <a-avatar :size="64" icon="user" />
       <span class="welcome">欢迎您回来，</span>
-      <span class="name">{{ userInfo.username }}</span>
+      <span class="name">{{ realName }}</span>
       <div class="icons">
         <div class="icon-item" @click="handleJump('/user/setting/realname')">
           <a-tooltip placement="bottom">
@@ -163,7 +163,14 @@ export default {
     ...mapState({
       userInfo: (state) => state.user.userInfo,
       userRealInfo: (state) => state.user.userRealInfo
-    })
+    }),
+    realName() {
+      if (this.userRealInfo && this.userRealInfo.realName) {
+        return "*" + this.userRealInfo.realName.slice(1);
+      } else {
+        return this.userRealInfo.phoneNumber;
+      }
+    }
   },
   data() {
     return {
