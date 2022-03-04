@@ -83,7 +83,7 @@
         <div class="public-box trend">
           <div class="public-top">
             <div class="public-tit">消费趋势</div>
-            <div class="jump">查看></div>
+            <!-- <div class="jump">查看></div> -->
           </div>
           <div id="echarts" class="echarts-pie-content"></div>
           <div class="consumption text-overflow">
@@ -143,7 +143,7 @@
         <div class="public-box news">
           <div class="public-top">
             <div class="public-tit">新闻公告</div>
-            <div class="jump">查看全部></div>
+            <!-- <div class="jump">查看全部></div> -->
           </div>
           <div class="list">
             <div class="new-item"></div>
