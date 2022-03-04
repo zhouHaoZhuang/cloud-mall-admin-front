@@ -13,14 +13,14 @@
         :label-col="labelCol"
         :wrapper-col="wrapperCol"
       >
-        <a-form-model-item ref="name" label="会员ID">
+        <a-form-model-item label="会员ID">
           <span>{{ corporationCode }}</span>
         </a-form-model-item>
-        <a-form-model-item ref="name" label="真实姓名">
+        <a-form-model-item label="真实姓名">
           <span>{{ realName }}</span>
         </a-form-model-item>
-        <a-form-model-item ref="name" label="QQ号码" prop="name">
-          <a-input v-model="form.name" />
+        <a-form-model-item label="QQ号码" prop="qq">
+          <a-input v-model="form.qq" />
         </a-form-model-item>
         <a-form-model-item :wrapper-col="{ span: 14, offset: 2 }">
           <a-button type="primary" @click="onSubmit"> 保存 </a-button>
@@ -40,10 +40,17 @@ export default {
       // realName: "",
       // corporationCode: "",
       form: {
-        name: ""
+        qq: ""
       },
       rules: {
-        name: [{ required: true, message: "请输入QQ号码", trigger: "blur" }]
+        qq: [
+          { required: true, message: "请输入QQ号码", trigger: "blur" },
+          {
+            pattern: /^[1-9][0-9]{4,9}$/,
+            message: "请输入正确的QQ号码",
+            trigger: "blur"
+          }
+        ]
       }
     };
   },
@@ -66,20 +73,24 @@ export default {
       }
     }
   },
+  mounted() {
+    console.log(this.userRealInfo.id, "------------");
+    this.form.qq = this.userRealInfo.qq;
+  },
   methods: {
     onSubmit() {
       this.$refs.ruleForm.validate((valid) => {
         if (valid) {
-          alert("submit!");
-        } else {
-          console.log("error submit!!");
-          return false;
+          this.form.id = this.userRealInfo.id;
+          this.$store.dispatch("user/updateQQ", this.form).then((res) => {
+            this.$message.success("保存成功");
+          });
         }
       });
     },
     resetForm() {
       this.$refs.ruleForm.resetFields();
-    },
+    }
   }
 };
 </script>
