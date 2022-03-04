@@ -1,5 +1,7 @@
 <template>
-  <div class="work-container"><a-icon type="profile" /> 工单</div>
+  <div class="work-container" @click="$router.push('/user/workOrder/submit')">
+    <a-icon type="profile" /> 工单
+  </div>
 </template>
 
 <script>
@@ -14,12 +16,15 @@ export default {
     return {};
   },
   created() {},
-  methods: {}
+  methods: {
+
+  }
 };
 </script>
 
 <style lang="less" scoped>
 .work-container {
   padding: 0 20px;
+  cursor: pointer;
 }
 </style>

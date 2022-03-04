@@ -1,13 +1,15 @@
 <template>
   <div class="message-container">
-    <a-popover >
+    <a-popover>
       <template slot="content">
         <div>
           <span>您暂时没有站内消息</span>
-          <a-button type='link' @click="$router.push('/message')">查看更多&gt;</a-button>
+          <a-button type="link" @click="$router.push('/message')">
+            查看更多&gt;
+          </a-button>
         </div>
       </template>
-      <span><a-icon type="mail" /> 站内信</span>
+      <span> <a-icon type="mail" /> 站内信 </span>
     </a-popover>
   </div>
 </template>
@@ -17,14 +19,14 @@ import { mapState } from "vuex";
 export default {
   computed: {
     ...mapState({
-      menuOpen: (state) => state.setting.menuOpen,
-    }),
+      menuOpen: (state) => state.setting.menuOpen
+    })
   },
   data() {
     return {};
   },
   created() {},
-  methods: {},
+  methods: {}
 };
 </script>
 

@@ -4,7 +4,7 @@
     <div class="header-user-info">
       <a-avatar :size="64" icon="user" />
       <span class="welcome">欢迎您回来，</span>
-      <span class="name">{{ userInfo.username }}</span>
+      <span class="name">{{ realName }}</span>
       <div class="icons">
         <div class="icon-item" @click="handleJump('/user/setting/realname')">
           <a-tooltip placement="bottom">
@@ -83,7 +83,7 @@
         <div class="public-box trend">
           <div class="public-top">
             <div class="public-tit">消费趋势</div>
-            <div class="jump">查看></div>
+            <!-- <div class="jump">查看></div> -->
           </div>
           <div id="echarts" class="echarts-pie-content"></div>
           <div class="consumption text-overflow">
@@ -143,7 +143,7 @@
         <div class="public-box news">
           <div class="public-top">
             <div class="public-tit">新闻公告</div>
-            <div class="jump">查看全部></div>
+            <!-- <div class="jump">查看全部></div> -->
           </div>
           <div class="list">
             <div class="new-item"></div>
@@ -163,7 +163,14 @@ export default {
     ...mapState({
       userInfo: (state) => state.user.userInfo,
       userRealInfo: (state) => state.user.userRealInfo
-    })
+    }),
+    realName() {
+      if (this.userRealInfo && this.userRealInfo.realName) {
+        return "*" + this.userRealInfo.realName.slice(1);
+      } else {
+        return this.userRealInfo.phoneNumber;
+      }
+    }
   },
   data() {
     return {

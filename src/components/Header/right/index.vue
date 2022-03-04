@@ -2,11 +2,11 @@
   <div class="right-container">
     <!-- <icon-font type="iconwuliuguanli" style="font-size: 30px"></icon-font> -->
     <!-- 帮助文档 -->
-    <Help />
+    <!-- <Help /> -->
     <!-- 站内信-->
     <Message />
     <!-- 费用 -->
-    <Price />
+    <!-- <Price /> -->
     <!-- 工单 -->
     <WorkOrder />
     <!-- 用户 -->
