@@ -143,7 +143,7 @@
         <div class="public-box news">
           <div class="public-top">
             <div class="public-tit">新闻公告</div>
-            <div class="jump">查看全部></div>
+            <!-- <div class="jump">查看全部></div> -->
           </div>
           <div class="list">
             <div class="new-item"></div>
