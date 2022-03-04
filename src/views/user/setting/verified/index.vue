@@ -115,7 +115,8 @@
             <div id="qrcodeDom"></div>
             <p v-if="endTime">
               请在<span>{{ endTime }}</span
-              >前扫码完成验证
+              >前使用<span>{{ verificatio[form.checkType] }}</span
+              >扫码完成验证
             </p>
           </div>
         </a-modal>
@@ -209,7 +210,11 @@ export default {
       ModalText: "Content of the modal",
       visible: false,
       confirmLoading: false,
-      companyName: ""
+      companyName: "",
+      verificatio: {
+        0: "支付宝",
+        1: "腾讯云"
+      }
     };
   },
   watch: {
@@ -297,7 +302,7 @@ export default {
     // 获取公司信息
     getCompanyInfo() {
       this.$store.dispatch("user/getCompanyInfo").then((res) => {
-        console.log(res.data.companyName,'----------');
+        console.log(res.data.companyName, "----------");
         this.companyName = res.data.companyName;
       });
     },

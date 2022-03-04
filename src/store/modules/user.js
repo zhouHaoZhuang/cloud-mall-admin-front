@@ -125,6 +125,14 @@ const user = {
           });
       });
     },
+    // 修改绑定QQ
+    updateQQ({ commit, state }, data) {
+      return request({
+        url: `/ccCorporation/${data.id}`,
+        method: "patch",
+        data
+      });
+    },
     // 获取其他全局配置
     getAllConfig({ commit, state }) {
       return new Promise((resolve, reject) => {

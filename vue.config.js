@@ -3,6 +3,7 @@ const webpack = require("webpack");
 const CompressionWebpackPlugin = require("compression-webpack-plugin");
 // 代码压缩
 const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
+const timeStamp = new Date().getTime();
 
 const resolve = (dir) => {
   return path.join(__dirname, dir);
@@ -30,7 +31,7 @@ const assetsCDN = {
 
 module.exports = {
   devServer: {
-    port: 8000, //自定义项目运行端口
+    port: 8000 //自定义项目运行端口
     // open: "true",  //自动打开浏览器
     // proxy: {
     //   "/ims": {
@@ -54,6 +55,9 @@ module.exports = {
     config.performance = {
       hints: false
     };
+    // 输出重构 打包编译后的js文件名称,添加时间戳.
+    config.output.filename = `js/[name].${timeStamp}.js`;
+    config.output.chunkFilename = `js/chunk.[id].${timeStamp}.js`;
     // Ignore all locale files of moment.js
     config.plugins.push(new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/));
     // 生产环境下将资源压缩成gzip格式
@@ -127,11 +131,18 @@ module.exports = {
           javascriptEnabled: true
         }
       }
+    },
+    // 打包后css文件名称添加时间戳
+    extract: {
+      filename: `css/[name].${timeStamp}.css`,
+      chunkFilename: `css/chunk.[id].${timeStamp}.css`
     }
   },
   publicPath: "/console",
   outputDir: "dist",
   assetsDir: "static",
   productionSourceMap: false,
-  lintOnSave: true
+  lintOnSave: true,
+  // 打包的时候不使用hash值.因为我们有时间戳来确定项目的唯一性了.
+  filenameHashing: false
 };

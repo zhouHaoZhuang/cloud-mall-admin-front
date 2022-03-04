@@ -4,8 +4,7 @@
     <div class="message-budy" v-if="data">
       <h2>{{ data.title }}</h2>
       <p class="message-time">{{ data.sendTime | formatDate }}</p>
-      <p class="message-info">
-        {{ data.content }}
+      <p v-html="data.content" class="message-info">
       </p>
     </div>
   </div>

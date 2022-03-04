@@ -63,6 +63,7 @@ export default {
 <style lang="less" scoped>
 .user-container {
   padding: 0 20px;
+  cursor: pointer;
   .user-name {
     margin: 0 10px;
   }
