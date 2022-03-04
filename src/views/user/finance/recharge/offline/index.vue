@@ -143,10 +143,10 @@ export default {
           title: "开户银行",
           dataIndex: "openBank"
         },
-        {
-          title: "汇款备注",
-          dataIndex: "remark"
-        }
+        // {
+        //   title: "汇款备注",
+        //   dataIndex: "remark"
+        // }
       ],
       form: {
         status: 0,
