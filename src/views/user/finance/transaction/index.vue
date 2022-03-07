@@ -116,7 +116,7 @@ export default {
           dataIndex: "createTime",
           key: "createTime",
           scopedSlots: { customRender: "createTime" },
-          sorter: (a, b) => a - b
+          sorter: true
         },
         {
           title: "来源用途",
