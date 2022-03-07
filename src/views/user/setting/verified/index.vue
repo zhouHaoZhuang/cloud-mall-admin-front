@@ -213,7 +213,7 @@ export default {
       companyName: "",
       verificatio: {
         0: "支付宝",
-        1: "腾讯云"
+        1: "腾讯QQ或微信",
       }
     };
   },
@@ -246,9 +246,9 @@ export default {
     idNumber() {
       if (this.userRealInfo && this.userRealInfo.idNumber) {
         return (
-          this.userRealInfo.realName.slice(0, 3) +
-          "******" +
-          this.userRealInfo.realName.slice(14, 17)
+          this.userRealInfo.idNumber.slice(0, 3) +
+          "**********" +
+          this.userRealInfo.idNumber.slice(14, 17)
         );
       } else {
         return "";
