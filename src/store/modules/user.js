@@ -107,6 +107,14 @@ const user = {
         data
       });
     },
+    // 绑定手机
+    phoneBinding({ commit, state }, data) {
+      return request({
+        url: `/user/bindPhone`,
+        method: "post",
+        data
+      });
+    },
     // 获取用户真实信息
     getUserActualName({ commit, state }) {
       return new Promise((resolve, reject) => {

@@ -14,22 +14,26 @@
         :label-col="labelCol"
         :wrapper-col="wrapperCol"
       >
-        <a-form-model-item label="会员ID" prop="phone">
+        <a-form-model-item label="会员ID">
           <span>{{ corporationCode }}</span>
         </a-form-model-item>
-        <a-form-model-item ref="email" label="原手机号码" prop="email">
+        <a-form-model-item label="原手机号码">
           <span>{{ phoneNumber }}</span>
         </a-form-model-item>
+        <a-form-model-item label="新手机号" prop="phone">
+          <a-input v-model="form.phone" style="width: 250px" />
+        </a-form-model-item>
         <a-form-model-item label="手机验证码" prop="code">
-          <a-input v-model="form.code" style="width: 250px"> </a-input>
-          <a-button
-            style="margin-left: 10px"
-            type="primary"
-            @click="sendEmail"
-            :disabled="loading"
+          <a-input
+            v-model="form.code"
+            style="width: 250px;"
+            placeholder="输入验证码"
+            v-number-evolution
+            :max-length="6"
           >
-            {{ btnTxt }}
-          </a-button>
+            <a-icon slot="prefix" type="smile" />
+          </a-input>
+          <CodeBtn style="margin-left: 10px;" codeType="3" :phone="form.phone" />
         </a-form-model-item>
         <a-form-model-item :wrapper-col="{ span: 14, offset: 4 }">
           <a-button @click="onSubmit" type="primary"> 确认</a-button>
@@ -40,19 +44,25 @@
 </template>
 
 <script>
+import CodeBtn from "@/components/CodeBtn/index";
+
 export default {
+  components: { CodeBtn },
   data() {
     return {
       form: {
-        name: "",
         code: "",
-        email: ""
+        phone: ""
       },
       rules: {
         code: [{ required: true, message: "请输入验证码", trigger: "blur" }],
-        email: [
-          { required: true, message: "请输入邮箱账号", trigger: "blur" },
-          { type: "email", message: "您输入的邮箱格式不正确", trigger: "blur" }
+        phone: [
+          { required: true, message: "请输入新手机号", trigger: "blur" },
+          {
+            pattern: /^1[3456789]\d{9}$/,
+            message: "您输入的手机号格式不正确",
+            trigger: "blur"
+          }
         ]
       },
       labelCol: {
@@ -62,11 +72,6 @@ export default {
         span: 8
       },
       corporationCode: "",
-      countdown: 0,
-      btnTxt: "发送验证码",
-      loading: false,
-      time: null,
-      timeCount: 60,
       phoneNumber: ""
     };
   },
@@ -74,48 +79,18 @@ export default {
     this.corporationCode = this.$route.query.corporationCode;
     this.phoneNumber = this.$route.query.phoneNumber;
   },
-  beforeDestroy() {
-    clearInterval(this.time);
-  },
   methods: {
     onSubmit() {
       this.$refs.ruleForm.validate((valid) => {
         if (valid) {
-          // console.log('submit!', this.form);
-          this.$store.dispatch("user/emailBinding", this.form).then(() => {
-            this.$message.success("绑定成功");
+          console.log('submit!', this.form);
+          this.$store.dispatch("user/phoneBinding", this.form).then(() => {
+            this.$message.success("修改绑定成功");
             this.$router.back();
           });
         }
       });
     },
-    sendEmail() {
-      if (this.form.email) {
-        this.loading = true;
-        this.$store
-          .dispatch("user/sendEmail", this.form)
-          .then(() => {
-            this.$message.success("发送成功");
-            this.startTime();
-          })
-          .catch(() => {
-            this.loading = false;
-          });
-      }
-    },
-    startTime() {
-      this.time = setInterval(() => {
-        if (this.timeCount - 1 === 0) {
-          clearInterval(this.time);
-          this.btnTxt = "获取验证码";
-          this.timeCount = 60;
-          this.loading = false;
-          return;
-        }
-        this.timeCount -= 1;
-        this.btnTxt = this.timeCount + "S";
-      }, 1000);
-    }
   }
 };
 </script>

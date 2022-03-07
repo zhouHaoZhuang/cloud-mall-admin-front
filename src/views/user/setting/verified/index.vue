@@ -165,7 +165,7 @@ export default {
   data() {
     return {
       verifyTypeEnum,
-      choose: 1,
+      choose: 3,
       Review: true,
       labelCol: { span: 4 },
       wrapperCol: { span: 10 },
@@ -246,9 +246,9 @@ export default {
     idNumber() {
       if (this.userRealInfo && this.userRealInfo.idNumber) {
         return (
-          this.userRealInfo.realName.slice(0, 3) +
-          "******" +
-          this.userRealInfo.realName.slice(14, 17)
+          this.userRealInfo.idNumber.slice(0, 3) +
+          "**********" +
+          this.userRealInfo.idNumber.slice(14, 17)
         );
       } else {
         return "";
