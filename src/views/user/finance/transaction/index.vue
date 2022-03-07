@@ -86,7 +86,6 @@ export default {
           dataIndex: "paymentLineId",
           key: "id",
           width: 150,
-          sorter: (a, b) => a.id - b.id
         },
         {
           title: "收入(+)",
