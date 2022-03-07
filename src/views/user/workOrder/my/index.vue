@@ -123,7 +123,6 @@ export default {
           title: "工单编号",
           dataIndex: "workOrderNo",
           width: 150,
-          sorter: (a, b) => moment(a.workOrderNo) - moment(b.workOrderNo),
           scopedSlots: { customRender: "workOrderNo" }
         },
         {
