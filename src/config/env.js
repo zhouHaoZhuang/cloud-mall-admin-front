@@ -1,14 +1,14 @@
 import { getIdcMallUrl } from "../utils/index";
 // 默认请求地址
 const baseUrl = {
-  local: "http://site.ydidc.com/ims",
+  local: "http://site.sailayun.com/ims",
   dev: "/ims",
   test: "/ims",
   prod: "/ims"
 };
 // form服务接口请求地址
 const formBaseUrl = {
-  local: "http://site.ydidc.com/fs",
+  local: "http://site.sailayun.com/fs",
   dev: "/fs",
   test: "/fs",
   prod: "/fs"
