@@ -213,7 +213,7 @@ export default {
       companyName: "",
       verificatio: {
         0: "支付宝",
-        1: "腾讯云"
+        1: "腾讯QQ或微信",
       }
     };
   },
