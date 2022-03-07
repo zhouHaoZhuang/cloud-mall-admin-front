@@ -165,7 +165,7 @@ export default {
   data() {
     return {
       verifyTypeEnum,
-      choose: 3,
+      choose: 1,
       Review: true,
       labelCol: { span: 4 },
       wrapperCol: { span: 10 },
