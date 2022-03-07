@@ -84,6 +84,7 @@ export default {
           this.form.id = this.userRealInfo.id;
           this.$store.dispatch("user/updateQQ", this.form).then((res) => {
             this.$message.success("保存成功");
+            this.$store.dispatch("user/getUserActualName");
           });
         }
       });

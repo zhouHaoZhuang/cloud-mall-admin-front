@@ -11,7 +11,7 @@
         <!-- 按钮 -->
         <div class="btn3">
           <a-input-group compact>
-            <a-select v-model="listQuery.key">
+            <a-select v-model="listQuery.searchType">
               <a-select-option value="paymentLineId">
                 流水单号
               </a-select-option>
@@ -72,6 +72,7 @@ export default {
       detailTypeMapData,
       listQuery: {
         key: "paymentLineId",
+        searchType: "paymentLineId",
         search: "",
         currentPage: 1,
         pageSize: 10,
@@ -85,7 +86,6 @@ export default {
           dataIndex: "paymentLineId",
           key: "id",
           width: 150,
-          sorter: (a, b) => a.id - b.id
         },
         {
           title: "收入(+)",
@@ -116,7 +116,7 @@ export default {
           dataIndex: "createTime",
           key: "createTime",
           scopedSlots: { customRender: "createTime" },
-          sorter: (a, b) => a - b
+          sorter: true
         },
         {
           title: "来源用途",
@@ -169,14 +169,14 @@ export default {
       });
     },
     getList() {
-      this.$store.dispatch("finance/getList", this.listQuery).then((res) => {
+      this.$getList("finance/getList", this.listQuery).then((res) => {
         this.data = res.data.list;
         this.paginationProps.total = res.data.totalCount * 1;
       });
     },
     onSearch(value) {
       this.listQuery.paymentLineId = value;
-      // console.log(value, this.listQuery.key);
+      this.listQuery.key = this.listQuery.searchType;
       this.getList();
     }
   }
