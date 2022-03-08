@@ -310,9 +310,10 @@ export default {
       this.$store.dispatch("user/getCertification", flowId).then((res) => {
         console.log(res, "获取认证信息");
         if (res.data.status === 1) {
+          this.$store.dispatch("user/getUserActualName");
           this.choose = 3;
           clearInterval(this.getStatus);
-          this.getStatus = ''
+          this.getStatus = "";
         } else {
           this.choose = 1;
         }
