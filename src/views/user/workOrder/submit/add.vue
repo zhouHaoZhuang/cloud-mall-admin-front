@@ -309,7 +309,7 @@ export default {
     },
     // 默认QQ号
     addQQ() {
-      this.form.qqNumber = this.userRealInfo.qqNumber;
+      this.form.qqNumber = this.userRealInfo.qq;
       this.$refs.ruleForm.validateField("qqNumber");
     },
     // 重置表单
