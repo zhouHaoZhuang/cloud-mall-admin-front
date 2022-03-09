@@ -173,7 +173,15 @@ const options = [
                     meta: {}
                   }
                 ]
-              }
+              },
+              {
+                path: "withdraw",
+                name: "提现申请",
+                component: () => import("@/views/user/finance/withdraw"),
+                meta: {
+                  // hiddenMenu: true
+                }
+              },
             ]
           },
           {
