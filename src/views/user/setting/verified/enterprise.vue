@@ -6,7 +6,6 @@
       </a-button>
       <span>企业认证</span>
     </h2>
-
     <a-form-model
       ref="ruleForm"
       :model="form"
@@ -20,7 +19,6 @@
       <a-form-model-item :colon="false">
         <span slot="label" class="form-title">营业执照</span>
       </a-form-model-item>
-
       <a-form-model-item label="上传营业执照" required>
         <div class="business-item">
           <a-form-model-item prop="businessImg">
