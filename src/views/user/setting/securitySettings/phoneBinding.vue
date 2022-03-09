@@ -86,6 +86,7 @@ export default {
           console.log('submit!', this.form);
           this.$store.dispatch("user/phoneBinding", this.form).then(() => {
             this.$message.success("修改绑定成功");
+            this.$store.dispatch("user/getUserActualName");
             this.$router.back();
           });
         }

@@ -213,8 +213,9 @@ export default {
       companyName: "",
       verificatio: {
         0: "支付宝",
-        1: "腾讯QQ或微信",
-      }
+        1: "腾讯QQ或微信"
+      },
+      getStatus: ""
     };
   },
   watch: {
@@ -290,10 +291,8 @@ export default {
     },
     handleOk(e) {
       this.confirmLoading = true;
-      // setTimeout(() => {
       this.visible = false;
       this.confirmLoading = false;
-      // }, 2000);
     },
     handleCancel(e) {
       console.log("Clicked cancel button");
@@ -306,6 +305,20 @@ export default {
         this.companyName = res.data.companyName;
       });
     },
+    // 请求认证状态
+    getCertification(flowId) {
+      this.$store.dispatch("user/getCertification", flowId).then((res) => {
+        console.log(res, "获取认证信息");
+        if (res.data.status === 1) {
+          this.$store.dispatch("user/getUserActualName");
+          this.choose = 3;
+          clearInterval(this.getStatus);
+          this.getStatus = "";
+        } else {
+          this.choose = 1;
+        }
+      });
+    },
     submit() {
       this.$store.dispatch("realName/realName", this.form).then((res) => {
         this.visible = true;
@@ -315,11 +328,14 @@ export default {
         );
         this.textUrl = res.data.shortUrl;
         this.getQrcode();
+        this.getStatus = setInterval(() => {
+          this.getCertification(res.data.flowId);
+        }, 5000);
       });
-      // .catch((val) => {
-      //   this.$message.error("您的认证信息有误，请重新输入");
-      // });
     }
+  },
+  beforeDestroy() {
+    clearInterval(this.getStatus);
   }
 };
 </script>

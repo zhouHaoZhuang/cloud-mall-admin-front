@@ -115,6 +115,13 @@ const user = {
         data
       });
     },
+    // 获取认证状态
+    getCertification({ commit, state }, flowId) {
+      return request({
+        url: `/authentication/getStatus/${flowId}`,
+        method: "get",
+      });
+    },
     // 获取用户真实信息
     getUserActualName({ commit, state }) {
       return new Promise((resolve, reject) => {
