@@ -178,7 +178,10 @@ export default {
     // 获取对应地域的系统镜像
     getSystemData() {
       this.$store
-        .dispatch("cloud/getSystemList", { regionId: this.detail.regionId })
+        .dispatch("cloud/getSystemList", {
+          regionId: this.detail.regionId,
+          instanceType: this.detail.instanceType
+        })
         .then((res) => {
           this.systemList = res.data.imageMap;
           const defaultKey = Object.keys(res.data.imageMap)[0];
