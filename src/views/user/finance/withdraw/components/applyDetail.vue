@@ -43,7 +43,8 @@
 <script>
 export default {
   props: {
-    visibleDetail: {}
+    visibleDetail: {},
+    detailData:{}
   },
   data() {
     return {
