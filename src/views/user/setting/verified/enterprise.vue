@@ -6,7 +6,7 @@
       </a-button>
       <span>企业认证</span>
     </h2>
-    <h3>当前账号尚未进行企业实名认证</h3>
+
     <a-form-model
       ref="ruleForm"
       :model="form"
@@ -14,9 +14,13 @@
       :label-col="labelCol"
       :wrapper-col="wrapperCol"
     >
+      <a-form-model-item label=" " :colon="false">
+        <h3>当前账号尚未进行企业实名认证</h3>
+      </a-form-model-item>
       <a-form-model-item :colon="false">
         <span slot="label" class="form-title">营业执照</span>
       </a-form-model-item>
+
       <a-form-model-item label="上传营业执照" required>
         <div class="business-item">
           <a-form-model-item prop="businessImg">
@@ -42,7 +46,7 @@
       <a-form-model-item label="社会信用代码">
         <span>通过上传营业执照获取</span>
       </a-form-model-item>
-       <a-form-model-item :colon="false">
+      <a-form-model-item :colon="false">
         <span slot="label" class="form-title">法人信息</span>
       </a-form-model-item>
       <a-form-model-item label="上传身份证" required>
@@ -167,9 +171,6 @@ h3 {
   font-size: 18px;
   font-weight: bold;
   color: #333;
-  text-align: left;
-  width: 530px;
-  margin: 30px auto;
 }
 .form-title {
   font-size: 16px;
