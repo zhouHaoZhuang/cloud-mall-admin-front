@@ -170,11 +170,19 @@ const options = [
                     name: "退订记录",
                     component: () =>
                       import("@/views/user/finance/refund/record"),
-                    meta: {},
-                  },
-                ],
+                    meta: {}
+                  }
+                ]
               },
-            ],
+              {
+                path: "withdraw",
+                name: "提现申请",
+                component: () => import("@/views/user/finance/withdraw"),
+                meta: {
+                  // hiddenMenu: true
+                }
+              },
+            ]
           },
           {
             path: "renew",

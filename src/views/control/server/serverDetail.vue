@@ -97,8 +97,8 @@
         <a-tab-pane key="2" tab="性能监控">
           <CloudMonitor :tabsKey="tabsKey" :detail="detail" />
         </a-tab-pane>
-        <a-tab-pane key="3" tab="备案白名单"></a-tab-pane>
-        <a-tab-pane key="4" tab="操作日志"></a-tab-pane>
+        <!-- <a-tab-pane key="3" tab="备案白名单"></a-tab-pane>
+        <a-tab-pane key="4" tab="操作日志"></a-tab-pane> -->
       </a-tabs>
     </div>
     <!-- 弹窗相关-----start -->
