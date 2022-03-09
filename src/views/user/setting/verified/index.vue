@@ -1,7 +1,12 @@
 <template>
   <div>
     <div v-if="allConfig.persona_real_authentication == '1'">
-      <h2 class="verified-title">实名认证</h2>
+      <h2 class="verified-title">
+        <a-button style="margin-right: 20px" @click="$router.back()">
+          <a-icon type="left" />
+        </a-button>
+        <span>实名认证</span>
+      </h2>
       <div class="verified-top-nav" v-if="choose != 3">
         <span :class="{ chooseClick: choose == 1 }">①填写认证资料</span>
         <span :class="{ chooseClick: choose == 2 }">②确认认证信息</span>
