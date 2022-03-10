@@ -37,7 +37,7 @@
           >
             <a-icon slot="prefix" type="smile" />
           </a-input>
-          <CodeBtn codeType="3" :phone="form.phone" />
+          <CodeBtn codeType="3" :phone="form.phone" :isDisabled="isDisabled"/>
         </a-form-model-item>
         <a-form-model-item ref="name" label="新密码" prop="newPassword">
           <a-input-password v-model="form.newPassword" v-password-input />
@@ -82,6 +82,7 @@ export default {
     };
     return {
       pwdReg: /(?=.*[0-9])(?=.*[a-z]).{8,20}/,
+      isDisabled: false,
       form: {
         name: "",
         phone: "",
@@ -101,8 +102,10 @@ export default {
             validator: (rule, value, callback) => {
               if (value !== this.userRealInfo.phoneNumber) {
                 callback(new Error("请输入当前登录手机号"));
+                this.isDisabled = true;
               } else {
                 callback();
+                this.isDisabled = false;
               }
             },
             trigger: "blur"
