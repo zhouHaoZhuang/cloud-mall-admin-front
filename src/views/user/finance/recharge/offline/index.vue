@@ -142,7 +142,7 @@ export default {
         {
           title: "开户银行",
           dataIndex: "openBank"
-        },
+        }
         // {
         //   title: "汇款备注",
         //   dataIndex: "remark"
@@ -178,6 +178,11 @@ export default {
           {
             required: true,
             message: "请输入汇款账号",
+            trigger: "blur"
+          },
+          {
+            pattern: /^[0-9]*$/,
+            message: "请输入正确的汇款账号",
             trigger: "blur"
           }
         ],
