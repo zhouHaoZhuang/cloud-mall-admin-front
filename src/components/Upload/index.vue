@@ -73,7 +73,7 @@ export default {
     // 是否可弹窗预览
     showPreview: {
       type: Boolean,
-      default: false
+      default: true
     },
     // 默认限制只能上传 jpg和png
     accept: {
