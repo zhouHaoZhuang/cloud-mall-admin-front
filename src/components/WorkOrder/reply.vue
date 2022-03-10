@@ -20,10 +20,11 @@
       <a-form-model-item label="附件上传">
         <Upload
           :defaultFile="form.replyUrl"
-          :limit="5"
+          :limit="9"
           replaceUrl="formService"
           @change="imgChange"
         />
+        <div style="margin-top: -20px">最多上传9张图片</div>
       </a-form-model-item>
       <a-form-model-item :wrapper-col="{ span: 14, offset: 3 }">
         <a-button
