@@ -12,6 +12,10 @@
 <script>
 export default {
   props: {
+    isDisabled:{
+      type:Boolean,
+      default:false
+    },
     phone: {
       type: [String, Number]
     },
@@ -36,6 +40,14 @@ export default {
   },
   beforeDestroy() {
     clearInterval(this.time);
+  },
+  watch: {
+    isDisabled: {
+      handler(val) {
+       this.loading = val;
+      },
+      immediate: true
+    }
   },
   methods: {
     handleCode() {

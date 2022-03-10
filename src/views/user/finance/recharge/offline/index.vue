@@ -142,7 +142,7 @@ export default {
         {
           title: "开户银行",
           dataIndex: "openBank"
-        },
+        }
         // {
         //   title: "汇款备注",
         //   dataIndex: "remark"
@@ -181,8 +181,8 @@ export default {
             trigger: "blur"
           },
           {
-            pattern: /^\d{16,19}$/,
-            message: "汇款账号为数字,长度为16-19位",
+            pattern: /^[0-9]*$/,
+            message: "请输入正确的汇款账号",
             trigger: "blur"
           }
         ],

@@ -2,7 +2,7 @@
   <div class="online">
     <div v-if="allConfig.online_pay == '1'">
       <div class="warn">
-        <p>1、充值最小金额{{allConfig.min_recharge}}元</p>
+        <p>1、充值最小金额{{ allConfig.min_recharge }}元</p>
         <p>
           2、支付过程中浏览器会有几次跳转，支付完成之前请勿关闭浏览器，否则可能造成支付失败
         </p>
@@ -35,7 +35,12 @@
           <span>支付宝支付</span>
         </div>
       </div>
-      <RechargeBtn class="rechargeBtn" :form="rechargeBtnForm" @success="startTime" />
+      <RechargeBtn
+        v-show="allConfig.alipay_switch == '1'"
+        class="rechargeBtn"
+        :form="rechargeBtnForm"
+        @success="startTime"
+      />
     </div>
     <div v-else>
       <p>暂未开启订单在线充值，无法使用在线支付功能</p>
@@ -166,7 +171,7 @@ h1 {
     color: #ff6600;
   }
 }
-.rechargeBtn{
+.rechargeBtn {
   margin-left: 75px;
 }
 </style>
