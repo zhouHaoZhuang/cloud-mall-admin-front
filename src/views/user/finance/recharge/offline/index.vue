@@ -179,11 +179,6 @@ export default {
             required: true,
             message: "请输入汇款账号",
             trigger: "blur"
-          },
-          {
-            pattern: /^\d{16,19}$/,
-            message: "汇款账号为数字,长度为16-19位",
-            trigger: "blur"
           }
         ],
         accountBankName: [
