@@ -174,14 +174,14 @@ const options = [
                   }
                 ]
               },
-              {
-                path: "withdraw",
-                name: "提现申请",
-                component: () => import("@/views/user/finance/withdraw"),
-                meta: {
-                  // hiddenMenu: true
-                }
-              },
+              // {
+              //   path: "withdraw",
+              //   name: "提现申请",
+              //   component: () => import("@/views/user/finance/withdraw"),
+              //   meta: {
+              //     // hiddenMenu: true
+              //   }
+              // },
             ]
           },
           {
