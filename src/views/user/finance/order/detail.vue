@@ -34,7 +34,7 @@
           <span class="strong">{{ countDownTime }}</span>
         </li>
         <li>
-          <span>支付状态:</span>
+          <span>订单状态:</span>
           <span
             :class="{
               green: orderInfo.tradeStatus === 1,

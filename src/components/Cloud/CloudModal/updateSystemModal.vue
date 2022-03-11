@@ -205,6 +205,7 @@ export default {
           this.loading = true;
           const data = {
             instanceId: this.detail.instanceId,
+            instanceType: this.detail.instanceType,
             regionId: this.detail.regionId,
             imageId: this.form.imageId,
             password: this.form.password
