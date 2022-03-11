@@ -101,7 +101,7 @@
       <a-form-model-item label="附件上传">
         <Upload
           :defaultFile="form.url"
-          :limit="5"
+          :limit="9"
           replaceUrl="formService"
           @change="imgChange"
         />
