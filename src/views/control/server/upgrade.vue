@@ -92,19 +92,20 @@
             <div class="input-number-box">
               <NumberInput
                 v-model="item.size"
+                :min="20"
                 :disabled="item.old"
                 :on-change="getPrice"
               />
             </div>
             <div class="action-box">
-              <div v-if="item.default" class="add">
+              <div v-if="index === 0" class="add">
                 <div class="left-btn" @click="addDisk">
                   <a-icon class="icon" type="plus-circle" theme="filled" />
                   <span>添加数据盘</span>
                 </div>
                 <div class="info">
                   还可以添加
-                  <span class="strong">{{ 4 - form.dataDisk.length }}</span>
+                  <span class="strong">{{ 16 - form.dataDisk.length }}</span>
                   块数据盘
                 </div>
               </div>
@@ -262,8 +263,7 @@ export default {
                   ...item,
                   id: index === 0 ? -1 : -1 - index,
                   min: item.size,
-                  old: true,
-                  default: index === 0
+                  old: true
                 };
               })
             };
@@ -360,15 +360,18 @@ export default {
     },
     // 添加一块ssd数据盘
     addDisk() {
-      if (this.form.dataDisk.length === 4) {
+      if (this.form.dataDisk.length === 16) {
         return;
       }
+      const newId =
+        this.form.dataDisk.length === 0
+          ? -1
+          : this.form.dataDisk[this.form.dataDisk.length - 1].id - 1;
       this.form.dataDisk.push({
-        ...this.form.dataDisk[0],
-        id: this.form.dataDisk[this.form.dataDisk.length - 1].id - 1,
-        size: 40,
-        min: 40,
-        default: false,
+        id: newId,
+        size: 20,
+        min: 20,
+        category: "cloud_ssd",
         old: false
       });
       this.getPrice();
