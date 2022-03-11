@@ -72,14 +72,14 @@
                     重装系统
                   </a-tooltip>
                 </a-menu-item>
-                <a-menu-item key="3" disabled>PUSH</a-menu-item>
+                <!-- <a-menu-item key="3" disabled>PUSH</a-menu-item>
                 <a-menu-item key="4" @click="handleCreateSnapshotModal">
                   创建快照
                 </a-menu-item>
                 <a-menu-item key="5" disabled>管理快照</a-menu-item>
                 <a-menu-item key="6" disabled>重设VNC密码</a-menu-item>
                 <a-menu-item key="7" disabled>续费降配</a-menu-item>
-                <a-menu-item key="8" disabled>销毁</a-menu-item>
+                <a-menu-item key="8" disabled>销毁</a-menu-item> -->
                 <a-menu-item key="9" @click="installMonitor">
                   安装监控插件
                 </a-menu-item>
