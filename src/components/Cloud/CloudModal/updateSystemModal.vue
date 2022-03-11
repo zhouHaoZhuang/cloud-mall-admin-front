@@ -51,6 +51,7 @@
       <a-form-model-item label="重装后的系统密码" prop="password">
         <a-input-password
           v-model="form.password"
+          v-password-input
           type="password"
           style="width: 280px"
           :max-length="30"
@@ -108,16 +109,7 @@ export default {
       if (value === "") {
         callback(new Error("请输入密码"));
       } else {
-        if (this.specialReg.test(value)) {
-          callback(new Error("密码包含了不被允许的特殊字符"));
-        } else if (
-          !(
-            this.pwdReg1.test(value) ||
-            this.pwdReg2.test(value) ||
-            this.pwdReg3.test(value) ||
-            this.pwdReg4.test(value)
-          )
-        ) {
+        if (!this.newReg.exec(value)) {
           callback(new Error("密码格式不正确"));
         }
         callback();
@@ -136,22 +128,9 @@ export default {
       labelCol: { span: 6 },
       wrapperCol: { span: 17 },
       loading: false,
-      // 必须包含大写字母，小写字母，数字，特殊字符
-      pwdReg:
-        /^.*(?=.{8,})(?=.*\d)(?=.*[A-Z])(?=.*[a-z])(?=.*[()`~!@#$%^&*-_+=|{}][:;'><,.?/]).*$/,
-      // 必须包含大写字母，小写字母，数字
-      pwdReg1: /^.*(?=.{8,})(?=.*\d)(?=.*[A-Z])(?=.*[a-z]).*$/,
-      // 必须包含大写字母，小写字母，特殊字符
-      pwdReg2:
-        /^.*(?=.{8,})(?=.*[A-Z])(?=.*[a-z])(?=.*[()`~!@#$%^&*-_+=|{}][:;'><,.?/]).*$/,
-      // 必须包含大写字母，数字，特殊字符
-      pwdReg3:
-        /^.*(?=.{8,})(?=.*\d)(?=.*[A-Z])(?=.*[()`~!@#$%^&*-_+=|{}][:;'><,.?/]).*$/,
-      // 必须包含小写字母，数字，特殊字符
-      pwdReg4:
-        /^.*(?=.{8,})(?=.*\d)(?=.*[a-z])(?=.*[()`~!@#$%^&*-_+=|{}][:;'><,.?/]).*$/,
-      // 不允许包含的特殊字符集合正则
-      specialReg: new RegExp("[《》！￥……（）—【】‘；：”“。，、？]"),
+      // 新的密码校验
+      newReg:
+        /(?!^\d{8-30}$)(?!^[a-zA-Z]{8,30}$)(?!^[0-9a-zA-Z]{8,30}$)^[0-9a-zA-Z()`~!@#$%^&*-_+=|{}[:;'><,.?/]{8,30}$/,
       form: {
         password: "",
         confirmPassword: "",
