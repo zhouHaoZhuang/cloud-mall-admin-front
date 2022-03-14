@@ -129,12 +129,12 @@ export const passwordInput = Vue.directive("password-input", {
     el = findInput(el);
     if (!el) return;
     el.addEventListener("keyup", function() {
-      const newVal = el.value.replace(/[^a-zA-Z0-9,-._=+!#$%*()<>?:""''@]/g, "");
+      const newVal = el.value.replace(/[^a-zA-Z0-9,-._=+!#$%*()<>?:""''`~@]/g, "");
       el.value = newVal;
       el.dispatchEvent(new Event("input"));
     });
     el.addEventListener("blur", function() {
-      const newVal = el.value.replace(/[^a-zA-Z0-9,.-_=+!#$%*()<>?:""''@]/g, "");
+      const newVal = el.value.replace(/[^a-zA-Z0-9,.-_=+!#$%*()<>?:""''`~@]/g, "");
       el.value = newVal;
       el.dispatchEvent(new Event("input"));
     });
