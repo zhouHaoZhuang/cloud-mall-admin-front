@@ -141,6 +141,14 @@ export default {
     };
   },
   methods: {
+    // 获取企业实名认证的数据信息
+    getEnterpriseRealNameInfo(){
+      this.$store.dispatch("user/getEnterpriseRealNameInfo").then((res)=>{
+        console.log(res);
+        this.form = res.data;
+      });
+    },
+    // 提交实名认证审核
     onSubmit() {
       this.$refs.ruleForm.validate((valid) => {
         if (valid) {
@@ -159,6 +167,11 @@ export default {
     },
     resetForm() {
       this.$refs.ruleForm.resetFields();
+      this.form = {
+        businessImg: "",
+        avatarImg: "",
+        emblemImg: ""
+      };
     }
   }
 };
