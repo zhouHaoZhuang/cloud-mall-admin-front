@@ -102,7 +102,6 @@
 
 <script>
 import Upload from "@/components/Upload/index";
-
 export default {
   components: {
     Upload
@@ -145,13 +144,18 @@ export default {
     onSubmit() {
       this.$refs.ruleForm.validate((valid) => {
         if (valid) {
-          alert("submit!");
+          this.$store
+            .dispatch("user/uploadEnterpriseRealName", this.form)
+            .then((res) => {
+              this.$message.success("提交成功");
+              console.log(res, "认证结果");
+            });
         }
       });
     },
     imgList(urlList, firstImageUrl, imgType) {
       console.log(urlList, firstImageUrl, imgType);
-      this.form[imgType] = urlList.toString();
+      this.form[imgType] = urlList;
     },
     resetForm() {
       this.$refs.ruleForm.resetFields();

@@ -9,7 +9,18 @@
           src="@/assets/img/realName/personalRealName.png"
           alt=""
         />
-        <p>个人认证</p>
+        <p>
+          <span>个人认证</span>
+          <span v-show="userRealInfo.realName">
+            已完成
+            <img
+              style="margin-left: 10px"
+              width="16px"
+              src="@/assets/img/realName/attestOk.png"
+              alt=""
+            />
+          </span>
+        </p>
         <a-button
           @click="$router.push('/user/setting/enterprise')"
           class="look-info"
@@ -19,7 +30,7 @@
           查看详情
         </a-button>
       </div>
-      <!-- <div @click="$router.push('/user/setting/enterprise')">
+      <div @click="$router.push('/user/setting/enterprise')">
         <img width="150px" src="@/assets/img/realName/enterprise.png" alt="" />
         <p>企业认证</p>
         <a-button
@@ -29,7 +40,7 @@
         >
           查看详情
         </a-button>
-      </div> -->
+      </div>
     </div>
     <div class="bottom-hint">
       <h3>温馨提示</h3>

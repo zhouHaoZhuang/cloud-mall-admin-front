@@ -115,6 +115,14 @@ const user = {
         data
       });
     },
+    // 上传企业实名认证信息
+    uploadEnterpriseRealName({ commit, state }, data) {
+      return request({
+        url: `/user/uploadRealName`,
+        method: "post",
+        data
+      });
+    },
     // 获取认证状态
     getCertification({ commit, state }, flowId) {
       return request({
