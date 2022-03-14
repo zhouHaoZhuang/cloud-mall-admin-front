@@ -61,7 +61,7 @@
         </div>
         <div class="txt">
           2、 （仅支持下列特殊字符： ( ) ` ~ ! @ # $ % ^ {{ "&" }} * - _ + = | {
-          } [ ] : ; ' > <span v-text="'<'"></span> , . ? / ）。
+          } : ; ' > <span v-text="'<'"></span> , . ? / ）。
         </div>
       </a-form-model-item>
       <a-form-model-item label="确认密码" prop="confirmPassword">
@@ -130,7 +130,7 @@ export default {
       loading: false,
       // 新的密码校验
       newReg:
-        /(?!^\d{8-30}$)(?!^[a-zA-Z]{8,30}$)(?!^[0-9a-zA-Z]{8,30}$)^[0-9a-zA-Z()`~!@#$%^&*-_+=|{}[:;'><,.?/]{8,30}$/,
+        /(?!^\d{8-30}$)(?!^[a-zA-Z]{8,30}$)(?!^[0-9a-zA-Z]{8,30}$)(?!^[()`~!@#$%^&*-_+=|{}[:;'><,.?/]{8,30}$)^[0-9a-zA-Z()`~!@#$%^&*-_+=|{}[:;'><,.?/]{8,30}$/,
       form: {
         password: "",
         confirmPassword: "",
