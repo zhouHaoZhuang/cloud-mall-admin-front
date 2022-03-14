@@ -14,7 +14,15 @@
       :wrapper-col="wrapperCol"
     >
       <a-form-model-item label=" " :colon="false">
-        <h3>当前账号尚未进行企业实名认证</h3>
+        <h3>
+          <img
+            v-if="false"
+            src="@/assets/img/realName/enterpriseRealNameError.png"
+            alt=""
+          />
+          <img v-if="false" src="@/assets/img/realName/attestOk.png" alt="" />
+          当前账号尚未进行企业实名认证
+        </h3>
       </a-form-model-item>
       <a-form-model-item :colon="false">
         <span slot="label" class="form-title">营业执照</span>
@@ -94,7 +102,7 @@
         <span>通过上传身份证获取</span>
       </a-form-model-item>
       <a-form-model-item :wrapper-col="{ span: 14, offset: 8 }">
-        <a-button type="primary" @click="onSubmit"> 提交审核 </a-button>
+        <a-button type="primary" @click="onSubmit"> {{ btnTiele }} </a-button>
       </a-form-model-item>
     </a-form-model>
   </div>
@@ -137,13 +145,22 @@ export default {
             trigger: "change"
           }
         ]
+      },
+      btnTiele: "提交审核",
+      realNameStatus: {
+        1: "当前账号尚未进行企业实名认证",
+        2: "企业实名认证失败，请核实后重新提交认证",
+        3: "企业实名认证已完成"
       }
     };
   },
+  created() {
+    // this.getEnterpriseRealNameInfo();
+  },
   methods: {
     // 获取企业实名认证的数据信息
-    getEnterpriseRealNameInfo(){
-      this.$store.dispatch("user/getEnterpriseRealNameInfo").then((res)=>{
+    getEnterpriseRealNameInfo() {
+      this.$store.dispatch("user/getEnterpriseRealNameInfo").then((res) => {
         console.log(res);
         this.form = res.data;
       });
