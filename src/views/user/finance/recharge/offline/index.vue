@@ -248,15 +248,21 @@ export default {
       });
     },
     submitForm() {
-      this.$confirm({
-        title: "确定要提交吗?",
-        onOk: () => {
-          console.log(this.form);
-          this.$store.dispatch("offline/putOffline", this.form).then((res) => {
-            // this.data = res.data;
-            this.$message.success("提交成功");
-            this.change("Inquire");
-            this.current = 2;
+      this.$refs.ruleForm.validate((valid) => {
+        if (valid) {
+          this.$confirm({
+            title: "确定要提交吗?",
+            onOk: () => {
+              console.log(this.form);
+              this.$store
+                .dispatch("offline/putOffline", this.form)
+                .then((res) => {
+                  // this.data = res.data;
+                  this.$message.success("提交成功");
+                  this.change("Inquire");
+                  this.current = 2;
+                });
+            }
           });
         }
       });
