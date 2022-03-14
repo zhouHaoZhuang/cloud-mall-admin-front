@@ -230,3 +230,31 @@ export const setCpuOrDiskData = (data, company) => {
     return [];
   }
 };
+
+// 判断密码是否是三种字符组合 默认长度限制为8-30
+export const judgePwdFormat = (value, minLength = 8, maxLength = 30) => {
+  if (value.length < minLength || value.length > maxLength) {
+    return 0;
+  }
+  const regArr = [
+    /^(?=.*?[a-z]).*$/,
+    /^(?=.*?[A-Z]).*$/,
+    /^(?=.*?\d).*$/,
+    /^(?=.*[()`~!@#$%^&*-_+=|{}:;'><,.?/]).*$/ // 用作占位，无用
+  ];
+  let count = 0;
+  regArr.forEach((ele, index) => {
+    if (index !== 3) {
+      if (ele.test(value)) {
+        count = count + 1;
+      }
+    } else {
+      const oldStr = value;
+      const newStr = value.replace(/[^u4e00-u9fa5w]/g, "");
+      if (oldStr !== newStr) {
+        count = count + 1;
+      }
+    }
+  });
+  return count;
+};
