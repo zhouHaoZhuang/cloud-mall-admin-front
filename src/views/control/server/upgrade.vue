@@ -92,7 +92,6 @@
             <div class="input-number-box">
               <NumberInput
                 v-model="item.size"
-                :min="20"
                 :disabled="item.old"
                 :on-change="getPrice"
               />
@@ -369,9 +368,10 @@ export default {
           : this.form.dataDisk[this.form.dataDisk.length - 1].id - 1;
       this.form.dataDisk.push({
         id: newId,
-        size: 20,
-        min: 20,
-        category: "cloud_ssd",
+        category: "cloud_essd",
+        performanceLevel: "PL0",
+        min: 40,
+        size: 40,
         old: false
       });
       this.getPrice();
