@@ -170,9 +170,9 @@ const options = [
                     name: "退订记录",
                     component: () =>
                       import("@/views/user/finance/refund/record"),
-                    meta: {}
-                  }
-                ]
+                    meta: {},
+                  },
+                ],
               },
               // {
               //   path: "withdraw",
@@ -182,7 +182,36 @@ const options = [
               //     // hiddenMenu: true
               //   }
               // },
-            ]
+              {
+                path: "bill",
+                name: "发票管理",
+                component: RouteView,
+                meta: {},
+                children: [
+                  {
+                    path: "apply",
+                    name: "发票申请",
+                    component: () =>
+                      import("@/views/user/finance/bill/Apply/list.vue"),
+                    meta: {},
+                  },
+                  {
+                    path: "list",
+                    name: "发票列表",
+                    component: () =>
+                      import("@/views/user/finance/bill/list/index.vue"),
+                    meta: {},
+                  },
+                  {
+                    path: "info",
+                    name: "发票信息管理",
+                    component: () =>
+                      import("@/views/user/finance/bill/info/list.vue"),
+                    meta: {},
+                  },
+                ],
+              },
+            ],
           },
           {
             path: "renew",
