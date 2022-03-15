@@ -36,7 +36,7 @@
         </div>
         <div class="txt">
           2、 （仅支持下列特殊字符： ( ) ` ~ ! @ # $ % ^ {{ "&" }} * - _ + = | {
-          } [ ] : ; ' > <span v-text="'<'"></span> , . ? / ）。
+          } : ; ' > <span v-text="'<'"></span> , . ? / ）。
         </div>
       </a-form-model-item>
       <a-form-model-item label="确认登录密码" prop="confirmPassword">
@@ -52,6 +52,7 @@
 </template>
 
 <script>
+import { judgePwdFormat } from "@/utils/index";
 export default {
   // 双向绑定
   model: {
@@ -75,16 +76,7 @@ export default {
       if (value === "") {
         callback(new Error("请输入密码"));
       } else {
-        if (this.specialReg.test(value)) {
-          callback(new Error("密码包含了不被允许的特殊字符"));
-        } else if (
-          !(
-            this.pwdReg1.test(value) ||
-            this.pwdReg2.test(value) ||
-            this.pwdReg3.test(value) ||
-            this.pwdReg4.test(value)
-          )
-        ) {
+        if (judgePwdFormat(value) < 3) {
           callback(new Error("密码格式不正确"));
         }
         callback();
@@ -104,21 +96,21 @@ export default {
       wrapperCol: { span: 17 },
       loading: false,
       // 必须包含大写字母，小写字母，数字，特殊字符
-      pwdReg:
-        /^.*(?=.{8,})(?=.*\d)(?=.*[A-Z])(?=.*[a-z])(?=.*[()`~!@#$%^&*-_+=|{}][:;'><,.?/]).*$/,
-      // 必须包含大写字母，小写字母，数字
-      pwdReg1: /^.*(?=.{8,})(?=.*\d)(?=.*[A-Z])(?=.*[a-z]).*$/,
-      // 必须包含大写字母，小写字母，特殊字符
-      pwdReg2:
-        /^.*(?=.{8,})(?=.*[A-Z])(?=.*[a-z])(?=.*[()`~!@#$%^&*-_+=|{}][:;'><,.?/]).*$/,
-      // 必须包含大写字母，数字，特殊字符
-      pwdReg3:
-        /^.*(?=.{8,})(?=.*\d)(?=.*[A-Z])(?=.*[()`~!@#$%^&*-_+=|{}][:;'><,.?/]).*$/,
-      // 必须包含小写字母，数字，特殊字符
-      pwdReg4:
-        /^.*(?=.{8,})(?=.*\d)(?=.*[a-z])(?=.*[()`~!@#$%^&*-_+=|{}][:;'><,.?/]).*$/,
+      // pwdReg:
+      //   /^.*(?=.{8,})(?=.*\d)(?=.*[A-Z])(?=.*[a-z])(?=.*[()`~!@#$%^&*-_+=|{}:;'><,.?/]).*$/,
+      // // 必须包含大写字母，小写字母，数字
+      // pwdReg1: /^.*(?=.{8,})(?=.*\d)(?=.*[A-Z])(?=.*[a-z]).*$/,
+      // // 必须包含大写字母，小写字母，特殊字符
+      // pwdReg2:
+      //   /^.*(?=.{8,})(?=.*[A-Z])(?=.*[a-z])(?=.*[()`~!@#$%^&*-_+=|{}:;'><,.?/]).*$/,
+      // // 必须包含大写字母，数字，特殊字符
+      // pwdReg3:
+      //   /^.*(?=.{8,})(?=.*\d)(?=.*[A-Z])(?=.*[()`~!@#$%^&*-_+=|{}:;'><,.?/]).*$/,
+      // // 必须包含小写字母，数字，特殊字符
+      // pwdReg4:
+      //   /^.*(?=.{8,})(?=.*\d)(?=.*[a-z])(?=.*[()`~!@#$%^&*-_+=|{}:;'><,.?/]).*$/,
       // 不允许包含的特殊字符集合正则
-      specialReg: new RegExp("[《》！￥……（）—【】‘；：”“。，、？]"),
+      // specialReg: new RegExp("[《》！￥……（）—【】‘；：”“。，、？]"),
       form: {
         user: "root (Linux) / administrator (Windows)",
         password: "",
