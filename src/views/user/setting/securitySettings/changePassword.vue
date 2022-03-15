@@ -200,9 +200,14 @@ export default {
           this.form.password = this.form.newPassword;
           this.$store.dispatch("user/changePassword", this.form).then(() => {
             this.$message.success("修改成功");
-            this.$store.dispatch("user/logout").then((res) => {
-              jumpCloudMall("/login?out=1");
-            });
+            this.$store
+              .dispatch("user/logout")
+              .then((res) => {
+                jumpCloudMall("/login?out=1");
+              })
+              .catch(() => {
+                this.refreshCode();
+              });
           });
         } else {
           this.$message.error("请检查输入项");
