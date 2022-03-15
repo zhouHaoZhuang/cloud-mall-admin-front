@@ -26,14 +26,32 @@
       </div>
       <div class="paymentMethod">
         <span class="paymentMethod-type">支付方式：</span>
-        <!-- <div class="WeChatply">
-        <img width="30px" src="@/assets/img/pay/WeChat.png" />
-        <span>微信支付</span>
-      </div> -->
-        <div class="WeChatply Alipay" v-if="allConfig.alipay_switch == '1'">
+        <!-- <div :class="{WeChatply:true,Alipay:}">
+          <img width="30px" src="@/assets/img/pay/WeChat.png" />
+          <span>微信支付</span>
+        </div>
+        <div class="WeChatply Alipay">
           <img width="40px" src="@/assets/img/pay/Alipay.png" />
           <span>支付宝支付</span>
-        </div>
+        </div> -->
+        <a-radio-group v-model="payType" @change="onChange">
+          <a-radio value="ali">
+            <span>支付宝</span>
+            <img
+              style="margin-left: 5px"
+              width="20px"
+              src="@/assets/img/pay/Alipay.png"
+            />
+          </a-radio>
+          <a-radio value="wxchat">
+            <span>微信</span>
+            <img
+              style="margin-left: 5px"
+              width="20px"
+              src="@/assets/img/pay/WeChat.png"
+            />
+          </a-radio>
+        </a-radio-group>
       </div>
       <RechargeBtn
         v-show="allConfig.alipay_switch == '1'"
@@ -71,7 +89,8 @@ export default {
         balanceAmount: "",
         payType: ["ali", "balance"]
       },
-      time: null
+      time: null,
+      payType: "ali"
     };
   },
   created() {
@@ -86,6 +105,9 @@ export default {
     })
   },
   methods: {
+    onChange(e) {
+      console.log("radio checked", e.target.value);
+    },
     // 查询余额
     getUserBalance() {
       this.$store
@@ -129,6 +151,7 @@ export default {
   }
   .paymentMethod {
     display: flex;
+    align-items: center;
     margin-top: 10px;
     margin-bottom: 20px;
   }
