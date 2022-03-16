@@ -84,6 +84,17 @@
           </a-select>
         </a-form-model-item>
         <a-form-model-item v-if="tabKey === '2'" label="SSD数据盘">
+          <div class="add-wrap">
+            <div class="add-btn" @click="addDisk">
+              <a-icon class="icon" type="plus-circle" theme="filled" />
+              <span>添加数据盘</span>
+            </div>
+            <div class="info">
+              还可以添加
+              <span class="strong">{{ 4 - form.dataDisk.length }}</span>
+              块数据盘
+            </div>
+          </div>
           <div
             v-for="(item, index) in form.dataDisk"
             :key="item.id"
@@ -92,23 +103,11 @@
             <div class="input-number-box">
               <NumberInput
                 v-model="item.size"
-                :min="20"
                 :disabled="item.old"
                 :on-change="getPrice"
               />
             </div>
             <div class="action-box">
-              <div v-if="index === 0" class="add">
-                <div class="left-btn" @click="addDisk">
-                  <a-icon class="icon" type="plus-circle" theme="filled" />
-                  <span>添加数据盘</span>
-                </div>
-                <div class="info">
-                  还可以添加
-                  <span class="strong">{{ 16 - form.dataDisk.length }}</span>
-                  块数据盘
-                </div>
-              </div>
               <div v-if="!item.old" class="del">
                 <div class="left-btn" @click="delDisk(index)">
                   <a-icon class="icon" type="minus-circle" theme="filled" />
@@ -360,7 +359,7 @@ export default {
     },
     // 添加一块ssd数据盘
     addDisk() {
-      if (this.form.dataDisk.length === 16) {
+      if (this.form.dataDisk.length === 4) {
         return;
       }
       const newId =
@@ -369,9 +368,10 @@ export default {
           : this.form.dataDisk[this.form.dataDisk.length - 1].id - 1;
       this.form.dataDisk.push({
         id: newId,
-        size: 20,
-        min: 20,
-        category: "cloud_ssd",
+        category: "cloud_essd",
+        performanceLevel: "PL0",
+        min: 40,
+        size: 40,
         old: false
       });
       this.getPrice();
@@ -526,6 +526,23 @@ export default {
       right: 28px;
     }
   }
+  .add-wrap {
+    display: flex;
+    align-items: center;
+    margin-top: 3px;
+    margin-bottom: 6px;
+    .add-btn {
+      color: #ff6600;
+      font-size: 14px;
+      margin-right: 5px;
+      cursor: pointer;
+      .icon {
+        font-size: 18px;
+        margin-right: 5px;
+        margin-left: 15px;
+      }
+    }
+  }
   .datasidk-item {
     display: flex;
     margin-bottom: 10px;
@@ -533,17 +550,6 @@ export default {
       .add {
         display: flex;
         align-items: center;
-        .left-btn {
-          color: #ff6600;
-          font-size: 14px;
-          margin-right: 5px;
-          cursor: pointer;
-          .icon {
-            font-size: 18px;
-            margin-right: 5px;
-            margin-left: 15px;
-          }
-        }
         .info {
           .strong {
             color: #ff6600;
