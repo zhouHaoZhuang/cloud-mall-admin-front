@@ -218,6 +218,13 @@ const options = [
                       import("@/views/user/finance/bill/address/index.vue"),
                     meta: {},
                   },
+                  {
+                    path: "refundlist",
+                    name: "退票列表",
+                    component: () =>
+                      import("@/views/user/finance/bill/refundlist/index.vue"),
+                    meta: {},
+                  },
                 ],
               },
             ],

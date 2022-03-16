@@ -1,8 +1,8 @@
 <template>
   <div>
-    <h1>修改地址</h1>
-    <div>
-      <a-descriptions title="申请信息">
+    <DetailHeader title="修改地址" />
+    <div class="address-info">
+      <a-descriptions style="margin: 30px 0" title="申请信息">
         <a-descriptions-item label="发票ID">
           FP20220314001
         </a-descriptions-item>
@@ -30,7 +30,7 @@
       </a-descriptions>
     </div>
     <div>
-      <h3>选择新的地址</h3>
+      <h3 class="new-adress">选择新的地址</h3>
       <div>
         <a-table
           :row-selection="{
@@ -48,14 +48,19 @@
       </div>
     </div>
     <a-button type="link" icon="plus"> 新增常用地址 </a-button>
-    <div>
+    <div style="text-align: center; margin-top: 20px">
       <a-button type="primary"> 保存提交 </a-button>
     </div>
   </div>
 </template>
 
 <script>
+import DetailHeader from "@/components/Common/detailHeader.vue";
+
 export default {
+  components: {
+    DetailHeader
+  },
   data() {
     return {
       data: [],
@@ -105,4 +110,12 @@ export default {
 };
 </script>
 
-<style></style>
+<style lang="less" scoped>
+.address-info {
+  margin: 30px 0;
+}
+.new-adress {
+  margin: 20px 0;
+  font-weight: 600;
+}
+</style>

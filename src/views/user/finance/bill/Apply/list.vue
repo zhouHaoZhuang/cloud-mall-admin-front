@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h3>发票申请</h3>
+    <DetailHeader title="发票申请" />
     <div class="title-hint">
       <a-steps :current="current">
         <a-step>
@@ -123,7 +123,12 @@
 </template>
 
 <script>
+import DetailHeader from "@/components/Common/detailHeader.vue";
+
 export default {
+  components: {
+    DetailHeader
+  },
   data() {
     return {
       current: 0,
