@@ -1,6 +1,6 @@
 <template>
   <div>
-    <DetailHeader title="发票申请详情" />
+    <DetailHeader title="退票申请详情" />
     <div class="bill-info">
       <a-descriptions style="margin: 20px 0" title="申请信息">
         <a-descriptions-item label="发票ID">
@@ -14,29 +14,26 @@
         <a-descriptions-item label="税务登记号">
           910004565465465
         </a-descriptions-item>
-        <a-descriptions-item label="申请状态"> 已提交 </a-descriptions-item>
+        <a-descriptions-item label="退票申请状态"> 已提交 </a-descriptions-item>
         <a-descriptions-item label="开票金额"> ￥500.00 </a-descriptions-item>
-        <a-descriptions-item label="申请时间">
+        <a-descriptions-item label="退票申请时间">
           2016-09-21 08:50:08
         </a-descriptions-item>
-        <a-descriptions-item label="反馈时间">
+        <a-descriptions-item label="备注"> 退款 </a-descriptions-item>
+        <a-descriptions-item label="退票申请反馈时间">
           2016-09-21 08:50:08
         </a-descriptions-item>
-        <a-descriptions-item label="反馈说明">
+        <a-descriptions-item label="退票申请反馈说明">
           阿萨德hasla
         </a-descriptions-item>
       </a-descriptions>
-      <a-descriptions style="margin: 20px 0" title="收件人信息">
-        <a-descriptions-item label="收件人"> 王富贵 </a-descriptions-item>
+      <a-descriptions style="margin: 20px 0" title="物流信息">
+        <a-descriptions-item label="物流单号"> SF454546873000000000000000 </a-descriptions-item>
+        <a-descriptions-item label="寄件联系人">
+          张三
+        </a-descriptions-item>
         <a-descriptions-item label="联系电话">
-          15200000000000
-        </a-descriptions-item>
-        <a-descriptions-item label="地址">
-          上海市/浦东区/陆家嘴
-        </a-descriptions-item>
-        <a-descriptions-item label="详细地址">上海 虹桥</a-descriptions-item>
-        <a-descriptions-item label="物流单号">
-          910004565465465
+          1520000000000000
         </a-descriptions-item>
       </a-descriptions>
     </div>

@@ -114,7 +114,7 @@
       <a-button type="link" icon="plus">新增常用地址</a-button>
       <div style="text-align: center">
         <a-button type="primary">提交申请</a-button>
-        <a-button style="margin-left: 20px" type="primary" @click="current = 0">
+        <a-button style="margin-left: 20px"  @click="current = 0">
           返回上一步
         </a-button>
       </div>

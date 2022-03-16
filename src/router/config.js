@@ -225,6 +225,20 @@ const options = [
                       import("@/views/user/finance/bill/refundlist/index.vue"),
                     meta: {},
                   },
+                  {
+                    path: "refundInfo",
+                    name: "退票详情",
+                    component: () =>
+                      import("@/views/user/finance/bill/refundInfo/info.vue"),
+                    meta: {},
+                  },
+                  {
+                    path: "resubmit",
+                    name: "重新提交退票申请",
+                    component: () =>
+                      import("@/views/user/finance/bill/resubmit/info.vue"),
+                    meta: {},
+                  },
                 ],
               },
             ],
