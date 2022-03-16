@@ -211,6 +211,13 @@ const options = [
                       import("@/views/user/finance/bill/info/list.vue"),
                     meta: {},
                   },
+                  {
+                    path: "address",
+                    name: "修改地址",
+                    component: () =>
+                      import("@/views/user/finance/bill/address/index.vue"),
+                    meta: {},
+                  },
                 ],
               },
             ],

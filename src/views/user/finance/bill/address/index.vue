@@ -1,0 +1,108 @@
+<template>
+  <div>
+    <h1>修改地址</h1>
+    <div>
+      <a-descriptions title="申请信息">
+        <a-descriptions-item label="发票ID">
+          FP20220314001
+        </a-descriptions-item>
+        <a-descriptions-item label="开具类型"> 企业 </a-descriptions-item>
+        <a-descriptions-item label="发票类型">
+          增值税专用发票
+        </a-descriptions-item>
+        <a-descriptions-item label="发票抬头"> 上海市公司 </a-descriptions-item>
+        <a-descriptions-item label="税务登记号">
+          910004565465465
+        </a-descriptions-item>
+        <a-descriptions-item label="申请状态"> 已提交 </a-descriptions-item>
+        <a-descriptions-item label="开票金额"> ￥500.00 </a-descriptions-item>
+        <a-descriptions-item label="申请时间"> 2016-09-21 </a-descriptions-item>
+      </a-descriptions>
+      <a-descriptions title="原收件人信息">
+        <a-descriptions-item label="收件人"> 王富贵 </a-descriptions-item>
+        <a-descriptions-item label="联系电话">
+          15000000000000
+        </a-descriptions-item>
+        <a-descriptions-item label="地址">
+          上海市/黄浦区/华新街道/华新路
+        </a-descriptions-item>
+        <a-descriptions-item label="详细地址"> 上海市虹桥 </a-descriptions-item>
+      </a-descriptions>
+    </div>
+    <div>
+      <h3>选择新的地址</h3>
+      <div>
+        <a-table
+          :row-selection="{
+            selectedRowKeys: selectedRowKeys,
+            onChange: onSelectChange
+          }"
+          :columns="columns"
+          :data-source="data"
+        >
+          <div slot="companyName" slot-scope="text">{{ text }}</div>
+          <div slot="action">
+            <a-button type="link">编辑</a-button>
+          </div>
+        </a-table>
+      </div>
+    </div>
+    <a-button type="link" icon="plus"> 新增常用地址 </a-button>
+    <div>
+      <a-button type="primary"> 保存提交 </a-button>
+    </div>
+  </div>
+</template>
+
+<script>
+export default {
+  data() {
+    return {
+      data: [],
+      selectedRowKeys: [],
+      columns: [
+        {
+          title: "收件人",
+          dataIndex: "companyName",
+          key: "companyName",
+          width: "20%"
+        },
+        {
+          title: "联系电话",
+          dataIndex: "phone",
+          key: "phone",
+          width: "20%"
+        },
+        {
+          title: "地址",
+          dataIndex: "address",
+          key: "address",
+          width: "20%"
+        },
+        {
+          title: "详细地址",
+          dataIndex: "detailAddress",
+          key: "detailAddress",
+          width: "20%"
+        },
+        {
+          title: "操作",
+          dataIndex: "action",
+          key: "action",
+          scopedSlots: {
+            customRender: "action"
+          }
+        }
+      ]
+    };
+  },
+  methods: {
+    // 选择收货信息
+    onSelectChange(selectedRowKeys) {
+      this.selectedRowKeys = selectedRowKeys;
+    }
+  }
+};
+</script>
+
+<style></style>
