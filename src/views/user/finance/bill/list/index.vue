@@ -15,7 +15,7 @@
               <template #prefix> ￥ </template>
             </a-statistic>
           </a-col>
-          <a-col :span="2"> = </a-col>
+          <a-col :span="2"> <div class="calculate">=</div> </a-col>
           <a-col :span="4">
             <a-statistic
               title="总计消费可开票"
@@ -25,7 +25,9 @@
               <template #prefix> ￥ </template>
             </a-statistic>
           </a-col>
-          <a-col :span="2"> - </a-col>
+          <a-col :span="2">
+            <div class="calculate">—</div>
+          </a-col>
           <a-col :span="4">
             <a-statistic
               title="历史已开票"
@@ -35,7 +37,7 @@
               <template #prefix> ￥ </template>
             </a-statistic>
           </a-col>
-          <a-col :span="2"> - </a-col>
+          <a-col :span="2"> <div class="calculate">—</div> </a-col>
           <a-col :span="4">
             <a-statistic
               title="本月不可开"
@@ -46,7 +48,12 @@
             </a-statistic>
           </a-col>
         </a-row>
-        <a-button @click="$router.push('/user/finance/bill/apply')" type="primary" style="margin: 20px 0">申请开票</a-button>
+        <a-button
+          @click="$router.push('/user/finance/bill/apply')"
+          type="primary"
+          style="margin: 20px 0"
+          >申请开票</a-button
+        >
         <div class="bill-info">
           <div>
             <a-descriptions title="默认发票信息" :column="2">
@@ -62,7 +69,9 @@
               </a-descriptions-item>
               <a-descriptions-item label=""> </a-descriptions-item>
               <a-descriptions-item label="">
-                <a href="">管理发票信息→</a>
+                <a @click="$router.push('/user/finance/bill/billmanage')"
+                  >管理发票信息→</a
+                >
               </a-descriptions-item>
             </a-descriptions>
           </div>
@@ -176,6 +185,9 @@ export default {
 h1 {
   margin: 20px;
   margin-top: 0;
+}
+.calculate {
+  margin-top: 15px;
 }
 .font-weight600 {
   font-weight: 600;
