@@ -239,6 +239,20 @@ const options = [
                       import("@/views/user/finance/bill/resubmit/info.vue"),
                     meta: {},
                   },
+                  {
+                    path: "billmanage",
+                    name: "发票信息管理",
+                    component: () =>
+                      import("@/views/user/finance/bill/billmanage/index.vue"),
+                    meta: {},
+                  },
+                  {
+                    path: "addBillInfo",
+                    name: "新增发票信息",
+                    component: () =>
+                      import("@/views/user/finance/bill/addBillInfo/index.vue"),
+                    meta: {},
+                  },
                 ],
               },
             ],
