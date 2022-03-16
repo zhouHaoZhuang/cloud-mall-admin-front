@@ -11,7 +11,7 @@
         />
         <p>个人认证</p>
         <a-button
-          @click="$router.push('/user/setting/enterprise')"
+          @click="$router.push('/user/setting/personalRealname')"
           class="look-info"
           type="link"
           v-show="userRealInfo.realName"

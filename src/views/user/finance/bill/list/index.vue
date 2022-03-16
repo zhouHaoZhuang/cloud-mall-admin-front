@@ -46,7 +46,7 @@
             </a-statistic>
           </a-col>
         </a-row>
-        <a-button type="primary" style="margin: 20px 0">申请开票</a-button>
+        <a-button @click="$router.push('/user/finance/bill/apply')" type="primary" style="margin: 20px 0">申请开票</a-button>
         <div class="bill-info">
           <div>
             <a-descriptions title="默认发票信息" :column="2">
