@@ -9,9 +9,20 @@
           src="@/assets/img/realName/personalRealName.png"
           alt=""
         />
-        <p>个人认证</p>
+        <p>
+          <span>个人认证</span>
+          <span v-show="userRealInfo.realName">
+            已完成
+            <img
+              style="margin-left: 10px"
+              width="16px"
+              src="@/assets/img/realName/attestOk.png"
+              alt=""
+            />
+          </span>
+        </p>
         <a-button
-          @click="$router.push('/user/setting/enterprise')"
+          @click="$router.push('/user/setting/personalRealname')"
           class="look-info"
           type="link"
           v-show="userRealInfo.realName"
