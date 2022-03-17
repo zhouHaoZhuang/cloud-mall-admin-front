@@ -25,9 +25,8 @@ function getCloudMallUrl() {
 }
 // 请求头携带domain参数
 const domains = {
-  local: "t946471742443573248.site.sailayun.com"
+  local: "t410796.site.sailayun.com"
 };
-
 export default {
   BASE_URL: baseUrl[process.env.VUE_APP_ENV],
   FORM_BASE_URL: formBaseUrl[process.env.VUE_APP_ENV],
