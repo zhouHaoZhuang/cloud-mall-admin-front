@@ -6,27 +6,25 @@
         <a-row :gutter="16">
           <a-col :span="4">
             <a-statistic
-              title="可开票金额"
               :value="1128"
               style="margin-right: 50px"
               class="font-weight600"
-              :value-style="{ color: '#02A7F0' }"
+              :value-style="{ color: '#02A7F0', 'white-space': 'nowrap' }"
+              groupSeparator=""
             >
+              <div style="white-space: nowrap" slot="title">可开票金额</div>
               <template #prefix> ￥ </template>
             </a-statistic>
           </a-col>
           <a-col :span="2"> <div class="calculate">=</div> </a-col>
           <a-col :span="4">
-            <a-statistic
-              title="总计消费可开票"
-              :value="93"
-              class="demo-class font-weight600"
-            >
+            <a-statistic :value="93" class="demo-class font-weight600">
+              <div style="white-space: nowrap" slot="title">总计消费可开票</div>
               <template #prefix> ￥ </template>
             </a-statistic>
           </a-col>
           <a-col :span="2">
-            <div class="calculate">—</div>
+            <div class="calculate">-</div>
           </a-col>
           <a-col :span="4">
             <a-statistic
@@ -37,7 +35,7 @@
               <template #prefix> ￥ </template>
             </a-statistic>
           </a-col>
-          <a-col :span="2"> <div class="calculate">—</div> </a-col>
+          <a-col :span="2"> <div class="calculate">-</div> </a-col>
           <a-col :span="4">
             <a-statistic
               title="本月不可开"
@@ -94,7 +92,7 @@
         </div>
       </div>
       <div class="title-right">
-        <h1 class="font-weight600" style="margin-left: 0">
+        <h1 class="font-weight600" style="margin-left: 0; white-space: nowrap">
           <span>欠票未冲抵总金额：</span>
           <span style="color: #d9001b">￥100</span>
         </h1>

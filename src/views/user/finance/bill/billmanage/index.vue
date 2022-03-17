@@ -19,6 +19,7 @@
 export default {
   data() {
     return {
+      data:[],
       columns:[
         {
           title:'发票抬头',
