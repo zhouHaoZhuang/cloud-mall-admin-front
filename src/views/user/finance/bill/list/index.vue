@@ -67,9 +67,9 @@
               </a-descriptions-item>
               <a-descriptions-item label=""> </a-descriptions-item>
               <a-descriptions-item label="">
-                <a @click="$router.push('/user/finance/bill/billmanage')"
-                  >管理发票信息→</a
-                >
+                <a @click="$router.push('/user/finance/bill/billmanage')">
+                  管理发票信息→
+                </a>
               </a-descriptions-item>
             </a-descriptions>
           </div>
@@ -85,7 +85,9 @@
               </a-descriptions-item>
               <a-descriptions-item label=""> </a-descriptions-item>
               <a-descriptions-item label="">
-                <a href="">管理常用地址→</a>
+                <a @click="$router.push('/user/finance/bill/manageadress')">
+                  管理常用地址→
+                </a>
               </a-descriptions-item>
             </a-descriptions>
           </div>

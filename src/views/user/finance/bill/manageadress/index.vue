@@ -6,7 +6,12 @@
           新增常用地址
         </a-button>
         <div class="title-hint">
-          <img width="15px" src="@/assets/img/bill/adress.png" alt="" />
+          <img
+            style="margin-top: -2px"
+            width="15px"
+            src="@/assets/img/bill/adress.png"
+            alt=""
+          />
           最多可以设置 {{ 5 }} 个常用地址，您还可以添加 {{ 0 }} 个常用地址。
         </div>
       </div>
