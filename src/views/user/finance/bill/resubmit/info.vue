@@ -1,6 +1,6 @@
 <template>
   <div>
-    <DetailHeader title="重新提交退票申请" />
+    <DetailHeader title="退票申请" />
     <div class="title-hint">
       <a-steps :current="current">
         <a-step title="确认退票信息" />
