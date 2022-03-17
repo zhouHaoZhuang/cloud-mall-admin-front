@@ -57,7 +57,7 @@ export const getListQp = (request, listQuery) => {
     store
       .dispatch(
         request,
-        listQuery.key
+        listQuery.key && listQuery.search
           ? {
               ...listQuery,
               [`qp-${listQuery.key}-${

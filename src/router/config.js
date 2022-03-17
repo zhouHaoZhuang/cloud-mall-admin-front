@@ -1,3 +1,4 @@
+import Router from "vue-router";
 import Default from "@/layouts/default";
 import Content from "@/layouts/content";
 import RouteView from "@/layouts/routeView";
@@ -9,7 +10,29 @@ import CommonLayout from "@/layouts/commonLayout";
  * icon  菜单图标
  * permission  权限配置
  */
-const options = [
+
+// 基础路由
+export const basicRoute = [
+  {
+    path: "/exception",
+    name: "exception",
+    component: CommonLayout,
+    children: [
+      {
+        path: "not",
+        name: "notLogin",
+        component: () => import("@/views/exception/notLogin")
+      },
+      {
+        path: "404",
+        name: "404",
+        component: () => import("@/views/exception/404")
+      }
+    ]
+  }
+];
+// 动态路由
+export const asyncRoute = [
   {
     path: "/",
     name: "index",
@@ -22,8 +45,8 @@ const options = [
         name: "总览",
         component: () => import("@/views/dashboard/index"),
         meta: {
-          hiddenMenu: true,
-        },
+          hiddenMenu: true
+        }
       },
       // 消息中心
       {
@@ -31,8 +54,8 @@ const options = [
         name: "消息中心",
         component: () => import("@/views/dashboard/message.vue"),
         meta: {
-          hiddenMenu: true,
-        },
+          hiddenMenu: true
+        }
       },
       // 消息中心详情
       {
@@ -40,8 +63,8 @@ const options = [
         name: "消息中心详情",
         component: () => import("@/views/dashboard/messageInfo.vue"),
         meta: {
-          hiddenMenu: true,
-        },
+          hiddenMenu: true
+        }
       },
       // 控制台
       {
@@ -55,31 +78,31 @@ const options = [
             name: "云服务器",
             component: RouteView,
             meta: {
-              icon: "icon-yunfuwuqi",
+              icon: "icon-yunfuwuqi"
             },
             children: [
               {
                 path: "admin",
                 name: "云服务器管理",
                 component: () => import("@/views/control/server/serverAdmin"),
-                meta: {},
+                meta: {}
               },
               {
                 path: "detail",
                 name: "云服务器详情",
                 component: () => import("@/views/control/server/serverDetail"),
                 meta: {
-                  hiddenMenu: true,
-                },
+                  hiddenMenu: true
+                }
               },
               {
                 path: "upgrade",
                 name: "云服务器升级",
                 component: () => import("@/views/control/server/upgrade"),
                 meta: {
-                  hiddenMenu: true,
-                },
-              },
+                  hiddenMenu: true
+                }
+              }
               // {
               //   path: "transfer",
               //   name: "过户",
@@ -106,9 +129,9 @@ const options = [
               //   component: () => import("@/views/control/server/trash"),
               //   meta: {}
               // }
-            ],
-          },
-        ],
+            ]
+          }
+        ]
       },
       // 用户中心
       {
@@ -122,35 +145,35 @@ const options = [
             name: "财务中心",
             component: RouteView,
             meta: {
-              icon: "icon-caiwu",
+              icon: "icon-caiwu"
             },
             children: [
               {
                 path: "recharge",
                 name: "充值中心",
                 component: () => import("@/views/user/finance/recharge/index"),
-                meta: {},
+                meta: {}
               },
               {
                 path: "transaction",
                 name: "收支明细",
                 component: () =>
                   import("@/views/user/finance/transaction/index"),
-                meta: {},
+                meta: {}
               },
               {
                 path: "trash",
                 name: "订单管理",
                 component: () => import("@/views/user/finance/order/index"),
-                meta: {},
+                meta: {}
               },
               {
                 path: "orderDetail",
                 name: "订单详情",
                 component: () => import("@/views/user/finance/order/detail"),
                 meta: {
-                  hiddenMenu: true, // 不显示在左侧菜单
-                },
+                  hiddenMenu: true // 不显示在左侧菜单
+                }
               },
               {
                 path: "refund",
@@ -173,7 +196,7 @@ const options = [
                     meta: {}
                   }
                 ]
-              },
+              }
               // {
               //   path: "withdraw",
               //   name: "提现申请",
@@ -189,23 +212,23 @@ const options = [
             name: "续费管理",
             component: RouteView,
             meta: {
-              icon: "icon-xufei",
+              icon: "icon-xufei"
             },
             children: [
               {
                 path: "cloud",
                 name: "云服务器续费管理",
                 component: () => import("@/views/user/renew/cloud/index"),
-                meta: {},
-              },
-            ],
+                meta: {}
+              }
+            ]
           },
           {
             path: "setting",
             name: "账号设置",
             component: RouteView,
             meta: {
-              icon: "icon-zhanghaoquanxianguanli",
+              icon: "icon-zhanghaoquanxianguanli"
             },
             children: [
               {
@@ -213,7 +236,7 @@ const options = [
                 name: "安全设置",
                 component: () =>
                   import("@/views/user/setting/securitySettings/index.vue"),
-                meta: {},
+                meta: {}
               },
               {
                 path: "changePassword",
@@ -223,8 +246,8 @@ const options = [
                     "@/views/user/setting/securitySettings/changePassword.vue"
                   ),
                 meta: {
-                  hiddenMenu: true, // 不显示在左侧菜单
-                },
+                  hiddenMenu: true // 不显示在左侧菜单
+                }
               },
               {
                 path: "emailBinding",
@@ -234,8 +257,8 @@ const options = [
                     "@/views/user/setting/securitySettings/emailBinding.vue"
                   ),
                 meta: {
-                  hiddenMenu: true, // 不显示在左侧菜单
-                },
+                  hiddenMenu: true // 不显示在左侧菜单
+                }
               },
               {
                 path: "phoneBinding",
@@ -245,22 +268,22 @@ const options = [
                     "@/views/user/setting/securitySettings/phoneBinding.vue"
                   ),
                 meta: {
-                  hiddenMenu: true, // 不显示在左侧菜单
-                },
+                  hiddenMenu: true // 不显示在左侧菜单
+                }
               },
               {
                 path: "info",
                 name: "基本资料",
                 component: () =>
                   import("@/views/user/setting/material/index.vue"),
-                meta: {},
+                meta: {}
               },
               {
                 path: "realname",
                 name: "实名认证",
                 component: () =>
                   import("@/views/user/setting/verified/realName.vue"),
-                meta: {},
+                meta: {}
               },
               {
                 path: "personalRealname",
@@ -268,8 +291,8 @@ const options = [
                 component: () =>
                   import("@/views/user/setting/verified/index.vue"),
                 meta: {
-                  hiddenMenu: true, // 不显示在左侧菜单
-                },
+                  hiddenMenu: true // 不显示在左侧菜单
+                }
               },
               {
                 path: "enterprise",
@@ -277,8 +300,8 @@ const options = [
                 component: () =>
                   import("@/views/user/setting/verified/enterprise.vue"),
                 meta: {
-                  hiddenMenu: true, // 不显示在左侧菜单
-                },
+                  hiddenMenu: true // 不显示在左侧菜单
+                }
               },
               {
                 path: "changerealname",
@@ -286,8 +309,8 @@ const options = [
                 component: () =>
                   import("@/views/user/setting/verified/changeVerified.vue"),
                 meta: {
-                  hiddenMenu: true, // 不显示在左侧菜单
-                },
+                  hiddenMenu: true // 不显示在左侧菜单
+                }
               },
               {
                 path: "changephone",
@@ -295,10 +318,9 @@ const options = [
                 component: () =>
                   import("@/views/user/setting/verified/changephone.vue"),
                 meta: {
-                  hiddenMenu: true, // 不显示在左侧菜单
-                },
+                  hiddenMenu: true // 不显示在左侧菜单
+                }
               },
-
               // {
               //   path: "address",
               //   name: "常用地址管理",
@@ -313,14 +335,29 @@ const options = [
               //     import("@/views/user/setting/shortMessage/index.vue"),
               //   meta: {},
               // },
-            ],
+              {
+                path: "role",
+                name: "角色管理",
+                component: () => import("@/views/user/setting/role/role.vue"),
+                meta: {}
+              },
+              {
+                path: "relation",
+                name: "关联资源",
+                component: () =>
+                  import("@/views/user/setting/role/relation.vue"),
+                meta: {
+                  hiddenMenu: true
+                }
+              }
+            ]
           },
           {
             path: "workOrder",
             name: "工单管理",
             component: RouteView,
             meta: {
-              icon: "icon-gongdanguanli",
+              icon: "icon-gongdanguanli"
             },
             children: [
               {
@@ -328,21 +365,21 @@ const options = [
                 name: "提交工单",
                 component: () =>
                   import("@/views/user/workOrder/submit/index.vue"),
-                meta: {},
+                meta: {}
               },
               {
                 path: "my",
                 name: "我的工单",
                 component: () => import("@/views/user/workOrder/my/index.vue"),
-                meta: {},
+                meta: {}
               },
               {
                 path: "detail",
                 name: "工单详情",
                 component: () => import("@/views/user/workOrder/my/detail.vue"),
                 meta: {
-                  hiddenMenu: true,
-                },
+                  hiddenMenu: true
+                }
               },
               {
                 path: "comment",
@@ -350,32 +387,29 @@ const options = [
                 component: () =>
                   import("@/views/user/workOrder/my/comment.vue"),
                 meta: {
-                  hiddenMenu: true,
-                },
-              },
-            ],
-          },
-        ],
-      },
-    ],
-  },
-  {
-    path: "/exception",
-    name: "exception",
-    component: CommonLayout,
-    children: [
-      {
-        path: "not",
-        name: "notLogin",
-        component: () => import("@/views/exception/notLogin"),
-      },
-      {
-        path: "404",
-        name: "404",
-        component: () => import("@/views/exception/404"),
-      },
-    ],
-  },
+                  hiddenMenu: true
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
 ];
+
+const options = {
+  routes: [...basicRoute, ...asyncRoute]
+};
+
+// 重置之前的路由
+export function resetRouter(router) {
+  const newRouter = new Router({
+    mode: "history",
+    base: "console",
+    routes: basicRoute
+  });
+  router.matcher = newRouter.matcher;
+}
 
 export default options;

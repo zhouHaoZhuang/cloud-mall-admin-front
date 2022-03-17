@@ -1,3 +1,4 @@
+import { hasPermissionMenu, setAsyncRouteMenu } from "@/utils/permission";
 import { loginIgnore } from "@/router/index";
 import NProgress from "nprogress";
 
@@ -53,8 +54,8 @@ const loginGuard = (to, from, next, options) => {
  * @param next
  * @param options
  */
-const permsGuard = (to, from, next, options) => {
-  const { store, message } = options;
+const permsGuard = async (to, from, next, options) => {
+  const { store, message, router } = options;
   // const perms = store.state.user.perms;
   // 如果没有用户信息，需要查询用户信息
   const perms = store.state.user.perms;
@@ -67,10 +68,23 @@ const permsGuard = (to, from, next, options) => {
     store.dispatch("dashboard/getWebInfo");
     // 获取公司信息
     store.dispatch("dashboard/getCompanyInfo");
-    // 获取权限数据
-    store.dispatch("user/getUserPerms");
     // 获取其他全局配置
     store.dispatch("user/getAllConfig");
+    // 获取权限数据
+    await store.dispatch("user/getUserPerms");
+    // 设置动态路由
+    const perms = store.state.user.perms;
+    setAsyncRouteMenu(perms, router, store);
+  }
+  if (to.path === "/") {
+    const perms = store.state.user.perms;
+    if (!perms || (perms && perms.length === 0)) {
+      message.warning("当前登录用户没有任何权限，将退出登录");
+      store.dispatch("user/logout");
+      next("/exception/not");
+    }
+    const firstPath = store.state.setting.firstPath;
+    next({ path: firstPath });
   }
   next();
 };
@@ -83,7 +97,26 @@ const permsGuard = (to, from, next, options) => {
  * @param options
  */
 const authorityGuard = (to, from, next, options) => {
-  next();
+  const { store, message, router } = options;
+  const perms = store.state.user.perms;
+  // console.log(
+  //   "查看权限",
+  //   to,
+  //   from,
+  //   !loginIgnore.includes(to),
+  //   !hasPermissionMenu(to, perms, router),
+  //   !loginIgnore.includes(to) && !hasPermissionMenu(to, perms, router)
+  // );
+  if (!loginIgnore.includes(to) && !hasPermissionMenu(to, perms, router)) {
+    message.warning(`对不起，您无权访问页面，请联系管理员`);
+    const firstPath = store.state.setting.firstPath;
+    next({ path: firstPath });
+    NProgress.done();
+  } else {
+    next();
+  }
+  // 存储一下当前路由的$route的meta信息
+  store.commit("setting/setRouteMeta", to.meta.perm);
 };
 
 /**
