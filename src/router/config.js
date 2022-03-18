@@ -146,7 +146,7 @@ export const asyncRoute = [
             name: "CDN云加速",
             component: RouteView,
             meta: {
-              icon: "icon-yunfuwuqi",
+              icon: "icon-cdn",
               perm: "control-cloud"
             },
             children: [
