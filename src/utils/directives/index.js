@@ -169,9 +169,9 @@ export const permission = Vue.directive("permission", {
         : [];
     // console.log("权限指令", routeMetaPrem, routePermObj, value, newPerms);
     // 判断当前按钮是否存在权限
-    if (newPerms.findIndex(ele => ele.code === value) === -1) {
-      //如果没有权限则直接删除此节点
-      el.parentNode && el.parentNode.removeChild(el);
-    }
+    // if (newPerms.findIndex(ele => ele.code === value) === -1) {
+    //   //如果没有权限则直接删除此节点
+    //   el.parentNode && el.parentNode.removeChild(el);
+    // }
   }
 });
