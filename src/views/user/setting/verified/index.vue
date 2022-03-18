@@ -14,7 +14,7 @@
       </div>
       <div v-show="choose == 1">
         <p class="phone-hint">
-          您选择了“手机号码认证方式”进行实名认证，请填写一下信息：
+          您选择了“身份证号码认证方式”进行实名认证，请填写一下信息：
         </p>
         <a-form-model
           ref="ruleForm"
