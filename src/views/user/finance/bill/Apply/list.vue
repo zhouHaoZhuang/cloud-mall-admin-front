@@ -103,6 +103,8 @@
           }"
           :columns="columnsAddress"
           :data-source="dataAddress"
+          :pagination="paginationProps"
+          rowKey="id"
         >
           <div slot="companyName" slot-scope="text">{{ text }}</div>
           <div slot="action">
@@ -114,7 +116,7 @@
       <a-button type="link" icon="plus">新增常用地址</a-button>
       <div style="text-align: center">
         <a-button type="primary">提交申请</a-button>
-        <a-button style="margin-left: 20px"  @click="current = 0">
+        <a-button style="margin-left: 20px" @click="current = 0">
           返回上一步
         </a-button>
       </div>
@@ -173,15 +175,15 @@ export default {
         },
         {
           title: "开具类型",
-          dataIndex: "issueType",
+          dataIndex: "issueType"
         },
         {
           title: "发票类型",
-          dataIndex: "billType",
+          dataIndex: "billType"
         },
         {
           title: "税务登记号",
-          dataIndex: "taxRegistrationNumber",
+          dataIndex: "taxRegistrationNumber"
         },
         {
           title: "操作",
@@ -189,6 +191,28 @@ export default {
           scopedSlots: { customRender: "action" }
         }
       ],
+      listQuery: {
+        key: "",
+        search: "",
+        currentPage: 1,
+        pageSize: 10,
+        total: 0,
+        status: "",
+        startTime: "",
+        endTime: "",
+        accountType: ""
+      },
+      paginationProps: {
+        showQuickJumper: true,
+        showSizeChanger: true,
+        total: 0,
+        showTotal: (total, range) =>
+          `共 ${total} 条记录 第 ${this.listQuery.currentPage} / ${Math.ceil(
+            total / this.listQuery.pageSize
+          )} 页`,
+        onChange: this.quickJump,
+        onShowSizeChange: this.onShowSizeChange
+      },
       // 选择收货信息
       dataAddress: [],
       selectedRowKeysAddress: [], // Check here to configure the default column
@@ -200,15 +224,15 @@ export default {
         },
         {
           title: "联系电话",
-          dataIndex: "phone",
+          dataIndex: "phone"
         },
         {
           title: "地址",
-          dataIndex: "address",
+          dataIndex: "address"
         },
         {
           title: "详细地址",
-          dataIndex: "detailAddress",
+          dataIndex: "detailAddress"
         },
         {
           title: "操作",
@@ -262,6 +286,25 @@ export default {
     onSelectChangeAddress(selectedRowKeysAddress) {
       console.log("selectedRowKeysAddress changed: ", selectedRowKeysAddress);
       this.selectedRowKeysAddress = selectedRowKeysAddress;
+    },
+    //查询数据表格
+    getList() {
+      this.$getListQp("word/getList", this.listQuery).then(res => {
+        console.log(res);
+        this.data = [...res.data.list];
+        this.paginationProps.total = res.data.totalCount * 1;
+      });
+    },
+    //表格分页跳转
+    quickJump(currentPage) {
+      this.listQuery.currentPage = currentPage;
+      this.getList();
+    },
+    //表格分页切换每页条数
+    onShowSizeChange(current, pageSize) {
+      this.listQuery.currentPage = current;
+      this.listQuery.pageSize = pageSize;
+      this.getList();
     }
   }
 };

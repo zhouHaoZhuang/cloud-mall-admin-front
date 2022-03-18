@@ -42,7 +42,12 @@
     </div>
     <div>
       <h2 style="margin: 20px 0">开票明细</h2>
-      <a-table :columns="columns" :data-source="data">
+      <a-table
+        :columns="columns"
+        :data-source="data"
+        :pagination="paginationProps"
+        rowKey="id"
+      >
       </a-table>
     </div>
   </div>
@@ -79,9 +84,52 @@ export default {
           title: "订单创建时间",
           dataIndex: "orderCreateTime"
         }
-      ]
+      ],
+      listQuery: {
+        key: "",
+        search: "",
+        currentPage: 1,
+        pageSize: 10,
+        total: 0,
+        status: "",
+        startTime: "",
+        endTime: "",
+        accountType: ""
+      },
+      paginationProps: {
+        showQuickJumper: true,
+        showSizeChanger: true,
+        total: 0,
+        showTotal: (total, range) =>
+          `共 ${total} 条记录 第 ${this.listQuery.currentPage} / ${Math.ceil(
+            total / this.listQuery.pageSize
+          )} 页`,
+        onChange: this.quickJump,
+        onShowSizeChange: this.onShowSizeChange
+      },
     };
-  }
+  },
+  methods: {
+    //查询数据表格
+    getList() {
+      this.$getListQp("word/getList", this.listQuery).then(res => {
+        console.log(res);
+        this.data = [...res.data.list];
+        this.paginationProps.total = res.data.totalCount * 1;
+      });
+    },
+    //表格分页跳转
+    quickJump(currentPage) {
+      this.listQuery.currentPage = currentPage;
+      this.getList();
+    },
+    //表格分页切换每页条数
+    onShowSizeChange(current, pageSize) {
+      this.listQuery.currentPage = current;
+      this.listQuery.pageSize = pageSize;
+      this.getList();
+    }
+  },
 };
 </script>
 
