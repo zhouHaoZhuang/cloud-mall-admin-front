@@ -35,7 +35,7 @@
           <span>支付宝支付</span>
         </div> -->
         <a-radio-group v-model="payType" @change="onChange">
-          <a-radio value="ali">
+          <a-radio value="ali" v-show="allConfig.alipay_switch === '1'">
             <span>支付宝</span>
             <img
               style="margin-left: 5px"
@@ -43,7 +43,7 @@
               src="@/assets/img/pay/Alipay.png"
             />
           </a-radio>
-          <a-radio value="wechat">
+          <a-radio value="wechat" v-show="allConfig.wxpay_switch === '1'">
             <span>微信</span>
             <img
               style="margin-left: 5px"
