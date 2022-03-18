@@ -377,15 +377,15 @@ export const asyncRoute = [
               //     import("@/views/user/setting/shortMessage/index.vue"),
               //   meta: {},
               // },
-              // {
-              //   path: "account",
-              //   name: "子账号管理",
-              //   meta: {
-              //     icon: "home",
-              //     perm: "user-setting-account"
-              //   },
-              //   component: () => import("@/pages/organization/admin/account")
-              // },
+              {
+                path: "account",
+                name: "子账号管理",
+                meta: {
+                  icon: "home",
+                  perm: "user-setting-account"
+                },
+                component: () => import("@/views/user/setting/role/account.vue")
+              },
               {
                 path: "role",
                 name: "角色管理",
@@ -412,7 +412,7 @@ export const asyncRoute = [
             component: RouteView,
             meta: {
               icon: "icon-gongdanguanli",
-              perm:'user-workOrder'
+              perm: "user-workOrder"
             },
             children: [
               {

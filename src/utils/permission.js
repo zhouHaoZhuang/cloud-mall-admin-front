@@ -1,15 +1,16 @@
 import { asyncRoute, resetRouter } from "@/router/config";
 // 循环处理路由菜单
 function getNewRoute(route, perms) {
-  let newData = route.filter(ele => hasPermissionMenu(ele, perms));
+  let newData = route.filter((ele) => hasPermissionMenu(ele, perms));
   newData.forEach(
-    item => item.children && (item.children = getNewRoute(item.children, perms))
+    (item) =>
+      item.children && (item.children = getNewRoute(item.children, perms))
   );
   return newData;
 }
 // 获取跳转的第一个路由地址
 let newPath = "";
-const getFirstPath = route => {
+const getFirstPath = (route) => {
   if (route.children && route.children.length > 0) {
     getFirstPath(route.children[0]);
   } else {
@@ -31,8 +32,10 @@ export const setAsyncRouteMenu = (perms, router, store) => {
   // 保存默认跳转地址，path是 / 的话，需要重定向到第一个路由
   if (newRoute && newRoute.length > 0) {
     getFirstPath(newRoute[0]);
+  } else {
+    newPath = "";
   }
-  const firstPath = newPath ? newPath : "/404";
+  const firstPath = newPath;
   store.commit("setting/setFirstPath", firstPath);
   // console.log("生成的新的权限动态菜单", newRoute, firstPath, perms, newData);
   // 重置本地存储中菜单数据
@@ -49,9 +52,7 @@ export const hasPermissionMenu = (to, perms) => {
   if (!to.meta.perm) {
     return false;
   }
-  const index = perms.findIndex(
-    ele => ele.code === to.meta.perm
-  );
+  const index = perms.findIndex((ele) => ele.code === to.meta.perm);
   if (index !== -1) {
     return true;
   } else {

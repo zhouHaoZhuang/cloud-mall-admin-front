@@ -63,7 +63,7 @@ const organization = {
     // 获取子账号列表
     getAccountList({ commit, state }, data) {
       return request({
-        url: "/user/getAdminUsers",
+        url: "/user/getCorporationUsers",
         method: "post",
         data
       });
@@ -71,7 +71,7 @@ const organization = {
     // 新增子账号
     addAccount({ commit, state }, data) {
       return request({
-        url: "/user/createUser",
+        url: "/user/createCorporationUser",
         method: "post",
         data
       });
@@ -79,7 +79,7 @@ const organization = {
     // 编辑子账号
     editAccount({ commit, state }, data) {
       return request({
-        url: `/user/updateAdminUsers`,
+        url: `/user/updateUserRole`,
         method: "post",
         data
       });

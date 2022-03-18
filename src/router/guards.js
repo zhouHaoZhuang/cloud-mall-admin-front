@@ -75,7 +75,9 @@ const permsGuard = async (to, from, next, options) => {
     // 设置动态路由
     const perms = store.state.user.perms;
     setAsyncRouteMenu(perms, router, store);
-    if (!perms || (perms && perms.length === 0)) {
+    // 获取生成的默认跳转路由
+    const firstPath = store.state.setting.firstPath;
+    if (!firstPath) {
       message.warning("当前登录用户没有任何权限，将退出登录");
       store.dispatch("user/logout");
       next("/exception/not");
