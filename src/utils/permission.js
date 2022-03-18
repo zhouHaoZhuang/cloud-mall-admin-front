@@ -1,4 +1,18 @@
 import { asyncRoute, resetRouter } from "@/router/config";
+/**
+ * 格式化 router.options.routes，生成 fullPath
+ * @param routes
+ * @param parentPath
+ */
+ function formatFullPath(routes, parentPath = '') {
+  routes.forEach(route => {
+    let isFullPath = route.path.substring(0, 1) === '/'
+    route.fullPath = isFullPath ? route.path : (parentPath === '/' ? parentPath + route.path : parentPath + '/' + route.path)
+    if (route.children) {
+      formatFullPath(route.children, route.fullPath)
+    }
+  })
+}
 // 循环处理路由菜单
 function getNewRoute(route, perms) {
   let newData = route.filter((ele) => hasPermissionMenu(ele, perms));
@@ -23,12 +37,10 @@ export const setAsyncRouteMenu = (perms, router, store) => {
   // 根据权限生成新的菜单
   const newData = [...asyncRoute];
   let newRoute = [];
-  // console.log(
-  //   "查看生成的路由",
-  //   perms,
-  //   getNewRoute(newData[0].children, perms)
-  // );
   newRoute = getNewRoute(newData[0].children, perms);
+  // 给所有路由生成fullPath
+  formatFullPath(newRoute)
+  // console.log("查看生成的路由", newRoute);
   // 保存默认跳转地址，path是 / 的话，需要重定向到第一个路由
   if (newRoute && newRoute.length > 0) {
     getFirstPath(newRoute[0]);
