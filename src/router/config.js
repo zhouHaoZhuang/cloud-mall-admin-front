@@ -140,6 +140,68 @@ export const asyncRoute = [
               //   meta: {}
               // }
             ]
+          },
+          {
+            path: "cdn",
+            name: "CDN云加速",
+            component: RouteView,
+            meta: {
+              icon: "icon-yunfuwuqi",
+              perm: "control-cloud"
+            },
+            children: [
+              {
+                path: "dashboard",
+                name: "概览",
+                component: () => import("@/views/control/cdn/dashboard"),
+                meta: {
+                  perm: "control-cloud-manage"
+                }
+              },
+              {
+                path: "domain",
+                name: "域名管理",
+                component: () => import("@/views/control/cdn/domain"),
+                meta: {
+                  perm: "control-cloud-manage"
+                }
+              },
+              {
+                path: "createDomain",
+                name: "创建域名",
+                component: () => import("@/views/control/cdn/createDomain"),
+                meta: {
+                  hiddenMenu: true,
+                  perm: "control-cloud-manage"
+                }
+              },
+              {
+                path: "manageDomain",
+                name: "域名详情",
+                component: () => import("@/views/control/cdn/manageDomain"),
+                meta: {
+                  hiddenMenu: true,
+                  perm: "control-cloud-manage"
+                }
+              },
+              {
+                path: "copy",
+                name: "复制配置",
+                component: () => import("@/views/control/cdn/copy"),
+                meta: {
+                  hiddenMenu: true,
+                  perm: "control-cloud-manage"
+                }
+              },
+              {
+                path: "consumption",
+                name: "用量查询",
+                component: () => import("@/views/control/cdn/consumption"),
+                meta: {
+                  perm: "control-cloud-manage"
+                }
+              }
+            ]
           }
         ]
       },
