@@ -75,14 +75,13 @@ const permsGuard = async (to, from, next, options) => {
     // 设置动态路由
     const perms = store.state.user.perms;
     setAsyncRouteMenu(perms, router, store);
-  }
-  if (to.path === "/") {
-    const perms = store.state.user.perms;
     if (!perms || (perms && perms.length === 0)) {
       message.warning("当前登录用户没有任何权限，将退出登录");
       store.dispatch("user/logout");
       next("/exception/not");
     }
+  }
+  if (to.path === "/") {
     const firstPath = store.state.setting.firstPath;
     next({ path: firstPath });
   }

@@ -45,7 +45,8 @@ export const asyncRoute = [
         name: "总览",
         component: () => import("@/views/dashboard/index"),
         meta: {
-          hiddenMenu: true
+          hiddenMenu: true,
+          perm: "dashboard"
         }
       },
       // 消息中心
@@ -54,7 +55,8 @@ export const asyncRoute = [
         name: "消息中心",
         component: () => import("@/views/dashboard/message.vue"),
         meta: {
-          hiddenMenu: true
+          hiddenMenu: true,
+          perm: "message"
         }
       },
       // 消息中心详情
@@ -63,7 +65,8 @@ export const asyncRoute = [
         name: "消息中心详情",
         component: () => import("@/views/dashboard/messageInfo.vue"),
         meta: {
-          hiddenMenu: true
+          hiddenMenu: true,
+          perm: "message"
         }
       },
       // 控制台
@@ -71,28 +74,34 @@ export const asyncRoute = [
         path: "/control",
         name: "控制台",
         component: Content,
-        meta: {},
+        meta: {
+          perm: "control"
+        },
         children: [
           {
             path: "server",
             name: "云服务器",
             component: RouteView,
             meta: {
-              icon: "icon-yunfuwuqi"
+              icon: "icon-yunfuwuqi",
+              perm: "control-cloud"
             },
             children: [
               {
                 path: "admin",
                 name: "云服务器管理",
                 component: () => import("@/views/control/server/serverAdmin"),
-                meta: {}
+                meta: {
+                  perm: "control-cloud-manage"
+                }
               },
               {
                 path: "detail",
                 name: "云服务器详情",
                 component: () => import("@/views/control/server/serverDetail"),
                 meta: {
-                  hiddenMenu: true
+                  hiddenMenu: true,
+                  perm: "control-cloud-manage"
                 }
               },
               {
@@ -100,7 +109,8 @@ export const asyncRoute = [
                 name: "云服务器升级",
                 component: () => import("@/views/control/server/upgrade"),
                 meta: {
-                  hiddenMenu: true
+                  hiddenMenu: true,
+                  perm: "control-cloud-manage"
                 }
               }
               // {
@@ -138,48 +148,60 @@ export const asyncRoute = [
         path: "/user",
         name: "用户中心",
         component: Content,
-        meta: {},
+        meta: {
+          perm: "user"
+        },
         children: [
           {
             path: "finance",
             name: "财务中心",
             component: RouteView,
             meta: {
-              icon: "icon-caiwu"
+              icon: "icon-caiwu",
+              perm: "user-finance"
             },
             children: [
               {
                 path: "recharge",
                 name: "充值中心",
                 component: () => import("@/views/user/finance/recharge/index"),
-                meta: {}
+                meta: {
+                  perm: "user-finance-recharge"
+                }
               },
               {
                 path: "transaction",
                 name: "收支明细",
                 component: () =>
                   import("@/views/user/finance/transaction/index"),
-                meta: {}
+                meta: {
+                  perm: "user-finance-transaction"
+                }
               },
               {
                 path: "trash",
                 name: "订单管理",
                 component: () => import("@/views/user/finance/order/index"),
-                meta: {}
+                meta: {
+                  perm: "user-finance-order"
+                }
               },
               {
                 path: "orderDetail",
                 name: "订单详情",
                 component: () => import("@/views/user/finance/order/detail"),
                 meta: {
-                  hiddenMenu: true // 不显示在左侧菜单
+                  hiddenMenu: true,
+                  perm: "user-finance-order"
                 }
               },
               {
                 path: "refund",
                 name: "退款管理",
                 component: RouteView,
-                meta: {},
+                meta: {
+                  perm: "user-finance-refund"
+                },
                 children: [
                   // {
                   //   path: "apply",
@@ -193,7 +215,9 @@ export const asyncRoute = [
                     name: "退订记录",
                     component: () =>
                       import("@/views/user/finance/refund/record"),
-                    meta: {}
+                    meta: {
+                      perm: "user-finance-refund-record"
+                    }
                   }
                 ]
               }
@@ -202,7 +226,8 @@ export const asyncRoute = [
               //   name: "提现申请",
               //   component: () => import("@/views/user/finance/withdraw"),
               //   meta: {
-              //     // hiddenMenu: true
+              //     // hiddenMenu: true,
+              //        perm: "user-finance-withdraw"
               //   }
               // },
             ]
@@ -212,14 +237,17 @@ export const asyncRoute = [
             name: "续费管理",
             component: RouteView,
             meta: {
-              icon: "icon-xufei"
+              icon: "icon-xufei",
+              perm: "user-renew"
             },
             children: [
               {
                 path: "cloud",
                 name: "云服务器续费管理",
                 component: () => import("@/views/user/renew/cloud/index"),
-                meta: {}
+                meta: {
+                  perm: "user-renew-cloudRenew"
+                }
               }
             ]
           },
@@ -228,7 +256,8 @@ export const asyncRoute = [
             name: "账号设置",
             component: RouteView,
             meta: {
-              icon: "icon-zhanghaoquanxianguanli"
+              icon: "icon-zhanghaoquanxianguanli",
+              perm: "user-setting"
             },
             children: [
               {
@@ -236,7 +265,9 @@ export const asyncRoute = [
                 name: "安全设置",
                 component: () =>
                   import("@/views/user/setting/securitySettings/index.vue"),
-                meta: {}
+                meta: {
+                  perm: "user-setting-security"
+                }
               },
               {
                 path: "changePassword",
@@ -246,7 +277,8 @@ export const asyncRoute = [
                     "@/views/user/setting/securitySettings/changePassword.vue"
                   ),
                 meta: {
-                  hiddenMenu: true // 不显示在左侧菜单
+                  hiddenMenu: true,
+                  perm: "user-setting-changPwd"
                 }
               },
               {
@@ -257,7 +289,8 @@ export const asyncRoute = [
                     "@/views/user/setting/securitySettings/emailBinding.vue"
                   ),
                 meta: {
-                  hiddenMenu: true // 不显示在左侧菜单
+                  hiddenMenu: true,
+                  perm: "user-setting-email"
                 }
               },
               {
@@ -268,7 +301,8 @@ export const asyncRoute = [
                     "@/views/user/setting/securitySettings/phoneBinding.vue"
                   ),
                 meta: {
-                  hiddenMenu: true // 不显示在左侧菜单
+                  hiddenMenu: true,
+                  perm: "user-setting-phone"
                 }
               },
               {
@@ -276,14 +310,18 @@ export const asyncRoute = [
                 name: "基本资料",
                 component: () =>
                   import("@/views/user/setting/material/index.vue"),
-                meta: {}
+                meta: {
+                  perm: "user-setting-data"
+                }
               },
               {
                 path: "realname",
                 name: "实名认证",
                 component: () =>
                   import("@/views/user/setting/verified/realName.vue"),
-                meta: {}
+                meta: {
+                  perm: "user-setting-auth"
+                }
               },
               {
                 path: "personalRealname",
@@ -291,7 +329,8 @@ export const asyncRoute = [
                 component: () =>
                   import("@/views/user/setting/verified/index.vue"),
                 meta: {
-                  hiddenMenu: true // 不显示在左侧菜单
+                  hiddenMenu: true,
+                  perm: "user-setting-auth"
                 }
               },
               {
@@ -300,7 +339,8 @@ export const asyncRoute = [
                 component: () =>
                   import("@/views/user/setting/verified/enterprise.vue"),
                 meta: {
-                  hiddenMenu: true // 不显示在左侧菜单
+                  hiddenMenu: true,
+                  perm: "user-setting-auth"
                 }
               },
               {
@@ -309,7 +349,8 @@ export const asyncRoute = [
                 component: () =>
                   import("@/views/user/setting/verified/changeVerified.vue"),
                 meta: {
-                  hiddenMenu: true // 不显示在左侧菜单
+                  hiddenMenu: true,
+                  perm: "user-setting-auth"
                 }
               },
               {
@@ -318,7 +359,8 @@ export const asyncRoute = [
                 component: () =>
                   import("@/views/user/setting/verified/changephone.vue"),
                 meta: {
-                  hiddenMenu: true // 不显示在左侧菜单
+                  hiddenMenu: true,
+                  perm: "user-setting-auth"
                 }
               },
               // {
@@ -335,11 +377,22 @@ export const asyncRoute = [
               //     import("@/views/user/setting/shortMessage/index.vue"),
               //   meta: {},
               // },
+              // {
+              //   path: "account",
+              //   name: "子账号管理",
+              //   meta: {
+              //     icon: "home",
+              //     perm: "user-setting-account"
+              //   },
+              //   component: () => import("@/pages/organization/admin/account")
+              // },
               {
                 path: "role",
                 name: "角色管理",
                 component: () => import("@/views/user/setting/role/role.vue"),
-                meta: {}
+                meta: {
+                  perm: "user-setting-role"
+                }
               },
               {
                 path: "relation",
@@ -347,7 +400,8 @@ export const asyncRoute = [
                 component: () =>
                   import("@/views/user/setting/role/relation.vue"),
                 meta: {
-                  hiddenMenu: true
+                  hiddenMenu: true,
+                  perm: "user-setting-role"
                 }
               }
             ]
@@ -357,7 +411,8 @@ export const asyncRoute = [
             name: "工单管理",
             component: RouteView,
             meta: {
-              icon: "icon-gongdanguanli"
+              icon: "icon-gongdanguanli",
+              perm:'user-workOrder'
             },
             children: [
               {
@@ -365,20 +420,25 @@ export const asyncRoute = [
                 name: "提交工单",
                 component: () =>
                   import("@/views/user/workOrder/submit/index.vue"),
-                meta: {}
+                meta: {
+                  perm: "user-workOrder-submit"
+                }
               },
               {
                 path: "my",
                 name: "我的工单",
                 component: () => import("@/views/user/workOrder/my/index.vue"),
-                meta: {}
+                meta: {
+                  perm: "user-workOrder-my"
+                }
               },
               {
                 path: "detail",
                 name: "工单详情",
                 component: () => import("@/views/user/workOrder/my/detail.vue"),
                 meta: {
-                  hiddenMenu: true
+                  hiddenMenu: true,
+                  perm: "user-workOrder-my"
                 }
               },
               {
@@ -387,7 +447,8 @@ export const asyncRoute = [
                 component: () =>
                   import("@/views/user/workOrder/my/comment.vue"),
                 meta: {
-                  hiddenMenu: true
+                  hiddenMenu: true,
+                  perm: "user-workOrder-my"
                 }
               }
             ]
