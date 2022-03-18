@@ -137,3 +137,8 @@ export const workOrderStatusEnum = {
   2: "接单处理中",
   3: "处理完成"
 };
+// 角色类型map
+export const roleTypeEnum = {
+  0: "系统角色",
+  1: "自建角色"
+};

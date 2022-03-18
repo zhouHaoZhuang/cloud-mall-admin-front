@@ -9,7 +9,9 @@ export default {
     filterList: ["/dashboard", "/message", "/messageInfo"],
     leftOpenShow: true,
     selectItemPath: "",
-    selectLeftPath: ""
+    selectLeftPath: "",
+    routeMetaPrem: "",
+    firstPath: ""
   },
   mutations: {
     // 设置左侧side菜单数据
@@ -43,6 +45,14 @@ export default {
     // 左侧三级菜单点击后保存点击后的路径实现选中功能
     setLeftMenuSelectPath(state, selectLeftPath) {
       state.selectLeftPath = selectLeftPath;
+    },
+    // 存储$route meta的perm权限信息
+    setRouteMeta(state, perm) {
+      state.routeMetaPrem = perm;
+    },
+    // 存储默认跳转的地址
+    setFirstPath(state, firstPath) {
+      state.firstPath = firstPath;
     }
   },
   actions: {
