@@ -61,7 +61,7 @@
         </div>
         <div class="txt">
           2、 （仅支持下列特殊字符： ( ) ` ~ ! @ # $ % ^ {{ "&" }} * - _ + = | {
-          } [ ] : ; ' > <span v-text="'<'"></span> , . ? / ）。
+          } : ; ' > <span v-text="'<'"></span> , . ? / ）。
         </div>
       </a-form-model-item>
       <a-form-model-item label="确认密码" prop="confirmPassword">
@@ -77,6 +77,7 @@
 </template>
 
 <script>
+import { judgePwdFormat } from "@/utils/index";
 export default {
   // 双向绑定
   model: {
@@ -109,7 +110,7 @@ export default {
       if (value === "") {
         callback(new Error("请输入密码"));
       } else {
-        if (!this.newReg.exec(value)) {
+        if (judgePwdFormat(value) < 3) {
           callback(new Error("密码格式不正确"));
         }
         callback();
@@ -128,9 +129,6 @@ export default {
       labelCol: { span: 6 },
       wrapperCol: { span: 17 },
       loading: false,
-      // 新的密码校验
-      newReg:
-        /(?!^\d{8-30}$)(?!^[a-zA-Z]{8,30}$)(?!^[0-9a-zA-Z]{8,30}$)^[0-9a-zA-Z()`~!@#$%^&*-_+=|{}[:;'><,.?/]{8,30}$/,
       form: {
         password: "",
         confirmPassword: "",
