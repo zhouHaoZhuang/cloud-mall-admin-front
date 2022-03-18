@@ -79,10 +79,10 @@ export default {
         })
         .then((res) => {
           // 打开支付宝支付
-          if (form.payType[0] === "ali") {
+          if (this.form.payType[0] === "ali") {
             openAlipayPay(res.data.aliPayResult);
           }
-          if (form.payType[0] === "wechat") {
+          if (this.form.payType[0] === "wechat") {
             this.visible = true;
             this.textUrl = res.data.wechatCode.code_url;
             this.getQrcode();
