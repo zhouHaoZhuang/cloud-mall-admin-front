@@ -54,7 +54,9 @@
         </a-radio-group>
       </div>
       <RechargeBtn
-        v-show="allConfig.alipay_switch == '1'"
+        v-show="
+          allConfig.alipay_switch === '1' || allConfig.wxpay_switch === '1'
+        "
         class="rechargeBtn"
         :form="rechargeBtnForm"
         @success="startTime"
