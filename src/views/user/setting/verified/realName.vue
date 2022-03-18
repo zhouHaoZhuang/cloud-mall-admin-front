@@ -30,7 +30,7 @@
           查看详情
         </a-button>
       </div>
-      <!-- <div @click="$router.push('/user/setting/enterprise')">
+      <div @click="$router.push('/user/setting/enterprise')">
         <img width="150px" src="@/assets/img/realName/enterprise.png" alt="" />
         <p>企业认证</p>
         <a-button
@@ -40,7 +40,7 @@
         >
           查看详情
         </a-button>
-      </div> -->
+      </div>
     </div>
     <div class="bottom-hint">
       <h3>温馨提示</h3>
