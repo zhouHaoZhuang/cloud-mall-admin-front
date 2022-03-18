@@ -59,7 +59,7 @@ export default {
             ...ele,
             open: true
           };
-        });
+        }).filter((ele) => !ele.meta.hiddenMenu);
         const routeArr = newVal.path.split("/").slice(1, 3);
         const newOneMenuData = this.menuList.find(
           (ele) => ele.path === "/" + routeArr[0]
