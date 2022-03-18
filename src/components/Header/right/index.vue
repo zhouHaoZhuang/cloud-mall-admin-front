@@ -23,9 +23,9 @@ import WorkOrder from "./workOrder";
 import User from "./user";
 export default {
   components: {
-    Help,
+    // Help,
     Message,
-    Price,
+    // Price,
     WorkOrder,
     User
   },

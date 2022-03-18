@@ -114,7 +114,7 @@ export const regionDataEnum = {
 // 验证方式
 export const verifyTypeEnum = {
   0: "支付宝芝麻信用认证",
-  1: "腾讯云认证",
+  1: "腾讯云认证"
   // 2: "e签宝认证"
 };
 // 充值方式map
@@ -141,4 +141,35 @@ export const workOrderStatusEnum = {
 export const roleTypeEnum = {
   0: "系统角色",
   1: "自建角色"
+};
+// cdn状态map
+export const cdnStatusEnum = {
+  0: {
+    dot: "success",
+    name: "正常运行"
+  },
+  1: {
+    dot: "warning",
+    name: "配置中"
+  },
+  2: {
+    dot: "error",
+    name: "配置失败"
+  },
+  3: {
+    dot: "error",
+    name: "下线"
+  },
+  4: {
+    dot: "error",
+    name: "停用"
+  },
+  5: {
+    dot: "processing",
+    name: "审核中"
+  },
+  6: {
+    dot: "error",
+    name: "审核失败"
+  }
 };
