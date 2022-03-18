@@ -39,11 +39,11 @@
             <span>支付宝</span>
             <img
               style="margin-left: 5px"
-              width="20px"
+              width="25px"
               src="@/assets/img/pay/Alipay.png"
             />
           </a-radio>
-          <a-radio value="wxchat">
+          <a-radio value="wechat">
             <span>微信</span>
             <img
               style="margin-left: 5px"
@@ -107,6 +107,7 @@ export default {
   methods: {
     onChange(e) {
       console.log("radio checked", e.target.value);
+      this.rechargeBtnForm.payType = [e.target.value, "balance"];
     },
     // 查询余额
     getUserBalance() {
