@@ -39,7 +39,7 @@
             <span>支付宝</span>
             <img
               style="margin-left: 5px"
-              width="25px"
+              width="30px"
               src="@/assets/img/pay/Alipay.png"
             />
           </a-radio>
