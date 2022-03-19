@@ -4,7 +4,7 @@
       <a-tab-pane :key="1" tab="用量查询">
         <UsageQuery :tabsKey="tabsKey" />
       </a-tab-pane>
-      <a-tab-pane :key="2" tab="用量汇总" force-render>
+      <a-tab-pane :key="2" tab="用量汇总">
         <Summary :tabsKey="tabsKey" />
       </a-tab-pane>
     </a-tabs>

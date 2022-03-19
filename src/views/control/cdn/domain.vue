@@ -102,9 +102,7 @@
           {{ text | formatDate }}
         </span>
         <div slot="action" slot-scope="text, record">
-          <a-button type="link" @click="handleDomainHttps(record)">
-            管理
-          </a-button>
+          <a-button type="link" @click="handleManage(record)"> 管理 </a-button>
           <a-button type="link" @click="handleCopy(record)">
             复制配置
           </a-button>
@@ -258,8 +256,9 @@ export default {
       this.$router.push({
         path: "/control/cdn/manageDomain",
         query: {
-          id: record.id,
-          monitor: true
+          domain: "dad.daa.coom"
+          // id: record.id,
+          // monitor: true
         }
       });
     },
