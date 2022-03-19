@@ -251,7 +251,7 @@ export default {
     },
     // 跳转新建域名
     handleAddDomain() {
-      this.$router.push("/control/cdn/manageDomain");
+      this.$router.push("/control/cdn/createDomain");
     },
     // 跳转管理
     handleManage(record) {
