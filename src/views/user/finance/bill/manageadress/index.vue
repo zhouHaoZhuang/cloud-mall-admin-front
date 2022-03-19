@@ -56,10 +56,10 @@
             <!-- <a-input v-model="form.name" /> -->
             <a-select
               v-model="form.region"
-              placeholder="please select your zone"
+              placeholder="请选择收件地址"
             >
-              <a-select-option value="shanghai"> Zone one </a-select-option>
-              <a-select-option value="beijing"> Zone two </a-select-option>
+              <a-select-option value="shanghai"> 上海 </a-select-option>
+              <a-select-option value="beijing"> 北京 </a-select-option>
             </a-select>
           </a-form-model-item>
           <a-form-model-item ref="name" label="详细地址" prop="name">
@@ -155,6 +155,9 @@ export default {
       },
     };
   },
+  created() {
+    this.getList();
+  },
   methods: {
     showModal() {
       this.visible = true;
@@ -182,7 +185,7 @@ export default {
     },
     //查询数据表格
     getList() {
-      this.$getListQp("word/getList", this.listQuery).then(res => {
+      this.$getList("mangeaddress/getList", this.listQuery).then(res => {
         console.log(res);
         this.data = [...res.data.list];
         this.paginationProps.total = res.data.totalCount * 1;

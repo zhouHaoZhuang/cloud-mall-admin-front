@@ -12,6 +12,8 @@ import realName from "./realName.js";
 import message from "./message.js";
 import refund from "./refund.js";
 import workorder from "./workorder.js";
+import mangeaddress from "./mangeaddress.js";
+import billlist from "./billlist.js";
 export default {
   setting,
   user,
@@ -26,5 +28,7 @@ export default {
   realName,
   message,
   refund,
-  workorder
+  workorder,
+  mangeaddress,
+  billlist
 };
