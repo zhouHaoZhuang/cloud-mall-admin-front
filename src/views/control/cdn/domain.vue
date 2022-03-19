@@ -11,13 +11,30 @@
         >
           创建域名
         </a-button>
-        <a-button v-permission="'add'" @click="handleBatchChangeStatus(true)">
+        <a-button
+          v-permission="'add'"
+          :disabled="!hasSelected"
+          :loading="startLoading"
+          @click="handleBatchChangeStatus(true)"
+        >
           启用
         </a-button>
-        <a-button v-permission="'add'" @click="handleBatchChangeStatus(false)">
+        <a-button
+          v-permission="'add'"
+          :disabled="!hasSelected"
+          :loading="stopLoading"
+          @click="handleBatchChangeStatus(false)"
+        >
           停用
         </a-button>
-        <a-button v-permission="'add'" @click="handleBatchDel"> 删除 </a-button>
+        <a-button
+          v-permission="'add'"
+          :disabled="!hasSelected"
+          :loading="delLoading"
+          @click="handleBatchDel"
+        >
+          删除
+        </a-button>
       </a-space>
     </div>
     <div class="public-header-wrap">
@@ -68,6 +85,10 @@
         :data-source="data"
         rowKey="id"
         :pagination="paginationProps"
+        :row-selection="{
+          selectedRowKeys: selectedRowKeys,
+          onChange: onSelectChange
+        }"
       >
         <div class="status" slot="cdnStatus" slot-scope="text">
           <a-badge :status="cdnStatusEnum[text].dot" />
@@ -156,7 +177,8 @@ export default {
           scopedSlots: { customRender: "action" }
         }
       ],
-      data: [],
+      data: [{}],
+      selectedRowKeys: [],
       paginationProps: {
         showQuickJumper: true,
         showSizeChanger: true,
@@ -167,8 +189,16 @@ export default {
           )} 页`,
         onChange: this.quickJump,
         onShowSizeChange: this.onShowSizeChange
-      }
+      },
+      startLoading: false,
+      stopLoading: false,
+      delLoading: false
     };
+  },
+  computed: {
+    hasSelected() {
+      return this.selectedRowKeys.length > 0;
+    }
   },
   created() {
     // this.getList();
@@ -214,6 +244,10 @@ export default {
         this.listQuery.startTime = "";
         this.listQuery.endTime = "";
       }
+    },
+    // 表格多选
+    onSelectChange(selectedRowKeys) {
+      this.selectedRowKeys = selectedRowKeys;
     },
     // 跳转新建域名
     handleAddDomain() {
@@ -315,7 +349,7 @@ export default {
     display: flex;
     margin-bottom: 15px;
   }
-  .public-header-wrap{
+  .public-header-wrap {
     margin-bottom: 20px;
   }
   .table-content {
