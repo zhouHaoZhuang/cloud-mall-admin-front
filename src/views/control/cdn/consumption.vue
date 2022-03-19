@@ -1,13 +1,26 @@
 <template>
-  <div class="cdn--container"></div>
+  <div class="cdn-consumption-container">
+    <a-tabs v-model="tabsKey">
+      <a-tab-pane :key="1" tab="用量查询">
+        <UsageQuery :tabsKey="tabsKey" />
+      </a-tab-pane>
+      <a-tab-pane :key="2" tab="用量汇总" force-render>
+        <Summary :tabsKey="tabsKey" />
+      </a-tab-pane>
+    </a-tabs>
+  </div>
 </template>
 
 <script>
+import UsageQuery from "@/components/Cdn/consumption/usageQuery";
+import Summary from "@/components/Cdn/consumption/summary";
 export default {
-  components: {},
+  components: { UsageQuery, Summary },
   computed: {},
   data() {
-    return {};
+    return {
+      tabsKey: 1
+    };
   },
   created() {},
   methods: {}
@@ -15,6 +28,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.cdn--container {
+.cdn-consumption-container {
+  width: 100%;
 }
 </style>

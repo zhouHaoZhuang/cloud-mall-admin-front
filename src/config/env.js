@@ -1,7 +1,7 @@
 import { getIdcMallUrl } from "../utils/index";
 // 默认请求地址
 const baseUrl = {
-  local: "http://site.sailayun.com/ims",
+  local: "/ims",
   dev: "/ims",
   test: "/ims",
   prod: "/ims"
