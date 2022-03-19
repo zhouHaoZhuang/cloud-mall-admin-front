@@ -105,7 +105,7 @@
           <a-button type="link" @click="handleDomainHttps(record)">
             管理
           </a-button>
-          <a-button type="link" @click="handleDomainHttps(record)">
+          <a-button type="link" @click="handleCopy(record)">
             复制配置
           </a-button>
           <a-button type="link" @click="handleChangeStatus(record)">
@@ -268,8 +268,8 @@ export default {
       this.$router.push({
         path: "/control/cdn/copy",
         query: {
-          id: record.id,
-          monitor: true
+          // id: record.id,
+          // monitor: true
         }
       });
     },
