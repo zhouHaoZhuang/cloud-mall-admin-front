@@ -23,8 +23,8 @@ export default {
     },
     // 是否切换到了监控页面
     tabsKey: {
-      type: String,
-      default: "1"
+      type: Number,
+      default: 1
     },
     // 头部文字
     title: {
