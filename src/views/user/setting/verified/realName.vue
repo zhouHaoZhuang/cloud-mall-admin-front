@@ -9,7 +9,8 @@
           src="@/assets/img/realName/personalRealName.png"
           alt=""
         />
-        <p>
+        <p v-if="realNameStatus === 1">已完成企业认证，无需个人认证</p>
+        <p v-else>
           <span>个人认证</span>
           <span v-show="userRealInfo.realName">
             已完成
@@ -21,23 +22,25 @@
             />
           </span>
         </p>
-        <a-button
-          @click="$router.push('/user/setting/enterprise')"
-          class="look-info"
-          type="link"
-          v-show="userRealInfo.realName"
-        >
+        <a-button class="look-info" type="link" v-show="userRealInfo.realName">
           查看详情
         </a-button>
       </div>
       <div @click="$router.push('/user/setting/enterprise')">
         <img width="150px" src="@/assets/img/realName/enterprise.png" alt="" />
-        <p>企业认证</p>
-        <a-button
-          @click="$router.push('/user/setting/enterprise')"
-          class="look-info"
-          type="link"
-        >
+        <p>
+          <span>企业认证</span>
+          <span v-show="realNameStatus === 1">
+            已完成
+            <img
+              style="margin-left: 10px"
+              width="16px"
+              src="@/assets/img/realName/attestOk.png"
+              alt=""
+            />
+          </span>
+        </p>
+        <a-button class="look-info" type="link" v-show="realNameStatus === 1">
           查看详情
         </a-button>
       </div>
@@ -56,12 +59,29 @@ import { mapState } from "vuex";
 
 export default {
   data() {
-    return {};
+    return {
+      realNameStatus: 0
+    };
   },
   computed: {
     ...mapState({
       userRealInfo: (state) => state.user.userRealInfo
     })
+  },
+  created() {
+    this.getEnterpriseRealNameInfo();
+  },
+  methods: {
+    // 获取企业实名认证的数据信息
+    getEnterpriseRealNameInfo() {
+      this.$store.dispatch("user/getEnterpriseRealNameInfo").then((res) => {
+        if (!res || !res.data) {
+          this.realNameStatus = 0;
+          return;
+        }
+        this.realNameStatus = 1;
+      });
+    }
   }
 };
 </script>
