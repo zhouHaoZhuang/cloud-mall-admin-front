@@ -17,7 +17,9 @@
         <a-tab-pane :key="4" tab="HTTPS配置">
           <Https :tabsKey="tabsKey" :domain="domain" />
         </a-tab-pane>
-        <a-tab-pane :key="5" tab="访问控制"> </a-tab-pane>
+        <a-tab-pane :key="5" tab="访问控制">
+          <AccessControl :tabsKey="tabsKey" :domain="domain" />
+        </a-tab-pane>
         <a-tab-pane :key="6" tab="性能优化"> </a-tab-pane>
         <a-tab-pane :key="7" tab="视频相关"> </a-tab-pane>
       </a-tabs>
@@ -31,8 +33,9 @@ import Basic from "@/components/Cdn/domain/manage/basic/index";
 import BackSource from "@/components/Cdn/domain/manage/backSource/index";
 import Cache from "@/components/Cdn/domain/manage/cache/index";
 import Https from "@/components/Cdn/domain/manage/https/index";
+import AccessControl from "@/components/Cdn/domain/manage/accessControl/index";
 export default {
-  components: { DetailHeader, Basic, BackSource, Cache, Https },
+  components: { DetailHeader, Basic, BackSource, Cache, Https, AccessControl },
   computed: {
     topTitle() {
       return this.$route.query.domain;

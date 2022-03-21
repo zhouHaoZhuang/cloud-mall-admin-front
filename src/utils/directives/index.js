@@ -175,3 +175,24 @@ export const permission = Vue.directive("permission", {
     // }
   }
 });
+
+/*
+ * filterInput-input 输入框限制只能输入大小写英文字母、数字
+ * 在需要控制输入的输入框上使用 v-filterInput-input
+ */
+export const filterInput = Vue.directive("filterInput-input", {
+  inserted: function (el) {
+    el = findInput(el);
+    if (!el) return;
+    el.addEventListener("keyup", function () {
+      const newVal = el.value.replace(/[^a-zA-Z0-9]/g, "");
+      el.value = newVal;
+      el.dispatchEvent(new Event("input"));
+    });
+    el.addEventListener("blur", function () {
+      const newVal = el.value.replace(/[^a-zA-Z0-9]/g, "");
+      el.value = newVal;
+      el.dispatchEvent(new Event("input"));
+    });
+  }
+});
