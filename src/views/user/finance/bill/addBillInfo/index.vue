@@ -124,7 +124,8 @@ export default {
                 }
               }
               callback();
-            }
+            },
+            trigger: "blur"
           },
           {
             pattern: /[0-9A-Z]{18}/,
@@ -141,7 +142,8 @@ export default {
                 }
               }
               callback();
-            }
+            },
+            trigger: "blur"
           }
         ],
         bankNo: [
@@ -153,7 +155,8 @@ export default {
                 }
               }
               callback();
-            }
+            },
+            trigger: "blur"
           }
         ],
         companyLicenseAddress: [
@@ -165,7 +168,8 @@ export default {
                 }
               }
               callback();
-            }
+            },
+            trigger: "blur"
           }
         ],
         concatPhone: [
@@ -177,7 +181,8 @@ export default {
                 }
               }
               callback();
-            }
+            },
+            trigger: "blur"
           },
           {
             pattern:
