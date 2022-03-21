@@ -23,7 +23,9 @@
         <a-tab-pane :key="6" tab="性能优化">
           <Performance :tabsKey="tabsKey" :domain="domain" />
         </a-tab-pane>
-        <a-tab-pane :key="7" tab="视频相关"> </a-tab-pane>
+        <a-tab-pane :key="7" tab="视频相关">
+          <VideoRelevant :tabsKey="tabsKey" :domain="domain" />
+        </a-tab-pane>
       </a-tabs>
     </div>
   </div>
@@ -37,6 +39,7 @@ import Cache from "@/components/Cdn/domain/manage/cache/index";
 import Https from "@/components/Cdn/domain/manage/https/index";
 import AccessControl from "@/components/Cdn/domain/manage/accessControl/index";
 import Performance from "@/components/Cdn/domain/manage/performance/index";
+import VideoRelevant from "@/components/Cdn/domain/manage/videoRelevant/index";
 export default {
   components: {
     DetailHeader,
@@ -45,7 +48,8 @@ export default {
     Cache,
     Https,
     AccessControl,
-    Performance
+    Performance,
+    VideoRelevant
   },
   computed: {
     topTitle() {
