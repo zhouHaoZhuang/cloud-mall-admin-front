@@ -84,7 +84,8 @@ export default {
           }
           if (this.form.payType[0] === "wechat") {
             this.visible = true;
-            this.textUrl = res.data.wechatCode.code_url;
+            let wechatCode = JSON.parse(res.data.wechatCode)
+            this.textUrl = wechatCode.code_url;
             this.getQrcode();
           }
           this.$emit("success");
