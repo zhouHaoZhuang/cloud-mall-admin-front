@@ -6,40 +6,47 @@ const mangeaddress = {
     // 获取常用地址列表
     getList({ commit, state},params ) {
       return request({
-				url: "/pcOfflineRecharge/user",
+				url: "/address",
 				method: "get",
 				params,
 			})
     },
 		// 获取线下充值记录详情
-    getOne({ commit, state }, id) {
-      console.log(state);
+    getOne({ commit, state }, data) {
       return request({
-        url: `/pcOfflineRecharge/detailed/${id}`,
+        url: `/address/${data.id}`,
         method: "get"
       });
     },
     // 添加常用地址
-    add({ commit, state }, params) {
+    add({ commit, state }, data) {
       return request({
-        url: "/pcOfflineRecharge/user",
+        url: "/address",
         method: "post",
-        data: params
+        data
       });
     },
     // 修改常用地址
-    edit({ commit, state }, params) {
+    edit({ commit, state }, data) {
       return request({
-        url: `/pcOfflineRecharge/user/${params.id}`,
-        method: "put",
-        data: params
+        url: `/address/${data.id}`,
+        method: "patch",
+        data
+      });
+    },
+    // 设为默认
+    setDefault({ commit, state }, data) {
+      return request({
+        url: `/address/defaultSign/${data.id}`,
+        method: "patch"
       });
     },
     // 删除常用地址
-    del({ commit, state }, id) {
+    del({ commit, state }, params) {
       return request({
-        url: `/pcOfflineRecharge/user/${id}`,
-        method: "delete"
+        url: `/address/deletes`,
+        method: "delete",
+        params
       });
     }
   },
