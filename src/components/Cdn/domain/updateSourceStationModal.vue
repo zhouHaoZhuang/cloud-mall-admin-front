@@ -203,7 +203,7 @@ export default {
 <style lang="less" scoped>
 .update-source-container {
   .info-txt {
-    color: #aaaabd;
+    color: #aaa;
     line-height: 22px;
   }
 }

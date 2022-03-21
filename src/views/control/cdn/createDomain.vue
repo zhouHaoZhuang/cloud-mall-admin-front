@@ -337,7 +337,7 @@ export default {
       margin-bottom: 20px;
     }
     .info-txt {
-      color: #aaaabd;
+      color: #aaa;
       line-height: 22px;
     }
     .check-domain-box {
