@@ -113,7 +113,9 @@
           </div>
         </a-table>
       </div>
-      <a-button type="link" icon="plus">新增常用地址</a-button>
+      <a-button type="link" icon="plus" @click="$router.push('/user/finance/bill/manageadress')">
+      新增常用地址
+      </a-button>
       <div style="text-align: center">
         <a-button type="primary">提交申请</a-button>
         <a-button style="margin-left: 20px" @click="current = 0">
@@ -287,12 +289,19 @@ export default {
       console.log("selectedRowKeysAddress changed: ", selectedRowKeysAddress);
       this.selectedRowKeysAddress = selectedRowKeysAddress;
     },
-    //查询数据表格
+    //查询数据表格（获取开票列表）
     getList() {
-      this.$getListQp("word/getList", this.listQuery).then(res => {
+      this.$getListQp("billapply/geitInvoice", this.listQuery).then(res => {
         console.log(res);
         this.data = [...res.data.list];
         this.paginationProps.total = res.data.totalCount * 1;
+      });
+    },
+    // 获取发票抬头列表
+    getListTitle() {
+      this.$getListQp("billapply/getInvoiceTitle").then(res => {
+        console.log(res);
+        this.dataTitle = [...res.data.list];
       });
     },
     //表格分页跳转

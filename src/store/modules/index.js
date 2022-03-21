@@ -14,6 +14,8 @@ import refund from "./refund.js";
 import workorder from "./workorder.js";
 import mangeaddress from "./mangeaddress.js";
 import billlist from "./billlist.js";
+import billapply from "./billapply.js";
+import billnews from "./billnews.js";
 export default {
   setting,
   user,
@@ -30,5 +32,7 @@ export default {
   refund,
   workorder,
   mangeaddress,
-  billlist
+  billlist,
+  billapply,
+  billnews
 };

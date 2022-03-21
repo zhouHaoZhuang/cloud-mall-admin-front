@@ -144,11 +144,11 @@ export default {
         },
         {
           title: "发票抬头",
-          dataIndex: "title"
+          dataIndex: "invoiceTitle"
         },
         {
           title: "开票金额",
-          dataIndex: "amount"
+          dataIndex: "invoiceAmount"
         },
         {
           title: "申请状态",
@@ -156,11 +156,11 @@ export default {
         },
         {
           title: "申请时间",
-          dataIndex: "createTime"
+          dataIndex: "bizTime"
         },
         {
           title: "反馈时间",
-          dataIndex: "updateTime"
+          dataIndex: "feedbackTime"
         },
         {
           title: "操作",
@@ -205,13 +205,44 @@ export default {
       },
     };
   },
+  created() {
+    this.getList();
+  },
   methods: {
-    //查询数据表格
+    //查询数据表格 开票记录
     getList() {
-      this.$getListQp("word/getList", this.listQuery).then(res => {
+      this.$getList("billlist/getList", this.listQuery).then(res => {
         console.log(res);
         this.data = [...res.data.list];
         this.paginationProps.total = res.data.totalCount * 1;
+      });
+    },
+    // 明细
+    getDetailsList() {
+      this.$getList("billlist/getDetails").then(res => {
+        console.log(res);
+        this.dataDetails = [...res.data.list];
+      });
+    },
+    // 金额
+    getAmount() {
+      this.$getList("billlist/getAmount").then(res => {
+        console.log(res);
+        // this.dataAmount = [...res.data.list];
+      });
+    },
+    // 获取发票信息
+    getInvoiceInfo() {
+      this.$getList("billlist/getInvoiceInfo").then(res => {
+        console.log(res);
+        // this.dataInvoiceInfo = [...res.data.list];
+      });
+    },
+    // 地址信息
+    getAddressInfo() {
+      this.$getList("billlist/getAddressInfo").then(res => {
+        console.log(res);
+        // this.dataAddressInfo = [...res.data.list];
       });
     },
     //表格分页跳转

@@ -1,12 +1,12 @@
 import request from "@/utils/request";
-// 发票列表相关接口
-const billlist = {
+// 发票信息相关接口
+const billapply = {
   namespaced: true,
   actions: {
-    // 获取发票列表
+    // 获取发票信息列表
     getList({ commit, state }, params) {
       return request({
-        url: "/ccInvoiceEvaluate",
+        url: "/ccInvoiceInfo",
         method: "get",
         params,
       });
@@ -14,9 +14,17 @@ const billlist = {
     // 获取明细列表
     getDetails({ commit, state }, params) {
       return request({
-        url: `/ccInvoiceEvaluate`,
+        url: `/ccInvoiceInfo`,
         method: "get",
-        params
+        params,
+      });
+    },
+    // 获取发票抬头
+    getInvoiceTitle({ commit, state }, params) {
+      return request({
+        url: `/ccInvoiceEvaluate/invoiceTitle`,
+        method: "get",
+        params,
       });
     },
     // 获取发票详情 金额数据
@@ -24,7 +32,7 @@ const billlist = {
       return request({
         url: `/ccInvoiceEvaluate/amount`,
         method: "get",
-        params
+        params,
       });
     },
     // 获取发票详情 发票信息
@@ -32,7 +40,7 @@ const billlist = {
       return request({
         url: `/ccInvoiceEvaluate/invoiceInfo`,
         method: "get",
-        params
+        params,
       });
     },
     // 获取发票详情 发票信息
@@ -40,7 +48,7 @@ const billlist = {
       return request({
         url: `/ccInvoiceEvaluate/addressInfo`,
         method: "get",
-        params
+        params,
       });
     },
     // 获取
@@ -77,4 +85,4 @@ const billlist = {
   },
 };
 
-export default billlist;
+export default billapply;

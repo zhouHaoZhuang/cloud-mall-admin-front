@@ -2,7 +2,14 @@
   <div>
     <h3>发票信息管理</h3>
     <div>
-      <a-button type="primary" icon="plus">新增发票信息</a-button>
+      <a-button
+        @click="$router.push('/user/finance/bill/addBillInfo')"
+        type="primary"
+        icon="plus"
+        style="margin: 10px 0 20px"
+      >
+        新增发票信息
+      </a-button>
     </div>
     <div>
       <a-table
@@ -11,9 +18,20 @@
         :pagination="paginationProps"
         rowKey="id"
       >
-        <div slot="action" slot-scope="text">
-          <a-button type="link">编辑</a-button>
-          <a-button type="link">删除</a-button>
+        <div slot="issueType" slot-scope="text">{{ issueTypeMap[text] }}</div>
+        <div slot="invoiceType" slot-scope="text">
+          {{ invoiceTypeMap[text] }}
+        </div>
+        <div slot="action" slot-scope="text, record">
+          <a-button
+            type="link"
+            @click="
+              $router.push(`/user/finance/bill/addBillInfo?id=${record.id}`)
+            "
+          >
+            编辑
+          </a-button>
+          <a-button type="link" @click="delbillInfo(record.id)">删除</a-button>
         </div>
       </a-table>
     </div>
@@ -28,19 +46,21 @@ export default {
       columns: [
         {
           title: "发票抬头",
-          dataIndex: "title"
+          dataIndex: "invoiceTitle"
         },
         {
           title: "开具类型",
-          dataIndex: "type"
+          dataIndex: "issueType",
+          scopedSlots: { customRender: "issueType" }
         },
         {
           title: "发票类型",
-          dataIndex: "invoiceType"
+          dataIndex: "invoiceType",
+          scopedSlots: { customRender: "invoiceType" }
         },
         {
           title: "税务登记号",
-          dataIndex: "taxNumber"
+          dataIndex: "registerNo"
         },
         {
           title: "操作",
@@ -53,11 +73,7 @@ export default {
         search: "",
         currentPage: 1,
         pageSize: 10,
-        total: 0,
-        status: "",
-        startTime: "",
-        endTime: "",
-        accountType: ""
+        total: 0
       },
       paginationProps: {
         showQuickJumper: true,
@@ -70,12 +86,35 @@ export default {
         onChange: this.quickJump,
         onShowSizeChange: this.onShowSizeChange
       },
+      issueTypeMap: {
+        1: "个人",
+        2: "企业"
+      },
+      invoiceTypeMap: {
+        1: "增值税普通发票",
+        2: "增值税专用发票"
+      }
     };
   },
+  created() {
+    this.getList();
+  },
   methods: {
+    // 删除
+    delbillInfo(id) {
+      this.$confirm({
+        title: "确认要删除发票信息吗？",
+        onOk: () => {
+          this.$store.dispatch("billnews/del", { ids: id }).then(() => {
+            this.$message.success("删除成功");
+            this.getList();
+          });
+        }
+      });
+    },
     //查询数据表格
     getList() {
-      this.$getListQp("word/getList", this.listQuery).then(res => {
+      this.$store.dispatch("billnews/getList", this.listQuery).then((res) => {
         console.log(res);
         this.data = [...res.data.list];
         this.paginationProps.total = res.data.totalCount * 1;
@@ -92,7 +131,7 @@ export default {
       this.listQuery.pageSize = pageSize;
       this.getList();
     }
-  },
+  }
 };
 </script>
 

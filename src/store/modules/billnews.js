@@ -6,40 +6,40 @@ const billnews = {
     // 获取
     getList({ commit, state},params ) {
       return request({
-				url: "/pcOfflineRecharge/user",
+				url: "/invoiceInfo",
 				method: "get",
 				params,
 			})
     },
-		// 获取
-    getOne({ commit, state }, id) {
-      console.log(state);
+		// 获取单个信息
+    getOne({ commit, state }, data) {
       return request({
-        url: `/pcOfflineRecharge/detailed/${id}`,
+        url: `/invoiceInfo/${data.id}`,
         method: "get"
       });
     },
-    // 添加常用地址
-    add({ commit, state }, params) {
+    // 添加
+    add({ commit, state }, data) {
       return request({
-        url: "/pcOfflineRecharge/user",
+        url: "/invoiceInfo",
         method: "post",
-        data: params
+        data
       });
     },
-    // 修改常用地址
-    edit({ commit, state }, params) {
+    // 修改
+    edit({ commit, state }, data) {
       return request({
-        url: `/pcOfflineRecharge/user/${params.id}`,
-        method: "put",
-        data: params
+        url: `/invoiceInfo/${data.id}`,
+        method: "patch",
+        data
       });
     },
-    // 删除常用地址
-    del({ commit, state }, id) {
+    // 删除
+    del({ commit, state }, data) {
       return request({
-        url: `/pcOfflineRecharge/user/${id}`,
-        method: "delete"
+        url: `/invoiceInfo/delete`,
+        method: "delete",
+        data
       });
     }
   },
