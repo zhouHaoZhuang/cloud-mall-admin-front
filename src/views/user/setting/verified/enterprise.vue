@@ -36,6 +36,7 @@
           <a-form-model-item prop="businessImg">
             <Upload
               class="upload-item"
+              :isDel="realNameStatus !== 2"
               :defaultFile="form.businessImg"
               @change="
                 ({ urlList, firstImageUrl }) => {
@@ -81,6 +82,7 @@
           <a-form-model-item prop="avatarImg">
             <Upload
               class="upload-item"
+              :isDel="realNameStatus !== 2"
               :defaultFile="form.avatarImg"
               @change="
                 ({ urlList, firstImageUrl }) => {
@@ -93,6 +95,7 @@
           <a-form-model-item prop="emblemImg">
             <Upload
               class="upload-item"
+              :isDel="realNameStatus !== 2"
               :defaultFile="form.emblemImg"
               @change="
                 ({ urlList, firstImageUrl }) => {
@@ -304,10 +307,7 @@ export default {
       if (this.form.avatarImg.length > 0 && this.form.emblemImg.length > 0) {
         this.legalPersonData();
       }
-      if (
-        this.form.avatarImg.length === "" ||
-        this.form.emblemImg.length === ""
-      ) {
+      if (this.form.avatarImg === "" || this.form.emblemImg === "") {
         this.form.name = "";
         this.form.idNo = "";
       }
