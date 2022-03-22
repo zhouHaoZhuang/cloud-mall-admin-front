@@ -282,7 +282,7 @@ export default {
 .upload-container {
   .imgListBox {
     display: flex;
-    width: 600px;
+    // width: 600px;
     flex-wrap: wrap;
     .list-enter-active,
     .list-leave-active {
