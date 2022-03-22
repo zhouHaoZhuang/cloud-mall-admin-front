@@ -27,17 +27,35 @@
         <a-form-model-item label="验证手机号" prop="phone">
           <a-input v-number-evolution v-model="form.phone"></a-input>
         </a-form-model-item>
+        <a-form-model-item label="图形验证码" prop="verificationCode">
+          <a-input
+            v-model="form.verificationCode"
+            placeholder="请输入图形验证码"
+            :max-length="4"
+            style="width: 250px"
+          >
+            <a-icon slot="prefix" type="smile" />
+          </a-input>
+          <div @click="refreshCode()" class="code" title="点击切换验证码">
+            <Identify :identifyCode="identifyCode" />
+          </div>
+        </a-form-model-item>
         <a-form-model-item label="验证码" prop="code">
           <a-input
             v-model="form.code"
-            style="width: 250px"
+            style="width: 250px; margin-right: 9px"
             placeholder="输入验证码"
             v-number-evolution
             :max-length="6"
           >
             <a-icon slot="prefix" type="smile" />
           </a-input>
-          <CodeBtn codeType="3" :phone="form.phone" :isDisabled="isDisabled"/>
+          <CodeBtn
+            codeType="3"
+            :phone="form.phone"
+            :isDisabled="isDisabled"
+            @validate="validateImgCode"
+          />
         </a-form-model-item>
         <a-form-model-item ref="name" label="新密码" prop="newPassword">
           <a-input-password v-model="form.newPassword" v-password-input />
@@ -55,11 +73,12 @@
 
 <script>
 import CodeBtn from "@/components/CodeBtn/index";
-import { jumpCloudMall } from "@/utils/index";
+import Identify from "@/components/Identify";
+import { jumpCloudMall, getRandomCode } from "@/utils/index";
 import { mapState } from "vuex";
 
 export default {
-  components: { CodeBtn },
+  components: { CodeBtn, Identify },
   data() {
     const validatePass = (rule, value, callback) => {
       if (value === "") {
@@ -88,7 +107,8 @@ export default {
         phone: "",
         code: "",
         newPassword: "",
-        newPasswordEnter: ""
+        newPasswordEnter: "",
+        verificationCode: ""
       },
       rules: {
         phone: [
@@ -111,6 +131,22 @@ export default {
             trigger: "blur"
           }
         ],
+        verificationCode: [
+          {
+            required: true,
+            message: "请输入图形验证码",
+            trigger: ["blur", "change"]
+          },
+          {
+            validator: (rule, value, callback) => {
+              if (value !== this.identifyCode) {
+                callback(new Error("图形验证码不正确"));
+              }
+              callback();
+            },
+            trigger: ["blur", "change"]
+          }
+        ],
         code: [{ required: true, message: "请输入验证码", trigger: "blur" }],
         // newPassword: [
         //   { required: true, message: '请输入新密码', trigger: 'blur' },
@@ -131,8 +167,9 @@ export default {
         span: 4
       },
       wrapperCol: {
-        span: 8
-      }
+        span: 10
+      },
+      identifyCode: "" //要核对的验证码
     };
   },
   computed: {
@@ -140,17 +177,38 @@ export default {
       userRealInfo: (state) => state.user.userRealInfo
     })
   },
+  mounted() {
+    this.refreshCode();
+  },
   methods: {
+    // 获取验证码组件校验图形验证
+    validateImgCode(callback) {
+      let flag = false;
+      this.$refs.ruleForm.validateField(
+        "verificationCode",
+        (err) => (flag = err ? false : true)
+      );
+      callback(flag);
+    },
+    // 更新验证码
+    refreshCode() {
+      this.identifyCode = getRandomCode();
+    },
     onSubmit() {
       this.$refs.ruleForm.validate((valid) => {
         if (valid) {
-          // console.log('submit!', this.form);
           this.form.password = this.form.newPassword;
+          this.form.username = this.form.phone;
           this.$store.dispatch("user/changePassword", this.form).then(() => {
             this.$message.success("修改成功");
-            this.$store.dispatch("user/logout").then((res) => {
-              jumpCloudMall("/login?out=1");
-            });
+            this.$store
+              .dispatch("user/logout")
+              .then((res) => {
+                jumpCloudMall("/login?out=1");
+              })
+              .catch(() => {
+                this.refreshCode();
+              });
           });
         } else {
           this.$message.error("请检查输入项");
@@ -177,5 +235,11 @@ export default {
 .return {
   display: flex;
   align-items: center;
+}
+.code {
+  cursor: pointer;
+  position: absolute;
+  right: -122px;
+  top: -10px;
 }
 </style>

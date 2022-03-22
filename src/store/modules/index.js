@@ -12,6 +12,7 @@ import realName from "./realName.js";
 import message from "./message.js";
 import refund from "./refund.js";
 import workorder from "./workorder.js";
+import organization from "./organization.js";
 export default {
   setting,
   user,
@@ -26,5 +27,6 @@ export default {
   realName,
   message,
   refund,
-  workorder
+  workorder,
+  organization
 };

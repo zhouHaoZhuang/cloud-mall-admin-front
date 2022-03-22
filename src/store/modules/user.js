@@ -51,20 +51,19 @@ const user = {
     },
     // 登录后获取当前用户的权限数据
     getUserPerms({ commit, state }) {
-      commit("SET_PERMS", [{ code: "*:*" }]);
-      // return new Promise((resolve, reject) => {
-      //   request({
-      //     url: `/user/listAuthorizedResources`,
-      //     method: "get"
-      //   })
-      //     .then((res) => {
-      //       commit("SET_PERMS", [{ code: "*:*" }]);
-      //       resolve();
-      //     })
-      //     .catch((error) => {
-      //       reject(error);
-      //     });
-      // });
+      return new Promise((resolve, reject) => {
+        request({
+          url: `/imPermissions/getPermissionsList`,
+          method: "get"
+        })
+          .then(res => {
+            commit("SET_PERMS", res.data);
+            resolve();
+          })
+          .catch(error => {
+            reject(error);
+          });
+      });
     },
     // 登出
     logout({ commit, state }) {

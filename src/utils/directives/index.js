@@ -1,4 +1,5 @@
 import Vue from "vue";
+import store from "@/store";
 
 function findInput(el) {
   if (el.nodeName === "INPUT") {
@@ -44,7 +45,7 @@ export const isclick = Vue.directive("isclick", {
         }, binding.value || 200);
       }
     });
-  },
+  }
 });
 
 const hasOwnProperty = Object.prototype.hasOwnProperty;
@@ -117,7 +118,7 @@ export const numberEvolution = Vue.directive("number-evolution", {
       el.value = inpVal;
       el.dispatchEvent(new Event("input"));
     });
-  },
+  }
 });
 
 /*
@@ -125,19 +126,52 @@ export const numberEvolution = Vue.directive("number-evolution", {
  * 在需要控制输入的输入框上使用 v-password-input
  */
 export const passwordInput = Vue.directive("password-input", {
-  inserted: function(el) {
+  inserted: function (el) {
     el = findInput(el);
     if (!el) return;
-    el.addEventListener("keyup", function() {
-      const newVal = el.value.replace(/[^a-zA-Z0-9,-._=+!#$%*()<>?:""''`~@/^{}]/g, "");
+    el.addEventListener("keyup", function () {
+      const newVal = el.value.replace(
+        /[^a-zA-Z0-9,-._=+!#$%*()<>?:""''`~@/^{};&]/g,
+        ""
+      );
       el.value = newVal;
       el.dispatchEvent(new Event("input"));
     });
-    el.addEventListener("blur", function() {
-      const newVal = el.value.replace(/[^a-zA-Z0-9,.-_=+!#$%*()<>?:""''`~@/^{}]/g, "");
+    el.addEventListener("blur", function () {
+      const newVal = el.value.replace(
+        /[^a-zA-Z0-9,-._=+!#$%*()<>?:""''`~@/^{};&]/g,
+        ""
+      );
       el.value = newVal;
       el.dispatchEvent(new Event("input"));
     });
   }
 });
 
+/**
+ * 按钮权限控制指令
+ * 可传递单个权限或对个权限-并且必须拥有所传递的权限，如果传递了多个，有一个没满足，还是没权限（全部匹配）
+ * v-permission=''  或  v-permission='[]'
+ * 多个权限的话，只需要任意一个权限符合即可正常展示（任一匹配）
+ * v-permission.or=''  或  v-permission.or='[]'
+ */
+export const permission = Vue.directive("permission", {
+  inserted: function (el, binding) {
+    // 得到指令的绑定值，此值为js计算完成后的值,当前为需要的权限
+    const { value, modifiers } = binding;
+    const perms = store.state.user.perms;
+    const routeMetaPrem = store.state.setting.routeMetaPrem;
+    const routePermObj = perms.find((ele) => ele.code === routeMetaPrem);
+    // 过滤当前路由菜单的按钮权限数据
+    const newPerms =
+      routePermObj !== undefined
+        ? perms.filter((ele) => ele.parentId === routePermObj.id)
+        : [];
+    // console.log("权限指令", routeMetaPrem, routePermObj, value, newPerms);
+    // 判断当前按钮是否存在权限
+    // if (newPerms.findIndex(ele => ele.code === value) === -1) {
+    //   //如果没有权限则直接删除此节点
+    //   el.parentNode && el.parentNode.removeChild(el);
+    // }
+  }
+});
