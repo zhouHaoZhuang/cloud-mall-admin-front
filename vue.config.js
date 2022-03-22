@@ -31,24 +31,24 @@ const assetsCDN = {
 
 module.exports = {
   devServer: {
-    port: 8000 //自定义项目运行端口
+    port: 8000 ,//自定义项目运行端口
     // open: "true",  //自动打开浏览器
-    // proxy: {
-    //   "/ims": {
-    //     target: "http://site.ydidc.com/ims",
-    //     changeOrigin: true,
-    //     pathRewrite: {
-    //       "^/ims": ""
-    //     }
-    //   },
-    //   "/fs": {
-    //     target: "http://site.ydidc.com/fs",
-    //     changeOrigin: true,
-    //     pathRewrite: {
-    //       "^/fs": ""
-    //     }
-    //   }
-    // }
+    proxy: {
+      "/ims": {
+        target: "http://site.ydidc.com/ims",
+        changeOrigin: true,
+        pathRewrite: {
+          "^/ims": ""
+        }
+      },
+      "/fs": {
+        target: "http://site.ydidc.com/fs",
+        changeOrigin: true,
+        pathRewrite: {
+          "^/fs": ""
+        }
+      }
+    }
   },
   configureWebpack: (config) => {
     config.entry.app = ["babel-polyfill", "whatwg-fetch", "./src/main.js"];
