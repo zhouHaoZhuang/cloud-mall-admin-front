@@ -220,7 +220,7 @@ export const asyncRoute = [
                     }
                   }
                 ]
-              }
+              },
               // {
               //   path: "withdraw",
               //   name: "提现申请",
@@ -230,7 +230,87 @@ export const asyncRoute = [
               //        perm: "user-finance-withdraw"
               //   }
               // },
-            ]
+              {
+                path: "bill",
+                name: "发票管理",
+                component: RouteView,
+                meta: {},
+                children: [
+                  // {
+                  //   path: "apply",
+                  //   name: "发票申请",
+                  //   component: () =>
+                  //     import("@/views/user/finance/bill/Apply/list.vue"),
+                  //   meta: {
+                  //     hiddenMenu: true,
+                  //   },
+                  // },
+                  // {
+                  //   path: "list",
+                  //   name: "发票列表",
+                  //   component: () =>
+                  //     import("@/views/user/finance/bill/list/index.vue"),
+                  //   meta: {},
+                  // },
+                  // {
+                  //   path: "info",
+                  //   name: "发票申请详情",
+                  //   component: () =>
+                  //     import("@/views/user/finance/bill/info/list.vue"),
+                  //   meta: {},
+                  // },
+                  // {
+                  //   path: "address",
+                  //   name: "修改地址",
+                  //   component: () =>
+                  //     import("@/views/user/finance/bill/address/index.vue"),
+                  //   meta: {},
+                  // },
+                  // {
+                  //   path: "refundlist",
+                  //   name: "退票列表",
+                  //   component: () =>
+                  //     import("@/views/user/finance/bill/refundlist/index.vue"),
+                  //   meta: {},
+                  // },
+                  // {
+                  //   path: "refundInfo",
+                  //   name: "退票详情",
+                  //   component: () =>
+                  //     import("@/views/user/finance/bill/refundInfo/info.vue"),
+                  //   meta: {},
+                  // },
+                  // {
+                  //   path: "resubmit",
+                  //   name: "重新提交退票申请",
+                  //   component: () =>
+                  //     import("@/views/user/finance/bill/resubmit/info.vue"),
+                  //   meta: {},
+                  // },
+                  // {
+                  //   path: "billmanage",
+                  //   name: "发票信息管理",
+                  //   component: () =>
+                  //     import("@/views/user/finance/bill/billmanage/index.vue"),
+                  //   meta: {},
+                  // },
+                  // {
+                  //   path: "addBillInfo",
+                  //   name: "新增发票信息",
+                  //   component: () =>
+                  //     import("@/views/user/finance/bill/addBillInfo/index.vue"),
+                  //   meta: {},
+                  // },
+                  {
+                    path: "manageadress",
+                    name: "常用地址管理",
+                    component: () =>
+                      import("@/views/user/finance/bill/manageadress/index.vue"),
+                    meta: {},
+                  },
+                ],
+              },
+            ],
           },
           {
             path: "renew",

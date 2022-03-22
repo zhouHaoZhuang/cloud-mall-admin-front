@@ -13,6 +13,10 @@ import message from "./message.js";
 import refund from "./refund.js";
 import workorder from "./workorder.js";
 import organization from "./organization.js";
+import mangeaddress from "./mangeaddress.js";
+import billlist from "./billlist.js";
+import billapply from "./billapply.js";
+import billnews from "./billnews.js";
 export default {
   setting,
   user,
@@ -28,5 +32,9 @@ export default {
   message,
   refund,
   workorder,
-  organization
+  organization,
+  mangeaddress,
+  billlist,
+  billapply,
+  billnews
 };

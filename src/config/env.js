@@ -27,7 +27,6 @@ function getCloudMallUrl() {
 const domains = {
   local: "t940857.site.sailayun.com"
 };
-
 export default {
   BASE_URL: baseUrl[process.env.VUE_APP_ENV],
   FORM_BASE_URL: formBaseUrl[process.env.VUE_APP_ENV],
