@@ -221,28 +221,22 @@ export const asyncRoute = [
                   }
                 ]
               },
-              // {
-              //   path: "withdraw",
-              //   name: "提现申请",
-              //   component: () => import("@/views/user/finance/withdraw"),
-              //   meta: {
-              //     // hiddenMenu: true,
-              //        perm: "user-finance-withdraw"
-              //   }
-              // },
+              {
+                path: "withdraw",
+                name: "提现申请",
+                component: () => import("@/views/user/finance/withdraw"),
+                meta: {
+                  perm: "user-finance-refund-record"
+                }
+              },
               {
                 path: "bill",
                 name: "发票管理",
                 component: RouteView,
-                meta: {},
+                meta: {
+                  perm: "user-finance-refund"
+                },
                 children: [
-                  {
-                    path: "manageadress",
-                    name: "常用地址管理",
-                    component: () =>
-                      import("@/views/user/finance/bill/manageadress/index.vue"),
-                    meta: {},
-                  },
                   // {
                   //   path: "apply",
                   //   name: "发票申请",
@@ -308,10 +302,20 @@ export const asyncRoute = [
                   //     import("@/views/user/finance/bill/addBillInfo/index.vue"),
                   //   meta: {},
                   // },
-                  
-                ],
-              },
-            ],
+                  {
+                    path: "manageadress",
+                    name: "常用地址管理",
+                    component: () =>
+                      import(
+                        "@/views/user/finance/bill/manageadress/index.vue"
+                      ),
+                    meta: {
+                      perm: "user-finance-refund"
+                    }
+                  }
+                ]
+              }
+            ]
           },
           {
             path: "renew",
@@ -449,7 +453,9 @@ export const asyncRoute = [
               //   name: "常用地址管理",
               //   component: () =>
               //     import("@/views/user/setting/address/index.vue"),
-              //   meta: {},
+              //   meta: {
+              //     perm: "user-setting-auth"
+              //   }
               // },
               // {
               //   path: "message",
