@@ -122,13 +122,6 @@ const user = {
         data,
       });
     },
-    // 获取企业实名认证信息
-    getEnterpriseRealNameInfo({ commit, state }) {
-      return request({
-        url: `/user/getEnterpriseRealNameInfo`,
-        method: "get",
-      });
-    },
      // 获取企业实名认证信息
      getEnterpriseRealNameInfo({ commit, state }, data) {
       return request({
