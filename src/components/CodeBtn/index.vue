@@ -12,9 +12,9 @@
 <script>
 export default {
   props: {
-    isDisabled:{
-      type:Boolean,
-      default:false
+    isDisabled: {
+      type: Boolean,
+      default: false
     },
     phone: {
       type: [String, Number]
@@ -44,7 +44,7 @@ export default {
   watch: {
     isDisabled: {
       handler(val) {
-       this.loading = val;
+        this.loading = val;
       },
       immediate: true
     }
@@ -58,6 +58,14 @@ export default {
       if (!this.phoneReg.test(this.phone)) {
         this.$message.warning("手机号格式不正确");
         return;
+      }
+      // 判断父组件是否传递方法校验
+      if (this.$listeners["validate"]) {
+        let flag;
+        this.$emit("validate", (val) => {
+          flag = val;
+        });
+        if (!flag) return;
       }
       if (this.loading) return;
       this.loading = true;

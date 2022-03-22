@@ -114,7 +114,7 @@ export const regionDataEnum = {
 // 验证方式
 export const verifyTypeEnum = {
   0: "支付宝芝麻信用认证",
-  1: "腾讯云认证",
+  1: "腾讯云认证"
   // 2: "e签宝认证"
 };
 // 充值方式map
@@ -136,4 +136,18 @@ export const workOrderStatusEnum = {
   1: "待接单",
   2: "接单处理中",
   3: "处理完成"
+};
+// 角色类型map
+export const roleTypeEnum = {
+  0: "系统角色",
+  1: "自建角色"
+};
+//提现申请状态
+export const applyStatus = {
+  0: "草稿",
+  1: "已完成",
+  2: "已提交",
+  3: "已驳回",
+  4: "已取消",
+  5: "待处理"
 };

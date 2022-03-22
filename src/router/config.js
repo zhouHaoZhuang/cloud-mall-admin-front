@@ -1,3 +1,4 @@
+import Router from "vue-router";
 import Default from "@/layouts/default";
 import Content from "@/layouts/content";
 import RouteView from "@/layouts/routeView";
@@ -9,7 +10,29 @@ import CommonLayout from "@/layouts/commonLayout";
  * icon  菜单图标
  * permission  权限配置
  */
-const options = [
+
+// 基础路由
+export const basicRoute = [
+  {
+    path: "/exception",
+    name: "exception",
+    component: CommonLayout,
+    children: [
+      {
+        path: "not",
+        name: "notLogin",
+        component: () => import("@/views/exception/notLogin")
+      },
+      {
+        path: "404",
+        name: "404",
+        component: () => import("@/views/exception/404")
+      }
+    ]
+  }
+];
+// 动态路由
+export const asyncRoute = [
   {
     path: "/",
     name: "index",
@@ -23,7 +46,8 @@ const options = [
         component: () => import("@/views/dashboard/index"),
         meta: {
           hiddenMenu: true,
-        },
+          perm: "dashboard"
+        }
       },
       // 消息中心
       {
@@ -32,7 +56,8 @@ const options = [
         component: () => import("@/views/dashboard/message.vue"),
         meta: {
           hiddenMenu: true,
-        },
+          perm: "message"
+        }
       },
       // 消息中心详情
       {
@@ -41,14 +66,17 @@ const options = [
         component: () => import("@/views/dashboard/messageInfo.vue"),
         meta: {
           hiddenMenu: true,
-        },
+          perm: "message"
+        }
       },
       // 控制台
       {
         path: "/control",
         name: "控制台",
         component: Content,
-        meta: {},
+        meta: {
+          perm: "control"
+        },
         children: [
           {
             path: "server",
@@ -56,13 +84,16 @@ const options = [
             component: RouteView,
             meta: {
               icon: "icon-yunfuwuqi",
+              perm: "control-cloud"
             },
             children: [
               {
                 path: "admin",
                 name: "云服务器管理",
                 component: () => import("@/views/control/server/serverAdmin"),
-                meta: {},
+                meta: {
+                  perm: "control-cloud-manage"
+                }
               },
               {
                 path: "detail",
@@ -70,7 +101,8 @@ const options = [
                 component: () => import("@/views/control/server/serverDetail"),
                 meta: {
                   hiddenMenu: true,
-                },
+                  perm: "control-cloud-manage"
+                }
               },
               {
                 path: "upgrade",
@@ -78,8 +110,9 @@ const options = [
                 component: () => import("@/views/control/server/upgrade"),
                 meta: {
                   hiddenMenu: true,
-                },
-              },
+                  perm: "control-cloud-manage"
+                }
+              }
               // {
               //   path: "transfer",
               //   name: "过户",
@@ -106,16 +139,18 @@ const options = [
               //   component: () => import("@/views/control/server/trash"),
               //   meta: {}
               // }
-            ],
-          },
-        ],
+            ]
+          }
+        ]
       },
       // 用户中心
       {
         path: "/user",
         name: "用户中心",
         component: Content,
-        meta: {},
+        meta: {
+          perm: "user"
+        },
         children: [
           {
             path: "finance",
@@ -123,40 +158,50 @@ const options = [
             component: RouteView,
             meta: {
               icon: "icon-caiwu",
+              perm: "user-finance"
             },
             children: [
               {
                 path: "recharge",
                 name: "充值中心",
                 component: () => import("@/views/user/finance/recharge/index"),
-                meta: {},
+                meta: {
+                  perm: "user-finance-recharge"
+                }
               },
               {
                 path: "transaction",
                 name: "收支明细",
                 component: () =>
                   import("@/views/user/finance/transaction/index"),
-                meta: {},
+                meta: {
+                  perm: "user-finance-transaction"
+                }
               },
               {
                 path: "trash",
                 name: "订单管理",
                 component: () => import("@/views/user/finance/order/index"),
-                meta: {},
+                meta: {
+                  perm: "user-finance-order"
+                }
               },
               {
                 path: "orderDetail",
                 name: "订单详情",
                 component: () => import("@/views/user/finance/order/detail"),
                 meta: {
-                  hiddenMenu: true, // 不显示在左侧菜单
-                },
+                  hiddenMenu: true,
+                  perm: "user-finance-order"
+                }
               },
               {
                 path: "refund",
                 name: "退款管理",
                 component: RouteView,
-                meta: {},
+                meta: {
+                  perm: "user-finance-refund"
+                },
                 children: [
                   // {
                   //   path: "apply",
@@ -170,16 +215,19 @@ const options = [
                     name: "退订记录",
                     component: () =>
                       import("@/views/user/finance/refund/record"),
-                    meta: {},
-                  },
-                ],
+                    meta: {
+                      perm: "user-finance-refund-record"
+                    }
+                  }
+                ]
               },
               // {
               //   path: "withdraw",
               //   name: "提现申请",
               //   component: () => import("@/views/user/finance/withdraw"),
               //   meta: {
-              //     // hiddenMenu: true
+              //     // hiddenMenu: true,
+              //        perm: "user-finance-withdraw"
               //   }
               // },
               {
@@ -272,15 +320,18 @@ const options = [
             component: RouteView,
             meta: {
               icon: "icon-xufei",
+              perm: "user-renew"
             },
             children: [
               {
                 path: "cloud",
                 name: "云服务器续费管理",
                 component: () => import("@/views/user/renew/cloud/index"),
-                meta: {},
-              },
-            ],
+                meta: {
+                  perm: "user-renew-cloudRenew"
+                }
+              }
+            ]
           },
           {
             path: "setting",
@@ -288,6 +339,7 @@ const options = [
             component: RouteView,
             meta: {
               icon: "icon-zhanghaoquanxianguanli",
+              perm: "user-setting"
             },
             children: [
               {
@@ -295,7 +347,9 @@ const options = [
                 name: "安全设置",
                 component: () =>
                   import("@/views/user/setting/securitySettings/index.vue"),
-                meta: {},
+                meta: {
+                  perm: "user-setting-security"
+                }
               },
               {
                 path: "changePassword",
@@ -305,8 +359,9 @@ const options = [
                     "@/views/user/setting/securitySettings/changePassword.vue"
                   ),
                 meta: {
-                  hiddenMenu: true, // 不显示在左侧菜单
-                },
+                  hiddenMenu: true,
+                  perm: "user-setting-changPwd"
+                }
               },
               {
                 path: "emailBinding",
@@ -316,8 +371,9 @@ const options = [
                     "@/views/user/setting/securitySettings/emailBinding.vue"
                   ),
                 meta: {
-                  hiddenMenu: true, // 不显示在左侧菜单
-                },
+                  hiddenMenu: true,
+                  perm: "user-setting-email"
+                }
               },
               {
                 path: "phoneBinding",
@@ -327,22 +383,27 @@ const options = [
                     "@/views/user/setting/securitySettings/phoneBinding.vue"
                   ),
                 meta: {
-                  hiddenMenu: true, // 不显示在左侧菜单
-                },
+                  hiddenMenu: true,
+                  perm: "user-setting-phone"
+                }
               },
               {
                 path: "info",
                 name: "基本资料",
                 component: () =>
                   import("@/views/user/setting/material/index.vue"),
-                meta: {},
+                meta: {
+                  perm: "user-setting-data"
+                }
               },
               {
                 path: "realname",
                 name: "实名认证",
                 component: () =>
                   import("@/views/user/setting/verified/realName.vue"),
-                meta: {},
+                meta: {
+                  perm: "user-setting-auth"
+                }
               },
               {
                 path: "personalRealname",
@@ -350,8 +411,9 @@ const options = [
                 component: () =>
                   import("@/views/user/setting/verified/index.vue"),
                 meta: {
-                  hiddenMenu: true, // 不显示在左侧菜单
-                },
+                  hiddenMenu: true,
+                  perm: "user-setting-auth"
+                }
               },
               {
                 path: "enterprise",
@@ -359,8 +421,9 @@ const options = [
                 component: () =>
                   import("@/views/user/setting/verified/enterprise.vue"),
                 meta: {
-                  hiddenMenu: true, // 不显示在左侧菜单
-                },
+                  hiddenMenu: true,
+                  perm: "user-setting-auth"
+                }
               },
               {
                 path: "changerealname",
@@ -368,8 +431,9 @@ const options = [
                 component: () =>
                   import("@/views/user/setting/verified/changeVerified.vue"),
                 meta: {
-                  hiddenMenu: true, // 不显示在左侧菜单
-                },
+                  hiddenMenu: true,
+                  perm: "user-setting-auth"
+                }
               },
               {
                 path: "changephone",
@@ -377,10 +441,10 @@ const options = [
                 component: () =>
                   import("@/views/user/setting/verified/changephone.vue"),
                 meta: {
-                  hiddenMenu: true, // 不显示在左侧菜单
-                },
+                  hiddenMenu: true,
+                  perm: "user-setting-auth"
+                }
               },
-
               // {
               //   path: "address",
               //   name: "常用地址管理",
@@ -395,7 +459,34 @@ const options = [
               //     import("@/views/user/setting/shortMessage/index.vue"),
               //   meta: {},
               // },
-            ],
+              {
+                path: "account",
+                name: "子账号管理",
+                meta: {
+                  icon: "home",
+                  perm: "user-setting-account"
+                },
+                component: () => import("@/views/user/setting/role/account.vue")
+              },
+              {
+                path: "role",
+                name: "角色管理",
+                component: () => import("@/views/user/setting/role/role.vue"),
+                meta: {
+                  perm: "user-setting-role"
+                }
+              },
+              {
+                path: "relation",
+                name: "关联资源",
+                component: () =>
+                  import("@/views/user/setting/role/relation.vue"),
+                meta: {
+                  hiddenMenu: true,
+                  perm: "user-setting-role"
+                }
+              }
+            ]
           },
           {
             path: "workOrder",
@@ -403,6 +494,7 @@ const options = [
             component: RouteView,
             meta: {
               icon: "icon-gongdanguanli",
+              perm: "user-workOrder"
             },
             children: [
               {
@@ -410,13 +502,17 @@ const options = [
                 name: "提交工单",
                 component: () =>
                   import("@/views/user/workOrder/submit/index.vue"),
-                meta: {},
+                meta: {
+                  perm: "user-workOrder-submit"
+                }
               },
               {
                 path: "my",
                 name: "我的工单",
                 component: () => import("@/views/user/workOrder/my/index.vue"),
-                meta: {},
+                meta: {
+                  perm: "user-workOrder-my"
+                }
               },
               {
                 path: "detail",
@@ -424,7 +520,8 @@ const options = [
                 component: () => import("@/views/user/workOrder/my/detail.vue"),
                 meta: {
                   hiddenMenu: true,
-                },
+                  perm: "user-workOrder-my"
+                }
               },
               {
                 path: "comment",
@@ -433,31 +530,29 @@ const options = [
                   import("@/views/user/workOrder/my/comment.vue"),
                 meta: {
                   hiddenMenu: true,
-                },
-              },
-            ],
-          },
-        ],
-      },
-    ],
-  },
-  {
-    path: "/exception",
-    name: "exception",
-    component: CommonLayout,
-    children: [
-      {
-        path: "not",
-        name: "notLogin",
-        component: () => import("@/views/exception/notLogin"),
-      },
-      {
-        path: "404",
-        name: "404",
-        component: () => import("@/views/exception/404"),
-      },
-    ],
-  },
+                  perm: "user-workOrder-my"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
 ];
+
+const options = {
+  routes: [...basicRoute, ...asyncRoute]
+};
+
+// 重置之前的路由
+export function resetRouter(router) {
+  const newRouter = new Router({
+    mode: "history",
+    base: "console",
+    routes: basicRoute
+  });
+  router.matcher = newRouter.matcher;
+}
 
 export default options;

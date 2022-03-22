@@ -1,10 +1,27 @@
 <template>
-  <a-button type="primary" :loading="loading" @click="handleRecharge">
-    充值
-  </a-button>
+  <div>
+    <a-button type="primary" :loading="loading" @click="handleRecharge">
+      充值
+    </a-button>
+    <a-modal
+      title="请扫描下方二维码完成支付"
+      :visible="visible"
+      :confirm-loading="confirmLoading"
+      @ok="handleOk"
+      @cancel="handleCancel"
+      forceRender
+    >
+      <div class="qrcodeDom">
+        <div id="qrcodeDom"></div>
+        <p>请使用<span>微信</span>扫码完成支付</p>
+        <p>如已充值完成，请点击确认并核对余额</p>
+      </div>
+    </a-modal>
+  </div>
 </template>
 
 <script>
+import QRCode from "qrcodejs2";
 import { openAlipayPay, getRechargeAliPayCallBack } from "@/utils/index";
 export default {
   props: {
@@ -16,10 +33,36 @@ export default {
   },
   data() {
     return {
-      loading: false
+      loading: false,
+      textUrl: "",
+      visible: false,
+      confirmLoading: false
     };
   },
   methods: {
+    //链接生成二维码 Api
+    transQrcode() {
+      const qrcode = new QRCode("qrcodeDom", {
+        width: 160,
+        height: 160,
+        text: `${this.textUrl}`
+      });
+    },
+    //点击开始进行转化
+    getQrcode() {
+      document.getElementById("qrcodeDom").innerHTML = ""; //先清空之前生成的二维码
+      this.$nextTick(() => {
+        this.transQrcode();
+      });
+    },
+    handleOk(e) {
+      this.visible = false;
+      this.confirmLoading = false;
+    },
+    handleCancel(e) {
+      console.log("Clicked cancel button");
+      this.visible = false;
+    },
     // 充值按钮点击
     handleRecharge() {
       if (this.form.totalAmount === "") {
@@ -37,7 +80,15 @@ export default {
         })
         .then((res) => {
           // 打开支付宝支付
-          openAlipayPay(res.data.aliPayResult);
+          if (this.form.payType[0] === "ali") {
+            openAlipayPay(res.data.aliPayResult);
+          }
+          if (this.form.payType[0] === "wechat") {
+            this.visible = true;
+            let wechatCode = JSON.parse(res.data.wechatCode)
+            this.textUrl = wechatCode.code_url;
+            this.getQrcode();
+          }
           this.$emit("success");
         })
         .finally(() => {
@@ -48,4 +99,20 @@ export default {
 };
 </script>
 
-<style lang="less" scoped></style>
+<style lang="less" scoped>
+.qrcodeDom {
+  width: 100%;
+  text-align: center;
+  #qrcodeDom {
+    width: 160px;
+    margin: 20px auto;
+  }
+  p {
+    font-size: 16px;
+    span {
+      color: #ff0000;
+      font-weight: 500;
+    }
+  }
+}
+</style>

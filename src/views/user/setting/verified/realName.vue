@@ -3,33 +3,52 @@
     <h2>实名认证</h2>
     <p>请选择认证方式</p>
     <div class="real-name-img">
-      <div @click="$router.push('/user/setting/personalRealname')">
+      <div @click="goPersonalRealName">
         <img
           width="150px"
           src="@/assets/img/realName/personalRealName.png"
           alt=""
         />
-        <p>个人认证</p>
+        <p v-if="realNameStatus === 1">已完成企业认证，无需个人认证</p>
+        <p v-else>
+          <span>个人认证</span>
+          <span v-show="userRealInfo.realName">
+            已完成
+            <img
+              style="margin-left: 10px"
+              width="16px"
+              src="@/assets/img/realName/attestOk.png"
+              alt=""
+            />
+          </span>
+        </p>
         <a-button
-          @click="$router.push('/user/setting/personalRealname')"
           class="look-info"
           type="link"
           v-show="userRealInfo.realName"
+          @click="$router.push('/user/setting/personalRealname')"
         >
           查看详情
         </a-button>
       </div>
-      <!-- <div @click="$router.push('/user/setting/enterprise')">
+      <div @click="$router.push('/user/setting/enterprise')">
         <img width="150px" src="@/assets/img/realName/enterprise.png" alt="" />
-        <p>企业认证</p>
-        <a-button
-          @click="$router.push('/user/setting/enterprise')"
-          class="look-info"
-          type="link"
-        >
+        <p>
+          <span>企业认证</span>
+          <span v-show="realNameStatus === 1">
+            已完成
+            <img
+              style="margin-left: 10px"
+              width="16px"
+              src="@/assets/img/realName/attestOk.png"
+              alt=""
+            />
+          </span>
+        </p>
+        <a-button class="look-info" type="link" v-show="realNameStatus === 1">
           查看详情
         </a-button>
-      </div> -->
+      </div>
     </div>
     <div class="bottom-hint">
       <h3>温馨提示</h3>
@@ -45,12 +64,37 @@ import { mapState } from "vuex";
 
 export default {
   data() {
-    return {};
+    return {
+      realNameStatus: 0
+    };
   },
   computed: {
     ...mapState({
       userRealInfo: (state) => state.user.userRealInfo
     })
+  },
+  created() {
+    this.getEnterpriseRealNameInfo();
+  },
+  methods: {
+    // 获取企业实名认证的数据信息
+    getEnterpriseRealNameInfo() {
+      this.$store.dispatch("user/getEnterpriseRealNameInfo").then((res) => {
+        if (!res || !res.data) {
+          this.realNameStatus = 0;
+          return;
+        }
+        this.realNameStatus = 1;
+      });
+    },
+    // 跳转个人实名认证页面
+    goPersonalRealName() {
+      if(this.realNameStatus === 1){
+        this.$message.warning('您已完成企业认证，无需个人认证');
+        return;
+      }
+      this.$router.push("/user/setting/personalRealname");
+    }
   }
 };
 </script>

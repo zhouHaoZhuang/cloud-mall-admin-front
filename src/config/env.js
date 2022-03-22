@@ -1,7 +1,8 @@
 import { getIdcMallUrl } from "../utils/index";
 // 默认请求地址
 const baseUrl = {
-  local: "http://site.sailayun.com/ims",
+  // local: "http://site.sailayun.com/ims",
+  local: "/ims",
   dev: "/ims",
   test: "/ims",
   prod: "/ims"
@@ -25,7 +26,7 @@ function getCloudMallUrl() {
 }
 // 请求头携带domain参数
 const domains = {
-  local: "t410796.site.sailayun.com"
+  local: "t940857.site.sailayun.com"
 };
 export default {
   BASE_URL: baseUrl[process.env.VUE_APP_ENV],

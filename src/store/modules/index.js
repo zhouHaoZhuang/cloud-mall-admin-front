@@ -12,10 +12,13 @@ import realName from "./realName.js";
 import message from "./message.js";
 import refund from "./refund.js";
 import workorder from "./workorder.js";
+import organization from "./organization.js";
 import mangeaddress from "./mangeaddress.js";
 import billlist from "./billlist.js";
 import billapply from "./billapply.js";
 import billnews from "./billnews.js";
+import withdraw from './withdraw'
+
 export default {
   setting,
   user,
@@ -31,8 +34,10 @@ export default {
   message,
   refund,
   workorder,
+  organization,
   mangeaddress,
   billlist,
   billapply,
-  billnews
+  billnews,
+  withdraw
 };

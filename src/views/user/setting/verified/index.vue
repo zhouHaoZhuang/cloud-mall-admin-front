@@ -295,7 +295,6 @@ export default {
       });
     },
     handleOk(e) {
-      this.confirmLoading = true;
       this.visible = false;
       this.confirmLoading = false;
     },
