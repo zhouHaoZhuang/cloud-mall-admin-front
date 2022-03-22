@@ -275,12 +275,12 @@ export default {
     },
     // 取消申请
     cancelOrder(record) {
-      record.status = 4;
+      let obj={id:record.id,status:4}
       this.$confirm({
         title: "确认要取消申请吗？",
         onOk: () => {
           console.log("点击了取消");
-          this.$store.dispatch("withdraw/editRecord", record).then(res => {
+          this.$store.dispatch("withdraw/editRecord", obj).then(res => {
             this.$message.success("取消成功");
             this.getList();
           });
