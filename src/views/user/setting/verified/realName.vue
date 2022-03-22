@@ -3,7 +3,7 @@
     <h2>实名认证</h2>
     <p>请选择认证方式</p>
     <div class="real-name-img">
-      <div @click="$router.push('/user/setting/personalRealname')">
+      <div @click="goPersonalRealName">
         <img
           width="150px"
           src="@/assets/img/realName/personalRealName.png"
@@ -22,7 +22,12 @@
             />
           </span>
         </p>
-        <a-button class="look-info" type="link" v-show="userRealInfo.realName">
+        <a-button
+          class="look-info"
+          type="link"
+          v-show="userRealInfo.realName"
+          @click="$router.push('/user/setting/personalRealname')"
+        >
           查看详情
         </a-button>
       </div>
@@ -81,6 +86,14 @@ export default {
         }
         this.realNameStatus = 1;
       });
+    },
+    // 跳转个人实名认证页面
+    goPersonalRealName() {
+      if(this.realNameStatus === 1){
+        this.$message.warning('您已完成企业认证，无需个人认证');
+        return;
+      }
+      this.$router.push("/user/setting/personalRealname");
     }
   }
 };
