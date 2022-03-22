@@ -157,7 +157,7 @@ export default {
   methods: {
     //确定,驳回申请
     handleOk(val) {
-      this.$refs.ruleForm.validate(valid => {
+      this.$refs.ruleForm.validate((valid) => {
         if (valid) {
           let title;
           if (val == "ok") {
@@ -168,14 +168,23 @@ export default {
             this.form.status = 3;
             title = "确认要驳回申请吗?";
           }
+          if (this.title != 1) {
+            console.log(this.$refs.feedback.value);
+            if (!this.$refs.feedback.value) {
+              this.$message.error("请填写反馈信息");
+              return;
+            }
+          }
           this.$confirm({
             title: title,
             onOk: () => {
-              this.$store.dispatch("withdraw/approval", this.form).then(res => {
-                this.$message.success("操作成功");
-                this.$emit("changeVisible", false);
-                this.$emit("success");
-              });
+              this.$store
+                .dispatch("withdraw/approval", this.form)
+                .then((res) => {
+                  this.$message.success("操作成功");
+                  this.$emit("changeVisible", false);
+                  this.$emit("success");
+                });
             }
           });
         } else {

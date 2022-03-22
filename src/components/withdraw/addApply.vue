@@ -144,8 +144,21 @@ export default {
         dealAmount: [
           {
             required: true,
-            message: "当前无足够余额可以进行提现，请核对剩余余额",
-            trigger: "blur"
+            trigger: ["blur", "change"],
+            validator: (rule, value, callback) => {
+              if (!value) {
+                callback(new Error("请输入提现余额"));
+              } else if (/[^\d.]/g.test(value)) {
+                callback(new Error("余额格式输入有误"));
+              }
+              //大于系统余额提示
+              // else if(value > 10){
+              //    callback(new Error("当前无足够余额可以进行提现，请核对剩余余额"));
+              // }
+              else {
+                callback();
+              }
+            }
           }
         ],
         receiverName: [
@@ -162,7 +175,7 @@ export default {
     // 保存,提交新增申请
     handleOk(val) {
       this.confirmLoading = true;
-      this.$refs.ruleForm.validate(valid => {
+      this.$refs.ruleForm.validate((valid) => {
         if (valid) {
           let title;
           if (val == "save") {
@@ -204,12 +217,12 @@ export default {
         onOk: () => {
           this.$store
             .dispatch("withdraw/addRecord", this.form)
-            .then(res => {
+            .then((res) => {
               this.$message.success("提交成功");
               this.$emit("changeVisible", false);
               this.$emit("success");
             })
-            .catch(err => {
+            .catch((err) => {
               this.confirmLoading = false;
             });
         }
@@ -222,12 +235,12 @@ export default {
         onOk: () => {
           this.$store
             .dispatch("withdraw/editRecord", this.form)
-            .then(res => {
+            .then((res) => {
               this.$message.success("提交成功");
               this.$emit("changeVisible", false);
               this.$emit("success");
             })
-            .catch(err => {
+            .catch((err) => {
               this.confirmLoading = false;
             });
         }
