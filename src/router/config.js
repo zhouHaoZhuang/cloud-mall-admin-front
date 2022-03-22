@@ -188,13 +188,6 @@ const options = [
                 component: RouteView,
                 meta: {},
                 children: [
-                  {
-                    path: "manageadress",
-                    name: "常用地址管理",
-                    component: () =>
-                      import("@/views/user/finance/bill/manageadress/index.vue"),
-                    meta: {},
-                  },
                   // {
                   //   path: "apply",
                   //   name: "发票申请",
@@ -260,7 +253,15 @@ const options = [
                   //     import("@/views/user/finance/bill/addBillInfo/index.vue"),
                   //   meta: {},
                   // },
-                  
+                  {
+                    path: "manageadress",
+                    name: "常用地址管理",
+                    component: () =>
+                      import(
+                        "@/views/user/finance/bill/manageadress/index.vue"
+                      ),
+                    meta: {},
+                  },
                 ],
               },
             ],
