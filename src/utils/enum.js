@@ -137,3 +137,12 @@ export const workOrderStatusEnum = {
   2: "接单处理中",
   3: "处理完成"
 };
+//提现申请状态
+export const applyStatus = {
+  0: "草稿",
+  1: "已完成",
+  2: "已提交",
+  3: "已驳回",
+  4: "已取消",
+  5: "待处理"
+};
