@@ -305,6 +305,9 @@ export default {
         this.form.businessName = "";
         this.form.certNo = "";
       }
+      if (imgType === "businessImg") {
+        return;
+      }
       if (this.form.avatarImg.length > 0 && this.form.emblemImg.length > 0) {
         this.legalPersonData();
       }
