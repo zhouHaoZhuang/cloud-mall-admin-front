@@ -283,6 +283,7 @@ export default {
             .dispatch("user/uploadEnterpriseRealName", this.realNameData)
             .then((res) => {
               this.$message.success("提交成功");
+              this.$store.dispatch("user/getUserActualName");
               console.log(res, "认证结果");
               if (res.data === true) {
                 this.realNameStatus = 2;
