@@ -14,6 +14,7 @@
       <div class="qrcodeDom">
         <div id="qrcodeDom"></div>
         <p>请使用<span>微信</span>扫码完成支付</p>
+        <p>如已充值完成，请点击确认并核对余额</p>
       </div>
     </a-modal>
   </div>
