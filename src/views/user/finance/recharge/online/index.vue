@@ -9,7 +9,7 @@
         <p>3、如充值后款项没有到账，请联系在线客服帮助处理，或提交工单</p>
       </div>
       <h1>
-        <span>账户余额：</span><span>{{ balanceData.userAmount }} 元</span>
+        <span>账户余额：</span><span>{{ balanceData.userAmount }} 元----</span>
       </h1>
       <!-- <p>暂未开启充值</p> -->
       <div>
