@@ -169,7 +169,6 @@ export default {
             title = "确认要驳回申请吗?";
           }
           if (this.title != 1) {
-            console.log(this.$refs.feedback.value);
             if (!this.$refs.feedback.value) {
               this.$message.error("请填写反馈信息");
               return;

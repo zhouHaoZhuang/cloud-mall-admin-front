@@ -35,6 +35,7 @@
         <a-form-model-item label="提现金额" prop="dealAmount">
           <a-input
             v-model="form.dealAmount"
+            ref="dealAmount"
             placeholder="请输入需要提现的金额"
             @change="toValidate"
           />
@@ -117,6 +118,7 @@ export default {
       confirmLoading: false,
       labelCol: { span: 6 },
       wrapperCol: { span: 16 },
+      balance: 0,
       codeReg: /^(\d{16}|\d{19}|\d{17})$/, //银行卡校验正则
       form: {
         status: 2,
@@ -150,12 +152,7 @@ export default {
                 callback(new Error("请输入提现余额"));
               } else if (/[^\d.]/g.test(value)) {
                 callback(new Error("余额格式输入有误"));
-              }
-              //大于系统余额提示
-              // else if(value > 10){
-              //    callback(new Error("当前无足够余额可以进行提现，请核对剩余余额"));
-              // }
-              else {
+              } else {
                 callback();
               }
             }
@@ -178,6 +175,10 @@ export default {
       this.$refs.ruleForm.validate((valid) => {
         if (valid) {
           let title;
+          if (this.$refs.dealAmount.value > this.balance) {
+            this.$message.error("当前无足够余额可以进行提现，请核对剩余余额");
+            return
+          }
           if (val == "save") {
             title = "确认保存申请吗?";
             this.form.status = 0;
@@ -253,6 +254,23 @@ export default {
         console.log("budui");
       }
     },
+    getDashboardData() {
+      this.$store.dispatch("dashboard/getBalanceAndCoupon").then((res) => {
+        const newData = {
+          balance: {},
+          coupon: {
+            balance: "0.00"
+          }
+        };
+        res.data.forEach((ele) => {
+          if (ele.accountType === 1) {
+            newData.balance = { ...ele };
+          }
+        });
+        this.overviewData = { ...newData };
+        this.balance = this.overviewData.balance.balance;
+      });
+    },
     // 重置表单数据
     resetForm() {
       this.form = {
@@ -263,6 +281,9 @@ export default {
         memo: ""
       };
     }
+  },
+  created() {
+    this.getDashboardData();
   }
 };
 </script>
