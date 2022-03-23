@@ -28,6 +28,7 @@
     "lodash": "^4.17.21",
     "lodash.clonedeep": "^4.5.0",
     "lrz": "^4.9.41",
+    "moment": "^2.29.1",
     "nprogress": "^0.2.0",
     "qrcodejs2": "^0.0.2",
     "uglifyjs-webpack-plugin": "^2.2.0",
