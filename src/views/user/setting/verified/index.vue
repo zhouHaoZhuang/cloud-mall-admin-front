@@ -254,7 +254,7 @@ export default {
         return (
           this.userRealInfo.idNumber.slice(0, 3) +
           "**********" +
-          this.userRealInfo.idNumber.slice(14, 17)
+          this.userRealInfo.idNumber.slice(15, 18)
         );
       } else {
         return "";
