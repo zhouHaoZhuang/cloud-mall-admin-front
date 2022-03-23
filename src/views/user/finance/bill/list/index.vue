@@ -57,7 +57,7 @@
         >
         <div class="bill-info">
           <div>
-            <a-descriptions title="默认发票信息" :column="2">
+            <a-descriptions title="默认发票信息" :column="2" v-if="invoiceInfo">
               <a-descriptions-item label="开票类型">
                 {{ issueTypeMap[invoiceInfo.issueType] }}
               </a-descriptions-item>
@@ -211,7 +211,7 @@ export default {
         pageSize: 10,
         total: 0
       },
-      invoiceInfo: {},
+      invoiceInfo: null,
       addressInfo: {},
       paginationProps: {
         showQuickJumper: true,

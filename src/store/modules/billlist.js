@@ -43,6 +43,14 @@ const billlist = {
         params,
       });
     },
+    // 获取可开票金额数据
+    getInvoiceAmountList({ commit, state }, params) {
+      return request({
+        url: `/invoiceRecord/positivePage`,
+        method: "get",
+        params,
+      });
+    },
     // 获取
     getOne({ commit, state }, id) {
       console.log(state);

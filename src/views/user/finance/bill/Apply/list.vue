@@ -250,16 +250,15 @@ export default {
       columns: [
         {
           title: "订单ID",
-          dataIndex: "id",
-          scopedSlots: { customRender: "id" }
+          dataIndex: "orderNo",
         },
         {
           title: "产品名称",
-          dataIndex: "name"
+          dataIndex: "bizTypeName"
         },
         {
           title: "可开票金额",
-          dataIndex: "amount"
+          dataIndex: "canInvoiceAmount"
         },
         {
           title: "订单创建时间",
@@ -398,7 +397,7 @@ export default {
             trigger: "blur"
           }
         ]
-      }
+      },
     };
   },
   watch: {
@@ -414,6 +413,7 @@ export default {
     this.getDetailsList();
     this.getListTitle();
     this.getListAddress();
+    this.getInvoiceAmountList();
   },
   methods: {
     disabledStartDate(startValue) {
@@ -500,9 +500,21 @@ export default {
     // 欠票数据
     getDetailsList() {
       this.$store.dispatch("billlist/getDetails").then((res) => {
-        console.log(res);
+        console.log(res,'res');
         this.arrearsdata = [...res.data.list];
       });
+    },
+    // 开票金额数据
+    getInvoiceAmountList() {
+      this.$store
+        .dispatch("billlist/getInvoiceAmountList", {
+          currentPage: 1,
+          pageSize: 10
+        })
+        .then((res) => {
+          console.log(res, "开票金额数据");
+          this.data = res.data.list;
+        });
     },
     // 选择发票抬头
     onSelectChangeTitle(selectedRowKeysTitle) {
