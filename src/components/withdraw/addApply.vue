@@ -119,7 +119,7 @@ export default {
       labelCol: { span: 6 },
       wrapperCol: { span: 16 },
       balance: 0,
-      codeReg: /^(\d{16}|\d{19}|\d{17})$/, //银行卡校验正则
+      codeReg: /[^\d]/g, //银行卡校验正则
       form: {
         status: 2,
         accountName: "",
@@ -150,8 +150,6 @@ export default {
             validator: (rule, value, callback) => {
               if (!value) {
                 callback(new Error("请输入提现余额"));
-              } else if (/[^\d.]/g.test(value)) {
-                callback(new Error("余额格式输入有误"));
               } else {
                 callback();
               }
@@ -248,12 +246,26 @@ export default {
       });
     },
     // 校验提现余额
-    toValidate(e) {
-      console.log(e.target.value, "eeeeeeeeeeee");
-      if (e.target.value > this.form.afterBalance) {
-        console.log("budui");
-      }
-    },
+    toValidate(e) {
+      //如果用户第一位输入的是小数点，则重置输入框内容
+      if (e.target.value != "" && e.target.value.substr(0, 1) == ".") {
+        e.target.value = "";
+      }
+      e.target.value = e.target.value.replace(/^0*(0\.|[1-9])/, "$1"); //粘贴不生效
+      e.target.value = e.target.value.replace(/[^\d.]/g, ""); //清除“数字”和“.”以外的字符
+      e.target.value = e.target.value.replace(/\.{2,}/g, "."); //只保留第一个. 清除多余的
+      e.target.value = e.target.value
+        .replace(".", "$#$")
+        .replace(/\./g, "")
+        .replace("$#$", ".");
+      e.target.value = e.target.value.toString().match(/^\d+(?:\.\d{0,2})?/); //只能输入两个小数
+      if (e.target.value.indexOf(".") < 0 && e.target.value != "") {
+        //以上已经过滤，此处控制的是如果没有小数点，首位不能为类似于 01、02的金额
+        if (e.target.value.substr(0, 1) == "0" && e.target.value.length == 2) {
+          e.target.value = e.target.value.substr(1, e.target.value.length);
+        }
+      }
+    },
     getDashboardData() {
       this.$store.dispatch("dashboard/getBalanceAndCoupon").then((res) => {
         const newData = {
