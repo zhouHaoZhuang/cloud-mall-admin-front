@@ -144,29 +144,33 @@ export const roleTypeEnum = {
 };
 // cdn状态map
 export const cdnStatusEnum = {
-  0: {
-    dot: "success",
-    name: "正常运行"
-  },
-  1: {
-    dot: "warning",
-    name: "配置中"
-  },
-  2: {
-    dot: "error",
-    name: "配置失败"
-  },
-  3: {
+  [-1]: {
     dot: "error",
     name: "下线"
   },
-  4: {
+  0: {
+    dot: "error",
+    name: "需要校验域名"
+  },
+  1: {
+    dot: "success",
+    name: "启用"
+  },
+  2: {
     dot: "error",
     name: "停用"
   },
+  3: {
+    dot: "processing",
+    name: "配置中"
+  },
+  4: {
+    dot: "error",
+    name: "配置失败"
+  },
   5: {
     dot: "processing",
-    name: "审核中"
+    name: "正在审核"
   },
   6: {
     dot: "error",

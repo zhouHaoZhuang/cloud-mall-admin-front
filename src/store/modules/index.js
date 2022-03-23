@@ -13,6 +13,7 @@ import message from "./message.js";
 import refund from "./refund.js";
 import workorder from "./workorder.js";
 import organization from "./organization.js";
+import cdn from "./cnd.js";
 export default {
   setting,
   user,
@@ -28,5 +29,6 @@ export default {
   message,
   refund,
   workorder,
-  organization
+  organization,
+  cdn
 };

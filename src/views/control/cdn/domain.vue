@@ -210,8 +210,7 @@ export default {
     //查询列表
     getList() {
       this.tableLoading = true;
-      this.$store
-        .dispatch("domain/getList", this.listQuery)
+      this.$getListQp("cdn/getDomainList", this.listQuery)
         .then((res) => {
           this.data = [...res.data.list];
           this.paginationProps.total = res.data.totalCount * 1;
