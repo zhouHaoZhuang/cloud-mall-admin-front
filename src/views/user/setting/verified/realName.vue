@@ -90,10 +90,10 @@ export default {
     },
     // 跳转个人实名认证页面
     goPersonalRealName(e) {
-      if(e.target.innerText==='查看详情'){
+      if (e.target.innerText === "查看详情") {
         return;
       }
-      if (this.realNameStatus === 1) {
+      if (this.realNameStatus === 1 && !userRealInfo.realName) {
         this.$message.warning("您已完成企业认证，无需个人认证");
         return;
       }
