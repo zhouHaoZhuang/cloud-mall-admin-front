@@ -17,6 +17,20 @@
           style="width: 150px; margin-left: 10px"
           placeholder="请输入订单ID"
         />
+        <a-select
+          placeholder="请选择发票类型"
+          style="width: 150px; margin-left: 10px"
+          v-model="listQueryInvoice.type"
+          allowClear
+        >
+          <a-select-option
+            :key="item"
+            :value="inx"
+            v-for="(item, inx) in typeMap"
+          >
+            {{ item }}
+          </a-select-option>
+        </a-select>
         <a-date-picker
           style="margin-left: 10px"
           v-model="startValue"
@@ -69,9 +83,13 @@
           :columns="columns"
           :data-source="data"
           rowKey="id"
+          :pagination="paginationPropsInvoice"
         >
-          <div slot="companyName" slot-scope="text">
-            {{ text }}
+          <div slot="type" slot-scope="text">
+            {{ typeMap[text] }}
+          </div>
+          <div v-if="text" slot="createTime" slot-scope="text">
+            {{ text | formatDate }}
           </div>
           <div slot="action">
             <a-button type="link">申请开票</a-button>
@@ -86,7 +104,7 @@
           <span>
             元，您选取了
             {{
-              5
+              selectedRowKeys.length
             }}条单据开具发票(若选中多条订单，填写开票金额将合并开具到一张票据中)
           </span>
         </p>
@@ -247,14 +265,29 @@ export default {
       // 开票数据
       data: [],
       selectedRowKeys: [], // Check here to configure the default column
+      typeMap: {
+        1: "订单",
+        2: "账单"
+      },
       columns: [
         {
           title: "订单ID",
-          dataIndex: "orderNo",
+          dataIndex: "orderNo"
+        },
+        {
+          title: "类型",
+          dataIndex: "type",
+          scopedSlots: {
+            customRender: "type"
+          }
         },
         {
           title: "产品名称",
           dataIndex: "bizTypeName"
+        },
+        {
+          title: "订单金额",
+          dataIndex: "presentAmount"
         },
         {
           title: "可开票金额",
@@ -262,12 +295,10 @@ export default {
         },
         {
           title: "订单创建时间",
-          dataIndex: "createTime"
-        },
-        {
-          title: "操作",
-          dataIndex: "action",
-          scopedSlots: { customRender: "action" }
+          dataIndex: "createTime",
+          scopedSlots: {
+            customRender: "createTime"
+          }
         }
       ],
       // 选择发票抬头
@@ -398,6 +429,27 @@ export default {
           }
         ]
       },
+      listQueryInvoice: {
+        key: "",
+        search: "",
+        currentPage: 1,
+        pageSize: 10,
+        total: 0,
+        startTime: "",
+        endTime: "",
+        type: undefined
+      },
+      paginationPropsInvoice: {
+        showQuickJumper: true,
+        showSizeChanger: true,
+        total: 0,
+        showTotal: (total, range) =>
+          `共 ${total} 条记录 第 ${
+            this.listQueryInvoice.currentPage
+          } / ${Math.ceil(total / this.listQueryInvoice.pageSize)} 页`,
+        onChange: this.quickJumpInvoice,
+        onShowSizeChange: this.onShowSizeChangeInvoice
+      }
     };
   },
   watch: {
@@ -416,6 +468,15 @@ export default {
     this.getInvoiceAmountList();
   },
   methods: {
+    quickJumpInvoice(page) {
+      this.listQueryInvoice.currentPage = page;
+      this.getInvoiceAmountList();
+    },
+    onShowSizeChangeInvoice(current, pageSize) {
+      this.listQueryInvoice.pageSize = pageSize;
+      this.listQueryInvoice.currentPage = 1;
+      this.getInvoiceAmountList();
+    },
     disabledStartDate(startValue) {
       const endValue = this.endValue;
       if (!startValue || !endValue) {
@@ -500,20 +561,18 @@ export default {
     // 欠票数据
     getDetailsList() {
       this.$store.dispatch("billlist/getDetails").then((res) => {
-        console.log(res,'res');
+        console.log(res, "res");
         this.arrearsdata = [...res.data.list];
       });
     },
     // 开票金额数据
     getInvoiceAmountList() {
       this.$store
-        .dispatch("billlist/getInvoiceAmountList", {
-          currentPage: 1,
-          pageSize: 10
-        })
+        .dispatch("billlist/getInvoiceAmountList", this.listQueryInvoice)
         .then((res) => {
           console.log(res, "开票金额数据");
           this.data = res.data.list;
+          this.paginationPropsInvoice.total = res.data.totalCount * 1;
         });
     },
     // 选择发票抬头
