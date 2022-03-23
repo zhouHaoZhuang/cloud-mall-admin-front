@@ -59,7 +59,7 @@ function isPlainObject(obj) {
 /*
  * number 输入框限制只能输入数字
  * 在需要控制输入的输入框上使用 v-number-evolution,
- * -> 可传 number字符串 v-numbe-evolutionr="1"
+ * -> 可传 number字符串 v-number-evolution="1"
  * -> 可传对象 { value: Number, max: Number, min: Number }
  *            value 小数 max 最大值 min 最小值
  *  v-number-evolution="{ value: 0, min: 0, max: 10 }"
@@ -78,9 +78,9 @@ export const numberEvolution = Vue.directive("number-evolution", {
     var RegStr =
       val === 0 ? `^[\\+\\-]?\\d+\\d{0,0}` : `^[\\+\\-]?\\d+\\.?\\d{0,${val}}`;
     el.addEventListener("keyup", function () {
-      console.log("键盘抬起1", el.value);
+      // console.log("键盘抬起1", el.value);
       const inpValArr = el.value.match(new RegExp(RegStr, "g"));
-      console.log("键盘抬起2", inpValArr);
+      // console.log("键盘抬起2", inpValArr);
       const inpVal =
         inpValArr && Array.isArray(inpValArr)
           ? inpValArr[inpValArr.length - 1]
@@ -99,8 +99,8 @@ export const numberEvolution = Vue.directive("number-evolution", {
           inpVal = Math.abs(inpVal);
           // const max = Object.keys(binding.modifiers)[0]
           // const min = Object.keys(binding.modifiers)[0]
-          console.log("当前的最大值是", value.max);
-          console.log("当前的最小值是", value);
+          // console.log("当前的最大值是", value.max);
+          // console.log("当前的最小值是", value);
           if (hasOwn(value, "max")) {
             const max = value.max;
             inpVal = inpVal > max ? max : inpVal;
@@ -173,5 +173,26 @@ export const permission = Vue.directive("permission", {
     //   //如果没有权限则直接删除此节点
     //   el.parentNode && el.parentNode.removeChild(el);
     // }
+  }
+});
+
+/*
+ * filterInput-input 输入框限制只能输入大小写英文字母、数字
+ * 在需要控制输入的输入框上使用 v-filterInput-input
+ */
+export const filterInput = Vue.directive("filterInput-input", {
+  inserted: function (el) {
+    el = findInput(el);
+    if (!el) return;
+    el.addEventListener("keyup", function () {
+      const newVal = el.value.replace(/[^a-zA-Z0-9]/g, "");
+      el.value = newVal;
+      el.dispatchEvent(new Event("input"));
+    });
+    el.addEventListener("blur", function () {
+      const newVal = el.value.replace(/[^a-zA-Z0-9]/g, "");
+      el.value = newVal;
+      el.dispatchEvent(new Event("input"));
+    });
   }
 });

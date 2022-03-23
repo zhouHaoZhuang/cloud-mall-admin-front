@@ -87,7 +87,6 @@
                   </a-radio-group>
                 </a-form-model-item>
                 <a-form-model-item
-                  ref="voucher"
                   label="汇款凭证"
                   prop="voucher"
                 >
@@ -155,7 +154,8 @@ export default {
         accountCode: "",
         memo: "",
         accountBankName: "",
-        accountType: 2
+        accountType: 2,
+        voucher: ""
       },
       labelCol: { span: 2 },
       wrapperCol: { span: 5 },
@@ -204,7 +204,7 @@ export default {
           {
             required: true,
             message: "请输入汇款凭证",
-            trigger: "blur"
+            trigger: "change"
           }
         ],
         accountType: [
