@@ -22,7 +22,7 @@
         </a-form-model-item>
 
         <a-form-model-item label="银行卡号" prop="accountNo">
-          <a-input v-model="form.accountNo" placeholder="请输入银行卡号" />
+          <a-input v-model="form.accountNo" v-number-evolution placeholder="请输入银行卡号" />
           <span class="tigs">请确保符合银行卡号规则</span>
         </a-form-model-item>
         <a-form-model-item label="银行卡绑定人" prop="receiverName">
@@ -37,7 +37,7 @@
             v-model="form.dealAmount"
             ref="dealAmount"
             placeholder="请输入需要提现的金额"
-            @change="toValidate"
+           v-number-evolution="{ value: 2, min: 0, max: 999999 }"
           />
           <span class="tigs">请确保符合当前账号下余额充足</span>
         </a-form-model-item>
@@ -103,23 +103,12 @@ export default {
     }
   },
   data() {
-    const validateAccount = (rule, value, callback) => {
-      if (value === "") {
-        callback(new Error("请输入银行卡号"));
-      } else {
-        if (!this.codeReg.test(value)) {
-          callback(new Error("银行卡号不符合编号规则"));
-        }
-        callback();
-      }
-    };
     return {
       newTitle: "",
       confirmLoading: false,
       labelCol: { span: 6 },
       wrapperCol: { span: 16 },
       balance: 0,
-      codeReg: /^(\d{16}|\d{19}|\d{17})$/, //银行卡校验正则
       form: {
         status: 2,
         accountName: "",
@@ -139,23 +128,15 @@ export default {
         accountNo: [
           {
             required: true,
-            validator: validateAccount,
+             message: "银行卡号未填写",
             trigger: ["blur", "change"]
           }
         ],
         dealAmount: [
           {
             required: true,
+             message: "余额未填写",
             trigger: ["blur", "change"],
-            validator: (rule, value, callback) => {
-              if (!value) {
-                callback(new Error("请输入提现余额"));
-              } else if (/[^\d.]/g.test(value)) {
-                callback(new Error("余额格式输入有误"));
-              } else {
-                callback();
-              }
-            }
           }
         ],
         receiverName: [
@@ -246,13 +227,6 @@ export default {
             });
         }
       });
-    },
-    // 校验提现余额
-    toValidate(e) {
-      console.log(e.target.value, "eeeeeeeeeeee");
-      if (e.target.value > this.form.afterBalance) {
-        console.log("budui");
-      }
     },
     getDashboardData() {
       this.$store.dispatch("dashboard/getBalanceAndCoupon").then((res) => {

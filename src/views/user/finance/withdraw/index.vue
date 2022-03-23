@@ -156,15 +156,11 @@ export default {
           title: "创建时间",
           dataIndex: "createTime",
           scopedSlots: { customRender: "createTime" },
-          sorter: true,
-          sortDirections: ["ascend", "descend"]
         },
         {
           title: "反馈时间",
           dataIndex: "modifyTime",
           scopedSlots: { customRender: "modifyTime" },
-          sorter: true,
-          sortDirections: ["ascend", "descend"]
         },
         {
           title: "备注",
