@@ -376,7 +376,15 @@ export const asyncRoute = [
                     }
                   }
                 ]
-              }
+              },
+              {
+                path: "billmanage",
+                name: "账单管理",
+                component: () => import("@/views/user/finance/billmanage"),
+                meta: {
+                  perm: "user-finance-refund-record"
+                }
+              },
             ]
           },
           {
