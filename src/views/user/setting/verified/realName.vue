@@ -26,6 +26,7 @@
         </p>
         <a-button
           class="look-info"
+          v-show="userRealInfo.realName"
           type="link"
           @click="$router.push('/user/setting/personalRealname')"
         >
