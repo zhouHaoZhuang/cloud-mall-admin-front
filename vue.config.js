@@ -31,7 +31,7 @@ const assetsCDN = {
 
 module.exports = {
   devServer: {
-    port: 8000 ,//自定义项目运行端口
+    port: 8000, //自定义项目运行端口
     // open: "true",  //自动打开浏览器
     proxy: {
       "/ims": {

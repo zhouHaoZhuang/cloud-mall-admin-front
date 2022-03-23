@@ -163,3 +163,45 @@ export const applyStatus = {
   4: "已取消",
   5: "待处理",
 };
+// cdn状态map
+export const cdnStatusEnum = {
+  0: {
+    dot: "success",
+    name: "正常运行"
+  },
+  1: {
+    dot: "warning",
+    name: "配置中"
+  },
+  2: {
+    dot: "error",
+    name: "配置失败"
+  },
+  3: {
+    dot: "error",
+    name: "下线"
+  },
+  4: {
+    dot: "error",
+    name: "停用"
+  },
+  5: {
+    dot: "processing",
+    name: "审核中"
+  },
+  6: {
+    dot: "error",
+    name: "审核失败"
+  }
+};
+// cdn源站类型map
+export const cdnTypeEnum = {
+  1: "OSS域名",
+  2: "IP",
+  3: "源站域名"
+};
+// cdn优先级map
+export const cdnPriorityEnum = {
+  1: "主",
+  2: "备"
+};
