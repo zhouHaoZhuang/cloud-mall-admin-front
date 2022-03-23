@@ -59,10 +59,10 @@
           <div>
             <a-descriptions title="默认发票信息" :column="2">
               <a-descriptions-item label="开票类型">
-                {{ invoiceInfo.issueType }}
+                {{ issueTypeMap[invoiceInfo.issueType] }}
               </a-descriptions-item>
               <a-descriptions-item label="发票类型">
-                {{ invoiceInfo.invoiceType }}
+                {{ invoiceTypeMap[invoiceInfo.invoiceType] }}
               </a-descriptions-item>
               <a-descriptions-item label="发票抬头">
                 {{ invoiceInfo.invoiceTitle }}
@@ -147,6 +147,14 @@ import { invoiceStatusEnum } from "@/utils/enum.js";
 export default {
   data() {
     return {
+      issueTypeMap: {
+        1: "个人",
+        2: "企业"
+      },
+      invoiceTypeMap: {
+        1: "增值税普通发票",
+        2: "增值税专用发票"
+      },
       dataAmount: {},
       invoiceStatusEnum,
       data: [],
