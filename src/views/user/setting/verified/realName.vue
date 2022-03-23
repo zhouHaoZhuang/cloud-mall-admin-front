@@ -9,7 +9,9 @@
           src="@/assets/img/realName/personalRealName.png"
           alt=""
         />
-        <p v-if="realNameStatus === 1">已完成企业认证，无需个人认证</p>
+        <p v-if="realNameStatus === 1 && !userRealInfo.realName">
+          已完成企业认证，无需个人认证
+        </p>
         <p v-else>
           <span>个人认证</span>
           <span v-show="userRealInfo.realName">
@@ -25,7 +27,6 @@
         <a-button
           class="look-info"
           type="link"
-          v-show="userRealInfo.realName"
           @click="$router.push('/user/setting/personalRealname')"
         >
           查看详情
@@ -88,9 +89,12 @@ export default {
       });
     },
     // 跳转个人实名认证页面
-    goPersonalRealName() {
-      if(this.realNameStatus === 1){
-        this.$message.warning('您已完成企业认证，无需个人认证');
+    goPersonalRealName(e) {
+      if(e.target.innerText==='查看详情'){
+        return;
+      }
+      if (this.realNameStatus === 1) {
+        this.$message.warning("您已完成企业认证，无需个人认证");
         return;
       }
       this.$router.push("/user/setting/personalRealname");
