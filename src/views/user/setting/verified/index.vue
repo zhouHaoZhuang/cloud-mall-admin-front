@@ -316,6 +316,7 @@ export default {
         if (res.data.status === 1) {
           this.$store.dispatch("user/getUserActualName");
           this.choose = 3;
+          this.visible = false;
           clearInterval(this.getStatus);
           this.getStatus = "";
         } else {
