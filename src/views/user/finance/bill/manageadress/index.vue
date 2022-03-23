@@ -149,41 +149,41 @@ export default {
         address: "",
         province: "",
         city: "",
-        county: "",
+        county: ""
       },
-      adress:['','',''],
+      adress: ["", "", ""],
       rules: {
         addressee: [
           {
             required: true,
             message: "收件人不能为空",
-            trigger: "blur"
+            trigger: ["change", "blur"]
           }
         ],
         concatPhone: [
           {
             required: true,
             message: "联系电话不能为空",
-            trigger: "blur"
+            trigger: ["change", "blur"]
           },
           {
             pattern: /^1[3456789]\d{9}$/,
             message: "请输入正确的手机号码",
-            trigger: "blur"
+            trigger: ["change", "blur"]
           }
         ],
         city: [
           {
             required: true,
             message: "所在地区不能为空",
-            trigger: "blur"
+            trigger: ["change", "blur"]
           }
         ],
         address: [
           {
             required: true,
             message: "详细地址不能为空",
-            trigger: "blur"
+            trigger: ["change", "blur"]
           }
         ]
       },
@@ -242,7 +242,7 @@ export default {
         this.form.province = res.data.province;
         this.form.city = res.data.city;
         this.form.county = res.data.county;
-        this.adress = [res.data.province, res.data.city, res.data.county]
+        this.adress = [res.data.province, res.data.city, res.data.county];
         // console.log(this.form);
       });
     },
@@ -297,7 +297,7 @@ export default {
     },
     resetForm() {
       this.$refs.ruleForm.resetFields();
-      this.adress = ['','',''];
+      this.adress = ["", "", ""];
     },
     //查询数据表格
     getList() {
