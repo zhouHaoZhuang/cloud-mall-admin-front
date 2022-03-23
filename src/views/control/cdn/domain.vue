@@ -46,10 +46,10 @@
             v-model="listQuery.key"
             placeholder="请选择"
           >
-            <a-select-option value="title"> 域名 </a-select-option>
-            <a-select-option value="workOrderNo"> 渠道商名称 </a-select-option>
-            <a-select-option value="workOrderNo"> 渠道商ID </a-select-option>
-            <a-select-option value="workOrderNo"> cname </a-select-option>
+            <a-select-option value="domain"> 域名 </a-select-option>
+            <a-select-option value="channelName"> 渠道商名称 </a-select-option>
+            <a-select-option value="channelCode"> 渠道商ID </a-select-option>
+            <a-select-option value="cnameValue"> cname </a-select-option>
           </a-select>
         </a-form-model-item>
         <a-form-model-item>
@@ -85,31 +85,43 @@
         :data-source="data"
         rowKey="id"
         :pagination="paginationProps"
-        :row-selection="{
-          selectedRowKeys: selectedRowKeys,
-          onChange: onSelectChange
-        }"
+        :row-selection="rowSelection"
       >
         <div class="status" slot="cdnStatus" slot-scope="text">
           <a-badge :status="cdnStatusEnum[text].dot" />
           {{ cdnStatusEnum[text].name }}
         </div>
         <div slot="httpsStatus" slot-scope="text">
-          <a-tag v-if="text"> 未开启 </a-tag>
-          <a-tag v-else color="green"> 已开启 </a-tag>
+          <a-tag v-if="text === 0"> 未配置 </a-tag>
+          <a-tag v-if="text === 1"> 未开启 </a-tag>
+          <a-tag v-if="text === 2" color="green"> 已开启 </a-tag>
         </div>
         <span slot="createTime" slot-scope="text">
           {{ text | formatDate }}
         </span>
         <div slot="action" slot-scope="text, record">
-          <a-button type="link" @click="handleManage(record)"> 管理 </a-button>
-          <a-button type="link" @click="handleCopy(record)">
-            复制配置
-          </a-button>
-          <a-button type="link" @click="handleChangeStatus(record)">
-            {{ record.status === 1 ? "停用" : "启用" }}
-          </a-button>
           <a-space>
+            <a-button type="link" @click="handleManage(record)">
+              管理
+            </a-button>
+            <a-button type="link" @click="handleCopy(record)">
+              复制配置
+            </a-button>
+            <a-button
+              v-if="record.cdnStatus === 2"
+              type="link"
+              @click="handleChangeStatus(record)"
+            >
+              启用
+            </a-button>
+            <a-button
+              v-if="record.cdnStatus === 2"
+              type="link"
+              @click="handleChangeStatus(record)"
+            >
+              停用
+            </a-button>
+
             <a-button type="link" @click="handleDelDomain(record)">
               删除
             </a-button>
@@ -131,8 +143,8 @@ export default {
       listQuery: {
         key: undefined,
         search: "",
-        startTime: "",
-        endTime: "",
+        startTime: undefined,
+        endTime: undefined,
         currentPage: 1,
         pageSize: 10,
         total: 0
@@ -145,23 +157,21 @@ export default {
         },
         {
           title: "CNAME",
-          dataIndex: "cnameStatus",
-          scopedSlots: { customRender: "cnameStatus" }
+          dataIndex: "cnameValue"
         },
         {
           title: "状态",
-          dataIndex: "cname111Status",
-          scopedSlots: { customRender: "cnameStatus" }
+          dataIndex: "cdnStatus",
+          scopedSlots: { customRender: "cdnStatus" }
         },
         {
           title: "HTTPS",
-          dataIndex: "cnameStasstus",
-          scopedSlots: { customRender: "cnameStatus" }
+          dataIndex: "httpsStatus",
+          scopedSlots: { customRender: "httpsStatus" }
         },
         {
           title: "源站信息",
-          dataIndex: "type",
-          scopedSlots: { customRender: "type" }
+          dataIndex: "sourceInfo"
         },
         {
           title: "创建时间",
@@ -175,7 +185,7 @@ export default {
           scopedSlots: { customRender: "action" }
         }
       ],
-      data: [{}],
+      data: [],
       selectedRowKeys: [],
       paginationProps: {
         showQuickJumper: true,
@@ -196,10 +206,26 @@ export default {
   computed: {
     hasSelected() {
       return this.selectedRowKeys.length > 0;
+    },
+    rowSelection() {
+      const { selectedRowKeys } = this;
+      return {
+        selectedRowKeys,
+        onChange: (selectedRowKeys) => {
+          this.selectedRowKeys = selectedRowKeys;
+        },
+        getCheckboxProps: (record) => ({
+          props: {
+            disabled:
+              record.corporationLockStatus === 0 ||
+              record.systemLockStatus === 0
+          }
+        })
+      };
     }
   },
   created() {
-    // this.getList();
+    this.getList();
   },
   methods: {
     // 搜索
@@ -212,7 +238,15 @@ export default {
       this.tableLoading = true;
       this.$getListQp("cdn/getDomainList", this.listQuery)
         .then((res) => {
-          this.data = [...res.data.list];
+          this.data = res.data.list.map((ele) => {
+            const newSourceInfo = ele.sourceInfo.sourceModel
+              .map((item) => item.content)
+              .join(",");
+            return {
+              ...ele,
+              sourceInfo: newSourceInfo
+            };
+          });
           this.paginationProps.total = res.data.totalCount * 1;
         })
         .finally(() => {
@@ -238,13 +272,9 @@ export default {
         );
         this.listQuery.endTime = moment(value[1]).format("YYYY-MM-DD HH:mm:ss");
       } else {
-        this.listQuery.startTime = "";
-        this.listQuery.endTime = "";
+        this.listQuery.startTime = undefined;
+        this.listQuery.endTime = undefined;
       }
-    },
-    // 表格多选
-    onSelectChange(selectedRowKeys) {
-      this.selectedRowKeys = selectedRowKeys;
     },
     // 跳转新建域名
     handleAddDomain() {

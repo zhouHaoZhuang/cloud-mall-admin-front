@@ -144,17 +144,21 @@ export const roleTypeEnum = {
 };
 // cdn状态map
 export const cdnStatusEnum = {
-  [-1]: {
+  "-2": {
     dot: "error",
-    name: "下线"
+    name: "已下线"
+  },
+  "-1": {
+    dot: "error",
+    name: "已下线"
   },
   0: {
     dot: "error",
-    name: "需要校验域名"
+    name: "校验域名"
   },
   1: {
     dot: "success",
-    name: "启用"
+    name: "正常运行"
   },
   2: {
     dot: "error",
@@ -187,4 +191,16 @@ export const cdnTypeEnum = {
 export const cdnPriorityEnum = {
   1: "主",
   2: "备"
+};
+// 业务类型map
+export const businessTypeEnum = {
+  web: "图片小文件",
+  download: "大文件下载",
+  video: "音视频点播"
+};
+// 加速map
+export const scopeAreaEnum = {
+  domestic: "仅中国内地",
+  global: "全球",
+  overseas: "全球（不含中国内地）"
 };

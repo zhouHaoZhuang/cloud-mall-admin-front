@@ -15,6 +15,30 @@ const cdn = {
         params
       });
     },
+    // 校验域名归属权
+    checkDomainAscription({ commit, state }, data) {
+      return request({
+        url: "/aliyun/cdn/verifyDomainOwner",
+        method: "post",
+        data
+      });
+    },
+    // 获取归属校验内容
+    getDomainAscription({ commit, state }, data) {
+      return request({
+        url: "/aliyun/cdn/describeVerifyContent",
+        method: "post",
+        data
+      });
+    },
+    // 创建域名
+    createDomain({ commit, state }, data) {
+      return request({
+        url: "/cdnDomain",
+        method: "post",
+        data
+      });
+    },
     // 获取服务器详情
     cloudDetail({ commit, state }, params) {
       return request({

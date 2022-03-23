@@ -13,7 +13,7 @@ import message from "./message.js";
 import refund from "./refund.js";
 import workorder from "./workorder.js";
 import organization from "./organization.js";
-import cdn from "./cnd.js";
+import cdn from "./cdn.js";
 export default {
   setting,
   user,
