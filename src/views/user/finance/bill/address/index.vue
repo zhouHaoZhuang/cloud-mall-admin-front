@@ -39,12 +39,15 @@
           }"
           :columns="columns"
           :data-source="data"
-          :pagination="paginationProps"
+          :pagination="false"
           rowKey="id"
         >
-          <div slot="companyName" slot-scope="text">{{ text }}</div>
-          <div slot="action">
-            <a-button type="link">编辑</a-button>
+          <div slot="adress" slot-scope="text, record">
+            {{ record.province }}/ {{ record.city }}/
+            {{ record.area }}
+          </div>
+          <div slot="action" slot-scope="text, record">
+            <a-button type="link" @click="showModal(record.id)">编辑</a-button>
           </div>
         </a-table>
       </div>
@@ -53,11 +56,51 @@
     <div style="text-align: center; margin-top: 20px">
       <a-button type="primary"> 保存提交 </a-button>
     </div>
+    <a-modal
+      title="编辑收货地址"
+      :visible="visible"
+      :centered="true"
+      @cancel="handleCancel"
+      :footer="null"
+      forceRender
+    >
+      <div>
+        <a-form-model
+          ref="ruleForm"
+          :model="form"
+          :rules="rules"
+          :label-col="labelCol"
+          :wrapper-col="wrapperCol"
+        >
+          <a-form-model-item label="收件人" prop="addressee">
+            <a-input v-model="form.addressee" />
+          </a-form-model-item>
+          <a-form-model-item label="联系电话" prop="concatPhone">
+            <a-input v-model="form.concatPhone" />
+          </a-form-model-item>
+          <a-form-model-item label="地址" prop="city">
+            <a-cascader
+              placeholder="请选择地址"
+              :options="options"
+              v-model="adress"
+              @change="onChange"
+            />
+          </a-form-model-item>
+          <a-form-model-item label="详细地址" prop="address">
+            <a-input v-model="form.address" />
+          </a-form-model-item>
+        </a-form-model>
+        <a-button class="save-btn" type="primary" @click="onSubmit">
+          保存信息
+        </a-button>
+      </div>
+    </a-modal>
   </div>
 </template>
 
 <script>
 import DetailHeader from "@/components/Common/detailHeader.vue";
+import { options } from "@/utils/city";
 
 export default {
   components: {
@@ -66,39 +109,32 @@ export default {
   data() {
     return {
       data: [],
+      options,
+      visible: false,
       selectedRowKeys: [],
       columns: [
         {
-          title: "收件人",
-          dataIndex: "companyName",
-          key: "companyName",
-          width: "20%"
+          title: "收货人",
+          dataIndex: "addressee",
+          scopedSlots: { customRender: "addressee" }
         },
         {
           title: "联系电话",
-          dataIndex: "phone",
-          key: "phone",
-          width: "20%"
+          dataIndex: "concatPhone"
         },
         {
           title: "地址",
-          dataIndex: "address",
-          key: "address",
-          width: "20%"
+          key: "adress",
+          scopedSlots: { customRender: "adress" }
         },
         {
           title: "详细地址",
-          dataIndex: "detailAddress",
-          key: "detailAddress",
-          width: "20%"
+          dataIndex: "address"
         },
         {
           title: "操作",
           dataIndex: "action",
-          key: "action",
-          scopedSlots: {
-            customRender: "action"
-          }
+          scopedSlots: { customRender: "action" }
         }
       ],
       listQuery: {
@@ -106,49 +142,121 @@ export default {
         search: "",
         currentPage: 1,
         pageSize: 10,
-        total: 0,
-        status: "",
-        startTime: "",
-        endTime: "",
-        accountType: ""
+        total: 0
       },
-      paginationProps: {
-        showQuickJumper: true,
-        showSizeChanger: true,
-        total: 0,
-        showTotal: (total, range) =>
-          `共 ${total} 条记录 第 ${this.listQuery.currentPage} / ${Math.ceil(
-            total / this.listQuery.pageSize
-          )} 页`,
-        onChange: this.quickJump,
-        onShowSizeChange: this.onShowSizeChange
+      form: {
+        addressee: "",
+        concatPhone: "",
+        address: "",
+        province: "",
+        city: "",
+        county: ""
+      },
+      labelCol: { span: 6 },
+      wrapperCol: { span: 15 },
+      adress: ["", "", ""],
+      rules: {
+        addressee: [
+          {
+            required: true,
+            message: "收件人不能为空",
+            trigger: "blur"
+          }
+        ],
+        concatPhone: [
+          {
+            required: true,
+            message: "联系电话不能为空",
+            trigger: "blur"
+          },
+          {
+            pattern: /^1[3456789]\d{9}$/,
+            message: "请输入正确的手机号码",
+            trigger: "blur"
+          }
+        ],
+        city: [
+          {
+            required: true,
+            message: "所在地区不能为空",
+            trigger: "blur"
+          }
+        ],
+        address: [
+          {
+            required: true,
+            message: "详细地址不能为空",
+            trigger: "blur"
+          }
+        ]
       }
     };
+  },
+  created() {
+    this.getList()
   },
   methods: {
     // 选择收货信息
     onSelectChange(selectedRowKeys) {
       this.selectedRowKeys = selectedRowKeys;
     },
+    handleCancel(e) {
+      console.log("Clicked cancel button");
+      this.visible = false;
+    },
+    showModal(id) {
+      this.visible = true;
+      this.resetForm();
+      this.getOne(id);
+      this.form.id = id;
+    },
     //查询数据表格
     getList() {
-      this.$getListQp("word/getList", this.listQuery).then(res => {
+      this.$getList("mangeaddress/getList", this.listQuery).then((res) => {
         console.log(res);
-        this.data = [...res.data.list];
-        this.paginationProps.total = res.data.totalCount * 1;
+        this.data = [...res.data];
       });
     },
-    //表格分页跳转
-    quickJump(currentPage) {
-      this.listQuery.currentPage = currentPage;
-      this.getList();
+    // 编辑地址信息
+    editAdress(form) {
+      this.$store.dispatch("mangeaddress/edit", form).then((res) => {
+        this.$message.success("修改成功");
+        this.getList();
+        this.visible = false;
+      });
     },
-    //表格分页切换每页条数
-    onShowSizeChange(current, pageSize) {
-      this.listQuery.currentPage = current;
-      this.listQuery.pageSize = pageSize;
-      this.getList();
-    }
+    // 获取单个信息
+    getOne(id) {
+      this.$store.dispatch("mangeaddress/getOne", { id }).then((res) => {
+        this.form = res.data;
+        this.form.province = res.data.province;
+        this.form.city = res.data.city;
+        this.form.county = res.data.county;
+        this.adress = [res.data.province, res.data.city, res.data.county];
+        // console.log(this.form);
+      });
+    },
+    // 保存信息
+    onSubmit() {
+      this.$refs.ruleForm.validate((valid) => {
+        if (valid) {
+          console.log(this.form, "this.form");
+          this.editAdress(this.form);
+        }
+      });
+    },
+    resetForm() {
+      this.$refs.ruleForm.resetFields();
+      this.adress = ["", "", ""];
+    },
+    onChange(value) {
+      console.log(value);
+      this.form.province = value[0];
+      this.form.city = value[1];
+      this.form.county = value[2];
+      // this.adress = value;
+      console.log(this.adress);
+    },
   }
 };
 </script>
@@ -156,6 +264,10 @@ export default {
 <style lang="less" scoped>
 .address-info {
   margin: 30px 0;
+}
+.save-btn {
+  width: 100px;
+  margin-left: calc(50% - 50px);
 }
 .new-adress {
   margin: 20px 0;
