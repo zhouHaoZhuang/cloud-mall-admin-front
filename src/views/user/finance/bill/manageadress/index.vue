@@ -25,7 +25,7 @@
         <a-table
           :columns="columns"
           :data-source="data"
-          :pagination="paginationProps"
+          :pagination="false"
           rowKey="id"
         >
           <div slot="county" slot-scope="text, record">
