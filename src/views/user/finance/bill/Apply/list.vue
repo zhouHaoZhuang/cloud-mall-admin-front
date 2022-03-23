@@ -39,6 +39,28 @@
         <a-button style="margin-left: 10px" type="primary">查询</a-button>
       </div>
       <div>
+        <div v-if="arrearsdata.length > 0">
+          <p>
+            欠票金额：￥20.00
+            开票时需要优先冲抵欠票金额（欠票金额包括退款订单、降配订单等）
+          </p>
+          <a-table
+            :row-selection="{
+              selectedRowKeys: arrearsselectedRowKeys,
+              onChange: arrearsonSelectChange
+            }"
+            :columns="columns"
+            rowKey="id"
+            :data-source="arrearsdata"
+          >
+            <div slot="companyName" slot-scope="text">{{ text }}</div>
+            <div slot="action">
+              <a-button type="link">申请开票</a-button>
+              <a-button type="link">查看详情</a-button>
+            </div>
+          </a-table>
+          <p>可开票金额：￥500.00 有5个订单可以进行开票，已可开票金额为准</p>
+        </div>
         <a-table
           :row-selection="{
             selectedRowKeys: selectedRowKeys,
@@ -46,8 +68,11 @@
           }"
           :columns="columns"
           :data-source="data"
+          rowKey="id"
         >
-          <div slot="companyName" slot-scope="text">{{ text }}</div>
+          <div slot="companyName" slot-scope="text">
+            {{ text }}
+          </div>
           <div slot="action">
             <a-button type="link">申请开票</a-button>
             <a-button type="link">查看详情</a-button>
@@ -79,18 +104,37 @@
         <a-table
           :row-selection="{
             selectedRowKeys: selectedRowKeysTitle,
-            onChange: onSelectChange
+            onChange: onSelectChangeTitle
           }"
+          rowKey="id"
           :columns="columnsTitle"
           :data-source="dataTitle"
+          :pagination="paginationProps"
         >
-          <div slot="companyName" slot-scope="text">{{ text }}</div>
-          <div slot="action">
-            <a-button type="link">编辑</a-button>
+          <div slot="issueType" slot-scope="text">
+            {{ issueTypeMap[text] }}
+          </div>
+          <div v-if="text" slot="invoiceType" slot-scope="text">
+            {{ invoiceTypeMap[text] }}
+          </div>
+          <div slot="action" slot-scope="text, record">
+            <a-button
+              type="link"
+              @click="
+                $router.push(`/user/finance/bill/addBillInfo?id=${record.id}`)
+              "
+            >
+              编辑
+            </a-button>
           </div>
         </a-table>
       </div>
-      <a-button type="link" icon="plus">新增开票信息</a-button>
+      <a-button
+        type="link"
+        icon="plus"
+        @click="$router.push('/user/finance/bill/addBillInfo')"
+        >新增开票信息</a-button
+      >
       <div class="table-type">
         <span>*</span>
         请选择收货信息：
@@ -103,18 +147,25 @@
           }"
           :columns="columnsAddress"
           :data-source="dataAddress"
-          :pagination="paginationProps"
+          :pagination="false"
           rowKey="id"
         >
           <div slot="companyName" slot-scope="text">{{ text }}</div>
-          <div slot="action">
-            <a-button type="link">申请开票</a-button>
-            <a-button type="link">查看详情</a-button>
+          <div slot="adress" slot-scope="text, record">
+            {{ record.province }}/ {{ record.city }}/
+            {{ record.area }}
+          </div>
+          <div slot="action" slot-scope="text, record">
+            <a-button type="link" @click="showModal(record.id)">编辑</a-button>
           </div>
         </a-table>
       </div>
-      <a-button type="link" icon="plus" @click="$router.push('/user/finance/bill/manageadress')">
-      新增常用地址
+      <a-button
+        type="link"
+        icon="plus"
+        @click="$router.push('/user/finance/bill/manageadress')"
+      >
+        新增常用地址
       </a-button>
       <div style="text-align: center">
         <a-button type="primary">提交申请</a-button>
@@ -122,11 +173,52 @@
           返回上一步
         </a-button>
       </div>
+      <a-modal
+        :title="modalTitle"
+        :visible="visible"
+        :centered="true"
+        :confirm-loading="confirmLoading"
+        @cancel="handleCancel"
+        :footer="null"
+        forceRender
+      >
+        <div>
+          <a-form-model
+            ref="ruleForm"
+            :model="form"
+            :rules="rules"
+            :label-col="labelCol"
+            :wrapper-col="wrapperCol"
+          >
+            <a-form-model-item label="收件人" prop="addressee">
+              <a-input v-model="form.addressee" />
+            </a-form-model-item>
+            <a-form-model-item label="联系电话" prop="concatPhone">
+              <a-input v-model="form.concatPhone" />
+            </a-form-model-item>
+            <a-form-model-item label="地址" prop="city">
+              <a-cascader
+                placeholder="请选择地址"
+                :options="options"
+                v-model="adress"
+                @change="onChange"
+              />
+            </a-form-model-item>
+            <a-form-model-item label="详细地址" prop="address">
+              <a-input v-model="form.address" />
+            </a-form-model-item>
+          </a-form-model>
+          <a-button class="save-btn" type="primary" @click="onSubmit">
+            保存信息
+          </a-button>
+        </div>
+      </a-modal>
     </div>
   </div>
 </template>
 
 <script>
+import { options } from "@/utils/city";
 import DetailHeader from "@/components/Common/detailHeader.vue";
 
 export default {
@@ -135,11 +227,24 @@ export default {
   },
   data() {
     return {
+      options,
+      issueTypeMap: {
+        1: "个人",
+        2: "企业"
+      },
+      invoiceTypeMap: {
+        1: "增值税普通发票",
+        2: "增值税专用发票"
+      },
       current: 0,
       startValue: null,
       endValue: null,
       endOpen: false,
       // 选择开票明细
+      // 欠票数据
+      arrearsdata: [],
+      arrearsselectedRowKeys: [],
+      // 开票数据
       data: [],
       selectedRowKeys: [], // Check here to configure the default column
       columns: [
@@ -172,20 +277,22 @@ export default {
       columnsTitle: [
         {
           title: "发票抬头",
-          dataIndex: "title",
-          scopedSlots: { customRender: "title" }
+          dataIndex: "invoiceTitle",
+          scopedSlots: { customRender: "invoiceTitle" }
         },
         {
           title: "开具类型",
-          dataIndex: "issueType"
+          dataIndex: "issueType",
+          scopedSlots: { customRender: "issueType" }
         },
         {
           title: "发票类型",
-          dataIndex: "billType"
+          dataIndex: "invoiceType",
+          scopedSlots: { customRender: "invoiceType" }
         },
         {
           title: "税务登记号",
-          dataIndex: "taxRegistrationNumber"
+          dataIndex: "registerNo"
         },
         {
           title: "操作",
@@ -221,27 +328,77 @@ export default {
       columnsAddress: [
         {
           title: "收货人",
-          dataIndex: "name",
-          scopedSlots: { customRender: "name" }
+          dataIndex: "addressee",
+          scopedSlots: { customRender: "addressee" }
         },
         {
           title: "联系电话",
-          dataIndex: "phone"
+          dataIndex: "concatPhone"
         },
         {
           title: "地址",
-          dataIndex: "address"
+          key: "adress",
+          scopedSlots: { customRender: "adress" }
         },
         {
           title: "详细地址",
-          dataIndex: "detailAddress"
+          dataIndex: "address"
         },
         {
           title: "操作",
           dataIndex: "action",
           scopedSlots: { customRender: "action" }
         }
-      ]
+      ],
+      modalTitle: "编辑收货信息",
+      visible: false,
+      confirmLoading: false,
+      form: {
+        addressee: "",
+        concatPhone: "",
+        address: "",
+        province: "",
+        city: "",
+        county: ""
+      },
+      labelCol: { span: 6 },
+      wrapperCol: { span: 15 },
+      adress: ["", "", ""],
+      rules: {
+        addressee: [
+          {
+            required: true,
+            message: "收件人不能为空",
+            trigger: "blur"
+          }
+        ],
+        concatPhone: [
+          {
+            required: true,
+            message: "联系电话不能为空",
+            trigger: "blur"
+          },
+          {
+            pattern: /^1[3456789]\d{9}$/,
+            message: "请输入正确的手机号码",
+            trigger: "blur"
+          }
+        ],
+        city: [
+          {
+            required: true,
+            message: "所在地区不能为空",
+            trigger: "blur"
+          }
+        ],
+        address: [
+          {
+            required: true,
+            message: "详细地址不能为空",
+            trigger: "blur"
+          }
+        ]
+      }
     };
   },
   watch: {
@@ -251,6 +408,12 @@ export default {
     endValue(val) {
       console.log("endValue", val);
     }
+  },
+  created() {
+    // this.getList();
+    this.getDetailsList();
+    this.getListTitle();
+    this.getListAddress();
   },
   methods: {
     disabledStartDate(startValue) {
@@ -272,12 +435,74 @@ export default {
         this.endOpen = true;
       }
     },
+    // 保存信息
+    onSubmit() {
+      this.$refs.ruleForm.validate((valid) => {
+        if (valid) {
+          console.log(this.form, "this.form");
+          this.editAdress(this.form);
+        }
+      });
+    },
+    // 获取单个信息
+    getOne(id) {
+      this.$store.dispatch("mangeaddress/getOne", { id }).then((res) => {
+        this.form = res.data;
+        this.form.province = res.data.province;
+        this.form.city = res.data.city;
+        this.form.county = res.data.county;
+        this.adress = [res.data.province, res.data.city, res.data.county];
+        // console.log(this.form);
+      });
+    },
+    showModal(id) {
+      this.visible = true;
+      this.resetForm();
+      this.getOne(id);
+      this.form.id = id;
+    },
+    resetForm() {
+      this.$refs.ruleForm.resetFields();
+      this.adress = ["", "", ""];
+    },
+    // 编辑地址信息
+    editAdress(form) {
+      this.$store.dispatch("mangeaddress/edit", form).then((res) => {
+        this.$message.success("修改成功");
+        this.getListAddress();
+        this.visible = false;
+      });
+    },
+    onChange(value) {
+      console.log(value);
+      this.form.province = value[0];
+      this.form.city = value[1];
+      this.form.county = value[2];
+      // this.adress = value;
+      console.log(this.adress);
+    },
+    handleCancel(e) {
+      console.log("Clicked cancel button");
+      this.visible = false;
+    },
     handleEndOpenChange(open) {
       this.endOpen = open;
     },
     onSelectChange(selectedRowKeys) {
       console.log("selectedRowKeys changed: ", selectedRowKeys);
       this.selectedRowKeys = selectedRowKeys;
+    },
+    // 欠票表格多选
+    arrearsonSelectChange(selectedRowKeys) {
+      console.log("selectedRowKeys changed: ", selectedRowKeys);
+      this.arrearsselectedRowKeys = selectedRowKeys;
+    },
+    // 欠票数据
+    getDetailsList() {
+      this.$store.dispatch("billlist/getDetails").then((res) => {
+        console.log(res);
+        this.arrearsdata = [...res.data.list];
+      });
     },
     // 选择发票抬头
     onSelectChangeTitle(selectedRowKeysTitle) {
@@ -291,7 +516,7 @@ export default {
     },
     //查询数据表格（获取开票列表）
     getList() {
-      this.$getListQp("billapply/geitInvoice", this.listQuery).then(res => {
+      this.$getList("billapply/getList", this.listQuery).then((res) => {
         console.log(res);
         this.data = [...res.data.list];
         this.paginationProps.total = res.data.totalCount * 1;
@@ -299,9 +524,20 @@ export default {
     },
     // 获取发票抬头列表
     getListTitle() {
-      this.$getListQp("billapply/getInvoiceTitle").then(res => {
+      this.$store
+        .dispatch("billnews/getList", { currentPage: 1, pageSize: 10 })
+        .then((res) => {
+          console.log(res);
+          this.dataTitle = [...res.data.list];
+          this.paginationProps.total = res.data.totalCount * 1;
+        });
+    },
+    // 获取收货信息列表
+    getListAddress() {
+      this.$getList("mangeaddress/getList", this.listQuery).then((res) => {
         console.log(res);
-        this.dataTitle = [...res.data.list];
+        this.dataAddress = [...res.data];
+        this.paginationProps.total = res.data.totalCount * 1;
       });
     },
     //表格分页跳转
@@ -326,6 +562,10 @@ export default {
 }
 .top-select {
   margin: 20px 0;
+}
+.save-btn {
+  width: 100px;
+  margin-left: calc(50% - 50px);
 }
 .next {
   width: 120px;

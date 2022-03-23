@@ -6,7 +6,7 @@
         <a-row :gutter="16">
           <a-col :span="4">
             <a-statistic
-              :value="1128"
+              :value="dataAmount.canInvoiceAmount"
               style="margin-right: 50px"
               class="font-weight600"
               :value-style="{ color: '#02A7F0', 'white-space': 'nowrap' }"
@@ -18,7 +18,10 @@
           </a-col>
           <a-col :span="2"> <div class="calculate">=</div> </a-col>
           <a-col :span="4">
-            <a-statistic :value="93" class="demo-class font-weight600">
+            <a-statistic
+              :value="dataAmount.totalAmount"
+              class="demo-class font-weight600"
+            >
               <div style="white-space: nowrap" slot="title">总计消费可开票</div>
               <template #prefix> ￥ </template>
             </a-statistic>
@@ -29,7 +32,7 @@
           <a-col :span="4">
             <a-statistic
               title="历史已开票"
-              :value="100"
+              :value="dataAmount.invoiceAmount"
               class="demo-class font-weight600"
             >
               <template #prefix> ￥ </template>
@@ -39,7 +42,7 @@
           <a-col :span="4">
             <a-statistic
               title="本月不可开"
-              :value="300"
+              :value="dataAmount.invisibleAmount"
               class="demo-class font-weight600"
             >
               <template #prefix> ￥ </template>
@@ -55,15 +58,17 @@
         <div class="bill-info">
           <div>
             <a-descriptions title="默认发票信息" :column="2">
-              <a-descriptions-item label="开票类型"> 企业 </a-descriptions-item>
+              <a-descriptions-item label="开票类型">
+                {{ issueTypeMap[invoiceInfo.issueType] }}
+              </a-descriptions-item>
               <a-descriptions-item label="发票类型">
-                增值税专用发票
+                {{ invoiceTypeMap[invoiceInfo.invoiceType] }}
               </a-descriptions-item>
               <a-descriptions-item label="发票抬头">
-                上海XX公司
+                {{ invoiceInfo.invoiceTitle }}
               </a-descriptions-item>
               <a-descriptions-item label="税务登记号">
-                9100001111
+                {{ invoiceInfo.registerNo }}
               </a-descriptions-item>
               <a-descriptions-item label=""> </a-descriptions-item>
               <a-descriptions-item label="">
@@ -75,13 +80,18 @@
           </div>
           <div>
             <a-descriptions title="默认地址信息" :column="2">
-              <a-descriptions-item label="收件人"> 王富贵 </a-descriptions-item>
-              <a-descriptions-item label="联系电话">
-                1810000000
+              <a-descriptions-item label="收件人">
+                {{ addressInfo.addressee }}
               </a-descriptions-item>
-              <a-descriptions-item label="地址"> 上海 </a-descriptions-item>
+              <a-descriptions-item label="联系电话">
+                {{ addressInfo.concatPhone }}
+              </a-descriptions-item>
+              <a-descriptions-item label="地址">
+                {{ addressInfo.province }} {{ addressInfo.city }}
+                {{ addressInfo.county }}
+              </a-descriptions-item>
               <a-descriptions-item label="详细地址">
-                红海桥
+                {{ addressInfo.address }}
               </a-descriptions-item>
               <a-descriptions-item label=""> </a-descriptions-item>
               <a-descriptions-item label="">
@@ -96,7 +106,7 @@
       <div class="title-right">
         <h1 class="font-weight600" style="margin-left: 0; white-space: nowrap">
           <span>欠票未冲抵总金额：</span>
-          <span style="color: #d9001b">￥100</span>
+          <span style="color: #d9001b">￥{{ dataAmount.negativeAmount }}</span>
         </h1>
         <div>
           <p>明细</p>
@@ -120,6 +130,7 @@
     <div>
       <a-table :columns="columns" :data-source="data">
         <div slot="companyName" slot-scope="text">{{ text }}</div>
+        <div slot="status" slot-scope="text">{{ invoiceStatusEnum[text] }}</div>
         <div slot="action">
           <a-button type="link">详情</a-button>
           <a-button type="link">修改地址</a-button>
@@ -132,15 +143,26 @@
 </template>
 
 <script>
+import { invoiceStatusEnum } from "@/utils/enum.js";
 export default {
   data() {
     return {
+      issueTypeMap: {
+        1: "个人",
+        2: "企业"
+      },
+      invoiceTypeMap: {
+        1: "增值税普通发票",
+        2: "增值税专用发票"
+      },
+      dataAmount: {},
+      invoiceStatusEnum,
       data: [],
       columns: [
         {
           title: "发票ID",
-          dataIndex: "id",
-          scopedSlots: { customRender: "id" }
+          dataIndex: "invoiceInfoId",
+          scopedSlots: { customRender: "invoiceInfoId" }
         },
         {
           title: "发票抬头",
@@ -148,11 +170,12 @@ export default {
         },
         {
           title: "开票金额",
-          dataIndex: "invoiceAmount"
+          dataIndex: "taxAmount"
         },
         {
           title: "申请状态",
-          dataIndex: "status"
+          dataIndex: "status",
+          scopedSlots: { customRender: "status" }
         },
         {
           title: "申请时间",
@@ -172,12 +195,12 @@ export default {
       columnsDetails: [
         {
           title: "订单ID",
-          dataIndex: "id",
+          dataIndex: "orderNo",
           width: "100px"
         },
         {
           title: " 退款金额",
-          dataIndex: "amount",
+          dataIndex: "debtAmount",
           width: "100px"
         }
       ],
@@ -186,12 +209,10 @@ export default {
         search: "",
         currentPage: 1,
         pageSize: 10,
-        total: 0,
-        status: "",
-        startTime: "",
-        endTime: "",
-        accountType: ""
+        total: 0
       },
+      invoiceInfo: {},
+      addressInfo: {},
       paginationProps: {
         showQuickJumper: true,
         showSizeChanger: true,
@@ -202,16 +223,20 @@ export default {
           )} 页`,
         onChange: this.quickJump,
         onShowSizeChange: this.onShowSizeChange
-      },
+      }
     };
   },
   created() {
     this.getList();
+    this.getAmount();
+    this.getDetailsList();
+    this.getInvoiceInfo();
+    this.getAddressInfo();
   },
   methods: {
     //查询数据表格 开票记录
     getList() {
-      this.$getList("billlist/getList", this.listQuery).then(res => {
+      this.$getList("billlist/getList", this.listQuery).then((res) => {
         console.log(res);
         this.data = [...res.data.list];
         this.paginationProps.total = res.data.totalCount * 1;
@@ -219,31 +244,40 @@ export default {
     },
     // 明细
     getDetailsList() {
-      this.$getList("billlist/getDetails").then(res => {
+      this.$store.dispatch("billlist/getDetails").then((res) => {
         console.log(res);
         this.dataDetails = [...res.data.list];
       });
     },
     // 金额
     getAmount() {
-      this.$getList("billlist/getAmount").then(res => {
+      this.$store.dispatch("billlist/getAmount").then((res) => {
         console.log(res);
-        // this.dataAmount = [...res.data.list];
+        this.dataAmount = res.data;
       });
     },
     // 获取发票信息
     getInvoiceInfo() {
-      this.$getList("billlist/getInvoiceInfo").then(res => {
-        console.log(res);
-        // this.dataInvoiceInfo = [...res.data.list];
-      });
+      this.$store
+        .dispatch("billnews/getList", { currentPage: 1, pageSize: 999 })
+        .then((res) => {
+          console.log(res);
+          this.invoiceInfo = res.data.list.filter((item) => {
+            return item.defaultStatus === 1;
+          })[0];
+        });
     },
     // 地址信息
     getAddressInfo() {
-      this.$getList("billlist/getAddressInfo").then(res => {
-        console.log(res);
-        // this.dataAddressInfo = [...res.data.list];
-      });
+      this.$store
+        .dispatch("mangeaddress/getList", { currentPage: 1, pageSize: 5 })
+        .then((res) => {
+          console.log(res);
+          this.addressInfo = res.data.filter((item) => {
+            return item.defaultSign === 1;
+          })[0];
+          console.log(this.addressInfo,'----');
+        });
     },
     //表格分页跳转
     quickJump(currentPage) {
@@ -256,7 +290,7 @@ export default {
       this.listQuery.pageSize = pageSize;
       this.getList();
     }
-  },
+  }
 };
 </script>
 

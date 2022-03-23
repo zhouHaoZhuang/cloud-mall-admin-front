@@ -3,10 +3,10 @@ import request from "@/utils/request";
 const billlist = {
   namespaced: true,
   actions: {
-    // 获取发票列表
+    // 获取发票记录列表
     getList({ commit, state }, params) {
       return request({
-        url: "/ccInvoiceEvaluate",
+        url: "/channelInvoiceRecord/page",
         method: "get",
         params,
       });
@@ -14,17 +14,17 @@ const billlist = {
     // 获取明细列表
     getDetails({ commit, state }, params) {
       return request({
-        url: `/ccInvoiceEvaluate`,
+        url: `/invoiceRecord/negativePage`,
         method: "get",
-        params
+        params,
       });
     },
     // 获取发票详情 金额数据
     getAmount({ commit, state }, params) {
       return request({
-        url: `/ccInvoiceEvaluate/amount`,
+        url: `/invoiceRecord/summary`,
         method: "get",
-        params
+        params,
       });
     },
     // 获取发票详情 发票信息
@@ -32,7 +32,7 @@ const billlist = {
       return request({
         url: `/ccInvoiceEvaluate/invoiceInfo`,
         method: "get",
-        params
+        params,
       });
     },
     // 获取发票详情 发票信息
@@ -40,7 +40,7 @@ const billlist = {
       return request({
         url: `/ccInvoiceEvaluate/addressInfo`,
         method: "get",
-        params
+        params,
       });
     },
     // 获取
