@@ -1,39 +1,53 @@
 <template>
   <div>
     <DetailHeader title="退票申请详情" />
-    <div class="bill-info">
+    <div class="bill-info" v-if="data">
       <a-descriptions style="margin: 20px 0" title="申请信息">
         <a-descriptions-item label="发票ID">
-          FP20220314001
+          {{ data.invoiceNo }}
         </a-descriptions-item>
-        <a-descriptions-item label="开具类型"> 企业 </a-descriptions-item>
+        <a-descriptions-item label="开具类型">
+          {{ issueTypeMap[data.invoiceInfo.issueType] }}
+        </a-descriptions-item>
         <a-descriptions-item label="发票类型">
-          增值税专用发票
+          {{ invoiceTypeMap[data.invoiceInfo.invoiceType] }}
         </a-descriptions-item>
-        <a-descriptions-item label="发票抬头">上海 </a-descriptions-item>
+        <a-descriptions-item label="发票抬头">
+          {{ data.invoiceInfo.invoiceTitle }}
+        </a-descriptions-item>
         <a-descriptions-item label="税务登记号">
-          910004565465465
+          {{ data.invoiceInfo.registerNo }}
         </a-descriptions-item>
-        <a-descriptions-item label="退票申请状态"> 已提交 </a-descriptions-item>
-        <a-descriptions-item label="开票金额"> ￥500.00 </a-descriptions-item>
+        <a-descriptions-item label="退票申请状态">
+          {{ invoiceStatusEnum[data.status] }}
+        </a-descriptions-item>
+        <a-descriptions-item label="开票金额">
+          ￥{{ data.invoiceAmount }}
+        </a-descriptions-item>
         <a-descriptions-item label="退票申请时间">
-          2016-09-21 08:50:08
+          <span v-if="data.refundCreateTime">
+            {{ data.refundCreateTime | formatDate }}
+          </span>
         </a-descriptions-item>
-        <a-descriptions-item label="备注"> 退款 </a-descriptions-item>
+        <a-descriptions-item label="备注">
+          {{ data.refundRemark }}
+        </a-descriptions-item>
         <a-descriptions-item label="退票申请反馈时间">
-          2016-09-21 08:50:08
+          {{ data.refundFeedbackTime }}
         </a-descriptions-item>
         <a-descriptions-item label="退票申请反馈说明">
-          阿萨德hasla
+          {{ data.refundFeedbackRemark }}
         </a-descriptions-item>
       </a-descriptions>
       <a-descriptions style="margin: 20px 0" title="物流信息">
         <a-descriptions-item label="物流单号">
-          SF454546873000000000000000
+          {{ data.expressDelivery }}
         </a-descriptions-item>
-        <a-descriptions-item label="寄件联系人"> 张三 </a-descriptions-item>
+        <a-descriptions-item label="寄件联系人">
+          {{ data.sender }}
+        </a-descriptions-item>
         <a-descriptions-item label="联系电话">
-          1520000000000000
+          {{ data.senderPhone }}
         </a-descriptions-item>
       </a-descriptions>
     </div>
@@ -41,7 +55,7 @@
       <h2 style="margin: 20px 0">开票明细</h2>
       <a-table
         :columns="columns"
-        :data-source="data"
+        :data-source="dataDetails"
         :pagination="paginationProps"
         rowKey="id"
       >
@@ -52,26 +66,27 @@
 
 <script>
 import DetailHeader from "@/components/Common/detailHeader.vue";
-
+import { invoiceStatusEnum } from "@/utils/enum.js";
 export default {
   components: {
     DetailHeader
   },
   data() {
     return {
-      data: [],
+      data: null,
+      invoiceStatusEnum,
       columns: [
         {
           title: "订单ID",
-          dataIndex: "orderId"
+          dataIndex: "orderNo"
         },
         {
           title: "类型",
-          dataIndex: "orderType"
+          dataIndex: "type"
         },
         {
           title: "产品名称",
-          dataIndex: "productName"
+          dataIndex: "bizTypeName"
         },
         {
           title: "可开票金额",
@@ -79,7 +94,7 @@ export default {
         },
         {
           title: "订单创建时间",
-          dataIndex: "orderCreateTime"
+          dataIndex: "createTime"
         }
       ],
       listQuery: {
@@ -93,6 +108,14 @@ export default {
         endTime: "",
         accountType: ""
       },
+      issueTypeMap: {
+        1: "个人",
+        2: "企业"
+      },
+      invoiceTypeMap: {
+        1: "增值税普通发票",
+        2: "增值税专用发票"
+      },
       paginationProps: {
         showQuickJumper: true,
         showSizeChanger: true,
@@ -104,29 +127,36 @@ export default {
         onChange: this.quickJump,
         onShowSizeChange: this.onShowSizeChange
       },
+      dataDetails: []
     };
   },
+  created() {
+    this.getData();
+  },
   methods: {
-    //查询数据表格
-    getList() {
-      this.$getListQp("word/getList", this.listQuery).then(res => {
-        console.log(res);
-        this.data = [...res.data.list];
-        this.paginationProps.total = res.data.totalCount * 1;
-      });
+    getData() {
+      this.$store
+        .dispatch("billapply/getInvoiceInfo", { id: this.$route.query.id })
+        .then((res) => {
+          console.log(res, "---------");
+          this.data = res.data;
+          this.dataDetails = res.data.invoiceEvaluatePage.list;
+          this.paginationProps.total =
+            res.data.invoiceEvaluatePage.totalCount * 1;
+        });
     },
     //表格分页跳转
     quickJump(currentPage) {
       this.listQuery.currentPage = currentPage;
-      this.getList();
+      this.getData();
     },
     //表格分页切换每页条数
     onShowSizeChange(current, pageSize) {
       this.listQuery.currentPage = current;
       this.listQuery.pageSize = pageSize;
-      this.getList();
+      this.getData();
     }
-  },
+  }
 };
 </script>
 

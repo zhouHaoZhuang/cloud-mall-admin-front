@@ -18,7 +18,7 @@ import billlist from "./billlist.js";
 import billapply from "./billapply.js";
 import billnews from "./billnews.js";
 import withdraw from './withdraw'
-
+import refundlist from './refundlist'
 export default {
   setting,
   user,
@@ -39,5 +39,6 @@ export default {
   billlist,
   billapply,
   billnews,
-  withdraw
+  withdraw,
+  refundlist,
 };
