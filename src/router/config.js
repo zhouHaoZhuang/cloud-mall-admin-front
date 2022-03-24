@@ -258,6 +258,16 @@ export const asyncRoute = [
                 }
               },
               {
+                path: "unsubscribe",
+                name: "资源退订",
+                component: () =>
+                  import("@/views/user/finance/order/unsubscribe"),
+                meta: {
+                  hiddenMenu: true,
+                  perm: "user-finance-order"
+                }
+              },
+              {
                 path: "refund",
                 name: "退款管理",
                 component: RouteView,
@@ -276,9 +286,19 @@ export const asyncRoute = [
                     path: "record",
                     name: "退订记录",
                     component: () =>
-                      import("@/views/user/finance/refund/record"),
+                      import("@/views/user/finance/refund/record/index"),
                     meta: {
                       perm: "user-finance-refund-record"
+                    }
+                  },
+                  {
+                    path: "recordDetail",
+                    name: "退订详情",
+                    component: () =>
+                      import("@/views/user/finance/refund/record/detail"),
+                    meta: {
+                      hiddenMenu: true,
+                      perm: "user-finance-recharge"
                     }
                   }
                 ]
@@ -384,7 +404,7 @@ export const asyncRoute = [
                 meta: {
                   perm: "user-finance-refund-record"
                 }
-              },
+              }
             ]
           },
           {

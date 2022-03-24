@@ -193,3 +193,19 @@ export const cdnPriorityEnum = {
   1: "主",
   2: "备"
 };
+//订单管理中订单类型枚举
+export const orderType = {
+  1: "CDN流量",
+  2: "CDN资源包"
+};
+//支付状态枚举
+export const payState = {
+  1: "未支付",
+  2: "已支付",
+  3: "作废"
+};
+//时间类型枚举
+export const timeType = {
+  1: "创建时间",
+  2: "支付时间"
+};

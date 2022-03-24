@@ -4,17 +4,25 @@
       <div>
         <div class="ny-panel-title">订单管理</div>
       </div>
+      <div class="prompt-message">
+        <p>
+          CDN加速产品在5天内未使用的情况下支持5天无理由退款，一经使用或者超过5天不支持退款。
+        </p>
+      </div>
       <div class="btns">
-        <div class="btn1">
+        <!-- <div class="btn1">
           <a-button type="primary" @click="handleJumpCloudPay">
             购买产品
           </a-button>
-        </div>
+        </div> -->
         <!-- 按钮输入框组 -->
         <div class="btn3">
           <a-input-group compact>
             <a-select v-model="listQuery.key" style="width: 100px">
+              <a-select-option value="orderNo"> 退单编号 </a-select-option>
               <a-select-option value="orderNo"> 订单编号 </a-select-option>
+              <a-select-option value="orderNo2"> 渠道商名称 </a-select-option>
+              <a-select-option value="orderNo3"> 渠道商ID </a-select-option>
             </a-select>
             <a-input-search
               allowClear
@@ -26,6 +34,51 @@
             />
           </a-input-group>
         </div>
+        <a-select
+          class="right-skew"
+          v-model="listQuery.enmu"
+          placeholder="订单类型"
+          allowClear
+          style="width: 110px"
+        >
+          <a-select-option
+            v-for="(value, key) in orderType"
+            :key="key"
+            :value="key"
+          >
+            {{ value }}
+          </a-select-option>
+        </a-select>
+        <a-select
+          class="right-skew"
+          v-model="listQuery.state"
+          placeholder="订单状态"
+          allowClear
+          style="width: 110px"
+        >
+          <a-select-option
+            v-for="(value, key) in payState"
+            :key="key"
+            :value="key"
+          >
+            {{ value }}
+          </a-select-option>
+        </a-select>
+        <a-select
+          class="right-skew"
+          v-model="listQuery.time"
+          placeholder="计费方式"
+          allowClear
+          style="width: 110px"
+        >
+          <a-select-option
+            v-for="(value, key) in timeType"
+            :key="key"
+            :value="key"
+          >
+            {{ value }}
+          </a-select-option>
+        </a-select>
         <!-- 日历 -->
         <div class="btn2">
           <div class="btn4">
@@ -50,22 +103,6 @@
             />
           </div>
         </div>
-        <div class="btn5">
-          <a-select
-            v-model="listQuery.tradeStatus"
-            placeholder="请选择"
-            style="width: 120px"
-            allowClear
-          >
-            <a-select-option
-              v-for="(value, key) in orderStatusEnum"
-              :key="key"
-              :value="key"
-            >
-              {{ value }}
-            </a-select-option>
-          </a-select>
-        </div>
         <div class="btn6">
           <a-button type="primary" @click="handleSearch">确定查询</a-button>
         </div>
@@ -86,31 +123,58 @@
           <span slot="discountAmount" style="color: #ff6600" slot-scope="text">
             {{ text }}
           </span>
+
           <div slot="createTime" slot-scope="text">
             {{ text | formatDate }}
           </div>
-          <div slot="tradeType" slot-scope="text">
-            {{ tradeTypeEnum[text] }}
-          </div>
-          <div
+
+          <!-- <div
             :class="{ green: text === 1, blue: text !== 1 }"
             slot="tradeStatus"
             slot-scope="text"
           >
             {{ orderStatusEnum[text] }}
-          </div>
+          </div> -->
+          <span slot="tradeStatus" style="color: #ff6600" slot-scope="text">
+            {{ text }}
+          </span>
+          <span slot="tradeType" style="color: #ff6600" slot-scope="text">
+            {{ text }}
+          </span>
           <div slot="action" slot-scope="text, record">
             <a-space>
               <a-button type="link" @click="selectPool(record)">
-                查看
+                详情
               </a-button>
-              <a-button
+              <a-button type="link" @click="subscription(record)">
+                退订
+              </a-button>
+              <a-button type="link" @click="cancelOrder(record)">
+                支付
+              </a-button>
+              <!-- <a-button
+                type="link"
+                @click="cancelOrder(record)"
+              >
+                关闭
+              </a-button> -->
+
+              <a-popconfirm
+                :title="`你要关闭订单${record.orderNo}号为多少的订单吗?`"
+                ok-text="确定"
+                cancel-text="取消"
+                @confirm="confirm"
+                @cancel="cancel"
+              >
+                <a href="#">关闭</a>
+              </a-popconfirm>
+              <!-- <a-button
                 v-if="record.tradeStatus === 1"
                 type="link"
                 @click="cancelOrder(record)"
               >
-                取消订单
-              </a-button>
+                退订
+              </a-button> -->
             </a-space>
           </div>
         </a-table>
@@ -121,19 +185,30 @@
 
 <script>
 import { jumpCloudMall } from "@/utils/index";
-import { orderStatusEnum, tradeTypeEnum } from "@/utils/enum";
+import {
+  orderStatusEnum,
+  tradeTypeEnum,
+  orderType,
+  payState,
+  timeType
+} from "@/utils/enum";
 export default {
   data() {
     return {
       orderStatusEnum,
       tradeTypeEnum,
+      orderType,
+      payState,
+      timeType,
       listQuery: {
         key: "orderNo",
         search: "",
         startTime: "",
         endTime: "",
         createTimeSort: "desc",
-        tradeStatus: undefined,
+        enmu: undefined,
+        state: undefined,
+        time: undefined,
         currentPage: 1,
         pageSize: 10,
         total: 0
@@ -142,44 +217,47 @@ export default {
         {
           title: "订单编号",
           dataIndex: "orderNo",
-          scopedSlots: { customRender: "orderNo" },
-          width: 150
+          scopedSlots: { customRender: "orderNo" }
         },
         {
           title: "产品名称",
-          dataIndex: "productName",
-          width: 150
+          dataIndex: "订单类型"
         },
         {
-          title: "金额",
+          title: "产品",
           dataIndex: "discountAmount",
-          scopedSlots: { customRender: "discountAmount" },
-          width: 80
+          scopedSlots: { customRender: "discountAmount" }
         },
         {
-          title: "创建时间",
+          title: "原价",
           dataIndex: "createTime",
-          width: 160,
           scopedSlots: { customRender: "createTime" },
           sorter: true,
           sortDirections: ["ascend", "descend"]
         },
         {
-          title: "状态",
+          title: "应付金额",
           dataIndex: "tradeStatus",
-          width: 100,
           scopedSlots: { customRender: "tradeStatus" }
         },
         {
-          title: "来源/用途",
+          title: "创建时间",
           dataIndex: "tradeType",
-          width: 100,
           scopedSlots: { customRender: "tradeType" }
+        },
+        {
+          title: "支付时间",
+          dataIndex: "action2",
+          scopedSlots: { customRender: "action2" }
+        },
+        {
+          title: "支付状态",
+          dataIndex: "action1",
+          scopedSlots: { customRender: "action1" }
         },
         {
           title: "操作",
           dataIndex: "action",
-          width: 120,
           scopedSlots: { customRender: "action" }
         }
       ],
@@ -207,12 +285,35 @@ export default {
       this.loading = true;
       this.$getList("income/getList", this.listQuery)
         .then((res) => {
-          this.data = [...res.data.list];
+          // this.data = [...res.data.list];
+          //下方是假数据
+          let aaa = [
+            {
+              orderNo: "22222222",
+              tradeStatus: 22,
+              id: 1
+            }
+          ];
+          this.data = aaa;
           this.paginationProps.total = res.data.totalCount * 1;
         })
         .finally(() => {
           this.loading = false;
         });
+    },
+    confirm() {
+      console.log("确定");
+    },
+    cancel() {
+      console.log("我取消了");
+    },
+    subscription(record) {
+      this.$router.push({
+        path: "/user/finance/unsubscribe",
+        query: {
+          id: record.orderNo
+        }
+      });
     },
     //查看
     selectPool(record) {
@@ -295,6 +396,13 @@ export default {
 .order-container {
   background-color: #fff;
   .content {
+    .prompt-message {
+      text-indent: 2em;
+      width: 800px;
+      height: 60px;
+      line-height: 60px;
+      background-color: #f2f2f2;
+    }
     .ny-panel-title {
       display: inline-block;
       margin: 0;
@@ -311,7 +419,7 @@ export default {
         padding-right: 20px;
       }
       .btn3 {
-        width: 400px;
+        width: 380px;
       }
       .btn2 {
         display: flex;
@@ -330,6 +438,9 @@ export default {
       }
       .btn6 {
         padding-left: 20px;
+      }
+      .right-skew {
+        margin-right: 20px;
       }
     }
     .table {

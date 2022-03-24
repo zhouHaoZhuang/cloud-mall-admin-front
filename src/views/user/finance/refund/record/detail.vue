@@ -2,7 +2,7 @@
   <div class="orderInfo">
     <!-- 订单信息 -->
     <div v-if="orderInfo" class="channel">
-      <DetailHeader title="订单详情" back="/user/finance/trash" />
+      <DetailHeader title="退订详情" back="/user/finance/refund/record" />
       <!-- 状态为未支付时的提示文字 -->
       <div v-if="orderInfo.tradeStatus === 1" class="unpaid-box">
         <a-icon class="icon" type="exclamation-circle" />
@@ -16,8 +16,12 @@
         <p class="purchase-tittle">订单信息</p>
         <ul class="detail-box">
           <li>
-            <span>订单编号:</span>
+            <span>退单编号:</span>
             <span>{{ orderInfo.orderNo }}</span>
+          </li>
+          <li>
+            <span>订单编号:</span>
+            <span>{{ tradeTypeEnum[orderInfo.tradeType] }} </span>
           </li>
           <li>
             <span>订单类型:</span>
@@ -27,45 +31,21 @@
             <span>创建时间:</span>
             <span>{{ orderInfo.orderCreateTime | formatDate }}</span>
           </li>
-          <li v-if="orderInfo.tradeStatus === 1">
-            <span>支付剩余时间:</span>
-            <span class="strong">{{ countDownTime }}</span>
-          </li>
-          <!-- <li>
-          <span>订单状态:</span>
-          <span
-            :class="{
-              green: orderInfo.tradeStatus === 1,
-              blue: orderInfo.tradeStatus !== 1
-            }"
-          >
-            {{ orderStatusEnum[orderInfo.tradeStatus] }}
-          </span>
-        </li> -->
-          <li
-            v-if="
-              orderInfo.tradeStatus !== 1 &&
-              orderInfo.tradeStatus !== 3 &&
-              orderInfo.tradeStatus !== -1
-            "
-          >
-            <span>支付时间:</span>
-            <span>{{ orderInfo.payTime | formatDate }}</span>
-          </li>
-          <li v-if="orderInfo.tradeStatus === 1" class="cancelOrder-btn">
-            <a-button @click="cancelOrder">取消订单</a-button>
+          <li>
+            <span>退款原因:</span>
+            <span>{{ orderInfo.orderCreateTime | formatDate }}</span>
           </li>
         </ul>
       </div>
       <div class="outbox">
-        <p class="purchase-tittle">支付信息</p>
+        <p class="purchase-tittle">退款信息</p>
         <ul class="detail-box">
           <li>
-            <span>支付金额:</span>
+            <span>退款金额:</span>
             <span>{{ orderInfo.orderNo }}</span>
           </li>
           <li>
-            <span>支付状态:</span>
+            <span>退款状态:</span>
             <span>{{ tradeTypeEnum[orderInfo.tradeType] }} </span>
           </li>
         </ul>
@@ -239,7 +219,19 @@ export default {
           dataIndex: "quantity"
         },
         {
-          title: "金额",
+          title: "推广优惠",
+          dataIndex: "quantity2"
+        },
+        {
+          title: "折扣",
+          dataIndex: "quantity3"
+        },
+        {
+          title: "成交价",
+          dataIndex: "quantity4"
+        },
+        {
+          title: "退款金额",
           dataIndex: "discountAmount",
           scopedSlots: { customRender: "discountAmount" }
         }
