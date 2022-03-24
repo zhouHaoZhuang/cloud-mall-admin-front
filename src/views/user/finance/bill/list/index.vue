@@ -57,7 +57,7 @@
         >
         <div class="bill-info">
           <div>
-            <a-descriptions title="默认发票信息" :column="2">
+            <a-descriptions title="默认发票信息" :column="2" v-if="invoiceInfo">
               <a-descriptions-item label="开票类型">
                 {{ issueTypeMap[invoiceInfo.issueType] }}
               </a-descriptions-item>
@@ -114,7 +114,6 @@
             <a-table
               :columns="columnsDetails"
               :data-source="dataDetails"
-              :pagination="paginationProps"
               rowKey="id"
             >
             </a-table>
@@ -124,18 +123,60 @@
     </div>
     <p>开票记录</p>
     <div style="margin: 20px 0">
-      <a-input style="width: 200px" placeholder="请输入发票ID进行搜索" />
-      <a-button style="margin-left: 10px" type="primary">查询</a-button>
+      <a-input
+        style="width: 200px"
+        placeholder="请输入发票ID进行搜索"
+        v-model="listQuery.invoiceNo"
+        allowClear
+      />
+      <a-button style="margin-left: 10px" type="primary" @click="getList()"
+        >查询</a-button
+      >
     </div>
     <div>
-      <a-table :columns="columns" :data-source="data">
+      <a-table
+        :columns="columns"
+        :data-source="data"
+        :pagination="paginationProps"
+        rowKey="id"
+      >
         <div slot="companyName" slot-scope="text">{{ text }}</div>
+        <div v-if="text" slot="bizTime" slot-scope="text">
+          {{ text | formatDate }}
+        </div>
+        <div v-if="text" slot="feedbackTime" slot-scope="text">
+          {{ text | formatDate }}
+        </div>
         <div slot="status" slot-scope="text">{{ invoiceStatusEnum[text] }}</div>
-        <div slot="action">
-          <a-button type="link">详情</a-button>
-          <a-button type="link">修改地址</a-button>
-          <a-button type="link">取消</a-button>
-          <a-button type="link">申请退票</a-button>
+        <div slot="action" slot-scope="text, record">
+          <a-button
+            type="link"
+            @click="$router.push('/user/finance/bill/info?id=' + record.id)"
+            >详情</a-button
+          >
+          <a-button
+            type="link"
+            :disabled="record.status !== 1"
+            @click="$router.push('/user/finance/bill/address?id=' + record.id)"
+          >
+            修改地址
+          </a-button>
+          <a-button
+            type="link"
+            :class="{ 'del-red': record.status === 1 }"
+            :disabled="record.status !== 1"
+            @click="cancelInvoice(record.id)"
+          >
+            取消
+          </a-button>
+          <a-button
+            type="link"
+            style="color: #d9001b"
+            v-show="record.status === 5"
+            @click="$router.push('/user/finance/bill/resubmit?id=' + record.id)"
+          >
+            申请退票
+          </a-button>
         </div>
       </a-table>
     </div>
@@ -161,8 +202,8 @@ export default {
       columns: [
         {
           title: "发票ID",
-          dataIndex: "invoiceInfoId",
-          scopedSlots: { customRender: "invoiceInfoId" }
+          dataIndex: "invoiceNo",
+          scopedSlots: { customRender: "invoiceNo" }
         },
         {
           title: "发票抬头",
@@ -179,15 +220,17 @@ export default {
         },
         {
           title: "申请时间",
-          dataIndex: "bizTime"
+          dataIndex: "bizTime",
+          scopedSlots: { customRender: "bizTime" }
         },
         {
           title: "反馈时间",
-          dataIndex: "feedbackTime"
+          dataIndex: "feedbackTime",
+          scopedSlots: { customRender: "feedbackTime" }
         },
         {
           title: "操作",
-          dataIndex: "action",
+          key: "action",
           scopedSlots: { customRender: "action" }
         }
       ],
@@ -207,11 +250,12 @@ export default {
       listQuery: {
         key: "",
         search: "",
+        invoiceNo: undefined,
         currentPage: 1,
         pageSize: 10,
         total: 0
       },
-      invoiceInfo: {},
+      invoiceInfo: null,
       addressInfo: {},
       paginationProps: {
         showQuickJumper: true,
@@ -242,10 +286,22 @@ export default {
         this.paginationProps.total = res.data.totalCount * 1;
       });
     },
+    // 取消发票记录
+    cancelInvoice(id) {
+      this.$confirm({
+        title: "确定要取消吗?",
+        onOk: () => {
+          this.$store.dispatch("billlist/del", id).then((res) => {
+            this.$message.success("取消成功");
+            this.getList();
+          });
+        }
+      });
+    },
     // 明细
     getDetailsList() {
       this.$store.dispatch("billlist/getDetails").then((res) => {
-        console.log(res);
+        console.log(res, "明细");
         this.dataDetails = [...res.data.list];
       });
     },
@@ -276,7 +332,7 @@ export default {
           this.addressInfo = res.data.filter((item) => {
             return item.defaultSign === 1;
           })[0];
-          console.log(this.addressInfo,'----');
+          console.log(this.addressInfo, "----");
         });
     },
     //表格分页跳转
@@ -304,6 +360,9 @@ h1 {
 }
 .font-weight600 {
   font-weight: 600;
+}
+.del-red {
+  color: #d9001b;
 }
 .title-info {
   display: flex;

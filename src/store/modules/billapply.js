@@ -35,10 +35,18 @@ const billapply = {
         params,
       });
     },
+    // 申请发票data
+    applyInvoice({ commit, state }, data) {
+      return request({
+        url: `/invoiceRecord/issue`,
+        method: "post",
+        data,
+      });
+    },
     // 获取发票详情 发票信息
     getInvoiceInfo({ commit, state }, params) {
       return request({
-        url: `/ccInvoiceEvaluate/invoiceInfo`,
+        url: `/invoiceRecord/${params.id}`,
         method: "get",
         params,
       });
@@ -49,6 +57,22 @@ const billapply = {
         url: `/ccInvoiceEvaluate/addressInfo`,
         method: "get",
         params,
+      });
+    },
+    // 退票申请
+    refundApply({ commit, state }, data) {
+      return request({
+        url: `/invoiceRecord/refund/${data.id}`,
+        method: "patch",
+        data,
+      });
+    },
+    // 修改地址
+    updateAddress({ commit, state }, data) {
+      return request({
+        url: `/ccInvoiceEvaluate/addressInfo`,
+        method: "patch",
+        data,
       });
     },
     // 获取

@@ -1,89 +1,104 @@
 export const options = [
   {
-    value: "北京市",
+    value: "北京",
 
-    label: "北京市",
+    label: "北京",
 
     children: [
-      { value: "东城区", label: "东城区" },
+      {
+        value: "北京市",
 
-      { value: "西城区", label: "西城区" },
+        label: "北京市",
 
-      { value: "崇文区", label: "崇文区" },
+        children: [
+          { value: "东城区", label: "东城区" },
 
-      { value: "宣武区", label: "宣武区" },
+          { value: "西城区", label: "西城区" },
 
-      { value: "朝阳区", label: "朝阳区" },
+          { value: "崇文区", label: "崇文区" },
 
-      { value: "丰台区", label: "丰台区" },
+          { value: "宣武区", label: "宣武区" },
 
-      { value: "石景山区", label: "石景山区" },
+          { value: "朝阳区", label: "朝阳区" },
 
-      { value: "海淀区", label: "海淀区" },
+          { value: "丰台区", label: "丰台区" },
 
-      { value: "门头沟区", label: "门头沟区" },
+          { value: "石景山区", label: "石景山区" },
 
-      { value: "房山区", label: "房山区" },
+          { value: "海淀区", label: "海淀区" },
 
-      { value: "通州区", label: "通州区" },
+          { value: "门头沟区", label: "门头沟区" },
 
-      { value: "顺义区", label: "顺义区" },
+          { value: "房山区", label: "房山区" },
 
-      { value: "昌平区", label: "昌平区" },
+          { value: "通州区", label: "通州区" },
 
-      { value: "大兴区", label: "大兴区" },
+          { value: "顺义区", label: "顺义区" },
 
-      { value: "怀柔区", label: "怀柔区" },
+          { value: "昌平区", label: "昌平区" },
 
-      { value: "平谷区", label: "平谷区" },
+          { value: "大兴区", label: "大兴区" },
 
-      { value: "密云县", label: "密云县" },
+          { value: "怀柔区", label: "怀柔区" },
 
-      { value: "延庆县", label: "延庆县" },
+          { value: "平谷区", label: "平谷区" },
+
+          { value: "密云县", label: "密云县" },
+
+          { value: "延庆县", label: "延庆县" },
+        ],
+      },
     ],
   },
-
   {
-    value: "天津市",
+    value: "天津",
 
-    label: "天津市",
+    label: "天津",
 
     children: [
-      { value: "和平区", label: "和平区" },
+      {
+        value: "天津市",
 
-      { value: "河东区", label: "河东区" },
+        label: "天津市",
 
-      { value: "河西区", label: "河西区" },
+        children: [
+          { value: "和平区", label: "和平区" },
 
-      { value: "南开区", label: "南开区" },
+          { value: "河东区", label: "河东区" },
 
-      { value: "河北区", label: "河北区" },
+          { value: "河西区", label: "河西区" },
 
-      { value: "红桥区", label: "红桥区" },
+          { value: "南开区", label: "南开区" },
 
-      { value: "塘沽区", label: "塘沽区" },
+          { value: "河北区", label: "河北区" },
 
-      { value: "汉沽区", label: "汉沽区" },
+          { value: "红桥区", label: "红桥区" },
 
-      { value: "大港区", label: "大港区" },
+          { value: "塘沽区", label: "塘沽区" },
 
-      { value: "东丽区", label: "东丽区" },
+          { value: "汉沽区", label: "汉沽区" },
 
-      { value: "西青区", label: "西青区" },
+          { value: "大港区", label: "大港区" },
 
-      { value: "津南区", label: "津南区" },
+          { value: "东丽区", label: "东丽区" },
 
-      { value: "北辰区", label: "北辰区" },
+          { value: "西青区", label: "西青区" },
 
-      { value: "武清区", label: "武清区" },
+          { value: "津南区", label: "津南区" },
 
-      { value: "宝坻区", label: "宝坻区" },
+          { value: "北辰区", label: "北辰区" },
 
-      { value: "宁河县", label: "宁河县" },
+          { value: "武清区", label: "武清区" },
 
-      { value: "静海县", label: "静海县" },
+          { value: "宝坻区", label: "宝坻区" },
 
-      { value: "蓟县", label: "蓟县" },
+          { value: "宁河县", label: "宁河县" },
+
+          { value: "静海县", label: "静海县" },
+
+          { value: "蓟县", label: "蓟县" },
+        ],
+      },
     ],
   },
 
@@ -2062,50 +2077,57 @@ export const options = [
       },
     ],
   },
-
   {
-    value: "上海市",
+    value: "上海",
 
-    label: "上海市",
+    label: "上海",
 
     children: [
-      { value: "黄浦区", label: "黄浦区" },
+      {
+        value: "上海市",
 
-      { value: "卢湾区", label: "卢湾区" },
+        label: "上海市",
 
-      { value: "徐汇区", label: "徐汇区" },
+        children: [
+          { value: "黄浦区", label: "黄浦区" },
 
-      { value: "长宁区", label: "长宁区" },
+          { value: "卢湾区", label: "卢湾区" },
 
-      { value: "静安区", label: "静安区" },
+          { value: "徐汇区", label: "徐汇区" },
 
-      { value: "普陀区", label: "普陀区" },
+          { value: "长宁区", label: "长宁区" },
 
-      { value: "闸北区", label: "闸北区" },
+          { value: "静安区", label: "静安区" },
 
-      { value: "虹口区", label: "虹口区" },
+          { value: "普陀区", label: "普陀区" },
 
-      { value: "杨浦区", label: "杨浦区" },
+          { value: "闸北区", label: "闸北区" },
 
-      { value: "闵行区", label: "闵行区" },
+          { value: "虹口区", label: "虹口区" },
 
-      { value: "宝山区", label: "宝山区" },
+          { value: "杨浦区", label: "杨浦区" },
 
-      { value: "嘉定区", label: "嘉定区" },
+          { value: "闵行区", label: "闵行区" },
 
-      { value: "浦东新区", label: "浦东新区" },
+          { value: "宝山区", label: "宝山区" },
 
-      { value: "金山区", label: "金山区" },
+          { value: "嘉定区", label: "嘉定区" },
 
-      { value: "松江区", label: "松江区" },
+          { value: "浦东新区", label: "浦东新区" },
 
-      { value: "青浦区", label: "青浦区" },
+          { value: "金山区", label: "金山区" },
 
-      { value: "南汇区", label: "南汇区" },
+          { value: "松江区", label: "松江区" },
 
-      { value: "奉贤区", label: "奉贤区" },
+          { value: "青浦区", label: "青浦区" },
 
-      { value: "崇明县", label: "崇明县" },
+          { value: "南汇区", label: "南汇区" },
+
+          { value: "奉贤区", label: "奉贤区" },
+
+          { value: "崇明县", label: "崇明县" },
+        ],
+      },
     ],
   },
 
@@ -6010,15 +6032,15 @@ export const options = [
   },
 
   {
-    value: "重庆市",
+    value: "重庆",
 
-    label: "重庆市",
+    label: "重庆",
 
     children: [
       {
-        value: "市辖区",
+        value: "重庆市",
 
-        label: "市辖区",
+        label: "重庆市",
 
         children: [
           { value: "万州区", label: "万州区" },
@@ -6056,16 +6078,7 @@ export const options = [
           { value: "合川区", label: "合川区" },
 
           { value: "永川区", label: "永川区" },
-
-        ],
-      },
-
-      {
-        value: "县",
-
-        label: "县",
-
-        children: [
+        
           { value: "綦江县", label: "綦江县" },
 
           { value: "潼南县", label: "潼南县" },
