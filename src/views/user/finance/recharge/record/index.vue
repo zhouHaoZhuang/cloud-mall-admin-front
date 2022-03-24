@@ -132,7 +132,6 @@ export default {
   methods: {
     onSearch() {
       console.log(this.listQuery);
-
       this.getList();
     },
     // 排序的回调
