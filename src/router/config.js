@@ -299,74 +299,74 @@ export const asyncRoute = [
                   perm: "user-finance-refund",
                 },
                 children: [
-                  // {
-                  //   path: "apply",
-                  //   name: "发票申请",
-                  //   component: () =>
-                  //     import("@/views/user/finance/bill/Apply/list.vue"),
-                  //   meta: {
-                  //     hiddenMenu: true,
-                  //     perm: "user-finance-refund",
-                  //   },
-                  // },
-                  // {
-                  //   path: "list",
-                  //   name: "发票列表",
-                  //   component: () =>
-                  //     import("@/views/user/finance/bill/list/index.vue"),
-                  //   meta: {
-                  //     perm: "user-finance-refund",
-                  //   },
-                  // },
-                  // {
-                  //   path: "info",
-                  //   name: "发票申请详情",
-                  //   component: () =>
-                  //     import("@/views/user/finance/bill/info/list.vue"),
-                  //   meta: { perm: "user-finance-refund" },
-                  // },
-                  // {
-                  //   path: "address",
-                  //   name: "修改地址",
-                  //   component: () =>
-                  //     import("@/views/user/finance/bill/address/index.vue"),
-                  //   meta: { perm: "user-finance-refund" },
-                  // },
-                  // {
-                  //   path: "refundlist",
-                  //   name: "退票列表",
-                  //   component: () =>
-                  //     import("@/views/user/finance/bill/refundlist/index.vue"),
-                  //   meta: { perm: "user-finance-refund" },
-                  // },
-                  // {
-                  //   path: "refundInfo",
-                  //   name: "退票详情",
-                  //   component: () =>
-                  //     import("@/views/user/finance/bill/refundInfo/info.vue"),
-                  //   meta: { perm: "user-finance-refund" },
-                  // },
-                  // {
-                  //   path: "resubmit",
-                  //   name: "重新提交退票申请",
-                  //   component: () =>
-                  //     import("@/views/user/finance/bill/resubmit/info.vue"),
-                  //   meta: { perm: "user-finance-refund" },
-                  // },
-                  // {
-                  //   path: "billmanage",
-                  //   name: "发票信息管理",
-                  //   component: () =>
-                  //     import("@/views/user/finance/bill/billmanage/index.vue"),
-                  //   meta: { perm: "user-finance-refund" },
-                  // },
-                  // {
-                  //   path: "addBillInfo",
-                  //   name: "新增发票信息",
-                  //   component: () =>
-                  //     import("@/views/user/finance/bill/addBillInfo/index.vue"),
-                  //   meta: { perm: "user-finance-refund" },
-                  // },
+                  {
+                    path: "apply",
+                    name: "发票申请",
+                    component: () =>
+                      import("@/views/user/finance/bill/Apply/list.vue"),
+                    meta: {
+                      hiddenMenu: true,
+                      perm: "user-finance-refund",
+                    },
+                  },
+                  {
+                    path: "list",
+                    name: "发票列表",
+                    component: () =>
+                      import("@/views/user/finance/bill/list/index.vue"),
+                    meta: {
+                      perm: "user-finance-refund",
+                    },
+                  },
+                  {
+                    path: "info",
+                    name: "发票申请详情",
+                    component: () =>
+                      import("@/views/user/finance/bill/info/list.vue"),
+                    meta: { perm: "user-finance-refund" },
+                  },
+                  {
+                    path: "address",
+                    name: "修改地址",
+                    component: () =>
+                      import("@/views/user/finance/bill/address/index.vue"),
+                    meta: { perm: "user-finance-refund" },
+                  },
+                  {
+                    path: "refundlist",
+                    name: "退票列表",
+                    component: () =>
+                      import("@/views/user/finance/bill/refundlist/index.vue"),
+                    meta: { perm: "user-finance-refund" },
+                  },
+                  {
+                    path: "refundInfo",
+                    name: "退票详情",
+                    component: () =>
+                      import("@/views/user/finance/bill/refundInfo/info.vue"),
+                    meta: { perm: "user-finance-refund" },
+                  },
+                  {
+                    path: "resubmit",
+                    name: "重新提交退票申请",
+                    component: () =>
+                      import("@/views/user/finance/bill/resubmit/info.vue"),
+                    meta: { perm: "user-finance-refund" },
+                  },
+                  {
+                    path: "billmanage",
+                    name: "发票信息管理",
+                    component: () =>
+                      import("@/views/user/finance/bill/billmanage/index.vue"),
+                    meta: { perm: "user-finance-refund" },
+                  },
+                  {
+                    path: "addBillInfo",
+                    name: "新增发票信息",
+                    component: () =>
+                      import("@/views/user/finance/bill/addBillInfo/index.vue"),
+                    meta: { perm: "user-finance-refund" },
+                  },
                   {
                     path: "manageadress",
                     name: "常用地址管理",
