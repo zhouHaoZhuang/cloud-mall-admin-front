@@ -29,6 +29,10 @@ export default {
     form: {
       type: Object,
       default: () => {}
+    },
+    userAmount: {
+      type: Number,
+      default: 0
     }
   },
   data() {
@@ -36,7 +40,15 @@ export default {
       loading: false,
       textUrl: "",
       visible: false,
-      confirmLoading: false
+      confirmLoading: false,
+      balanceForm: {
+        payType: "none",
+        totalAmount: 0,
+        useAliPay: false,
+        useBalance: true,
+        useVoucher: false,
+        useWechatPay: false
+      }
     };
   },
   methods: {
@@ -47,6 +59,16 @@ export default {
         height: 160,
         text: `${this.textUrl}`
       });
+    },
+    // 查询余额
+    getUserBalance() {
+      this.$store
+        .dispatch("finance/getUserBalance", this.balanceForm)
+        .then((res) => {
+          if (res.data.userAmount !== this.userAmount) {
+            this.visible = false;
+          }
+        });
     },
     //点击开始进行转化
     getQrcode() {
@@ -85,9 +107,12 @@ export default {
           }
           if (this.form.payType[0] === "wechat") {
             this.visible = true;
-            let wechatCode = JSON.parse(res.data.wechatCode)
+            let wechatCode = JSON.parse(res.data.wechatCode);
             this.textUrl = wechatCode.code_url;
             this.getQrcode();
+            setInterval(() => {
+              this.getUserBalance();
+            }, 3000);
           }
           this.$emit("success");
         })
