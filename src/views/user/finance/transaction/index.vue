@@ -12,7 +12,7 @@
         <div class="btn3">
           <a-input-group compact>
             <a-select v-model="listQuery.searchType">
-              <a-select-option value="paymentLineId">
+              <a-select-option value="payNo">
                 流水单号
               </a-select-option>
               <!-- <a-select-option value="来源/用途"> 来源/用途 </a-select-option> -->
@@ -71,21 +71,21 @@ export default {
       detailsMap,
       detailTypeMapData,
       listQuery: {
-        key: "paymentLineId",
-        searchType: "paymentLineId",
+        key: "payNo",
+        searchType: "payNo",
         search: "",
         currentPage: 1,
         pageSize: 10,
         total: 0,
         sorter: "",
-        paymentLineId: ""
+        payNo: ""
       },
       columns: [
         {
           title: "流水单号",
-          dataIndex: "paymentLineId",
-          key: "id",
-          width: 150,
+          dataIndex: "payNo",
+          key: "payNo",
+          width: 200,
         },
         {
           title: "收入(+)",
@@ -175,7 +175,7 @@ export default {
       });
     },
     onSearch(value) {
-      this.listQuery.paymentLineId = value;
+      this.listQuery.payNo = value;
       this.listQuery.key = this.listQuery.searchType;
       this.getList();
     }
