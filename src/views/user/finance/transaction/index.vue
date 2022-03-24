@@ -71,7 +71,7 @@ export default {
       detailsMap,
       detailTypeMapData,
       listQuery: {
-        key: "paymentLineId",
+        key: "payNo",
         searchType: "payNo",
         search: "",
         currentPage: 1,
@@ -175,7 +175,7 @@ export default {
       });
     },
     onSearch(value) {
-      this.listQuery.paymentLineId = value;
+      this.listQuery.payNo = value;
       this.listQuery.key = this.listQuery.searchType;
       this.getList();
     }
