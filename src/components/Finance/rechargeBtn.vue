@@ -49,11 +49,7 @@ export default {
         useWechatPay: false
       },
       time: null,
-      amount: 0
     };
-  },
-  mounted() {
-    this.amount = this.userAmount;
   },
   beforeDestroy() {
     this.time && clearInterval(this.time);
@@ -72,8 +68,8 @@ export default {
       this.$store
         .dispatch("finance/getUserBalance", this.balanceForm)
         .then((res) => {
-          console.log(res.data.userAmount * 1, this.amount * 1, "============");
-          if (res.data.userAmount * 1 > this.amount * 1) {
+          console.log(res.data.userAmount * 1, this.userAmount * 1, "============");
+          if (res.data.userAmount * 1 > this.userAmount * 1) {
             this.visible = false;
             this.time && clearInterval(this.time);
           }

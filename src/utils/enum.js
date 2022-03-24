@@ -131,8 +131,13 @@ export const verifyTypeEnum = {
 };
 // 充值方式map
 export const rechargeTypeMap = {
-  wechat: "微信",
-  ali: "支付宝",
+  1: "在线充值",
+  2: "线下充值",
+  3: "下单",
+  4: "退款",
+  5: "冻结",
+  6: "资金解冻",
+  7: "扣除冻结",
 };
 
 // 充值状态map数据

@@ -2,7 +2,7 @@
   <div class="record">
     <div class="search">
       <a-input-group compact enterButton="true">
-        <a-select v-model="listQuery.channelCode" style="width: 250px">
+        <a-select v-model="listQuery.detailType" style="width: 250px">
           <a-select-option value=""> 充值方式 </a-select-option>
           <a-select-option
             :value="index"
@@ -26,11 +26,11 @@
         <div slot-scope="text" slot="createTime" v-if="text">
           {{ text | formatDate }}
         </div>
-        <div slot-scope="text" slot="modifyTime">
+        <div slot-scope="text" slot="payTime">
           <span v-if="text">{{ text | formatDate }}</span>
           <span v-else>-----</span>
         </div>
-        <div slot="channelCode" slot-scope="text">
+        <div slot="detailType" slot-scope="text">
           {{ rechargeTypeMap[text] }}
         </div>
         <span slot="status" slot-scope="text">
@@ -57,16 +57,16 @@ export default {
         },
         {
           title: "充值金额",
-          dataIndex: "amount",
-          key: "amount",
-          sorter: (a, b) => a.amount - b.amount
+          dataIndex: "dealAmount",
+          key: "dealAmount",
+          sorter: (a, b) => a.dealAmount - b.dealAmount
         },
         {
           title: "充值方式",
-          dataIndex: "channelCode",
-          key: "channelCode",
+          dataIndex: "detailType",
+          key: "detailType",
           scopedSlots: {
-            customRender: "channelCode"
+            customRender: "detailType"
           }
         },
         {
@@ -87,7 +87,7 @@ export default {
             );
           },
           scopedSlots: {
-            customRender: "modifyTime"
+            customRender: "payTime"
           }
         },
         {
@@ -105,18 +105,18 @@ export default {
         }
       ],
       listQuery: {
-        key: "channelCode",
+        key: "detailType",
         search: "",
         currentPage: 1,
         pageSize: 10,
         total: 0,
         sorter: "",
-        channelCode: ""
+        detailType: ""
       },
       paginationProps: {
         showQuickJumper: true,
         showSizeChanger: true,
-        total: 1,
+        total: 0,
         showTotal: (total, range) =>
           `共 ${total} 条记录 第 ${this.listQuery.currentPage} / ${Math.ceil(
             total / this.listQuery.pageSize
@@ -132,7 +132,6 @@ export default {
   methods: {
     onSearch() {
       console.log(this.listQuery);
-
       this.getList();
     },
     // 排序的回调

@@ -59,7 +59,7 @@
         "
         class="rechargeBtn"
         :form="rechargeBtnForm"
-        :userAmount="balanceData.userAmount"
+        :userAmount="userAmount"
         @success="startTime"
       />
     </div>
@@ -93,7 +93,8 @@ export default {
         payType: ["ali", "balance"]
       },
       time: null,
-      payType: "ali"
+      payType: "ali",
+      userAmount: ""
     };
   },
   created() {
@@ -108,6 +109,7 @@ export default {
     })
   },
   mounted() {
+    
     if (this.allConfig.first_payment === "alipay") {
       this.payType = "ali";
     }
@@ -127,6 +129,7 @@ export default {
         .dispatch("finance/getUserBalance", this.balanceForm)
         .then((res) => {
           this.balanceData = { ...res.data };
+          this.userAmount = this.balanceData.userAmount;
         });
     },
     // 轮询查询余额
