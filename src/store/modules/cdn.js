@@ -65,7 +65,7 @@ const cdn = {
     // 修改加速区域
     updateScopeArea({ commit, state }, data) {
       return request({
-        url: "/aliyun/cdn/describeCdnDomainDetail",
+        url: "/aliyun/cdn/modifyCdnDomainSchdmByProperty",
         method: "post",
         data
       });
