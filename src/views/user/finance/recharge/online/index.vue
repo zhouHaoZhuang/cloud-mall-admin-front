@@ -59,6 +59,7 @@
         "
         class="rechargeBtn"
         :form="rechargeBtnForm"
+        :userAmount="balanceData.userAmount"
         @success="startTime"
       />
     </div>
@@ -105,6 +106,15 @@ export default {
     ...mapState({
       allConfig: (state) => state.user.allConfig
     })
+  },
+  mounted() {
+    if (this.allConfig.first_payment === "alipay") {
+      this.payType = "ali";
+    }
+    if (this.allConfig.first_payment === "wxpay") {
+      this.payType = "wechat";
+    }
+    this.rechargeBtnForm.payType = [this.payType, "balance"];
   },
   methods: {
     onChange(e) {
