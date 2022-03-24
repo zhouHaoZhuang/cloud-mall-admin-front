@@ -72,6 +72,7 @@ export default {
       this.$store
         .dispatch("finance/getUserBalance", this.balanceForm)
         .then((res) => {
+          console.log(res.data.userAmount * 1, this.amount * 1, "============");
           if (res.data.userAmount * 1 > this.amount * 1) {
             this.visible = false;
             this.time && clearInterval(this.time);
