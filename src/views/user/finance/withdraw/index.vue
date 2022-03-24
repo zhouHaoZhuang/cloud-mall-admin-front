@@ -69,7 +69,7 @@
           <div slot="createTime" slot-scope="text">
             {{ text | formatDate }}
           </div>
-          <div slot="modifyTime" slot-scope="text">
+          <div slot="finishTime" slot-scope="text">
             {{ text | formatDate }}
           </div>
           <span slot="action" slot-scope="text, record">
@@ -159,8 +159,8 @@ export default {
         },
         {
           title: "反馈时间",
-          dataIndex: "modifyTime",
-          scopedSlots: { customRender: "modifyTime" },
+          dataIndex: "finishTime",
+          scopedSlots: { customRender: "finishTime" },
         },
         {
           title: "备注",
@@ -261,12 +261,12 @@ export default {
         this.listQuery["qp-createTime-ge"] = moment(value[0]).format(
           "YYYY-MM-DD HH:mm:ss"
         );
-        this.listQuery["qp-modifyTime-le"] = moment(value[1]).format(
+        this.listQuery["qp-finishTime-le"] = moment(value[1]).format(
           "YYYY-MM-DD HH:mm:ss"
         );
       } else {
           this.listQuery["qp-createTime-ge"] = "";
-        this.listQuery["qp-modifyTime-le"]= "";
+        this.listQuery["qp-finishTime-le"]= "";
       }
     },
     // 取消申请
