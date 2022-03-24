@@ -289,7 +289,7 @@ export default {
     // 取消发票记录
     cancelInvoice(id) {
       this.$confirm({
-        title: "确定要删除吗?",
+        title: "确定要取消吗?",
         onOk: () => {
           this.$store.dispatch("billlist/del", id).then((res) => {
             this.$message.success("取消成功");
@@ -301,7 +301,7 @@ export default {
     // 明细
     getDetailsList() {
       this.$store.dispatch("billlist/getDetails").then((res) => {
-        console.log(res);
+        console.log(res, "明细");
         this.dataDetails = [...res.data.list];
       });
     },

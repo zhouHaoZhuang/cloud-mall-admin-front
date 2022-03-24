@@ -58,25 +58,37 @@
       <div>
         <div v-if="arrearsdata.length > 0">
           <p>
-            欠票金额：￥20.00
+            欠票金额：￥
+            {{ dataAmount.negativeAmount }}
             开票时需要优先冲抵欠票金额（欠票金额包括退款订单、降配订单等）
           </p>
           <a-table
             :row-selection="{
               selectedRowKeys: arrearsselectedRowKeys,
-              onChange: arrearsonSelectChange
+              onChange: arrearsonSelectChange,
+              getCheckboxProps: (record) => ({
+                props: {
+                  disabled: true
+                }
+              })
             }"
             :columns="columns"
             rowKey="id"
             :data-source="arrearsdata"
           >
             <div slot="companyName" slot-scope="text">{{ text }}</div>
-            <div slot="action">
-              <a-button type="link">申请开票</a-button>
-              <a-button type="link">查看详情</a-button>
+            <div slot="type" slot-scope="text">
+              {{ typeMap[text] }}
+            </div>
+            <div v-if="text" slot="createTime" slot-scope="text">
+              {{ text | formatDate }}
             </div>
           </a-table>
-          <p>可开票金额：￥500.00 有5个订单可以进行开票，已可开票金额为准</p>
+          <p>
+            可开票金额：￥{{ dataAmount.canInvoiceAmount }} 有
+            {{ data.length }}
+            个订单可以进行开票，已可开票金额为准
+          </p>
         </div>
         <a-table
           :row-selection="{
@@ -93,10 +105,6 @@
           </div>
           <div v-if="text" slot="createTime" slot-scope="text">
             {{ text | formatDate }}
-          </div>
-          <div slot="action">
-            <a-button type="link">申请开票</a-button>
-            <a-button type="link">查看详情</a-button>
           </div>
         </a-table>
       </div>
@@ -488,7 +496,8 @@ export default {
           } / ${Math.ceil(total / this.listQueryInvoice.pageSize)} 页`,
         onChange: this.quickJumpInvoice,
         onShowSizeChange: this.onShowSizeChangeInvoice
-      }
+      },
+      dataAmount: {}
     };
   },
   watch: {
@@ -622,11 +631,22 @@ export default {
       console.log("selectedRowKeys changed: ", selectedRowKeys);
       this.arrearsselectedRowKeys = selectedRowKeys;
     },
+    // 金额
+    getAmount() {
+      this.$store.dispatch("billlist/getAmount").then((res) => {
+        console.log(res);
+        this.dataAmount = res.data;
+      });
+    },
     // 欠票数据
     getDetailsList() {
       this.$store.dispatch("billlist/getDetails").then((res) => {
         console.log(res, "res");
         this.arrearsdata = [...res.data.list];
+        this.arrearsselectedRowKeys = [];
+        this.arrearsdata.forEach((item) => {
+          this.arrearsselectedRowKeys.push(item.id);
+        });
       });
     },
     // 开票金额数据

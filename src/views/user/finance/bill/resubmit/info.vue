@@ -8,20 +8,24 @@
       </a-steps>
     </div>
     <div v-show="current === 0">
-      <a-descriptions title="申请信息">
+      <a-descriptions title="申请信息" v-if="data">
         <a-descriptions-item label="发票ID">
-          FP20220314001
+          {{ data.invoiceNo }}
         </a-descriptions-item>
-        <a-descriptions-item label="开具类型"> 企业 </a-descriptions-item>
+        <a-descriptions-item label="开具类型"> 
+          {{ issueTypeMap[data.invoiceInfo.issueType] }}
+        </a-descriptions-item>
         <a-descriptions-item label="发票类型">
-          增值税专用发票
+          {{ invoiceTypeMap[data.invoiceInfo.invoiceType] }}
         </a-descriptions-item>
-        <a-descriptions-item label="发票抬头"> 上海XX公司 </a-descriptions-item>
+        <a-descriptions-item label="发票抬头">
+          {{ data.invoiceInfo.invoiceTitle }}
+        </a-descriptions-item>
         <a-descriptions-item label="税务登记号">
-          910004565465465
+          {{ data.invoiceInfo.registerNo }}
         </a-descriptions-item>
         <a-descriptions-item label="开票金额">
-          <b>￥100.00</b>
+          <b style="color: #02a7f0">￥{{ data.invoiceAmount }}</b>
         </a-descriptions-item>
       </a-descriptions>
       <h3>开票明细</h3>
@@ -54,17 +58,17 @@
         :label-col="labelCol"
         :wrapper-col="wrapperCol"
       >
-        <a-form-model-item label="物流单号" prop="name">
-          <a-input v-model="form.name" />
+        <a-form-model-item label="物流单号" prop="expressDelivery">
+          <a-input v-model="form.expressDelivery" />
         </a-form-model-item>
-        <a-form-model-item label="寄件联系人" prop="name">
-          <a-input v-model="form.name" />
+        <a-form-model-item label="寄件联系人" prop="sender">
+          <a-input v-model="form.sender" />
         </a-form-model-item>
-        <a-form-model-item label="联系电话" prop="name">
-          <a-input v-model="form.name" />
+        <a-form-model-item label="联系电话" prop="senderPhone">
+          <a-input v-model="form.senderPhone" />
         </a-form-model-item>
-        <a-form-model-item label="备注" prop="name">
-          <a-input v-model="form.name" />
+        <a-form-model-item label="备注" prop="refundRemark">
+          <a-input v-model="form.refundRemark" />
         </a-form-model-item>
         <a-form-model-item :wrapper-col="{ span: 9, offset: 8 }">
           <a-button type="primary" @click="onSubmit"> 提交申请 </a-button>
@@ -85,32 +89,58 @@ export default {
   },
   data() {
     return {
+      data:null,
       typeMap: {
         1: "订单",
         2: "账单"
       },
+      issueTypeMap: {
+        1: "个人",
+        2: "企业"
+      },
+      invoiceTypeMap: {
+        1: "增值税普通发票",
+        2: "增值税专用发票"
+      },
       labelCol: { span: 8 },
       wrapperCol: { span: 9 },
       form: {
-        name: "",
-        region: undefined,
-        date1: undefined,
-        delivery: false,
-        type: [],
-        resource: "",
-        desc: ""
+        expressDelivery: "",
+        sender: "",
+        senderPhone: "",
+        refundRemark: ""
       },
       rules: {
-        name: [
+        expressDelivery: [
           {
             required: true,
-            message: "Please input Activity name",
+            message: "请填写物流单号",
+            trigger: "blur"
+          }
+        ],
+        sender: [
+          {
+            required: true,
+            message: "请填写寄件联系人",
+            trigger: "blur"
+          }
+        ],
+        senderPhone: [
+          {
+            required: true,
+            message: "请填写联系电话",
             trigger: "blur"
           },
           {
-            min: 3,
-            max: 5,
-            message: "Length should be 3 to 5",
+            pattern: /^1[3456789]\d{9}$/,
+            message: "请填写正确的联系电话",
+            trigger: "blur"
+          }
+        ],
+        refundRemark: [
+          {
+            required: true,
+            message: "请填写备注",
             trigger: "blur"
           }
         ]
@@ -162,11 +192,14 @@ export default {
   methods: {
     onSubmit() {
       this.$refs.ruleForm.validate((valid) => {
+        this.form.id = this.$route.query.id;
         if (valid) {
-          alert("submit!");
-        } else {
-          console.log("error submit!!");
-          return false;
+          this.$store
+            .dispatch("billapply/refundApply", this.form)
+            .then((res) => {
+              this.$message.success("提交成功");
+              this.$router.back();
+            });
         }
       });
     },

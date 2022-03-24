@@ -59,6 +59,22 @@ const billapply = {
         params,
       });
     },
+    // 退票申请
+    refundApply({ commit, state }, data) {
+      return request({
+        url: `/invoiceRecord/refund/${data.id}`,
+        method: "patch",
+        data,
+      });
+    },
+    // 修改地址
+    updateAddress({ commit, state }, data) {
+      return request({
+        url: `/ccInvoiceEvaluate/addressInfo`,
+        method: "patch",
+        data,
+      });
+    },
     // 获取
     getOne({ commit, state }, id) {
       console.log(state);
