@@ -52,7 +52,7 @@
         </a-form-model-item>
       </div>
       <a-form-model-item v-if="this.type === 2" label="跳转类型" prop="type">
-        <a-radio-group v-model="form.type">
+        <a-radio-group v-model="form.scheme_origin">
           <a-radio
             v-for="(val, key) in sourceProtocolEnum"
             :key="key"
@@ -64,12 +64,16 @@
       </a-form-model-item>
       <div v-if="this.type === 3">
         <a-form-model-item label="回源SNI开关">
-          <a-switch v-model="form.enable">
+          <a-switch v-model="form.enabled">
             <a-icon slot="checkedChildren" type="check" />
             <a-icon slot="unCheckedChildren" type="close" />
           </a-switch>
         </a-form-model-item>
-        <a-form-model-item label="SNI" prop="https_origin_sni">
+        <a-form-model-item
+          v-if="form.enabled"
+          label="SNI"
+          prop="https_origin_sni"
+        >
           <a-input v-model="form.https_origin_sni" placeholder="请输入SNI" />
         </a-form-model-item>
       </div>
@@ -183,7 +187,6 @@ export default {
             if (this.type === 1) {
               this.form.type = this.form.domain_name === this.domain ? 1 : 3;
               this.form.enable = true;
-              console.log(this.form, "sadadasdas");
             }
           } else {
             this.form = { ...this.modalMap[this.type].form };
@@ -214,10 +217,15 @@ export default {
           domainName: this.domain
         };
       } else {
-        let tempForm = {};
+        let tempForm = { ...this.form };
         if (this.type === 1) {
           tempForm = {
             domain_name: this.form.domain_name
+          };
+        }
+        if (this.type === 3 && !this.form.enable) {
+          tempForm = {
+            enabled: this.form.enabled
           };
         }
         newForm = {

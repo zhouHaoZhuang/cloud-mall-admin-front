@@ -289,7 +289,7 @@ export const getRandomCode = (len = 4) => {
   return identifyCode;
 };
 // 处理cdn时，前端switch组件需要布尔类型，而参数时字符串off/on,需要转换
-const transformList = ["enable"];
+const transformList = ["enable", "enabled"];
 // cdn管理页面处理后端所需参数
 export const getParameter = (form, functionName, domainNames) => {
   let data = {

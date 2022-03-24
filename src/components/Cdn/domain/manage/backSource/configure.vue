@@ -32,7 +32,10 @@
       <div class="content-row">
         <div class="label">回源协议</div>
         <div class="value">
-          <a-switch @change="handleChangeStatus">
+          <a-switch
+            v-model="agreementForm.enable"
+            @change="handleChangeAgreement"
+          >
             <a-icon slot="checkedChildren" type="check" />
             <a-icon slot="unCheckedChildren" type="close" />
           </a-switch>
@@ -41,9 +44,13 @@
           </div>
         </div>
       </div>
-      <div class="content-row">
+      <div v-if="agreementForm.enable" class="content-row">
         <div class="label">协议类型</div>
-        <div class="value">未设置</div>
+        <div class="value">
+          <span>
+            {{ agreementForm.scheme_origin }}
+          </span>
+        </div>
       </div>
     </div>
     <div class="public-manage-box">
@@ -58,10 +65,17 @@
       <div class="content-row">
         <div class="label">状态</div>
         <div class="value">
-          已关闭
+          <span v-if="sniForm.enabled">已开启</span>
+          <span v-else>已关闭</span>
           <div class="txt">
             如果您的源站IP绑定了多个域名，则CDN节点以HTTPS协议访问您的源站时，必须设置访问具体哪个域名（即SNI）。
           </div>
+        </div>
+      </div>
+      <div v-if="sniForm.enabled" class="content-row">
+        <div class="label">SNI</div>
+        <div class="value">
+          {{ sniForm.https_origin_sni }}
         </div>
       </div>
     </div>
@@ -77,7 +91,7 @@
       <div class="content-row">
         <div class="label">回源请求超时时间</div>
         <div class="value">
-          当前回源请求超时时间为：30秒
+          当前回源请求超时时间为：{{ timeoutForm.forward_timeout }} 秒
           <div class="txt">回源请求超时时间。</div>
         </div>
       </div>
@@ -126,12 +140,12 @@ export default {
         2: {
           title: "静态协议跟随回源",
           functionName: "forward_scheme",
-          form: { enable: false }
+          form: { enable: true, scheme_origin: "follow" }
         },
         3: {
           title: "回源SNI",
           functionName: "https_origin_sni",
-          form: { enable: "on", https_origin_sni: "" }
+          form: { enabled: true, https_origin_sni: "" }
         },
         4: {
           title: "回源请求超时时间",
@@ -140,7 +154,9 @@ export default {
         }
       },
       hostForm: { enable: false, type: 1, domain_name: "" },
-      agreementType: "未设置"
+      agreementForm: { enable: false, scheme_origin: "" },
+      sniForm: { enabled: false, https_origin_sni: "" },
+      timeoutForm: { forward_timeout: "" }
     };
   },
   computed: {
@@ -176,13 +192,27 @@ export default {
               this.hostForm.type =
                 this.hostForm.domain_name === this.domain ? 1 : 3;
               this.hostForm.enable = true;
-              console.log(this.hostForm, "dasdasdasds");
+            }
+            if (type === 2) {
+              this.agreementForm = {
+                ...getForm(data[0], newForm)
+              };
+            }
+            if (type === 3) {
+              this.sniForm = {
+                ...getForm(data[0], newForm)
+              };
+            }
+            if (type === 4) {
+              this.timeoutForm = {
+                ...getForm(data[0], newForm)
+              };
             }
           } else {
-            // this.form = { ...this.modalMap[this.type].form };
-            // if (this.type === 1) {
-            //   this.form.domain_name = this.domain;
-            // }
+            if (type === 1) {
+              this.hostForm.enable = false;
+              this.hostForm.domain_name = this.domain;
+            }
           }
         });
     },
@@ -196,21 +226,14 @@ export default {
       this.visible = true;
     },
     // 开启/关闭回源协议
-    // 修改角色状态
-    handleChangeStatus(record) {
-      const statusTxt = !record.status ? "开启" : "关闭";
-      this.$confirm({
-        title: `确认要${statusTxt}当前角色吗？`,
-        onOk: () => {
-          this.$store
-            .dispatch("organization/editRole", {
-              id: record.id,
-              status: record.status ? 0 : 1
-            })
-            .then((res) => {
-              this.$message.success(`${statusTxt}成功`);
-            });
-        }
+    handleChangeAgreement() {
+      const tempForm = { enable: this.agreementForm.enable };
+      const newForm = {
+        ...getParameter(tempForm, "forward_scheme", this.domain)
+      };
+      this.$store.dispatch("cdn/saveConfig", newForm).then((res) => {
+        this.$message.success(`设置成功`);
+        this.getConfig(2);
       });
     }
   }
