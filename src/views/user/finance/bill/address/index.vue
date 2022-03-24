@@ -73,7 +73,11 @@
       新增常用地址
     </a-button>
     <div style="text-align: center; margin-top: 20px">
-      <a-button @click="saveCommit" type="primary" :disabled="selectedRowKeys.length === 0">
+      <a-button
+        @click="saveCommit"
+        type="primary"
+        :disabled="selectedRowKeys.length === 0"
+      >
         保存提交
       </a-button>
     </div>
@@ -237,13 +241,18 @@ export default {
     },
     // 保存提交
     saveCommit() {
-       this.$confirm({
+      this.$confirm({
         title: "确定要提交吗?",
         onOk: () => {
-          this.$store.dispatch("billapply/updateAddress", id).then((res) => {
-            this.$message.success("提交成功");
-            this.$router.back();
-          });
+          this.$store
+            .dispatch("billapply/updateAddress", {
+              addressInfoId: this.selectedRowKeys[0],
+              id: this.$route.query.id
+            })
+            .then((res) => {
+              this.$message.success("提交成功");
+              this.$router.back();
+            });
         }
       });
     },
