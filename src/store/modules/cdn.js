@@ -57,7 +57,23 @@ const cdn = {
     // 获取加速域名的基础配置
     getDomainBasicConfig({ commit, state }, data) {
       return request({
-        url: "/aliyun/cdn/describeCdnDomainConfigs",
+        url: "/aliyun/cdn/describeCdnDomainDetail",
+        method: "post",
+        data
+      });
+    },
+    // 修改加速区域
+    updateScopeArea({ commit, state }, data) {
+      return request({
+        url: "/aliyun/cdn/describeCdnDomainDetail",
+        method: "post",
+        data
+      });
+    },
+    // 新增+编辑+删除源站信息
+    updateSourceInfo({ commit, state }, data) {
+      return request({
+        url: "/aliyun/cdn/modifyCdnDomain",
         method: "post",
         data
       });
@@ -71,7 +87,21 @@ const cdn = {
       });
     },
     // 单独删除指定域名的指定配置
-    delAlone
+    delAloneConfig({ commit, state }, data) {
+      return request({
+        url: "/aliyun/cdn/deleteSpecificConfig",
+        method: "post",
+        data
+      });
+    },
+    // 保存指定配置
+    saveConfig({ commit, state }, data) {
+      return request({
+        url: "/aliyun/cdn/batchSetCdnDomainConfig",
+        method: "post",
+        data
+      });
+    }
   }
 };
 

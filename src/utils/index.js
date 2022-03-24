@@ -288,6 +288,8 @@ export const getRandomCode = (len = 4) => {
   }
   return identifyCode;
 };
+// 处理cdn时，前端switch组件需要布尔类型，而参数时字符串off/on,需要转换
+const transformList = ["enable"];
 // cdn管理页面处理后端所需参数
 export const getParameter = (form, functionName, DomainNames) => {
   let data = {
@@ -303,28 +305,24 @@ export const getParameter = (form, functionName, DomainNames) => {
   data.Functions[0].functionArgs = formArr.map((ele) => {
     return {
       argName: ele,
-      argValue: form[ele]
+      argValue: transformList.includes(ele)
+        ? form[ele]
+          ? "on"
+          : "off"
+        : form[ele]
     };
   });
   return data;
 };
 // cdn管理页面根据接口返回数据处理前端所需格式form
-export const getForm = (form, functionName, DomainNames) => {
-  let data = {
-    Functions: [
-      {
-        functionArgs: [],
-        functionName
-      }
-    ],
-    DomainNames
-  };
-  const formArr = Object.keys(form);
-  data.Functions[0].functionArgs = formArr.map((ele) => {
-    return {
-      argName: ele,
-      argValue: form[ele]
-    };
+export const getForm = (data, form) => {
+  let newForm = { ...form };
+  data.functionArgs.functionArg.forEach((ele) => {
+    newForm[ele.argName] = transformList.includes(ele.argName)
+      ? ele.argValue === "on"
+        ? true
+        : false
+      : ele.argValue;
   });
-  return data;
+  return newForm;
 };

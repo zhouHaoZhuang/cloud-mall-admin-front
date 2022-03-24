@@ -28,10 +28,10 @@
             自定义在CDN节点回源过程中所需访问的WEB服务器域名
           </div>
         </a-form-model-item>
-        <a-form-model-item label="域名类型" prop="type">
+        <!-- <a-form-model-item label="域名类型" prop="type">
           <a-radio-group v-model="form.type">
             <a-radio
-              v-for="(val, key) in scopeAreaEnum"
+              v-for="(val, key) in sourceProtocolEnum"
               :key="key"
               :value="key"
             >
@@ -40,7 +40,7 @@
             <a-radio :value="2"> 源站域名 </a-radio>
             <a-radio :value="3"> 自定义域名 </a-radio>
           </a-radio-group>
-        </a-form-model-item>
+        </a-form-model-item> -->
         <a-form-model-item label="域名" prop="type">
           <a-input v-model="form.type" placeholder="请输入自定义域名" />
         </a-form-model-item>
@@ -123,9 +123,6 @@ export default {
     modalTitle() {
       return this.modalMap[this.type].title;
     },
-    form() {
-      return this.modalMap[this.type].form;
-    },
     functionName() {
       return this.modalMap[this.type].functionName;
     },
@@ -135,17 +132,18 @@ export default {
   },
   data() {
     return {
+      sourceProtocolEnum,
       modalMap: {
         1: {
           title: "回源HOST",
           functionName: "set_req_host_header",
-          aloneCloseReq: 'cdn/',
+          aloneCloseReq: "cdn/delAloneConfig",
           form: { domain_name: "" }
         },
         2: {
           title: "静态协议跟随回源",
           functionName: "forward_scheme",
-          form: { type: 2 }
+          form: { enable: false }
         },
         3: {
           title: "回源SNI",
@@ -160,6 +158,7 @@ export default {
       },
       labelCol: { span: 6 },
       wrapperCol: { span: 15 },
+      form: {},
       loading: false,
       rules: {
         https_origin_sni: [
@@ -192,7 +191,15 @@ export default {
           domainName: this.domain
         })
         .then((res) => {
-          console.log(getForm(res));
+          const data = res.data.domainConfigs.domainConfig;
+          if (data.length > 0) {
+            const newForm = { ...this.modalMap[this.type].form };
+            this.form = {
+              ...getForm(data[0], newForm)
+            };
+          } else {
+            this.form = { ...this.modalMap[this.type].form };
+          }
         });
     },
     // 弹窗提交
