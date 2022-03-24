@@ -15,7 +15,7 @@
           v-permission="'add'"
           :disabled="!hasSelected"
           :loading="startLoading"
-          @click="handleBatchChangeStatus(true)"
+          @click="handleChangeStatus('open')"
         >
           启用
         </a-button>
@@ -23,7 +23,7 @@
           v-permission="'add'"
           :disabled="!hasSelected"
           :loading="stopLoading"
-          @click="handleBatchChangeStatus(false)"
+          @click="handleChangeStatus('off')"
         >
           停用
         </a-button>
@@ -31,7 +31,7 @@
           v-permission="'add'"
           :disabled="!hasSelected"
           :loading="delLoading"
-          @click="handleBatchDel"
+          @click="handleDel"
         >
           删除
         </a-button>
@@ -110,19 +110,18 @@
             <a-button
               v-if="record.cdnStatus === 2"
               type="link"
-              @click="handleChangeStatus(record)"
+              @click="handleChangeStatus('open', [record.id])"
             >
               启用
             </a-button>
             <a-button
-              v-if="record.cdnStatus === 2"
+              v-if="record.cdnStatus === 1"
               type="link"
-              @click="handleChangeStatus(record)"
+              @click="handleChangeStatus('stop', [record.id])"
             >
               停用
             </a-button>
-
-            <a-button type="link" @click="handleDelDomain(record)">
+            <a-button type="link" @click="handleDel([record.id])">
               删除
             </a-button>
           </a-space>
@@ -301,62 +300,59 @@ export default {
         }
       });
     },
-    // 批量停用/启用
-    handleBatchChangeStatus(type) {
-      const statusTxt = !type ? "停用" : "启用";
-      this.$confirm({
-        title: `确认要${statusTxt}当前域名吗？`,
-        onOk: () => {
-          this.$store
-            .dispatch("organization/editRole", {
-              status: type ? 0 : 1
-            })
-            .then((res) => {
-              this.$message.success(`批量${statusTxt}成功`);
-              this.getList();
-            });
+    // 停用/启用+批量
+    handleChangeStatus(type, ids) {
+      const statusTxt = type === "open" ? "启用" : "停用";
+      const newIds = ids ? [...ids] : [...this.selectedRowKeys];
+      const result = this.data.map((ele) => {
+        if (newIds.includes(ele.id)) {
+          return ele.domain;
         }
       });
-    },
-    // 停用/启用
-    handleChangeStatus(record) {
-      const statusTxt = !record.status ? "停用" : "启用";
+      const req =
+        type === "open" ? "cdn/changeDomainOpen" : "cdn/changeDomainOff";
+      if (!ids) {
+        if (type === "open") {
+          this.startLoading = true;
+        }
+        if (type === "off") {
+          this.stopLoading = true;
+        }
+      }
       this.$confirm({
-        title: `确认要${statusTxt}当前域名吗？`,
+        title: `确认要${statusTxt}吗？`,
         onOk: () => {
           this.$store
-            .dispatch("organization/editRole", {
-              id: record.id,
-              status: record.status ? 0 : 1
-            })
+            .dispatch(req, { domainNames: result.join(",") })
             .then((res) => {
               this.$message.success(`${statusTxt}成功`);
               this.getList();
+            })
+            .finally(() => {
+              this.startLoading = false;
+              this.stopLoading = false;
             });
         }
       });
     },
-    // 批量删除
-    handleBatchDel() {
+    // 删除+批量
+    handleDel(ids) {
+      const newIds = ids ? [...ids] : [...this.selectedRowKeys];
+      if (!ids) {
+        this.delLoading = true;
+      }
       this.$confirm({
         title: "确定要删除吗?",
         onOk: () => {
-          this.$store.dispatch("domain/del").then((res) => {
-            this.$message.success("批量删除成功");
-            this.getList();
-          });
-        }
-      });
-    },
-    //删除
-    handleDelDomain(record) {
-      this.$confirm({
-        title: "确定要删除吗?",
-        onOk: () => {
-          this.$store.dispatch("domain/del", record.id).then((res) => {
-            this.$message.success("操作成功");
-            this.getList();
-          });
+          this.$store
+            .dispatch("cdn/delDomain", { ids: newIds })
+            .then((res) => {
+              this.$message.success("删除成功");
+              this.getList();
+            })
+            .finally(() => {
+              this.delLoading = false;
+            });
         }
       });
     }

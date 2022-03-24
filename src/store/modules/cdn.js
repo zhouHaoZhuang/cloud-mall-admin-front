@@ -18,15 +18,7 @@ const cdn = {
     // 校验域名归属权
     checkDomainAscription({ commit, state }, data) {
       return request({
-        url: "/aliyun/cdn/verifyDomainOwner",
-        method: "post",
-        data
-      });
-    },
-    // 获取归属校验内容
-    getDomainAscription({ commit, state }, data) {
-      return request({
-        url: "/aliyun/cdn/describeVerifyContent",
+        url: "/cdnDomain/verifyCdnDomain",
         method: "post",
         data
       });
@@ -39,11 +31,27 @@ const cdn = {
         data
       });
     },
-    // 获取服务器详情
-    cloudDetail({ commit, state }, params) {
+    // 启用+批量
+    changeDomainOpen({ commit, state }, data) {
       return request({
-        url: `/corporation/ecsStock/${params.id}`,
-        method: "get"
+        url: `/aliyun/cdn/batchStartCdnDomain`,
+        method: "post",
+        data
+      });
+    },
+    // 停用+批量
+    changeDomainOff({ commit, state }, data) {
+      return request({
+        url: `/aliyun/cdn/batchStopCdnDomain`,
+        method: "post",
+        data
+      });
+    },
+    // 删除+批量
+    delDomain({ commit, state }, data) {
+      return request({
+        url: `/cdnDomain/${data.ids}`,
+        method: "delete"
       });
     },
     // 查询地域列表

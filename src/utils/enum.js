@@ -181,16 +181,16 @@ export const cdnStatusEnum = {
     name: "审核失败"
   }
 };
-// cdn源站类型map
+// cdn源站信息类型map
 export const cdnTypeEnum = {
-  1: "OSS域名",
-  2: "IP",
-  3: "源站域名"
+  oss: "OSS域名",
+  ipaddr: "IP",
+  domain: "源站域名"
 };
 // cdn优先级map
 export const cdnPriorityEnum = {
-  1: "主",
-  2: "备"
+  20: "主",
+  30: "备"
 };
 // 业务类型map
 export const businessTypeEnum = {

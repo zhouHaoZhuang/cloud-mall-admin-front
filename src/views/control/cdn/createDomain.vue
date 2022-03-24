@@ -50,7 +50,7 @@
                     <div class="item">TXT</div>
                     <div class="item">verification</div>
                     <div class="right">
-                      verify_ec54b30ed591b4a1f8ee9a52696abec8
+                      {{ verifyCode }}
                     </div>
                   </div>
                 </a-timeline-item>
@@ -67,10 +67,17 @@
                     </a-button>
                   </a-space>
                 </a-timeline-item>
-                <a-timeline-item v-if="!checkDomainStatus" color="red">
+                <a-timeline-item
+                  v-if="!checkDomainStatus && verifyStatus === 'wait'"
+                  color="blue"
+                >
                   <span>待验证</span>
-                  <!-- <span>验证中</span>
-                  <span>验证失败</span> -->
+                </a-timeline-item>
+                <a-timeline-item
+                  v-if="!checkDomainStatus && verifyStatus === 'err'"
+                  color="red"
+                >
+                  <span>验证失败</span>
                 </a-timeline-item>
               </a-timeline>
             </div>
@@ -259,7 +266,9 @@ export default {
       visible: false,
       modalDetail: {},
       isShowCheck: false,
+      verifyCode: "",
       checkDomainStatus: "",
+      verifyStatus: "wait",
       // 如何设置解析弹窗
       courseVisible: false,
       step: 1
@@ -275,16 +284,47 @@ export default {
       if (!this.form.domain) return;
       this.$store
         .dispatch("cdn/checkDomainAscription", {
-          domainName: this.form.domain,
+          domain: this.form.domain,
           productCode: this.productCode
         })
         .then((res) => {
           // 如果校验不通过的话
           if (res.data !== "success") {
             this.isShowCheck = true;
+            this.verifyCode = res.data;
           } else {
+            this.isShowCheck = false;
+            this.verifyCode = "";
             this.$message.success("域名归属权校验成功");
           }
+        });
+    },
+    // 域名校验归属权验证按钮
+    handleCheckDomain() {
+      if (!this.form.domain) {
+        this.$message.warning("请输入域名");
+      }
+      this.checkDomainStatus = "验证中";
+      this.$store
+        .dispatch("cdn/checkDomainAscription", {
+          domain: this.form.domain,
+          productCode: this.productCode
+        })
+        .then((res) => {
+          // 如果校验不通过的话
+          if (res.data !== "success") {
+            this.verifyCode = res.data;
+            this.$message.warning("验证失败");
+            this.verifyStatus = "err";
+          } else {
+            this.isShowCheck = false;
+            this.verifyCode = "";
+            this.verifyStatus = "wait";
+            this.$message.success("域名归属权校验成功");
+          }
+        })
+        .finally(() => {
+          this.checkDomainStatus = "";
         });
     },
     // 跳转云商城价格详情
@@ -347,18 +387,24 @@ export default {
       this.loading = true;
       this.$store
         .dispatch("cdn/checkDomainAscription", {
-          domainName: this.form.domain,
+          domain: this.form.domain,
           productCode: this.productCode
         })
         .then((res) => {
-          this.$store
-            .dispatch("cdn/createDomain", this.form)
-            .then((res) => {
-              this.step = 2;
-            })
-            .finally(() => {
-              this.loading = false;
-            });
+          // 如果校验不通过的话
+          if (res.data !== "success") {
+            this.isShowCheck = true;
+            this.verifyCode = res.data;
+          } else {
+            this.$store
+              .dispatch("cdn/createDomain", this.form)
+              .then((res) => {
+                this.step = 2;
+              })
+              .finally(() => {
+                this.loading = false;
+              });
+          }
         })
         .catch(() => {
           this.loading = false;
@@ -371,13 +417,6 @@ export default {
     // 如何设置域名
     handleCourse() {
       this.courseVisible = true;
-    },
-    // 验证域名
-    handleCheckDomain() {
-      this.checkDomainStatus = "验证中";
-      setTimeout(() => {
-        this.checkDomainStatus = "";
-      }, 2000);
     },
     // 返回域名管理
     handleBackDomain() {
