@@ -288,3 +288,23 @@ export const getRandomCode = (len = 4) => {
   }
   return identifyCode;
 };
+// cdn管理页面处理后端所需参数
+export const getParameter = (form, functionName, DomainNames) => {
+  let data = {
+    Functions: [
+      {
+        functionArgs: [],
+        functionName
+      }
+    ],
+    DomainNames
+  };
+  const formArr = Object.keys(form);
+  data.Functions[0].functionArgs = formArr.map((ele) => {
+    return {
+      argName: ele,
+      argValue: form[ele]
+    };
+  });
+  return data;
+};

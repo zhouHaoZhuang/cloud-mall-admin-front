@@ -3,6 +3,7 @@
     :visible="value"
     width="680px"
     centered
+    destroyOnClose
     :title="modalTitle"
     wrapClassName="update-source-container"
     okText="确定"
@@ -29,7 +30,13 @@
         </a-form-model-item>
         <a-form-model-item label="域名类型" prop="type">
           <a-radio-group v-model="form.type">
-            <a-radio :value="1"> 加速域名 </a-radio>
+            <a-radio
+              v-for="(val, key) in scopeAreaEnum"
+              :key="key"
+              :value="key"
+            >
+              加速域名
+            </a-radio>
             <a-radio :value="2"> 源站域名 </a-radio>
             <a-radio :value="3"> 自定义域名 </a-radio>
           </a-radio-group>
@@ -40,25 +47,33 @@
       </div>
       <a-form-model-item v-if="this.type === 2" label="跳转类型" prop="type">
         <a-radio-group v-model="form.type">
-          <a-radio :value="1"> 跟随 </a-radio>
-          <a-radio :value="2"> HTTP </a-radio>
-          <a-radio :value="3"> HTTPS </a-radio>
+          <a-radio
+            v-for="(val, key) in sourceProtocolEnum"
+            :key="key"
+            :value="key"
+          >
+            {{ val }}
+          </a-radio>
         </a-radio-group>
       </a-form-model-item>
       <div v-if="this.type === 3">
-        <a-form-model-item label="回源SNI开关" prop="type">
-          <a-switch v-model="form.type">
+        <a-form-model-item label="回源SNI开关">
+          <a-switch v-model="form.enabled">
             <a-icon slot="checkedChildren" type="check" />
             <a-icon slot="unCheckedChildren" type="close" />
           </a-switch>
         </a-form-model-item>
-        <a-form-model-item label="SNI" prop="type">
-          <a-input v-model="form.type" placeholder="请输入SNI" />
+        <a-form-model-item label="SNI" prop="https_origin_sni">
+          <a-input v-model="form.https_origin_sni" placeholder="请输入SNI" />
         </a-form-model-item>
       </div>
-      <a-form-model-item v-if="this.type === 4" label="超时时间" prop="type">
+      <a-form-model-item
+        v-if="this.type === 4"
+        label="超时时间"
+        prop="forward_timeout"
+      >
         <a-input
-          v-model="form.type"
+          v-model="form.forward_timeout"
           v-number-evolution="{ value: 0, min: 0, max: 900 }"
           suffix="秒"
           style="width: 100px"
@@ -72,6 +87,8 @@
 </template>
 
 <script>
+import { getParameter } from "@/utils/index";
+import { sourceProtocolEnum } from "@/utils/enum";
 export default {
   // 双向绑定
   model: {
@@ -95,40 +112,58 @@ export default {
   },
   computed: {
     modalTitle() {
-      return this.modalMap[this.type];
-    }
-  },
-  watch: {
-    value: {
-      handler(newVal) {
-        if (!newVal) {
-          this.$nextTick(() => {
-            this.resetForm();
-          });
-        }
-      }
+      return this.modalMap[this.type].title;
+    },
+    form() {
+      return this.modalMap[this.type].form;
+    },
+    functionName() {
+      return this.modalMap[this.type].functionName;
+    },
+    domain() {
+      return this.$route.query.domain;
     }
   },
   data() {
     return {
       modalMap: {
-        1: "回源HOST",
-        2: "静态协议跟随回源",
-        3: "回源SNI",
-        4: "回源请求超时时间"
+        1: {
+          title: "回源HOST",
+          functionName: "forward_scheme",
+          form: { type: 1, type1: 1 }
+        },
+        2: {
+          title: "静态协议跟随回源",
+          functionName: "forward_scheme",
+          form: { type: 2 }
+        },
+        3: {
+          title: "回源SNI",
+          functionName: "https_origin_sni",
+          form: { enabled: "on", https_origin_sni: "" }
+        },
+        4: {
+          title: "回源请求超时时间",
+          functionName: "forward_timeout",
+          form: { forward_timeout: 30 }
+        }
       },
       labelCol: { span: 6 },
       wrapperCol: { span: 15 },
       loading: false,
-      form: {
-        type: 1
-      },
       rules: {
-        type: [
+        https_origin_sni: [
           {
             required: true,
-            message: "请选择加速区域",
-            trigger: "change"
+            message: "请输入SNI",
+            trigger: ["blur", "change"]
+          }
+        ],
+        forward_timeout: [
+          {
+            required: true,
+            message: "请输入超时时间",
+            trigger: ["blur", "change"]
           }
         ]
       }
@@ -139,30 +174,36 @@ export default {
     handleCancel() {
       this.$emit("changeVisible", false);
     },
-    // 重置表单数据
-    resetForm() {
-      this.$refs.ruleForm.clearValidate();
-      this.form = {
-        type: 1
-      };
+    // 获取配置详情
+    getConfig() {
+      this.$store
+        .dispatch("cdn/getDomainConfig", {
+          functionNames: this.functionName,
+          domainName: this.domain
+        })
+        .then((res) => {});
     },
     // 弹窗提交
     handleOk() {
-      this.$refs.ruleForm.validate((valid) => {
-        if (valid) {
-          this.loading = true;
-          this.$store
-            .dispatch("domain/add", this.form)
-            .then((res) => {
-              this.$message.success(`修改${this.modalTitle}成功`);
-              this.$emit("success");
-              this.$emit("changeVisible", false);
-            })
-            .finally(() => {
-              this.loading = false;
-            });
-        }
-      });
+      console.log(
+        this.form,
+        getParameter(this.form, this.functionName, this.domain)
+      );
+      // this.$refs.ruleForm.validate((valid) => {
+      //   if (valid) {
+      //     this.loading = true;
+      //     this.$store
+      //       .dispatch("domain/add", this.form)
+      //       .then((res) => {
+      //         this.$message.success(`修改${this.modalTitle}成功`);
+      //         this.$emit("success");
+      //         this.$emit("changeVisible", false);
+      //       })
+      //       .finally(() => {
+      //         this.loading = false;
+      //       });
+      //   }
+      // });
     }
   }
 };

@@ -96,21 +96,22 @@ export default {
     },
     // 弹窗提交
     handleOk() {
-      this.$refs.ruleForm.validate((valid) => {
-        if (valid) {
-          this.loading = true;
-          this.$store
-            .dispatch("domain/add", this.form)
-            .then((res) => {
-              this.$message.success("修改加速区域成功");
-              this.$emit("success");
-              this.$emit("changeVisible", false);
-            })
-            .finally(() => {
-              this.loading = false;
-            });
-        }
-      });
+      console.log(this.form);
+      // this.$refs.ruleForm.validate((valid) => {
+      //   if (valid) {
+      //     this.loading = true;
+      //     this.$store
+      //       .dispatch("domain/add", this.form)
+      //       .then((res) => {
+      //         this.$message.success("修改加速区域成功");
+      //         this.$emit("success");
+      //         this.$emit("changeVisible", false);
+      //       })
+      //       .finally(() => {
+      //         this.loading = false;
+      //       });
+      //   }
+      // });
     }
   }
 };

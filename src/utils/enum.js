@@ -204,3 +204,9 @@ export const scopeAreaEnum = {
   global: "全球",
   overseas: "全球（不含中国内地）"
 };
+// 回源协议类型map
+export const sourceProtocolEnum = {
+  follow: "跟随",
+  http: "HTTP",
+  https: "HTTPS"
+};

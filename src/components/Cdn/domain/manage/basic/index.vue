@@ -136,7 +136,25 @@ export default {
       ],
       visible: false,
       modalDetail: {},
-      regionVisible: false
+      regionVisible: false,
+      abc: {
+        Functions: [
+          {
+            functionArgs: [
+              {
+                argName: "switch",
+                argValue: "on"
+              },
+              {
+                argName: "region",
+                argValue: "*"
+              }
+            ],
+            functionName: "ipv6"
+          }
+        ],
+        DomainNames: "example.com"
+      }
     };
   },
   created() {},
@@ -194,6 +212,7 @@ export default {
 
 <style lang="less" scoped>
 .cdn-basic-container {
+  width: 100%;
   .info-txt {
     color: #aaa;
     line-height: 22px;
