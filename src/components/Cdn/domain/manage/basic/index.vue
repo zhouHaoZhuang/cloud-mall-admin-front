@@ -68,6 +68,7 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 import UpdateSourceStationModal from "@/components/Cdn/domain/updateSourceStationModal";
 import UpdateRegionModal from "@/components/Cdn/domain/manage/basic/updateRegionModal";
 import { cdnTypeEnum, cdnPriorityEnum } from "@/utils/enum";
@@ -87,12 +88,14 @@ export default {
     tabsKey: {
       handler(newVal) {
         if (newVal === "1") {
-          //   this.getData();
+          this.getBasicConfig();
         }
       }
     }
   },
-  computed: {},
+  computed: {
+    ...mapGetters(["productCode"])
+  },
   data() {
     return {
       cdnTypeEnum,
@@ -157,8 +160,16 @@ export default {
       }
     };
   },
-  created() {},
   methods: {
+    // 查询基础配置信息
+    getBasicConfig(type) {
+      this.$store
+        .dispatch("cdn/getDomainBasicConfig", {
+          domainName: this.domain,
+          productCode: this.productCode
+        })
+        .then((res) => {});
+    },
     // 修改加速区域
     handleUpdate() {
       this.regionVisible = true;
