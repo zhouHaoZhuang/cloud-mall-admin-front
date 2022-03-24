@@ -18,6 +18,14 @@
         :pagination="paginationProps"
         rowKey="id"
       >
+        <div slot="invoiceTitle" slot-scope="text">
+          <span>
+            {{ text }}
+          </span>
+          <small class="default" v-show="record.defaultStatus === 1">
+            默认
+          </small>
+        </div>
         <div slot="issueType" slot-scope="text">{{ issueTypeMap[text] }}</div>
         <div slot="invoiceType" slot-scope="text">
           {{ invoiceTypeMap[text] }}
@@ -31,7 +39,21 @@
           >
             编辑
           </a-button>
-          <a-button type="link" @click="delbillInfo(record.id)">删除</a-button>
+          <a-button
+            type="link"
+            :disabled="record.defaultStatus === 1"
+            @click="setDefault(record.id)"
+          >
+            设为默认
+          </a-button>
+          <a-button
+            type="link"
+            :disabled="record.defaultStatus === 1"
+            :class="{ 'del-btn': record.defaultStatus !== 1 }"
+            @click="delbillInfo(record.id)"
+          >
+            删除
+          </a-button>
         </div>
       </a-table>
     </div>
@@ -46,7 +68,10 @@ export default {
       columns: [
         {
           title: "发票抬头",
-          dataIndex: "invoiceTitle"
+          dataIndex: "invoiceTitle",
+          scopedSlots: {
+            default: "invoiceTitle"
+          }
         },
         {
           title: "开具类型",
@@ -120,6 +145,12 @@ export default {
         this.paginationProps.total = res.data.totalCount * 1;
       });
     },
+    setDefault(id) {
+      this.$store.dispatch("billnews/setDefault", { id }).then(() => {
+        this.$message.success("设置成功");
+        this.getList();
+      });
+    },
     //表格分页跳转
     quickJump(currentPage) {
       this.listQuery.currentPage = currentPage;
@@ -135,4 +166,15 @@ export default {
 };
 </script>
 
-<style></style>
+<style lang="less" scoped>
+.default {
+  margin-left: 10px;
+  color: #fff;
+  background-color: #02a7f0;
+  border-radius: 3px;
+  font-size: smaller;
+}
+.del-btn {
+  color: #d9001b;
+}
+</style>

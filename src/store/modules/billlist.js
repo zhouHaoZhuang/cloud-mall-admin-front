@@ -78,8 +78,8 @@ const billlist = {
     // 删除
     del({ commit, state }, id) {
       return request({
-        url: `/pcOfflineRecharge/user/${id}`,
-        method: "delete",
+        url: `/invoiceRecord/cancel/${id}`,
+        method: "patch",
       });
     },
   },

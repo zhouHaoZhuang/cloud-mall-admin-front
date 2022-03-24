@@ -34,6 +34,12 @@ const billnews = {
         data
       });
     },
+    setDefault({ commit, state }, data) {
+      return request({
+        url: `/invoiceInfo/default/${data.id}`,
+        method: "post"
+      });
+    },
     // 删除
     del({ commit, state }, data) {
       return request({

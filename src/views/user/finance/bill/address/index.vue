@@ -34,8 +34,9 @@
       <div>
         <a-table
           :row-selection="{
+            type: 'radio',
             selectedRowKeys: selectedRowKeys,
-            onChange: onSelectChange
+            onChange: onSelectChange,
           }"
           :columns="columns"
           :data-source="data"
@@ -52,7 +53,9 @@
         </a-table>
       </div>
     </div>
-    <a-button type="link" icon="plus"> 新增常用地址 </a-button>
+    <a-button v-show="data && data.length < 5" type="link" icon="plus">
+      新增常用地址
+    </a-button>
     <div style="text-align: center; margin-top: 20px">
       <a-button type="primary"> 保存提交 </a-button>
     </div>
@@ -193,12 +196,14 @@ export default {
     };
   },
   created() {
-    this.getList()
+    this.getList();
+    this.getData();
   },
   methods: {
     // 选择收货信息
     onSelectChange(selectedRowKeys) {
       this.selectedRowKeys = selectedRowKeys;
+      console.log(selectedRowKeys, "selectedRowKeys");
     },
     handleCancel(e) {
       console.log("Clicked cancel button");
@@ -209,6 +214,18 @@ export default {
       this.resetForm();
       this.getOne(id);
       this.form.id = id;
+    },
+    // 获取页面数据
+    getData() {
+      this.$store
+        .dispatch("billapply/getInvoiceInfo", { id: this.$route.query.id })
+        .then((res) => {
+          console.log(res, "---------");
+          // this.data = res.data;
+          this.dataDetails = res.data.invoiceEvaluatePage.list;
+          // this.paginationProps.total =
+          // res.data.invoiceEvaluatePage.totalCount * 1;
+        });
     },
     //查询数据表格
     getList() {
@@ -256,7 +273,7 @@ export default {
       this.form.county = value[2];
       // this.adress = value;
       console.log(this.adress);
-    },
+    }
   }
 };
 </script>

@@ -28,10 +28,16 @@
       <div>
         <a-table
           :columns="columns"
-          :data-source="data"
-          :pagination="paginationProps"
+          :data-source="dataDetails"
+          :pagination="false"
           rowKey="id"
         >
+          <div slot="type" slot-scope="text">
+            {{ typeMap[text] }}
+          </div>
+          <div v-if="text" slot="createTime" slot-scope="text">
+            {{ text | formatDate }}
+          </div>
         </a-table>
         <div>
           <a-button class="next" type="primary" @click="current = 1">
@@ -79,6 +85,10 @@ export default {
   },
   data() {
     return {
+      typeMap: {
+        1: "订单",
+        2: "账单"
+      },
       labelCol: { span: 8 },
       wrapperCol: { span: 9 },
       form: {
@@ -108,12 +118,20 @@ export default {
       current: 0,
       columns: [
         { title: "订单ID", dataIndex: "id" },
-        { title: "类型", dataIndex: "type" },
+        {
+          title: "类型",
+          dataIndex: "type",
+          scopedSlots: { customRender: "type" }
+        },
         { title: "产品名称", dataIndex: "name" },
         { title: "可开票金额", dataIndex: "canInvoiceAmount" },
-        { title: "订单创建时间", dataIndex: "createTime" }
+        {
+          title: "订单创建时间",
+          dataIndex: "createTime",
+          scopedSlots: { customRender: "createTime" }
+        }
       ],
-      data: [],
+      dataDetails: [],
       listQuery: {
         key: "",
         search: "",
@@ -135,8 +153,11 @@ export default {
           )} 页`,
         onChange: this.quickJump,
         onShowSizeChange: this.onShowSizeChange
-      },
+      }
     };
+  },
+  created() {
+    this.getData();
   },
   methods: {
     onSubmit() {
@@ -152,9 +173,21 @@ export default {
     resetForm() {
       this.$refs.ruleForm.resetFields();
     },
+    // 获取页面数据
+    getData() {
+      this.$store
+        .dispatch("billapply/getInvoiceInfo", { id: this.$route.query.id })
+        .then((res) => {
+          console.log(res, "---------");
+          this.data = res.data;
+          this.dataDetails = res.data.invoiceEvaluatePage.list;
+          this.paginationProps.total =
+            res.data.invoiceEvaluatePage.totalCount * 1;
+        });
+    },
     //查询数据表格
     getList() {
-      this.$getListQp("word/getList", this.listQuery).then(res => {
+      this.$getListQp("word/getList", this.listQuery).then((res) => {
         console.log(res);
         this.data = [...res.data.list];
         this.paginationProps.total = res.data.totalCount * 1;

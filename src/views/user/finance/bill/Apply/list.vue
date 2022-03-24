@@ -111,7 +111,12 @@
             }}条单据开具发票(若选中多条订单，填写开票金额将合并开具到一张票据中)
           </span>
         </p>
-        <a-button class="next" type="primary" @click="current = 1">
+        <a-button
+          class="next"
+          type="primary"
+          @click="current = 1"
+          :disabled="selectedRowKeys.length <= 0"
+        >
           下一步
         </a-button>
       </div>
@@ -124,8 +129,15 @@
       <div>
         <a-table
           :row-selection="{
+            type: 'radio',
             selectedRowKeys: selectedRowKeysTitle,
-            onChange: onSelectChangeTitle
+            onChange: onSelectChangeTitle,
+            getCheckboxProps: (record) => ({
+              props: {
+                disabled: record.defaultStatus === 0,
+                defaultStatus: record.defaultStatus
+              }
+            })
           }"
           rowKey="id"
           :columns="columnsTitle"
@@ -163,8 +175,15 @@
       <div>
         <a-table
           :row-selection="{
+            type: 'radio',
             selectedRowKeys: selectedRowKeysAddress,
-            onChange: onSelectChangeAddress
+            onChange: onSelectChangeAddress,
+            getCheckboxProps: (record) => ({
+              props: {
+                disabled: record.defaultSign === 0,
+                defaultSign: record.defaultSign
+              }
+            })
           }"
           :columns="columnsAddress"
           :data-source="dataAddress"
@@ -189,7 +208,16 @@
         新增常用地址
       </a-button>
       <div style="text-align: center">
-        <a-button type="primary">提交申请</a-button>
+        <a-button
+          type="primary"
+          :disabled="
+            selectedRowKeysAddress.length === 0 ||
+            selectedRowKeysTitle.length === 0
+          "
+          @click="submitApp"
+        >
+          提交申请
+        </a-button>
         <a-button style="margin-left: 20px" @click="current = 0">
           返回上一步
         </a-button>
@@ -298,7 +326,7 @@ export default {
         },
         {
           title: "订单金额",
-          dataIndex: "presentAmount"
+          dataIndex: "originalAmount"
         },
         {
           title: "可开票金额",
@@ -511,6 +539,22 @@ export default {
       }
       return startValue.valueOf() >= endValue.valueOf();
     },
+    // 提交申请
+    submitApp() {
+      console.log(this.selectedRowKeysAddress, "selectedRowKeysAddress");
+      console.log(this.selectedRowKeysTitle, "selectedRowKeysTitle");
+      console.log(this.selectedRowKeys, "selectedRowKeys");
+      let data = {
+        addressInfoId: this.selectedRowKeysAddress[0],
+        invoiceEvaluateIds: this.selectedRowKeys,
+        invoiceInfoId: this.selectedRowKeysTitle[0]
+      };
+      console.log(data, "data");
+      this.$store.dispatch("billapply/applyInvoice", data).then((res) => {
+        this.$message.success("申请成功");
+        this.$router.push("/user/finance/bill/list");
+      });
+    },
     // 保存信息
     onSubmit() {
       this.$refs.ruleForm.validate((valid) => {
@@ -568,7 +612,7 @@ export default {
       console.log("selectedRowKeys changed: ", selectedRowKeys, obj);
       this.selectedRowKeys = selectedRowKeys;
       this.invoiceAmount = obj.reduce((prev, cur) => {
-        return math.format(math.add(prev, cur.canInvoiceAmount), {
+        return math.format(math.add(prev, cur.originalAmount), {
           precision: 14
         });
       }, 0);
@@ -620,6 +664,12 @@ export default {
         .then((res) => {
           console.log(res);
           this.dataTitle = [...res.data.list];
+          this.selectedRowKeysTitle = [
+            res.data.list.filter((item) => {
+              return item.defaultStatus === 1;
+            })[0].id
+          ];
+          console.log(this.selectedRowKeysTitle);
           this.paginationProps.total = res.data.totalCount * 1;
         });
     },
@@ -628,6 +678,12 @@ export default {
       this.$getList("mangeaddress/getList", this.listQuery).then((res) => {
         console.log(res);
         this.dataAddress = [...res.data];
+        this.selectedRowKeysAddress = [
+          res.data.filter((item) => {
+            return item.defaultSign === 1;
+          })[0].id
+        ];
+        console.log(this.selectedRowKeysAddress, "res.data");
         this.paginationProps.total = res.data.totalCount * 1;
       });
     },
