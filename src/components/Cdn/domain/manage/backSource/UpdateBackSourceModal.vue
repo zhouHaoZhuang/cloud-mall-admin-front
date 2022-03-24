@@ -19,8 +19,8 @@
       :wrapper-col="wrapperCol"
     >
       <div v-if="this.type === 1">
-        <a-form-model-item label="回源HOST" prop="type">
-          <a-switch v-model="form.type">
+        <a-form-model-item label="回源HOST">
+          <a-switch v-model="form.enable">
             <a-icon slot="checkedChildren" type="check" />
             <a-icon slot="unCheckedChildren" type="close" />
           </a-switch>
@@ -28,21 +28,27 @@
             自定义在CDN节点回源过程中所需访问的WEB服务器域名
           </div>
         </a-form-model-item>
-        <!-- <a-form-model-item label="域名类型" prop="type">
-          <a-radio-group v-model="form.type">
-            <a-radio
-              v-for="(val, key) in sourceProtocolEnum"
-              :key="key"
-              :value="key"
-            >
-              加速域名
-            </a-radio>
-            <a-radio :value="2"> 源站域名 </a-radio>
+        <a-form-model-item label="域名类型">
+          <a-radio-group
+            v-model="form.type"
+            :disabled="!form.enable"
+            @change="handleRadioChange"
+          >
+            <a-radio :value="1"> 加速域名 </a-radio>
+            <a-radio :value="2" :disabled="true"> 源站域名 </a-radio>
             <a-radio :value="3"> 自定义域名 </a-radio>
           </a-radio-group>
-        </a-form-model-item> -->
-        <a-form-model-item label="域名" prop="type">
-          <a-input v-model="form.type" placeholder="请输入自定义域名" />
+        </a-form-model-item>
+        <a-form-model-item label="域名">
+          <a-input
+            v-if="form.type === 3"
+            :disabled="!form.enable"
+            v-model="form.domain_name"
+            placeholder="请输入自定义域名"
+          />
+          <span v-else>
+            {{ form.domain_name }}
+          </span>
         </a-form-model-item>
       </div>
       <a-form-model-item v-if="this.type === 2" label="跳转类型" prop="type">
@@ -58,7 +64,7 @@
       </a-form-model-item>
       <div v-if="this.type === 3">
         <a-form-model-item label="回源SNI开关">
-          <a-switch v-model="form.enabled">
+          <a-switch v-model="form.enable">
             <a-icon slot="checkedChildren" type="check" />
             <a-icon slot="unCheckedChildren" type="close" />
           </a-switch>
@@ -105,7 +111,7 @@ export default {
       type: Number,
       default: 1
     },
-    detail: {
+    modalMap: {
       type: Object,
       default: () => {}
     }
@@ -133,29 +139,6 @@ export default {
   data() {
     return {
       sourceProtocolEnum,
-      modalMap: {
-        1: {
-          title: "回源HOST",
-          functionName: "set_req_host_header",
-          aloneCloseReq: "cdn/delAloneConfig",
-          form: { domain_name: "" }
-        },
-        2: {
-          title: "静态协议跟随回源",
-          functionName: "forward_scheme",
-          form: { enable: false }
-        },
-        3: {
-          title: "回源SNI",
-          functionName: "https_origin_sni",
-          form: { enabled: "on", https_origin_sni: "" }
-        },
-        4: {
-          title: "回源请求超时时间",
-          functionName: "forward_timeout",
-          form: { forward_timeout: 30 }
-        }
-      },
       labelCol: { span: 6 },
       wrapperCol: { span: 15 },
       form: {},
@@ -197,10 +180,24 @@ export default {
             this.form = {
               ...getForm(data[0], newForm)
             };
+            if (this.type === 1) {
+              this.form.type = this.form.domain_name === this.domain ? 1 : 3;
+              this.form.enable = true;
+              console.log(this.form, "sadadasdas");
+            }
           } else {
             this.form = { ...this.modalMap[this.type].form };
+            if (this.type === 1) {
+              this.form.domain_name = this.domain;
+            }
           }
         });
+    },
+    // 域名类型change
+    handleRadioChange(e) {
+      if (e.target.value !== 3) {
+        this.form.domain_name = this.domain;
+      }
     },
     // 弹窗提交
     handleOk() {
@@ -208,21 +205,40 @@ export default {
         this.form,
         getParameter(this.form, this.functionName, this.domain)
       );
-      // this.$refs.ruleForm.validate((valid) => {
-      //   if (valid) {
-      //     this.loading = true;
-      //     this.$store
-      //       .dispatch("domain/add", this.form)
-      //       .then((res) => {
-      //         this.$message.success(`修改${this.modalTitle}成功`);
-      //         this.$emit("success");
-      //         this.$emit("changeVisible", false);
-      //       })
-      //       .finally(() => {
-      //         this.loading = false;
-      //       });
-      //   }
-      // });
+      let req = "";
+      let newForm = {};
+      if (this.type === 1 && !this.form.enable) {
+        req = this.modalMap[this.type].aloneCloseReq;
+        newForm = {
+          functionNames: this.functionName,
+          domainName: this.domain
+        };
+      } else {
+        let tempForm = {};
+        if (this.type === 1) {
+          tempForm = {
+            domain_name: this.form.domain_name
+          };
+        }
+        newForm = {
+          ...getParameter(tempForm, this.functionName, this.domain)
+        };
+      }
+      this.$refs.ruleForm.validate((valid) => {
+        if (valid) {
+          this.loading = true;
+          this.$store
+            .dispatch(req ? req : "cdn/saveConfig", newForm)
+            .then((res) => {
+              this.$message.success(`设置成功`);
+              this.$emit("success", this.type);
+              this.$emit("changeVisible", false);
+            })
+            .finally(() => {
+              this.loading = false;
+            });
+        }
+      });
     }
   }
 };

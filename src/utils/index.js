@@ -291,18 +291,18 @@ export const getRandomCode = (len = 4) => {
 // 处理cdn时，前端switch组件需要布尔类型，而参数时字符串off/on,需要转换
 const transformList = ["enable"];
 // cdn管理页面处理后端所需参数
-export const getParameter = (form, functionName, DomainNames) => {
+export const getParameter = (form, functionName, domainNames) => {
   let data = {
-    Functions: [
+    functions: [
       {
         functionArgs: [],
         functionName
       }
     ],
-    DomainNames
+    domainNames
   };
   const formArr = Object.keys(form);
-  data.Functions[0].functionArgs = formArr.map((ele) => {
+  data.functions[0].functionArgs = formArr.map((ele) => {
     return {
       argName: ele,
       argValue: transformList.includes(ele)

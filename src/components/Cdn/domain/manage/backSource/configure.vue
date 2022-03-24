@@ -12,7 +12,8 @@
       <div class="content-row">
         <div class="label">回源HOST</div>
         <div class="value">
-          未开启
+          <span v-if="hostForm.enable">已开启</span>
+          <span v-else>未开启</span>
           <div class="txt">
             自定义在CDN节点回源过程中所需访问的WEB服务器域名。
           </div>
@@ -85,7 +86,7 @@
     <UpdateBackSourceModal
       v-model="visible"
       :type="modalType"
-      :detail="modalDetail"
+      :modalMap="modalMap"
       @success="modalSuccess"
     />
   </div>
@@ -93,15 +94,12 @@
 
 <script>
 import UpdateBackSourceModal from "@/components/Cdn/domain/manage/backSource/UpdateBackSourceModal";
+import { getParameter, getForm } from "@/utils/index";
 export default {
   props: {
     tabsKey: {
       type: Number,
       default: 1
-    },
-    domain: {
-      type: String,
-      default: ""
     }
   },
   components: { UpdateBackSourceModal },
@@ -114,19 +112,83 @@ export default {
       }
     }
   },
-  computed: {},
   data() {
     return {
       visible: false,
       modalType: 1,
-      modalDetail: {}
+      modalMap: {
+        1: {
+          title: "回源HOST",
+          functionName: "set_req_host_header",
+          aloneCloseReq: "cdn/delAloneConfig",
+          form: { enable: false, type: 1, domain_name: "" }
+        },
+        2: {
+          title: "静态协议跟随回源",
+          functionName: "forward_scheme",
+          form: { enable: false }
+        },
+        3: {
+          title: "回源SNI",
+          functionName: "https_origin_sni",
+          form: { enable: "on", https_origin_sni: "" }
+        },
+        4: {
+          title: "回源请求超时时间",
+          functionName: "forward_timeout",
+          form: { forward_timeout: 30 }
+        }
+      },
+      hostForm: { enable: false, type: 1, domain_name: "" },
+      agreementType: "未设置"
     };
   },
-  created() {},
+  computed: {
+    domain() {
+      return this.$route.query.domain;
+    }
+  },
+  created() {
+    this.getBatchConfig();
+  },
   methods: {
+    // 批量查询配置信息
+    getBatchConfig() {
+      Object.keys(this.modalMap).forEach((ele, index) => {
+        this.getConfig(index + 1);
+      });
+    },
+    // 查询配置信息
+    getConfig(type) {
+      this.$store
+        .dispatch("cdn/getDomainConfig", {
+          functionNames: this.modalMap[type].functionName,
+          domainName: this.domain
+        })
+        .then((res) => {
+          const data = res.data.domainConfigs.domainConfig;
+          if (data.length > 0) {
+            const newForm = { ...this.modalMap[type].form };
+            if (type === 1) {
+              this.hostForm = {
+                ...getForm(data[0], newForm)
+              };
+              this.hostForm.type =
+                this.hostForm.domain_name === this.domain ? 1 : 3;
+              this.hostForm.enable = true;
+              console.log(this.hostForm, "dasdasdasds");
+            }
+          } else {
+            // this.form = { ...this.modalMap[this.type].form };
+            // if (this.type === 1) {
+            //   this.form.domain_name = this.domain;
+            // }
+          }
+        });
+    },
     // 弹窗成功回调
-    modalSuccess(type, val) {
-      this.modalDetail = {};
+    modalSuccess(type) {
+      this.getConfig(type);
     },
     // 修改配置
     handleChangeConfig(type) {
