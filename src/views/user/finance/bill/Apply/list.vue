@@ -16,6 +16,7 @@
         <a-input
           style="width: 150px; margin-left: 10px"
           placeholder="请输入订单ID"
+          v-model="listQueryInvoice.orderId"
         />
         <a-select
           placeholder="请选择发票类型"
@@ -33,24 +34,26 @@
         </a-select>
         <a-date-picker
           style="margin-left: 10px"
-          v-model="startValue"
           :disabled-date="disabledStartDate"
           show-time
           format="YYYY-MM-DD HH:mm:ss"
           placeholder="创建开始时间"
-          @openChange="handleStartOpenChange"
+          @change="startDateChange"
         />
         --
         <a-date-picker
-          v-model="endValue"
           :disabled-date="disabledEndDate"
           show-time
           format="YYYY-MM-DD HH:mm:ss"
           placeholder="创建结束时间"
-          :open="endOpen"
-          @openChange="handleEndOpenChange"
+          @change="endDateChange"
         />
-        <a-button style="margin-left: 10px" type="primary">查询</a-button>
+        <a-button
+          style="margin-left: 10px"
+          type="primary"
+          @click="getInvoiceAmountList()"
+          >查询</a-button
+        >
       </div>
       <div>
         <div v-if="arrearsdata.length > 0">
@@ -100,7 +103,7 @@
       <div style="width: 100%">
         <p style="margin: 20px 0">
           <span>已选择发票金额：</span>
-          <b style="color: #02a7f0">￥{{ 500 }}.00</b>
+          <b style="color: #02a7f0">￥{{ invoiceAmount }}</b>
           <span>
             元，您选取了
             {{
@@ -238,7 +241,15 @@
 <script>
 import { options } from "@/utils/city";
 import DetailHeader from "@/components/Common/detailHeader.vue";
+import { add, bignumber, create, all } from "mathjs";
 
+const config = {
+  number: "number"
+};
+const math = create(all, config);
+math.config({
+  number: "number"
+});
 export default {
   components: {
     DetailHeader
@@ -430,8 +441,7 @@ export default {
         ]
       },
       listQueryInvoice: {
-        key: "",
-        search: "",
+        orderId: "",
         currentPage: 1,
         pageSize: 10,
         total: 0,
@@ -439,6 +449,7 @@ export default {
         endTime: "",
         type: undefined
       },
+      invoiceAmount: 0,
       paginationPropsInvoice: {
         showQuickJumper: true,
         showSizeChanger: true,
@@ -468,6 +479,15 @@ export default {
     this.getInvoiceAmountList();
   },
   methods: {
+    // 日期组件change
+    startDateChange(date, dateString) {
+      console.log(dateString, "dateString");
+      this.listQueryInvoice.startTime = dateString;
+    },
+    endDateChange(date, dateString) {
+      console.log(dateString, "dateString");
+      this.listQueryInvoice.endTime = dateString;
+    },
     quickJumpInvoice(page) {
       this.listQueryInvoice.currentPage = page;
       this.getInvoiceAmountList();
@@ -490,11 +510,6 @@ export default {
         return false;
       }
       return startValue.valueOf() >= endValue.valueOf();
-    },
-    handleStartOpenChange(open) {
-      if (!open) {
-        this.endOpen = true;
-      }
     },
     // 保存信息
     onSubmit() {
@@ -549,9 +564,14 @@ export default {
     handleEndOpenChange(open) {
       this.endOpen = open;
     },
-    onSelectChange(selectedRowKeys) {
-      console.log("selectedRowKeys changed: ", selectedRowKeys);
+    onSelectChange(selectedRowKeys, obj) {
+      console.log("selectedRowKeys changed: ", selectedRowKeys, obj);
       this.selectedRowKeys = selectedRowKeys;
+      this.invoiceAmount = obj.reduce((prev, cur) => {
+        return math.format(math.add(prev, cur.canInvoiceAmount), {
+          precision: 14
+        });
+      }, 0);
     },
     // 欠票表格多选
     arrearsonSelectChange(selectedRowKeys) {
