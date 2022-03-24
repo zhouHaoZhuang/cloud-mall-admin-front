@@ -3,20 +3,19 @@ import request from "@/utils/request";
 const refundlist = {
   namespaced: true,
   actions: {
-    // 获取
+    // 获取列表
     getList({ commit, state},params ) {
       return request({
-				url: "/pcOfflineRecharge/user",
+				url: "/invoiceRecord/refund/page",
 				method: "get",
 				params,
 			})
     },
-		// 获取
-    getOne({ commit, state }, id) {
-      console.log(state);
+		// 取消单个
+    getCancelRefund({ commit, state }, id) {
       return request({
-        url: `/pcOfflineRecharge/detailed/${id}`,
-        method: "get"
+        url: `/invoiceRecord/cancelRefund/${id}`,
+        method: "patch"
       });
     },
     // 添加常用地址

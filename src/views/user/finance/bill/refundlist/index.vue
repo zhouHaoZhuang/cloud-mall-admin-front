@@ -1,10 +1,17 @@
 <template>
   <div>
     <h1>退票列表</h1>
-    <div>
-      <a-input style="width: 200px" placeholder="请输入发票ID进行搜索">
+    <div style="margin-bottom: 20px">
+      <a-input
+        v-model="listQuery.invoiceNo"
+        style="width: 200px"
+        placeholder="请输入发票ID进行搜索"
+        allowClear
+      >
       </a-input>
-      <a-button style="margin-left: 10px" type="primary">查询</a-button>
+      <a-button style="margin-left: 10px" type="primary" @click="getList()"
+        >查询</a-button
+      >
     </div>
     <div>
       <a-table
@@ -13,10 +20,37 @@
         :pagination="paginationProps"
         rowKey="id"
       >
-        <div slot="action" slot-scope="text">
-          <a-button type="link">详情</a-button>
-          <a-button type="link">取消</a-button>
-          <a-button type="link">重新提交</a-button>
+        <div slot="status" slot-scope="text">
+          {{ invoiceStatusEnum[text] }}
+        </div>
+        <div v-if="text" slot="refundCreateTime" slot-scope="text">
+          {{ text | formatDate }}
+        </div>
+        <div v-if="text" slot="refundFeedbackTime" slot-scope="text">
+          {{ text | formatDate }}
+        </div>
+        <div slot="action" slot-scope="text, record">
+          <a-button
+            type="link"
+            @click="
+              $router.push('/user/finance/bill/refundInfo?id=' + record.id)
+            "
+          >
+            详情
+          </a-button>
+          <a-button
+            type="link"
+            :disabled="record.status !== 6"
+            :class="{ 'del-red': record.status === 6 }"
+            @click="getCancelRefund(record.id)"
+          >
+            取消
+          </a-button>
+          <a-button
+            type="link"
+            @click="$router.push('/user/finance/bill/resubmit?id=' + record.id)"
+            >重新提交</a-button
+          >
         </div>
       </a-table>
     </div>
@@ -24,41 +58,53 @@
 </template>
 
 <script>
+import { invoiceStatusEnum } from "@/utils/enum.js";
+
 export default {
   data() {
     return {
+      invoiceStatusEnum,
       columns: [
         {
           title: "发票ID",
-          dataIndex: "id"
+          dataIndex: "invoiceNo"
         },
         {
           title: "发票抬头",
-          dataIndex: "title"
+          dataIndex: "invoiceTitle"
         },
         {
           title: "开票金额",
-          dataIndex: "amount"
+          dataIndex: "invoiceAmount"
         },
         {
           title: "退票申请状态",
-          dataIndex: "status"
+          dataIndex: "status",
+          scopedSlots: {
+            customRender: "status"
+          }
         },
         {
           title: "退票申请时间",
-          dataIndex: "createTime"
+          dataIndex: "refundCreateTime",
+          scopedSlots: {
+            customRender: "refundCreateTime"
+          }
         },
         {
           title: "备注",
-          dataIndex: "remark"
+          dataIndex: "refundRemark"
         },
         {
           title: "退票申请反馈时间",
-          dataIndex: "updateTime"
+          dataIndex: "refundFeedbackTime",
+          scopedSlots: {
+            customRender: "refundFeedbackTime"
+          }
         },
         {
           title: "退票申请反馈说明",
-          dataIndex: "feedbackRemark"
+          dataIndex: "refundFeedbackRemark"
         },
         {
           title: "操作",
@@ -73,10 +119,7 @@ export default {
         currentPage: 1,
         pageSize: 10,
         total: 0,
-        status: "",
-        startTime: "",
-        endTime: "",
-        accountType: ""
+        invoiceNo: ""
       },
       paginationProps: {
         showQuickJumper: true,
@@ -88,16 +131,32 @@ export default {
           )} 页`,
         onChange: this.quickJump,
         onShowSizeChange: this.onShowSizeChange
-      },
+      }
     };
+  },
+  created() {
+    this.getList();
   },
   methods: {
     //查询数据表格
     getList() {
-      this.$getListQp("word/getList", this.listQuery).then(res => {
+      this.$getList("refundlist/getList", this.listQuery).then((res) => {
         console.log(res);
         this.data = [...res.data.list];
         this.paginationProps.total = res.data.totalCount * 1;
+      });
+    },
+    // 取消
+    getCancelRefund(id) {
+      this.$confirm({
+        title: "确定要取消吗?",
+        onOk: () => {
+          this.$store.dispatch("refundlist/getCancelRefund", id).then((res) => {
+            this.$message.success("取消成功");
+            console.log(res);
+            this.getList();
+          });
+        }
       });
     },
     //表格分页跳转
@@ -111,8 +170,12 @@ export default {
       this.listQuery.pageSize = pageSize;
       this.getList();
     }
-  },
+  }
 };
 </script>
 
-<style></style>
+<style>
+.del-red {
+  color: #d9001b;
+}
+</style>
