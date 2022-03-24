@@ -68,11 +68,11 @@ const billapply = {
       });
     },
     // 修改地址
-    updateAddress({ commit, state }, data) {
+    updateAddress({ commit, state }, params) {
       return request({
-        url: `/ccInvoiceEvaluate/addressInfo`,
+        url: `/invoiceRecord/updateAddress/${params.id}`,
         method: "patch",
-        data,
+        params,
       });
     },
     // 获取
