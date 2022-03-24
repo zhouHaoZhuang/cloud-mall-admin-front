@@ -284,9 +284,7 @@ export default {
       this.$router.push({
         path: "/control/cdn/manageDomain",
         query: {
-          domain: "dad.daa.coom"
-          // id: record.id,
-          // monitor: true
+          domain: record.domain
         }
       });
     },

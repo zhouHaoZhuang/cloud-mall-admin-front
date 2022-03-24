@@ -87,7 +87,7 @@
 </template>
 
 <script>
-import { getParameter } from "@/utils/index";
+import { getParameter, getForm } from "@/utils/index";
 import { sourceProtocolEnum } from "@/utils/enum";
 export default {
   // 双向绑定
@@ -110,6 +110,15 @@ export default {
       default: () => {}
     }
   },
+  watch: {
+    value: {
+      handler(newVal) {
+        if (newVal) {
+          this.getConfig();
+        }
+      }
+    }
+  },
   computed: {
     modalTitle() {
       return this.modalMap[this.type].title;
@@ -129,8 +138,9 @@ export default {
       modalMap: {
         1: {
           title: "回源HOST",
-          functionName: "forward_scheme",
-          form: { type: 1, type1: 1 }
+          functionName: "set_req_host_header",
+          aloneCloseReq: 'cdn/',
+          form: { domain_name: "" }
         },
         2: {
           title: "静态协议跟随回源",
@@ -181,7 +191,9 @@ export default {
           functionNames: this.functionName,
           domainName: this.domain
         })
-        .then((res) => {});
+        .then((res) => {
+          console.log(getForm(res));
+        });
     },
     // 弹窗提交
     handleOk() {

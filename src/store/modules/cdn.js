@@ -54,6 +54,14 @@ const cdn = {
         method: "delete"
       });
     },
+    // 获取加速域名的基础配置
+    getDomainBasicConfig({ commit, state }, data) {
+      return request({
+        url: "/aliyun/cdn/describeCdnDomainConfigs",
+        method: "post",
+        data
+      });
+    },
     // 获取加速域名的配置信息
     getDomainConfig({ commit, state }, data) {
       return request({
@@ -61,7 +69,9 @@ const cdn = {
         method: "post",
         data
       });
-    }
+    },
+    // 单独删除指定域名的指定配置
+    delAlone
   }
 };
 

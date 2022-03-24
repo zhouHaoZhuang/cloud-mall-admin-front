@@ -308,3 +308,23 @@ export const getParameter = (form, functionName, DomainNames) => {
   });
   return data;
 };
+// cdn管理页面根据接口返回数据处理前端所需格式form
+export const getForm = (form, functionName, DomainNames) => {
+  let data = {
+    Functions: [
+      {
+        functionArgs: [],
+        functionName
+      }
+    ],
+    DomainNames
+  };
+  const formArr = Object.keys(form);
+  data.Functions[0].functionArgs = formArr.map((ele) => {
+    return {
+      argName: ele,
+      argValue: form[ele]
+    };
+  });
+  return data;
+};
