@@ -31,8 +31,7 @@ export default {
       default: () => {}
     },
     userAmount: {
-      type: Number,
-      default: 0
+      type: [Number, String]
     }
   },
   data() {
@@ -73,7 +72,7 @@ export default {
       this.$store
         .dispatch("finance/getUserBalance", this.balanceForm)
         .then((res) => {
-          if (res.data.userAmount !== this.amount) {
+          if (res.data.userAmount * 1 > this.amount * 1) {
             this.visible = false;
             this.time && clearInterval(this.time);
           }
