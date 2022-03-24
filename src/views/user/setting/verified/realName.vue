@@ -33,7 +33,7 @@
           查看详情
         </a-button>
       </div>
-      <div @click="$router.push('/user/setting/enterprise')">
+      <div @click="goEnterpriseRealName">
         <img width="150px" src="@/assets/img/realName/enterprise.png" alt="" />
         <p>
           <span>企业认证</span>
@@ -99,6 +99,15 @@ export default {
         return;
       }
       this.$router.push("/user/setting/personalRealname");
+    },
+    // 跳转企业实名认证页面
+    goEnterpriseRealName(e) {
+      if (this.realNameStatus === 0) {
+        this.$router.push("/user/setting/enterprise");
+      }
+      if (this.realNameStatus === 1 && e.target.innerText === "查看详情") {
+        this.$router.push("/user/setting/enterprise");
+      }
     }
   }
 };

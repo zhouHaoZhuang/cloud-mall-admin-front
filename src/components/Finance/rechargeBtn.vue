@@ -48,8 +48,16 @@ export default {
         useBalance: true,
         useVoucher: false,
         useWechatPay: false
-      }
+      },
+      time: null,
+      amount: 0
     };
+  },
+  mounted() {
+    this.amount = this.userAmount;
+  },
+  beforeDestroy() {
+    this.time && clearInterval(this.time);
   },
   methods: {
     //链接生成二维码 Api
@@ -65,8 +73,9 @@ export default {
       this.$store
         .dispatch("finance/getUserBalance", this.balanceForm)
         .then((res) => {
-          if (res.data.userAmount !== this.userAmount) {
+          if (res.data.userAmount !== this.amount) {
             this.visible = false;
+            this.time && clearInterval(this.time);
           }
         });
     },
@@ -109,8 +118,9 @@ export default {
             this.visible = true;
             let wechatCode = JSON.parse(res.data.wechatCode);
             this.textUrl = wechatCode.code_url;
+            this.time && clearInterval(this.time);
             this.getQrcode();
-            setInterval(() => {
+            this.time = setInterval(() => {
               this.getUserBalance();
             }, 3000);
           }

@@ -117,7 +117,7 @@ const user = {
     // 上传企业实名认证信息
     uploadEnterpriseRealName({ commit, state }, data) {
       return request({
-        url: `/user/uploadRealName`,
+        url: `/ccCompanyInfo/legalPerson`,
         method: "post",
         data,
       });
