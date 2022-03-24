@@ -16,50 +16,79 @@
         <a-input
           style="width: 150px; margin-left: 10px"
           placeholder="请输入订单ID"
+          v-model="listQueryInvoice.orderId"
         />
+        <a-select
+          placeholder="请选择发票类型"
+          style="width: 150px; margin-left: 10px"
+          v-model="listQueryInvoice.type"
+          allowClear
+        >
+          <a-select-option
+            :key="item"
+            :value="inx"
+            v-for="(item, inx) in typeMap"
+          >
+            {{ item }}
+          </a-select-option>
+        </a-select>
         <a-date-picker
           style="margin-left: 10px"
-          v-model="startValue"
           :disabled-date="disabledStartDate"
           show-time
           format="YYYY-MM-DD HH:mm:ss"
           placeholder="创建开始时间"
-          @openChange="handleStartOpenChange"
+          @change="startDateChange"
         />
         --
         <a-date-picker
-          v-model="endValue"
           :disabled-date="disabledEndDate"
           show-time
           format="YYYY-MM-DD HH:mm:ss"
           placeholder="创建结束时间"
-          :open="endOpen"
-          @openChange="handleEndOpenChange"
+          @change="endDateChange"
         />
-        <a-button style="margin-left: 10px" type="primary">查询</a-button>
+        <a-button
+          style="margin-left: 10px"
+          type="primary"
+          @click="getInvoiceAmountList()"
+          >查询</a-button
+        >
       </div>
       <div>
         <div v-if="arrearsdata.length > 0">
           <p>
-            欠票金额：￥20.00
+            欠票金额：￥
+            {{ dataAmount.negativeAmount }}
             开票时需要优先冲抵欠票金额（欠票金额包括退款订单、降配订单等）
           </p>
           <a-table
             :row-selection="{
               selectedRowKeys: arrearsselectedRowKeys,
-              onChange: arrearsonSelectChange
+              onChange: arrearsonSelectChange,
+              getCheckboxProps: (record) => ({
+                props: {
+                  disabled: true
+                }
+              })
             }"
             :columns="columns"
             rowKey="id"
             :data-source="arrearsdata"
           >
             <div slot="companyName" slot-scope="text">{{ text }}</div>
-            <div slot="action">
-              <a-button type="link">申请开票</a-button>
-              <a-button type="link">查看详情</a-button>
+            <div slot="type" slot-scope="text">
+              {{ typeMap[text] }}
+            </div>
+            <div v-if="text" slot="createTime" slot-scope="text">
+              {{ text | formatDate }}
             </div>
           </a-table>
-          <p>可开票金额：￥500.00 有5个订单可以进行开票，已可开票金额为准</p>
+          <p>
+            可开票金额：￥{{ dataAmount.canInvoiceAmount }} 有
+            {{ data.length }}
+            个订单可以进行开票，已可开票金额为准
+          </p>
         </div>
         <a-table
           :row-selection="{
@@ -69,28 +98,33 @@
           :columns="columns"
           :data-source="data"
           rowKey="id"
+          :pagination="paginationPropsInvoice"
         >
-          <div slot="companyName" slot-scope="text">
-            {{ text }}
+          <div slot="type" slot-scope="text">
+            {{ typeMap[text] }}
           </div>
-          <div slot="action">
-            <a-button type="link">申请开票</a-button>
-            <a-button type="link">查看详情</a-button>
+          <div v-if="text" slot="createTime" slot-scope="text">
+            {{ text | formatDate }}
           </div>
         </a-table>
       </div>
       <div style="width: 100%">
         <p style="margin: 20px 0">
           <span>已选择发票金额：</span>
-          <b style="color: #02a7f0">￥{{ 500 }}.00</b>
+          <b style="color: #02a7f0">￥{{ invoiceAmount }}</b>
           <span>
             元，您选取了
             {{
-              5
+              selectedRowKeys.length
             }}条单据开具发票(若选中多条订单，填写开票金额将合并开具到一张票据中)
           </span>
         </p>
-        <a-button class="next" type="primary" @click="current = 1">
+        <a-button
+          class="next"
+          type="primary"
+          @click="current = 1"
+          :disabled="selectedRowKeys.length <= 0"
+        >
           下一步
         </a-button>
       </div>
@@ -103,8 +137,15 @@
       <div>
         <a-table
           :row-selection="{
+            type: 'radio',
             selectedRowKeys: selectedRowKeysTitle,
-            onChange: onSelectChangeTitle
+            onChange: onSelectChangeTitle,
+            getCheckboxProps: (record) => ({
+              props: {
+                disabled: record.defaultStatus === 0,
+                defaultStatus: record.defaultStatus
+              }
+            })
           }"
           rowKey="id"
           :columns="columnsTitle"
@@ -142,8 +183,15 @@
       <div>
         <a-table
           :row-selection="{
+            type: 'radio',
             selectedRowKeys: selectedRowKeysAddress,
-            onChange: onSelectChangeAddress
+            onChange: onSelectChangeAddress,
+            getCheckboxProps: (record) => ({
+              props: {
+                disabled: record.defaultSign === 0,
+                defaultSign: record.defaultSign
+              }
+            })
           }"
           :columns="columnsAddress"
           :data-source="dataAddress"
@@ -168,7 +216,16 @@
         新增常用地址
       </a-button>
       <div style="text-align: center">
-        <a-button type="primary">提交申请</a-button>
+        <a-button
+          type="primary"
+          :disabled="
+            selectedRowKeysAddress.length === 0 ||
+            selectedRowKeysTitle.length === 0
+          "
+          @click="submitApp"
+        >
+          提交申请
+        </a-button>
         <a-button style="margin-left: 20px" @click="current = 0">
           返回上一步
         </a-button>
@@ -220,7 +277,15 @@
 <script>
 import { options } from "@/utils/city";
 import DetailHeader from "@/components/Common/detailHeader.vue";
+import { add, bignumber, create, all } from "mathjs";
 
+const config = {
+  number: "number"
+};
+const math = create(all, config);
+math.config({
+  number: "number"
+});
 export default {
   components: {
     DetailHeader
@@ -247,28 +312,40 @@ export default {
       // 开票数据
       data: [],
       selectedRowKeys: [], // Check here to configure the default column
+      typeMap: {
+        1: "订单",
+        2: "账单"
+      },
       columns: [
         {
           title: "订单ID",
-          dataIndex: "id",
-          scopedSlots: { customRender: "id" }
+          dataIndex: "orderNo"
+        },
+        {
+          title: "类型",
+          dataIndex: "type",
+          scopedSlots: {
+            customRender: "type"
+          }
         },
         {
           title: "产品名称",
-          dataIndex: "name"
+          dataIndex: "bizTypeName"
+        },
+        {
+          title: "订单金额",
+          dataIndex: "originalAmount"
         },
         {
           title: "可开票金额",
-          dataIndex: "amount"
+          dataIndex: "canInvoiceAmount"
         },
         {
           title: "订单创建时间",
-          dataIndex: "createTime"
-        },
-        {
-          title: "操作",
-          dataIndex: "action",
-          scopedSlots: { customRender: "action" }
+          dataIndex: "createTime",
+          scopedSlots: {
+            customRender: "createTime"
+          }
         }
       ],
       // 选择发票抬头
@@ -398,7 +475,29 @@ export default {
             trigger: "blur"
           }
         ]
-      }
+      },
+      listQueryInvoice: {
+        orderId: "",
+        currentPage: 1,
+        pageSize: 10,
+        total: 0,
+        startTime: "",
+        endTime: "",
+        type: undefined
+      },
+      invoiceAmount: 0,
+      paginationPropsInvoice: {
+        showQuickJumper: true,
+        showSizeChanger: true,
+        total: 0,
+        showTotal: (total, range) =>
+          `共 ${total} 条记录 第 ${
+            this.listQueryInvoice.currentPage
+          } / ${Math.ceil(total / this.listQueryInvoice.pageSize)} 页`,
+        onChange: this.quickJumpInvoice,
+        onShowSizeChange: this.onShowSizeChangeInvoice
+      },
+      dataAmount: {}
     };
   },
   watch: {
@@ -414,8 +513,27 @@ export default {
     this.getDetailsList();
     this.getListTitle();
     this.getListAddress();
+    this.getInvoiceAmountList();
   },
   methods: {
+    // 日期组件change
+    startDateChange(date, dateString) {
+      console.log(dateString, "dateString");
+      this.listQueryInvoice.startTime = dateString;
+    },
+    endDateChange(date, dateString) {
+      console.log(dateString, "dateString");
+      this.listQueryInvoice.endTime = dateString;
+    },
+    quickJumpInvoice(page) {
+      this.listQueryInvoice.currentPage = page;
+      this.getInvoiceAmountList();
+    },
+    onShowSizeChangeInvoice(current, pageSize) {
+      this.listQueryInvoice.pageSize = pageSize;
+      this.listQueryInvoice.currentPage = 1;
+      this.getInvoiceAmountList();
+    },
     disabledStartDate(startValue) {
       const endValue = this.endValue;
       if (!startValue || !endValue) {
@@ -430,10 +548,21 @@ export default {
       }
       return startValue.valueOf() >= endValue.valueOf();
     },
-    handleStartOpenChange(open) {
-      if (!open) {
-        this.endOpen = true;
-      }
+    // 提交申请
+    submitApp() {
+      console.log(this.selectedRowKeysAddress, "selectedRowKeysAddress");
+      console.log(this.selectedRowKeysTitle, "selectedRowKeysTitle");
+      console.log(this.selectedRowKeys, "selectedRowKeys");
+      let data = {
+        addressInfoId: this.selectedRowKeysAddress[0],
+        invoiceEvaluateIds: this.selectedRowKeys,
+        invoiceInfoId: this.selectedRowKeysTitle[0]
+      };
+      console.log(data, "data");
+      this.$store.dispatch("billapply/applyInvoice", data).then((res) => {
+        this.$message.success("申请成功");
+        this.$router.push("/user/finance/bill/list");
+      });
     },
     // 保存信息
     onSubmit() {
@@ -488,21 +617,47 @@ export default {
     handleEndOpenChange(open) {
       this.endOpen = open;
     },
-    onSelectChange(selectedRowKeys) {
-      console.log("selectedRowKeys changed: ", selectedRowKeys);
+    onSelectChange(selectedRowKeys, obj) {
+      console.log("selectedRowKeys changed: ", selectedRowKeys, obj);
       this.selectedRowKeys = selectedRowKeys;
+      this.invoiceAmount = obj.reduce((prev, cur) => {
+        return math.format(math.add(prev, cur.originalAmount), {
+          precision: 14
+        });
+      }, 0);
     },
     // 欠票表格多选
     arrearsonSelectChange(selectedRowKeys) {
       console.log("selectedRowKeys changed: ", selectedRowKeys);
       this.arrearsselectedRowKeys = selectedRowKeys;
     },
+    // 金额
+    getAmount() {
+      this.$store.dispatch("billlist/getAmount").then((res) => {
+        console.log(res);
+        this.dataAmount = res.data;
+      });
+    },
     // 欠票数据
     getDetailsList() {
       this.$store.dispatch("billlist/getDetails").then((res) => {
-        console.log(res);
+        console.log(res, "res");
         this.arrearsdata = [...res.data.list];
+        this.arrearsselectedRowKeys = [];
+        this.arrearsdata.forEach((item) => {
+          this.arrearsselectedRowKeys.push(item.id);
+        });
       });
+    },
+    // 开票金额数据
+    getInvoiceAmountList() {
+      this.$store
+        .dispatch("billlist/getInvoiceAmountList", this.listQueryInvoice)
+        .then((res) => {
+          console.log(res, "开票金额数据");
+          this.data = res.data.list;
+          this.paginationPropsInvoice.total = res.data.totalCount * 1;
+        });
     },
     // 选择发票抬头
     onSelectChangeTitle(selectedRowKeysTitle) {
@@ -529,6 +684,12 @@ export default {
         .then((res) => {
           console.log(res);
           this.dataTitle = [...res.data.list];
+          this.selectedRowKeysTitle = [
+            res.data.list.filter((item) => {
+              return item.defaultStatus === 1;
+            })[0].id
+          ];
+          console.log(this.selectedRowKeysTitle);
           this.paginationProps.total = res.data.totalCount * 1;
         });
     },
@@ -537,6 +698,12 @@ export default {
       this.$getList("mangeaddress/getList", this.listQuery).then((res) => {
         console.log(res);
         this.dataAddress = [...res.data];
+        this.selectedRowKeysAddress = [
+          res.data.filter((item) => {
+            return item.defaultSign === 1;
+          })[0].id
+        ];
+        console.log(this.selectedRowKeysAddress, "res.data");
         this.paginationProps.total = res.data.totalCount * 1;
       });
     },
