@@ -139,13 +139,7 @@
           :row-selection="{
             type: 'radio',
             selectedRowKeys: selectedRowKeysTitle,
-            onChange: onSelectChangeTitle,
-            getCheckboxProps: (record) => ({
-              props: {
-                disabled: record.defaultStatus === 0,
-                defaultStatus: record.defaultStatus
-              }
-            })
+            onChange: onSelectChangeTitle
           }"
           rowKey="id"
           :columns="columnsTitle"
@@ -181,17 +175,17 @@
         请选择收货信息：
       </div>
       <div>
-        <a-table
-          :row-selection="{
-            type: 'radio',
-            selectedRowKeys: selectedRowKeysAddress,
-            onChange: onSelectChangeAddress,
-            getCheckboxProps: (record) => ({
+        <!-- getCheckboxProps: (record) => ({
               props: {
                 disabled: record.defaultSign === 0,
                 defaultSign: record.defaultSign
               }
-            })
+            }) -->
+        <a-table
+          :row-selection="{
+            type: 'radio',
+            selectedRowKeys: selectedRowKeysAddress,
+            onChange: onSelectChangeAddress
           }"
           :columns="columnsAddress"
           :data-source="dataAddress"

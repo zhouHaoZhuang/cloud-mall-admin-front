@@ -18,7 +18,7 @@
         :pagination="paginationProps"
         rowKey="id"
       >
-        <div slot="invoiceTitle" slot-scope="text">
+        <div slot="invoiceTitle" slot-scope="text, record">
           <span>
             {{ text }}
           </span>
@@ -70,7 +70,7 @@ export default {
           title: "发票抬头",
           dataIndex: "invoiceTitle",
           scopedSlots: {
-            default: "invoiceTitle"
+            customRender: "invoiceTitle"
           }
         },
         {
