@@ -109,7 +109,6 @@ export default {
     })
   },
   mounted() {
-    
     if (this.allConfig.first_payment === "alipay") {
       this.payType = "ali";
     }
