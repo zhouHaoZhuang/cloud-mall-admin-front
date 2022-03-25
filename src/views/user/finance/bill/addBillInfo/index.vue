@@ -125,7 +125,7 @@ export default {
               }
               callback();
             },
-            trigger: "blur"
+            trigger: ["blur","change"]
           },
           {
             pattern: /[0-9A-Z]{18}/,
@@ -143,7 +143,7 @@ export default {
               }
               callback();
             },
-            trigger: "blur"
+            trigger: ["blur","change"]
           }
         ],
         bankNo: [
@@ -156,7 +156,7 @@ export default {
               }
               callback();
             },
-            trigger: "blur"
+            trigger: ["blur","change"]
           },
           {
             pattern: /^[0-9]$/,
@@ -174,7 +174,7 @@ export default {
               }
               callback();
             },
-            trigger: "blur"
+            trigger: ["blur","change"]
           }
         ],
         concatPhone: [
@@ -187,7 +187,7 @@ export default {
               }
               callback();
             },
-            trigger: "blur"
+            trigger: ["blur","change"]
           },
           {
             pattern:
