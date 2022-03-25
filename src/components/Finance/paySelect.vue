@@ -52,6 +52,12 @@
             <a-icon class="alipay-icon" type="alipay-circle" />
           </div>
         </a-radio>
+        <a-radio value="wechat">
+          <div class="box">
+            微信
+            <a-icon class="wechat-icon"  type="wechat" />
+          </div>
+        </a-radio>
       </a-radio-group>
     </div>
     <!-- 服务协议 -->
@@ -109,6 +115,10 @@ export default {
     detail: {
       type: Object,
       default: () => {}
+    },
+    // 微信支付url
+    WeChatPop: {
+      type: Function
     }
   },
   data() {
@@ -175,6 +185,9 @@ export default {
       if (this.balanceForm.payType === "ali") {
         this.balanceForm.useAliPay = true;
       }
+      if (this.balanceForm.payType === "wechat") {
+        this.balanceForm.useWechatPay = true;
+      }
     },
     // 查询余额
     getUserBalance() {
@@ -227,9 +240,14 @@ export default {
       this.$store
         .dispatch("finance/aliPay", data)
         .then((res) => {
+          console.log(res);
           if (res.data.aliPayResult) {
             // 打开支付宝支付
             openAlipayPay(res.data.aliPayResult);
+          }
+          if (res.data.wechatCode) {
+            // 打开微信支付
+            this.WeChatPop(res.data.wechatCode);
           } else {
             this.$message.success("余额支付成功");
           }
@@ -244,6 +262,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
+
 .pay-select-container {
   font-size: 12px;
   color: #262829;
@@ -319,6 +338,14 @@ export default {
       .alipay-icon {
         font-size: 40px;
         color: #00aaff;
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        right: 20px;
+      }
+      .wechat-icon{
+        font-size: 40px;
+        color: #08C161;
         position: absolute;
         top: 50%;
         transform: translateY(-50%);
