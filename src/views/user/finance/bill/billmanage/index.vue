@@ -142,6 +142,9 @@ export default {
       this.$store.dispatch("billnews/getList", this.listQuery).then((res) => {
         console.log(res);
         this.data = [...res.data.list];
+        this.data.sort((a, b) => {
+          return b.defaultStatus - a.defaultStatus;
+        });
         this.paginationProps.total = res.data.totalCount * 1;
       });
     },
