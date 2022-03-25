@@ -48,6 +48,7 @@
           </a-button>
           <a-button
             type="link"
+            v-if="record.status === 7 || record.status === 8"
             @click="$router.push('/user/finance/bill/resubmit?id=' + record.id)"
             >重新提交</a-button
           >

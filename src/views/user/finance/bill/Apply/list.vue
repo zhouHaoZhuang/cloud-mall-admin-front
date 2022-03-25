@@ -72,7 +72,7 @@
                 }
               })
             }"
-            :columns="columns"
+            :columns="oweColumns"
             rowKey="id"
             :data-source="arrearsdata"
           >
@@ -342,6 +342,38 @@ export default {
           }
         }
       ],
+      oweColumns: [
+        {
+          title: "订单ID",
+          dataIndex: "orderNo"
+        },
+        {
+          title: "类型",
+          dataIndex: "type",
+          scopedSlots: {
+            customRender: "type"
+          }
+        },
+        {
+          title: "产品名称",
+          dataIndex: "bizTypeName"
+        },
+        {
+          title: "订单金额",
+          dataIndex: "originalAmount"
+        },
+        {
+          title: "欠票金额",
+          dataIndex: "debtAmount"
+        },
+        {
+          title: "订单创建时间",
+          dataIndex: "createTime",
+          scopedSlots: {
+            customRender: "createTime"
+          }
+        }
+      ],
       // 选择发票抬头
       dataTitle: [],
       selectedRowKeysTitle: [], // Check here to configure the default column
@@ -506,6 +538,7 @@ export default {
     // this.getList();
     this.getDetailsList();
     this.getListTitle();
+    this.getAmount()
     this.getListAddress();
     this.getInvoiceAmountList();
   },
