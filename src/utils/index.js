@@ -289,7 +289,12 @@ export const getRandomCode = (len = 4) => {
   return identifyCode;
 };
 // 处理cdn时，前端switch组件需要布尔类型，而参数时字符串off/on,需要转换
-const transformList = ["enable", "enabled", "switch"];
+const transformList = [
+  "enable",
+  "enabled",
+  "switch",
+  "https_hsts_include_subdomains"
+];
 // cdn管理页面处理后端所需参数
 export const getParameter = (form, functionName, domainNames) => {
   let data = {
@@ -302,6 +307,11 @@ export const getParameter = (form, functionName, domainNames) => {
     domainNames
   };
   const formArr = Object.keys(form);
+  if (formArr.length === 0) {
+    return {
+      domainName: domainNames
+    };
+  }
   data.functions[0].functionArgs = formArr.map((ele) => {
     return {
       argName: ele,

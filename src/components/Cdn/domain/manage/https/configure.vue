@@ -131,7 +131,7 @@
     <UpdateHttpsModal
       v-model="visible"
       :type="modalType"
-      :detail="modalDetail"
+      :modalMap="modalMap"
       @success="modalSuccess"
     />
   </div>
@@ -140,42 +140,122 @@
 <script>
 import DomainHttps from "@/components/Cdn/domain/manage/https/domainHttps";
 import UpdateHttpsModal from "@/components/Cdn/domain/manage/https/UpdateHttpsModal";
+import { getParameter, getForm } from "@/utils/index";
 export default {
   props: {
     tabsKey: {
       type: Number,
       default: 1
-    },
-    domain: {
-      type: String,
-      default: ""
     }
   },
   components: { DomainHttps, UpdateHttpsModal },
   watch: {
     tabsKey: {
       handler(newVal) {
-        if (newVal === "1") {
-          //   this.getData();
+        if (newVal === 4) {
+          this.getBatchConfig();
         }
       }
     }
   },
-  computed: {},
+  computed: {
+    domain() {
+      return this.$route.query.domain;
+    }
+  },
   data() {
     return {
       // https设置弹窗
       domainHttpsVisible: false,
       visible: false,
       modalType: 1,
-      modalDetail: {}
+      modalMap: {
+        1: {
+          title: "强制跳转",
+          isBeforeDel: "cdn/delAloneConfig",
+          functionName: "https_force",
+          form: { enable: false }
+        },
+        2: {
+          title: "HSTS 设置",
+          functionName: "HSTS",
+          form: {
+            enabled: false,
+            https_hsts_max_age: "",
+            https_hsts_include_subdomains: false
+          }
+        },
+        3: {
+          title: "回源SNI",
+          functionName: "https_origin_sni",
+          form: { enabled: true, https_origin_sni: "" }
+        },
+        4: {
+          title: "回源请求超时时间",
+          functionName: "forward_timeout",
+          form: { forward_timeout: 30 }
+        }
+      },
+      httpForm: {
+        enable: false
+      },
+      httpsForm: {
+        enable: false
+      }
     };
   },
-  created() {},
   methods: {
+    // 批量查询配置信息
+    getBatchConfig() {
+      Object.keys(this.modalMap).forEach((ele, index) => {
+        this.getConfig(index + 1);
+      });
+    },
+    // 查询配置信息
+    getConfig(type) {
+      this.$store
+        .dispatch("cdn/getDomainConfig", {
+          functionNames: this.modalMap[type].functionName,
+          domainName: this.domain
+        })
+        .then((res) => {
+          const data = res.data.domainConfigs.domainConfig;
+          if (data.length > 0) {
+            const newForm = { ...this.modalMap[type].form };
+            if (type === 1) {
+              this.httpsForm = {
+                ...getForm(data[0], newForm)
+              };
+              this.hostForm.type =
+                this.hostForm.domain_name === this.domain ? 1 : 3;
+              this.hostForm.enable = true;
+            }
+            if (type === 2) {
+              this.agreementForm = {
+                ...getForm(data[0], newForm)
+              };
+            }
+            if (type === 3) {
+              this.sniForm = {
+                ...getForm(data[0], newForm)
+              };
+            }
+            if (type === 4) {
+              this.timeoutForm = {
+                ...getForm(data[0], newForm)
+              };
+            }
+          } else {
+            // if (type === 1) {
+            //   this.hostForm.enable = false;
+            //   this.hostForm.domain_name = this.domain;
+            // }
+          }
+        });
+    },
     // 弹窗成功回调
-    modalSuccess(type, val) {
-      this.modalDetail = {};
+    modalSuccess(type) {
+      this.getConfig(type);
     },
     // 修改https证书
     handleChangeHttps() {

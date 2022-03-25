@@ -120,10 +120,11 @@ export default {
   watch: {
     tabsKey: {
       handler(newVal) {
-        if (newVal === "1") {
-          //   this.getData();
+        if (newVal === 2) {
+          this.getBatchConfig();
         }
-      }
+      },
+      immediate: true
     }
   },
   data() {
@@ -163,9 +164,6 @@ export default {
     domain() {
       return this.$route.query.domain;
     }
-  },
-  created() {
-    this.getBatchConfig();
   },
   methods: {
     // 批量查询配置信息

@@ -2,10 +2,10 @@
   <div class="cdn-source-container">
     <a-tabs v-model="tabCurrent" type="card">
       <a-tab-pane :key="1" tab="回源配置">
-        <Configure />
+        <Configure :tabsKey="tabsKey" />
       </a-tab-pane>
       <a-tab-pane :key="2" tab="自定义回源HTTP头">
-        <Custom />
+        <Custom :tabsKey="tabCurrent" />
       </a-tab-pane>
     </a-tabs>
   </div>
@@ -26,15 +26,6 @@ export default {
     }
   },
   components: { Configure, Custom },
-  watch: {
-    tabsKey: {
-      handler(newVal) {
-        if (newVal === "1") {
-          //   this.getData();
-        }
-      }
-    }
-  },
   computed: {},
   data() {
     return {
