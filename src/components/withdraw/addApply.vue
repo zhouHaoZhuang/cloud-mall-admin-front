@@ -70,7 +70,8 @@ export default {
       type: Object,
       default: () => {}
     },
-    apply: {}
+    apply: {},
+    balance:{}
   },
   watch: {
     apply: {
@@ -108,7 +109,6 @@ export default {
       confirmLoading: false,
       labelCol: { span: 6 },
       wrapperCol: { span: 16 },
-      balance: 0,
       form: {
         status: 2,
         accountName: "",
@@ -156,10 +156,16 @@ export default {
       this.$refs.ruleForm.validate((valid) => {
         if (valid) {
           let title;
-          if (this.$refs.dealAmount.value > this.balance) {
+          console.log(this.balance,'this.balance');
+          console.log(this.$refs.dealAmount.value,'this.$refs.dealAmount.value');
+          if(!this.balance){
+            this.$message.error("请刷新页面");
+          }
+          if (this.$refs.dealAmount.value >  this.balance) {
             this.$message.error("当前无足够余额可以进行提现，请核对剩余余额");
             return
           }
+
           if (val == "save") {
             title = "确认保存申请吗?";
             this.form.status = 0;
@@ -228,23 +234,6 @@ export default {
         }
       });
     },
-    getDashboardData() {
-      this.$store.dispatch("dashboard/getBalanceAndCoupon").then((res) => {
-        const newData = {
-          balance: {},
-          coupon: {
-            balance: "0.00"
-          }
-        };
-        res.data.forEach((ele) => {
-          if (ele.accountType === 1) {
-            newData.balance = { ...ele };
-          }
-        });
-        this.overviewData = { ...newData };
-        this.balance = this.overviewData.balance.balance;
-      });
-    },
     // 重置表单数据
     resetForm() {
       this.form = {
@@ -256,9 +245,6 @@ export default {
       };
     }
   },
-  created() {
-    this.getDashboardData();
-  }
 };
 </script>
 
