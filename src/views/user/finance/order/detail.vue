@@ -161,7 +161,22 @@
       v-if="orderInfo.tradeStatus === 1"
       :detail="orderInfo"
       @success="startTime"
+      :WeChatPop="WeChatPop"
     />
+    <a-modal
+      title="请扫描下方二维码完成支付"
+      :visible="visible"
+      :confirm-loading="confirmLoading"
+      @ok="handleOk"
+      @cancel="handleCancel"
+      forceRender
+    >
+      <div class="qrcodeDom">
+        <div id="qrcodeDom"></div>
+        <p>请使用<span>微信</span>扫码完成支付</p>
+        <p>如已支付成功，请点击确认查看订单信息</p>
+      </div>
+    </a-modal>
   </div>
 </template>
 
@@ -171,6 +186,8 @@ import DetailHeader from "@/components/Common/detailHeader";
 import PaySelect from "@/components/Finance/paySelect";
 import { useLeftTime } from "@/utils/index";
 import { orderStatusEnum, tradeTypeEnum, regionDataEnum } from "@/utils/enum";
+import QRCode from "qrcodejs2";
+
 export default {
   components: { DetailHeader, PaySelect },
   computed: {
@@ -188,6 +205,9 @@ export default {
   },
   data() {
     return {
+      visible: false,
+      confirmLoading: false,
+      textUrl: "",
       orderStatusEnum,
       tradeTypeEnum,
       regionDataEnum,
@@ -237,7 +257,43 @@ export default {
     this.time && clearInterval(this.time);
     this.payTime && clearInterval(this.payTime);
   },
+  watch: {
+    orderInfo(val) {
+      if (val.tradeStatus === 5) {
+        this.visible = false;
+      }
+    }
+  },
   methods: {
+    //链接生成二维码 Api
+    transQrcode() {
+      const qrcode = new QRCode("qrcodeDom", {
+        width: 160,
+        height: 160,
+        text: `${this.textUrl}`
+      });
+    },
+    handleCancel(e) {
+      console.log("Clicked cancel button");
+      this.visible = false;
+    },
+    //点击开始进行转化
+    getQrcode() {
+      document.getElementById("qrcodeDom").innerHTML = ""; //先清空之前生成的二维码
+      this.$nextTick(() => {
+        this.transQrcode();
+      });
+    },
+    handleOk(e) {
+      this.visible = false;
+      this.confirmLoading = false;
+    },
+    WeChatPop(url) {
+      this.visible = true;
+      let wechatCode = JSON.parse(url);
+      this.textUrl = wechatCode.code_url;
+      this.getQrcode();
+    },
     // 获取详情
     getDetail() {
       this.$store
@@ -304,6 +360,21 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.qrcodeDom {
+  width: 100%;
+  text-align: center;
+  #qrcodeDom {
+    width: 160px;
+    margin: 20px auto;
+  }
+  p {
+    font-size: 16px;
+    span {
+      color: #ff0000;
+      font-weight: 500;
+    }
+  }
+}
 .orderInfo {
   margin: 0 24px;
   .unpaid-box {
