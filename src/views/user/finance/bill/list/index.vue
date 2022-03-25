@@ -115,6 +115,7 @@
               :columns="columnsDetails"
               :data-source="dataDetails"
               rowKey="id"
+              :pagination="false"
             >
             </a-table>
           </div>
@@ -141,7 +142,7 @@
         rowKey="id"
       >
         <div slot="companyName" slot-scope="text">{{ text }}</div>
-        <div v-if="text" slot="bizTime" slot-scope="text">
+        <div v-if="text" slot="createTime" slot-scope="text">
           {{ text | formatDate }}
         </div>
         <div v-if="text" slot="feedbackTime" slot-scope="text">
@@ -220,8 +221,8 @@ export default {
         },
         {
           title: "申请时间",
-          dataIndex: "bizTime",
-          scopedSlots: { customRender: "bizTime" }
+          dataIndex: "createTime",
+          scopedSlots: { customRender: "createTime" }
         },
         {
           title: "反馈时间",

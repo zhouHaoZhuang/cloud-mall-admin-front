@@ -75,6 +75,7 @@
             :columns="oweColumns"
             rowKey="id"
             :data-source="arrearsdata"
+            :pagination="false"
           >
             <div slot="companyName" slot-scope="text">{{ text }}</div>
             <div slot="type" slot-scope="text">
@@ -538,7 +539,7 @@ export default {
     // this.getList();
     this.getDetailsList();
     this.getListTitle();
-    this.getAmount()
+    this.getAmount();
     this.getListAddress();
     this.getInvoiceAmountList();
   },

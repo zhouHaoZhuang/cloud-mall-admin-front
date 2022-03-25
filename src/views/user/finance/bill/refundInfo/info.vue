@@ -33,7 +33,9 @@
           {{ data.refundRemark }}
         </a-descriptions-item>
         <a-descriptions-item label="退票申请反馈时间">
-          {{ data.refundFeedbackTime }}
+          <span v-if="data.refundFeedbackTime">
+            {{ data.refundFeedbackTime | formatDate }}
+          </span>
         </a-descriptions-item>
         <a-descriptions-item label="退票申请反馈说明">
           {{ data.refundFeedbackRemark }}
@@ -59,6 +61,9 @@
         :pagination="paginationProps"
         rowKey="id"
       >
+        <div v-if="text" slot="createTime" slot-scope="text">
+          {{ text | formatDate }}
+        </div>
       </a-table>
     </div>
   </div>
@@ -94,7 +99,10 @@ export default {
         },
         {
           title: "订单创建时间",
-          dataIndex: "createTime"
+          dataIndex: "createTime",
+          scopedSlots: {
+            customRender: "createTime"
+          }
         }
       ],
       listQuery: {
