@@ -39,20 +39,17 @@ export default {
       loading: false,
       textUrl: "",
       visible: false,
-      confirmLoading: false,
-      balanceForm: {
-        payType: "none",
-        totalAmount: 0,
-        useAliPay: false,
-        useBalance: true,
-        useVoucher: false,
-        useWechatPay: false
-      },
-      time: null,
+      confirmLoading: false
     };
   },
-  beforeDestroy() {
-    this.time && clearInterval(this.time);
+  watch: {
+    userAmount(val, oldVal) {
+      console.log(val, oldVal, "***********");
+      if (val * 1 > oldVal * 1 && oldVal != "") {
+        console.log(val, oldVal, "---------");
+        this.visible = false;
+      }
+    }
   },
   methods: {
     //链接生成二维码 Api
@@ -62,18 +59,6 @@ export default {
         height: 160,
         text: `${this.textUrl}`
       });
-    },
-    // 查询余额
-    getUserBalance() {
-      this.$store
-        .dispatch("finance/getUserBalance", this.balanceForm)
-        .then((res) => {
-          console.log(res.data.userAmount * 1, this.userAmount * 1, "============");
-          if (res.data.userAmount * 1 > this.userAmount * 1) {
-            this.visible = false;
-            this.time && clearInterval(this.time);
-          }
-        });
     },
     //点击开始进行转化
     getQrcode() {
@@ -114,11 +99,7 @@ export default {
             this.visible = true;
             let wechatCode = JSON.parse(res.data.wechatCode);
             this.textUrl = wechatCode.code_url;
-            this.time && clearInterval(this.time);
             this.getQrcode();
-            this.time = setInterval(() => {
-              this.getUserBalance();
-            }, 3000);
           }
           this.$emit("success");
         })
