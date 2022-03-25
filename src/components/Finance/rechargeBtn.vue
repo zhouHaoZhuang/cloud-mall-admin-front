@@ -39,13 +39,14 @@ export default {
       loading: false,
       textUrl: "",
       visible: false,
-      confirmLoading: false,
+      confirmLoading: false
     };
   },
   watch: {
-    userAmount(val,oldVal) {
-      console.log(val,oldVal,'***********');
-      if (val > oldVal) {
+    userAmount(val, oldVal) {
+      console.log(val, oldVal, "***********");
+      if (val * 1 > oldVal * 1 && oldVal != "") {
+        console.log(val, oldVal, "---------");
         this.visible = false;
       }
     }
