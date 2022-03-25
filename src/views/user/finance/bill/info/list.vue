@@ -28,7 +28,7 @@
           {{ data.invoiceInfo.createTime }}
         </a-descriptions-item>
         <a-descriptions-item label="反馈时间">
-          {{ data.refundFeedbackTime }}
+          {{ data.feedbackTime }}
         </a-descriptions-item>
         <a-descriptions-item label="反馈说明">
           {{ data.refundFeedbackRemark }}
