@@ -1,14 +1,12 @@
 <template>
   <div>
     <div class="channel-list-container">
-    <h2>提现申请</h2>
+      <h2>提现申请</h2>
 
       <div class="public-header-wrap">
         <a-form-model layout="inline" :model="listQuery">
           <a-form-model-item>
-            <a-button type="primary" @click="toAdd">
-              新建申请
-            </a-button>
+            <a-button type="primary" @click="toAdd"> 新建申请 </a-button>
           </a-form-model-item>
           <a-form-model-item>
             <a-input
@@ -64,12 +62,24 @@
             {{ text }}
           </span>
           <span slot="status" slot-scope="text">
-          <a-tag :color="text ==1 ?'#87d068':text ==2 ?'#2db7f5':text ==3 ?'red':text ==4 ?'orange':text ==5 ?'blue':'gray'">{{ applyStatus[text] }}</a-tag>    
+            <a-tag
+              :color="
+                text == 1
+                  ? '#87d068'
+                  : text == 2
+                  ? '#2db7f5'
+                  : text == 3
+                  ? 'red'
+                  : text == 4
+                  ? 'orange'
+                  : text == 5
+                  ? 'blue'
+                  : 'gray'
+              "
+              >{{ applyStatus[text] }}</a-tag
+            >
           </span>
           <div slot="createTime" slot-scope="text">
-            {{ text | formatDate }}
-          </div>
-          <div slot="finishTime" slot-scope="text">
             {{ text | formatDate }}
           </div>
           <span slot="action" slot-scope="text, record">
@@ -103,7 +113,13 @@
       </div>
     </div>
     <!-- 新增,编辑申请 -->
-    <add-apply v-if="visible" v-model="visible" @success="getList" :detailInfo="detailInfos" :apply="apply"/>
+    <add-apply
+      v-if="visible"
+      v-model="visible"
+      @success="getList"
+      :detailInfo="detailInfos"
+      :apply="apply"
+    />
     <!-- 申请详情 -->
     <applyOption
       v-model="visibleDetail"
@@ -126,7 +142,7 @@ export default {
     return {
       moment,
       applyStatus,
-      apply:1,
+      apply: 1,
       visibleDetail: false, //是否显示申请详情的弹框
       visible: false, //是否显示新增申请申请
       detailInfo: {}, //详情信息
@@ -155,12 +171,11 @@ export default {
         {
           title: "创建时间",
           dataIndex: "createTime",
-          scopedSlots: { customRender: "createTime" },
+          scopedSlots: { customRender: "createTime" }
         },
         {
           title: "反馈时间",
-          dataIndex: "finishTime",
-          scopedSlots: { customRender: "finishTime" },
+          dataIndex: "finishTime"
         },
         {
           title: "备注",
@@ -207,9 +222,14 @@ export default {
       //   this.tableLoading = true;
       this.$store
         .dispatch("withdraw/getRecordList", this.listQuery)
-        .then(res => {
+        .then((res) => {
           this.tableLoading = false;
           this.data = res.data.list;
+          this.data.forEach((element) => {
+            element.finishTime = element.finishTime
+              ? moment(element.finishTime).format("YYYY-MM-DD HH:mm:ss")
+              : "";
+          });
           this.paginationProps.total = res.data.totalCount * 1;
         });
     },
@@ -229,7 +249,7 @@ export default {
       this.visibleDetail = true;
       this.$store
         .dispatch("withdraw/getRecordDetail", record.id)
-        .then(res => {
+        .then((res) => {
           this.detailInfo = res.data;
         })
         .finally(() => {
@@ -239,10 +259,10 @@ export default {
     //编辑
     goUpdate(record) {
       this.visible = true;
-      this.apply = 2
+      this.apply = 2;
       this.$store
         .dispatch("withdraw/getRecordDetail", record.id)
-        .then(res => {
+        .then((res) => {
           this.detailInfos = res.data;
         })
         .finally(() => {
@@ -251,7 +271,7 @@ export default {
     },
     //新增
     toAdd() {
-      this.apply = 1
+      this.apply = 1;
       this.visible = true;
       this.detailInfos = {};
     },
@@ -265,18 +285,18 @@ export default {
           "YYYY-MM-DD HH:mm:ss"
         );
       } else {
-          this.listQuery["qp-createTime-ge"] = "";
-        this.listQuery["qp-finishTime-le"]= "";
+        this.listQuery["qp-createTime-ge"] = "";
+        this.listQuery["qp-finishTime-le"] = "";
       }
     },
     // 取消申请
     cancelOrder(record) {
-      let obj={id:record.id,status:4}
+      let obj = { id: record.id, status: 4 };
       this.$confirm({
         title: "确认要取消申请吗？",
         onOk: () => {
           console.log("点击了取消");
-          this.$store.dispatch("withdraw/editRecord", obj).then(res => {
+          this.$store.dispatch("withdraw/editRecord", obj).then((res) => {
             this.$message.success("取消成功");
             this.getList();
           });
@@ -289,7 +309,7 @@ export default {
         title: "确认要删除申请吗？",
         onOk: () => {
           console.log("点击了删除");
-          this.$store.dispatch("withdraw/delRecord", record.id).then(res => {
+          this.$store.dispatch("withdraw/delRecord", record.id).then((res) => {
             this.$message.success("删除成功");
             this.getList();
           });
