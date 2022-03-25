@@ -119,6 +119,7 @@
       @success="getList"
       :detailInfo="detailInfos"
       :apply="apply"
+      :balance="balance"
     />
     <!-- 申请详情 -->
     <applyOption
@@ -147,6 +148,8 @@ export default {
       visible: false, //是否显示新增申请申请
       detailInfo: {}, //详情信息
       detailInfos: {},
+      balance:undefined,
+      overviewData:{},
       listQuery: {
         currentPage: 1,
         pageSize: 10,
@@ -210,12 +213,14 @@ export default {
   },
   created() {
     this.getList();
+      this.getDashboardData()
   },
   methods: {
     // 查询
     search() {
       this.listQuery.currentPage = 1;
       this.getList();
+    
     },
     // 查询表格数据
     getList() {
@@ -255,6 +260,24 @@ export default {
         .finally(() => {
           this.visibleDetail = true;
         });
+    },
+     getDashboardData() {
+      this.$store.dispatch("dashboard/getBalanceAndCoupon").then((res) => {
+        const newData = {
+          balance: {},
+          coupon: {
+            balance: "0.00"
+          }
+        };
+        res.data.forEach((ele) => {
+          if (ele.accountType === 1) {
+            newData.balance = { ...ele };
+          }
+        });
+        this.overviewData = { ...newData };
+        this.balance = this.overviewData.balance.balance;
+        console.log(this.balance,'this.balance');
+      });
     },
     //编辑
     goUpdate(record) {
