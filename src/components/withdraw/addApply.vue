@@ -142,7 +142,7 @@ export default {
         receiverName: [
           {
             required: true,
-            message: "银行卡绑定人不正确",
+            message: "银行卡绑定人未填写",
             trigger: "blur"
           }
         ]
