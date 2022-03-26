@@ -70,6 +70,8 @@ const permsGuard = async (to, from, next, options) => {
     store.dispatch("dashboard/getCompanyInfo");
     // 获取其他全局配置
     store.dispatch("user/getAllConfig");
+    // 获取产品列表
+    store.dispatch("user/getProductList");
     // 获取权限数据
     await store.dispatch("user/getUserPerms");
     // 设置动态路由

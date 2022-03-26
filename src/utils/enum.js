@@ -170,43 +170,69 @@ export const applyStatus = {
 };
 // cdn状态map
 export const cdnStatusEnum = {
+  "-2": {
+    dot: "error",
+    name: "已下线"
+  },
+  "-1": {
+    dot: "error",
+    name: "已下线"
+  },
   0: {
+    dot: "error",
+    name: "校验域名"
+  },
+  1: {
     dot: "success",
     name: "正常运行"
   },
-  1: {
-    dot: "warning",
-    name: "配置中"
-  },
   2: {
-    dot: "error",
-    name: "配置失败"
-  },
-  3: {
-    dot: "error",
-    name: "下线"
-  },
-  4: {
     dot: "error",
     name: "停用"
   },
+  3: {
+    dot: "processing",
+    name: "配置中"
+  },
+  4: {
+    dot: "error",
+    name: "配置失败"
+  },
   5: {
     dot: "processing",
-    name: "审核中"
+    name: "正在审核"
   },
   6: {
     dot: "error",
     name: "审核失败"
   }
 };
-// cdn源站类型map
+// cdn源站信息类型map
 export const cdnTypeEnum = {
-  1: "OSS域名",
-  2: "IP",
-  3: "源站域名"
+  oss: "OSS域名",
+  ipaddr: "IP",
+  domain: "源站域名"
 };
 // cdn优先级map
 export const cdnPriorityEnum = {
-  1: "主",
-  2: "备"
+  20: "主",
+  30: "备"
+};
+// 业务类型map
+export const businessTypeEnum = {
+  web: "图片小文件",
+  download: "大文件下载",
+  video: "音视频点播"
+};
+// 加速map
+export const scopeAreaEnum = {
+  domestic: "仅中国内地",
+  global: "全球",
+  overseas: "全球（不含中国内地）"
+};
+// 回源协议类型map
+export const sourceProtocolEnum = {
+  follow: "跟随",
+  http: "HTTP",
+  https: "HTTPS"
 };
