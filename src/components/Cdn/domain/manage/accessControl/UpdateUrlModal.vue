@@ -3,6 +3,7 @@
     :visible="value"
     width="680px"
     centered
+    destroyOnClose
     title="URL鉴权"
     wrapClassName="update-source-container"
     okText="确定"
@@ -17,25 +18,33 @@
       :label-col="labelCol"
       :wrapper-col="wrapperCol"
     >
-      <a-form-model-item label="URL鉴权" prop="type">
-        <a-switch v-model="form.type">
+      <a-form-model-item label="URL鉴权">
+        <a-switch v-model="form.enable">
           <a-icon slot="checkedChildren" type="check" />
           <a-icon slot="unCheckedChildren" type="close" />
         </a-switch>
       </a-form-model-item>
-      <a-form-model-item label="鉴权类型" prop="type">
-        <a-radio-group v-model="form.type">
-          <a-radio :value="1"> A方式 </a-radio>
-          <a-radio :value="2"> B方式 </a-radio>
-          <a-radio :value="3"> C方式 </a-radio>
+      <a-form-model-item label="鉴权类型">
+        <a-radio-group v-model="form.auth_type" :disabled="!form.enable">
+          <a-radio value="type_a"> A方式 </a-radio>
+          <a-radio value="type_b"> B方式 </a-radio>
+          <a-radio value="type_c"> C方式 </a-radio>
         </a-radio-group>
       </a-form-model-item>
-      <a-form-model-item label="主KEY" prop="type">
-        <a-input v-model="form.type" v-filterInput-input />
+      <a-form-model-item label="主KEY">
+        <a-input
+          v-model="form.auth_key1"
+          v-filterInput-input
+          :disabled="!form.enable"
+        />
         <div class="info-txt">6~32个字符支持大写字母、小写字母、数字。</div>
       </a-form-model-item>
-      <a-form-model-item label="备KEY" prop="type">
-        <a-input v-model="form.type" v-filterInput-input />
+      <a-form-model-item label="备KEY">
+        <a-input
+          v-model="form.auth_key2"
+          v-filterInput-input
+          :disabled="!form.enable"
+        />
         <div class="info-txt">6~32个字符支持大写字母、小写字母、数字。</div>
       </a-form-model-item>
     </a-form-model>
@@ -43,6 +52,7 @@
 </template>
 
 <script>
+import { getParameter, getForm } from "@/utils/index";
 export default {
   // 双向绑定
   model: {
@@ -59,7 +69,7 @@ export default {
       type: Number,
       default: 1
     },
-    detail: {
+    modalMap: {
       type: Object,
       default: () => {}
     }
@@ -67,15 +77,19 @@ export default {
   computed: {
     modalTitle() {
       return this.modalMap[this.type];
+    },
+    functionName() {
+      return this.modalMap[this.type].functionName;
+    },
+    domain() {
+      return this.$route.query.domain;
     }
   },
   watch: {
     value: {
       handler(newVal) {
-        if (!newVal) {
-          this.$nextTick(() => {
-            this.resetForm();
-          });
+        if (newVal) {
+          this.getConfig();
         }
       }
     }
@@ -85,42 +99,68 @@ export default {
       labelCol: { span: 6 },
       wrapperCol: { span: 15 },
       loading: false,
-      form: {
-        type: 1
-      },
+      form: {},
       rules: {
-        type: [
+        key1: [
           {
             required: true,
-            message: "请选择加速区域",
-            trigger: "change"
+            message: "请输入主KEY",
+            trigger: "blur"
+          }
+        ],
+        abc: [
+          {
+            required: true,
+            message: "请输入备KEY",
+            trigger: "blur"
           }
         ]
       }
     };
   },
   methods: {
+    // 获取hsts配置详情
+    getConfig() {
+      this.$store
+        .dispatch("cdn/getDomainConfig", {
+          functionNames: this.functionName,
+          domainName: this.domain
+        })
+        .then((res) => {
+          const data = res.data.domainConfigs.domainConfig;
+          if (data.length > 0) {
+            const newForm = { ...this.modalMap[this.type].form };
+            this.form = {
+              ...getForm(data[0], newForm),
+              enable: true
+            };
+          } else {
+            this.form = { ...this.modalMap[this.type].form, enable: false };
+          }
+        });
+    },
     // 关闭弹窗
     handleCancel() {
       this.$emit("changeVisible", false);
-    },
-    // 重置表单数据
-    resetForm() {
-      this.$refs.ruleForm.clearValidate();
-      this.form = {
-        type: 1
-      };
     },
     // 弹窗提交
     handleOk() {
       this.$refs.ruleForm.validate((valid) => {
         if (valid) {
+          let tempForm = { ...this.form };
+          if (!tempForm.enable) {
+            tempForm.auth_type = "no_auth";
+          }
+          delete tempForm.enable;
+          const newForm = {
+            ...getParameter(tempForm, this.functionName, this.domain)
+          };
           this.loading = true;
           this.$store
-            .dispatch("domain/add", this.form)
+            .dispatch("cdn/saveConfig", newForm)
             .then((res) => {
-              this.$message.success(`修改${this.modalTitle}成功`);
-              this.$emit("success");
+              this.$message.success(`设置成功`);
+              this.$emit("success", this.type);
               this.$emit("changeVisible", false);
             })
             .finally(() => {

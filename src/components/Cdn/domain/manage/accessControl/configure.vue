@@ -4,7 +4,7 @@
       <div class="head-box">
         <div class="label">鉴权URL设置</div>
         <div class="value">
-          <a-button type="link" @click="handleChangeConfig('urlVisible')">
+          <a-button type="link" @click="handleChangeConfig('urlVisible', 1)">
             修改配置
           </a-button>
         </div>
@@ -12,7 +12,7 @@
       <div class="content-row">
         <div class="label">URL鉴权</div>
         <div class="value">
-          未设置
+          {{ aliauthForm.enable ? "已设置" : "未设置" }}
           <div class="txt">
             高级防盗链功能设置鉴权KEY对URL进行加密保护源站资源。
           </div>
@@ -75,7 +75,7 @@
       <div class="head-box">
         <div class="label">Refer防盗链</div>
         <div class="value">
-          <a-button type="link" @click="handleChangeConfig('referVisible')">
+          <a-button type="link" @click="handleChangeConfig('referVisible', 2)">
             修改配置
           </a-button>
         </div>
@@ -94,7 +94,7 @@
       <div class="head-box">
         <div class="label">IP黑/白名单</div>
         <div class="value">
-          <a-button type="link" @click="handleChangeConfig('ipVisible')">
+          <a-button type="link" @click="handleChangeConfig('ipVisible', 3)">
             修改配置
           </a-button>
         </div>
@@ -108,7 +108,7 @@
       <div class="head-box">
         <div class="label">UA黑/白名单</div>
         <div class="value">
-          <a-button type="link" @click="handleChangeConfig('uaVisible')">
+          <a-button type="link" @click="handleChangeConfig('uaVisible', 4)">
             修改配置
           </a-button>
         </div>
@@ -121,25 +121,29 @@
     <!-- 鉴权url弹窗 -->
     <UpdateUrlModal
       v-model="urlVisible"
-      :detail="modalDetail"
+      :type="modalType"
+      :modalMap="modalMap"
       @success="modalSuccess"
     />
     <!-- Refer弹窗 -->
     <UpdateReferModal
       v-model="referVisible"
-      :detail="modalDetail"
+      :type="modalType"
+      :modalMap="modalMap"
       @success="modalSuccess"
     />
     <!-- ip弹窗 -->
     <UpdateIpModal
       v-model="ipVisible"
-      :detail="modalDetail"
+      :type="modalType"
+      :modalMap="modalMap"
       @success="modalSuccess"
     />
     <!-- ua弹窗 -->
     <UpdateUaModal
       v-model="uaVisible"
-      :detail="modalDetail"
+      :type="modalType"
+      :modalMap="modalMap"
       @success="modalSuccess"
     />
   </div>
@@ -150,15 +154,12 @@ import UpdateUrlModal from "@/components/Cdn/domain/manage/accessControl/UpdateU
 import UpdateReferModal from "@/components/Cdn/domain/manage/accessControl/UpdateReferModal";
 import UpdateIpModal from "@/components/Cdn/domain/manage/accessControl/UpdateIpModal";
 import UpdateUaModal from "@/components/Cdn/domain/manage/accessControl/UpdateUaModal";
+import { getParameter, getForm } from "@/utils/index";
 export default {
   props: {
     tabsKey: {
       type: Number,
       default: 1
-    },
-    domain: {
-      type: String,
-      default: ""
     }
   },
   components: {
@@ -170,13 +171,18 @@ export default {
   watch: {
     tabsKey: {
       handler(newVal) {
-        if (newVal === "1") {
-          //   this.getData();
+        if (newVal === 5) {
+          this.getBatchConfig();
         }
-      }
+      },
+      immediate: true
     }
   },
-  computed: {},
+  computed: {
+    domain() {
+      return this.$route.query.domain;
+    }
+  },
   data() {
     return {
       form: {
@@ -186,35 +192,105 @@ export default {
       referVisible: false,
       ipVisible: false,
       uaVisible: false,
-      modalDetail: {}
+      modalType: 1,
+      modalMap: {
+        1: {
+          title: "鉴权URL设置",
+          functionName: "aliauth",
+          form: {
+            auth_type: "type_a",
+            auth_key1: "",
+            auth_key2: "",
+            ali_auth_delta: 1800
+          }
+        },
+        2: {
+          title: "HSTS 设置",
+          functionName: "HSTS",
+          form: {
+            enabled: false,
+            https_hsts_max_age: "",
+            https_hsts_include_subdomains: false
+          }
+        },
+        3: {
+          title: "HTTP/2设置",
+          functionName: "https_option",
+          form: { http2: false }
+        },
+        4: {
+          title: "TLS版本控制",
+          functionName: "https_tls_version",
+          form: { tls10: false, tls11: false, tls12: false, tls13: false }
+        }
+      },
+      aliauthForm: {
+        enable: false
+      }
     };
   },
-  created() {},
   methods: {
+    // 批量查询配置信息
+    getBatchConfig() {
+      Object.keys(this.modalMap).forEach((ele, index) => {
+        this.getConfig(index + 1);
+      });
+    },
+    // 查询配置信息
+    getConfig(type) {
+      this.$store
+        .dispatch("cdn/getDomainConfig", {
+          functionNames: this.modalMap[type].functionName,
+          domainName: this.domain
+        })
+        .then((res) => {
+          const data = res.data.domainConfigs.domainConfig;
+          if (data.length > 0) {
+            const newForm = { ...this.modalMap[type].form };
+            if (type === 1) {
+              this.aliauthForm = {
+                enable:
+                  getForm(data[0], newForm).auth_type === "no_auth"
+                    ? false
+                    : true
+              };
+            }
+            if (type === 2) {
+              this.hstsForm = {
+                ...getForm(data[0], newForm)
+              };
+            }
+            if (type === 3) {
+              this.http2Form = {
+                ...getForm(data[0], newForm)
+              };
+            }
+            if (type === 4) {
+              this.tlsForm = {
+                ...getForm(data[0], newForm)
+              };
+            }
+          }
+        });
+    },
     // 弹窗成功回调
-    modalSuccess(type, val) {
-      this.modalDetail = {};
+    modalSuccess(type) {
+      this.getConfig(type);
     },
     // 修改配置
-    handleChangeConfig(type) {
+    handleChangeConfig(type, modalType) {
       this[type] = true;
+      this.modalType = modalType;
     },
-    // 开启/关闭回源协议
-    // 修改角色状态
-    handleChangeStatus(record) {
-      const statusTxt = !record.status ? "开启" : "关闭";
-      this.$confirm({
-        title: `确认要${statusTxt}当前角色吗？`,
-        onOk: () => {
-          this.$store
-            .dispatch("organization/editRole", {
-              id: record.id,
-              status: record.status ? 0 : 1
-            })
-            .then((res) => {
-              this.$message.success(`${statusTxt}成功`);
-            });
-        }
+    // 生成鉴权url
+    handleCreateUrl() {
+      const tempForm = { ...this.tlsForm };
+      const newForm = {
+        ...getParameter(tempForm, "https_tls_version", this.domain)
+      };
+      this.$store.dispatch("cdn/saveConfig", newForm).then((res) => {
+        this.$message.success(`设置成功`);
+        this.getConfig(4);
       });
     }
   }
