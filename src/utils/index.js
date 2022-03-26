@@ -172,7 +172,10 @@ export const getDomainUrl = () => {
 export const jumpCloudMall = (url, type) => {
   window.open(env.MALL_URL + url, type ? "_blank" : "_self");
 };
-
+// 跳转云商城开通CDN页面
+export const jumpCloudMallOpen = (url, type) => {
+  window.open(env.MALL_URL + url, type ? "_blank" : "_self");
+};
 // 跳转云商城的url地址生成
 export const getIdcMallUrl = () => {
   const url = window.location.href;
