@@ -121,9 +121,8 @@
 </template>
 
 <script>
-import { jumpCloudMall } from "@/utils/index";
+import { jumpCloudMall, jumpCloudMallOpen } from "@/utils/index";
 import moment from "moment";
-
 export default {
   components: {},
   computed: {},
@@ -155,9 +154,31 @@ export default {
     };
   },
   created() {
-    this.getData(this.currentDate()[this.date]);
+    this.skipInstant();
   },
   methods: {
+    skipInstant() {
+      //判断是否开通过CDN服务
+      // 判断是否开通过,开通过就提示,没开通过就让跳转,开通过进行提示
+      this.$store.dispatch("dashboard/isAccountSetup").then((res) => {
+        console.log(res, "返回结果");
+        // 开通过
+        if (res.code === "000000") {
+          if (res.data === true) {
+            console.log("已开通CDN服务");
+          } else {
+            // 未开通
+            console.log("未开通");
+            this.$message.warning("请先开通CDN服务");
+            setInterval(() => {
+              jumpCloudMall("/instant-open", false);
+            }, 2000);
+          }
+        } else {
+          this.$message.warning(res.msg);
+        }
+      });
+    },
     // 跳转云商城价格详情
     handleJumpCloud() {
       jumpCloudMall("/cloud-price", true);

@@ -21,6 +21,13 @@ const cloud = {
   },
 
   actions: {
+    isAccountSetup({ commit, state }, data) {
+      return request({
+        url: "/tcOrder/checkOpenCdnProductServer",
+        method: "post",
+        data
+      });
+    },
     // 获取首页消费趋势数据
     trendData({ commit, state }) {
       return request({
