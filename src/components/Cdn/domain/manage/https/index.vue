@@ -1,6 +1,6 @@
 <template>
   <div class="cdn-source-container">
-    <Configure />
+    <Configure :tabsKey="tabsKey" />
   </div>
 </template>
 
@@ -18,16 +18,6 @@ export default {
     }
   },
   components: { Configure },
-  watch: {
-    tabsKey: {
-      handler(newVal) {
-        if (newVal === "1") {
-          //   this.getData();
-        }
-      }
-    }
-  },
-  computed: {},
   data() {
     return {};
   },

@@ -17,10 +17,15 @@
           <a-input
             v-model="form.domain"
             placeholder="请输入单个域名，例如：slayun.com"
+            @blur="checkDamain"
+            @pressEnter="checkDamain"
           />
           <div class="info-txt">支持添加泛域名，如"*.example.com"</div>
         </a-form-model-item>
-        <a-form-model-item :wrapper-col="{ span: 10, offset: 3 }">
+        <a-form-model-item
+          v-if="isShowCheck"
+          :wrapper-col="{ span: 10, offset: 3 }"
+        >
           <div class="check-domain-box">
             <div class="title">
               首次添加该域名，需要在验证该域名的归属权后，才能添加该域名
@@ -45,7 +50,7 @@
                     <div class="item">TXT</div>
                     <div class="item">verification</div>
                     <div class="right">
-                      verify_ec54b30ed591b4a1f8ee9a52696abec8
+                      {{ verifyCode }}
                     </div>
                   </div>
                 </a-timeline-item>
@@ -62,10 +67,17 @@
                     </a-button>
                   </a-space>
                 </a-timeline-item>
-                <a-timeline-item v-if="!checkDomainStatus" color="red">
+                <a-timeline-item
+                  v-if="!checkDomainStatus && verifyStatus === 'wait'"
+                  color="blue"
+                >
                   <span>待验证</span>
-                  <!-- <span>验证中</span>
-                  <span>验证失败</span> -->
+                </a-timeline-item>
+                <a-timeline-item
+                  v-if="!checkDomainStatus && verifyStatus === 'err'"
+                  color="red"
+                >
+                  <span>验证失败</span>
                 </a-timeline-item>
               </a-timeline>
             </div>
@@ -74,15 +86,25 @@
         <div class="line"></div>
         <div class="public-title">业务信息</div>
         <a-form-model-item label="业务类型">
-          <a-select v-model="form.type">
-            <a-select-option :value="1"> 图片小文件 </a-select-option>
+          <a-select v-model="form.cdnType">
+            <a-select-option
+              v-for="(val, key) in businessTypeEnum"
+              :key="key"
+              :value="key"
+            >
+              {{ val }}
+            </a-select-option>
           </a-select>
         </a-form-model-item>
         <a-form-model-item label="加速区域">
-          <a-radio-group v-model="form.address">
-            <a-radio :value="1"> 仅中国内地 </a-radio>
-            <a-radio :value="2"> 全球 </a-radio>
-            <a-radio :value="2"> 全球（不含中国内地） </a-radio>
+          <a-radio-group v-model="form.scope">
+            <a-radio
+              v-for="(val, key) in scopeAreaEnum"
+              :key="key"
+              :value="key"
+            >
+              {{ val }}
+            </a-radio>
           </a-radio-group>
           <div class="info-txt">
             1、不同加速区域价格有差别，请按您的实际需求选择 。
@@ -104,7 +126,7 @@
           <a-table
             style="margin-top: 20px"
             :columns="columns"
-            :data-source="form.data"
+            :data-source="form.sourceInfo.sourceModel"
             :pagination="false"
             rowKey="id"
           >
@@ -126,7 +148,7 @@
             </div>
           </a-table>
         </a-form-model-item>
-        <div class="line"></div>
+        <!-- <div class="line"></div>
         <div class="public-title">IPv6开关</div>
         <a-form-model-item label="状态">
           <a-switch v-model="form.status">
@@ -136,10 +158,15 @@
           <div class="info-txt">
             开启后，IPv6的客户端请求将支持以ipv6协议访问CDN，CDN也将携带ipv6的客户端IP信息访问您的源站。
           </div>
-        </a-form-model-item>
+        </a-form-model-item> -->
         <a-form-model-item :wrapper-col="{ span: 6, offset: 3 }">
           <a-space>
-            <a-button type="primary" :loading="loading" @click="handleNext">
+            <a-button
+              type="primary"
+              :disabled="!form.domain"
+              :loading="loading"
+              @click="handleNext"
+            >
               下一步
             </a-button>
             <a-button @click="handleCancel"> 取消 </a-button>
@@ -175,27 +202,36 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 import DetailHeader from "@/components/Common/detailHeader";
 import UpdateSourceStationModal from "@/components/Cdn/domain/updateSourceStationModal";
 import CourseModal from "@/components/Cdn/domain/courseModal.vue";
 import { jumpCloudMall } from "@/utils/index";
-import { cdnTypeEnum, cdnPriorityEnum } from "@/utils/enum";
+import {
+  cdnTypeEnum,
+  cdnPriorityEnum,
+  businessTypeEnum,
+  scopeAreaEnum
+} from "@/utils/enum";
 export default {
   components: { DetailHeader, UpdateSourceStationModal, CourseModal },
-  computed: {},
   data() {
     return {
       cdnTypeEnum,
       cdnPriorityEnum,
+      businessTypeEnum,
+      scopeAreaEnum,
       labelCol: { span: 3 },
       wrapperCol: { span: 10 },
       loading: false,
       form: {
         domain: "",
-        type: 1,
-        address: 1,
-        data: [],
-        status: true
+        cdnType: "web",
+        scope: "domestic",
+        sourceInfo: {
+          sourceModel: []
+        }
+        // status: true
       },
       columns: [
         {
@@ -229,14 +265,68 @@ export default {
       ],
       visible: false,
       modalDetail: {},
+      isShowCheck: false,
+      verifyCode: "",
       checkDomainStatus: "",
+      verifyStatus: "wait",
       // 如何设置解析弹窗
       courseVisible: false,
       step: 1
     };
   },
+  computed: {
+    ...mapGetters(["productCode"])
+  },
   created() {},
   methods: {
+    // 域名输入框失焦或回车
+    checkDamain() {
+      if (!this.form.domain) return;
+      this.$store
+        .dispatch("cdn/checkDomainAscription", {
+          domain: this.form.domain,
+          productCode: this.productCode
+        })
+        .then((res) => {
+          // 如果校验不通过的话
+          if (res.data !== "success") {
+            this.isShowCheck = true;
+            this.verifyCode = res.data;
+          } else {
+            this.isShowCheck = false;
+            this.verifyCode = "";
+            this.$message.success("域名归属权校验成功");
+          }
+        });
+    },
+    // 域名校验归属权验证按钮
+    handleCheckDomain() {
+      if (!this.form.domain) {
+        this.$message.warning("请输入域名");
+      }
+      this.checkDomainStatus = "验证中";
+      this.$store
+        .dispatch("cdn/checkDomainAscription", {
+          domain: this.form.domain,
+          productCode: this.productCode
+        })
+        .then((res) => {
+          // 如果校验不通过的话
+          if (res.data !== "success") {
+            this.verifyCode = res.data;
+            this.$message.warning("验证失败");
+            this.verifyStatus = "err";
+          } else {
+            this.isShowCheck = false;
+            this.verifyCode = "";
+            this.verifyStatus = "wait";
+            this.$message.success("域名归属权校验成功");
+          }
+        })
+        .finally(() => {
+          this.checkDomainStatus = "";
+        });
+    },
     // 跳转云商城价格详情
     handleJumpCloud() {
       jumpCloudMall("/cloud-price", true);
@@ -245,21 +335,25 @@ export default {
     modalSuccess(type, val) {
       this.modalDetail = {};
       if (type === "add") {
-        this.form.data.push({
+        this.form.sourceInfo.sourceModel.push({
           id: this.getId(),
           ...val
         });
         return;
       }
-      const index = this.form.data.findIndex((ele) => ele.id === val.id);
-      this.form.data.splice(index, 1, { ...val });
+      const index = this.form.sourceInfo.sourceModel.findIndex(
+        (ele) => ele.id === val.id
+      );
+      this.form.sourceInfo.sourceModel.splice(index, 1, { ...val });
     },
     // 生成id
     getId() {
       const newId =
-        this.form.data.length === 0
+        this.form.sourceInfo.sourceModel.length === 0
           ? -1
-          : this.form.data[this.form.data.length - 1].id - 1;
+          : this.form.sourceInfo.sourceModel[
+              this.form.sourceInfo.sourceModel.length - 1
+            ].id - 1;
       return newId;
     },
     // 新增源站信息
@@ -276,22 +370,45 @@ export default {
       this.$confirm({
         title: "确定要删除吗?",
         onOk: () => {
-          const index = this.form.data.findIndex((ele) => ele.id === record.id);
-          this.form.data.splice(index, 1);
+          const index = this.form.sourceInfo.sourceModel.findIndex(
+            (ele) => ele.id === record.id
+          );
+          this.form.sourceInfo.sourceModel.splice(index, 1);
           this.$message.success("删除成功");
         }
       });
     },
     // 提交下一步
     handleNext() {
-      this.step = 2;
-      // this.loading = true;
-      // this.$store
-      //   .dispatch("domain/add", this.form)
-      //   .then((res) => {})
-      //   .finally(() => {
-      //     this.loading = false;
-      //   });
+      if (this.form.sourceInfo.sourceModel.length === 0) {
+        this.$message.warning("请至少添加一条源站信息");
+        return;
+      }
+      this.loading = true;
+      this.$store
+        .dispatch("cdn/checkDomainAscription", {
+          domain: this.form.domain,
+          productCode: this.productCode
+        })
+        .then((res) => {
+          // 如果校验不通过的话
+          if (res.data !== "success") {
+            this.isShowCheck = true;
+            this.verifyCode = res.data;
+          } else {
+            this.$store
+              .dispatch("cdn/createDomain", this.form)
+              .then((res) => {
+                this.step = 2;
+              })
+              .finally(() => {
+                this.loading = false;
+              });
+          }
+        })
+        .catch(() => {
+          this.loading = false;
+        });
     },
     // 取消
     handleCancel() {
@@ -300,13 +417,6 @@ export default {
     // 如何设置域名
     handleCourse() {
       this.courseVisible = true;
-    },
-    // 验证域名
-    handleCheckDomain() {
-      this.checkDomainStatus = "验证中";
-      setTimeout(() => {
-        this.checkDomainStatus = "";
-      }, 2000);
     },
     // 返回域名管理
     handleBackDomain() {

@@ -3,6 +3,7 @@
     :visible="value"
     width="780px"
     centered
+    destroyOnClose
     title="修改加速区域"
     wrapClassName="update-region-container"
     okText="确定"
@@ -17,11 +18,11 @@
       :label-col="labelCol"
       :wrapper-col="wrapperCol"
     >
-      <a-form-model-item label="加速区域" prop="type">
-        <a-radio-group v-model="form.type">
-          <a-radio :value="1"> 仅中国大陆 </a-radio>
-          <a-radio :value="2"> 全球 </a-radio>
-          <a-radio :value="3"> 全球（不包含中国大陆） </a-radio>
+      <a-form-model-item label="加速区域" prop="scope">
+        <a-radio-group v-model="form.scope">
+          <a-radio v-for="(val, key) in scopeAreaEnum" :key="key" :value="key">
+            {{ val }}
+          </a-radio>
         </a-radio-group>
         <div class="info-txt">
           1.不同加速区域的价格不同，请您在了解各区域价格后再进行切换。
@@ -35,6 +36,7 @@
 </template>
 
 <script>
+import { scopeAreaEnum } from "@/utils/enum";
 export default {
   // 双向绑定
   model: {
@@ -48,6 +50,10 @@ export default {
       default: false
     },
     domain: {
+      type: String,
+      default: ""
+    },
+    scope: {
       type: String,
       default: ""
     }
@@ -65,14 +71,15 @@ export default {
   },
   data() {
     return {
+      scopeAreaEnum,
       labelCol: { span: 6 },
       wrapperCol: { span: 15 },
       loading: false,
       form: {
-        type: 1
+        scope: this.scope
       },
       rules: {
-        type: [
+        scope: [
           {
             required: true,
             message: "请选择加速区域",
@@ -87,20 +94,16 @@ export default {
     handleCancel() {
       this.$emit("changeVisible", false);
     },
-    // 重置表单数据
-    resetForm() {
-      this.$refs.ruleForm.clearValidate();
-      this.form = {
-        type: 1
-      };
-    },
     // 弹窗提交
     handleOk() {
       this.$refs.ruleForm.validate((valid) => {
         if (valid) {
           this.loading = true;
           this.$store
-            .dispatch("domain/add", this.form)
+            .dispatch("cdn/updateScopeArea", {
+              ...this.form,
+              domainName: this.domain
+            })
             .then((res) => {
               this.$message.success("修改加速区域成功");
               this.$emit("success");

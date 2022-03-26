@@ -8,6 +8,7 @@ const user = {
     userRealInfo: {},
     perms: [],
     allConfig: {},
+    productList: []
   },
 
   mutations: {
@@ -26,6 +27,9 @@ const user = {
     SET_PERMS: (state, perms) => {
       state.perms = [...perms];
     },
+    SET_PRODUCT_LIST: (state, productList) => {
+      state.productList = [...productList];
+    }
   },
 
   actions: {
@@ -56,11 +60,11 @@ const user = {
           url: `/imPermissions/getPermissionsList`,
           method: "get"
         })
-          .then(res => {
+          .then((res) => {
             commit("SET_PERMS", res.data);
             resolve();
           })
-          .catch(error => {
+          .catch((error) => {
             reject(error);
           });
       });
@@ -149,7 +153,7 @@ const user = {
     getCertification({ commit, state }, flowId) {
       return request({
         url: `/authentication/getStatus/${flowId}`,
-        method: "get",
+        method: "get"
       });
     },
     // 获取用户真实信息
@@ -220,7 +224,23 @@ const user = {
           });
       });
     },
-  },
+    // 获取产品列表
+    getProductList({ commit, state }) {
+      return new Promise((resolve, reject) => {
+        request({
+          url: `/icProduct`,
+          method: "get"
+        })
+          .then((res) => {
+            commit("SET_PRODUCT_LIST", res.data.list);
+            resolve();
+          })
+          .catch((error) => {
+            reject(error);
+          });
+      });
+    }
+  }
 };
 
 export default user;

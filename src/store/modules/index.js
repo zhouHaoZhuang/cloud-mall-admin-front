@@ -19,6 +19,7 @@ import billapply from "./billapply.js";
 import billnews from "./billnews.js";
 import withdraw from './withdraw'
 import refundlist from './refundlist'
+import cdn from "./cdn.js";
 export default {
   setting,
   user,
@@ -41,4 +42,5 @@ export default {
   billnews,
   withdraw,
   refundlist,
+  cdn
 };

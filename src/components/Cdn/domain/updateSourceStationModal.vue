@@ -19,9 +19,9 @@
     >
       <a-form-model-item label="源站信息" prop="type">
         <a-radio-group v-model="form.type">
-          <a-radio :value="1"> OSS域名 </a-radio>
-          <a-radio :value="2"> IP </a-radio>
-          <a-radio :value="3"> 源站域名 </a-radio>
+          <a-radio v-for="(val, key) in cdnTypeEnum" :key="key" :value="key">
+            {{ val }}
+          </a-radio>
         </a-radio-group>
       </a-form-model-item>
       <a-form-model-item label="域名" prop="content">
@@ -29,8 +29,13 @@
       </a-form-model-item>
       <a-form-model-item label="优先级" prop="priority">
         <a-radio-group v-model="form.priority">
-          <a-radio :value="1"> 主 </a-radio>
-          <a-radio :value="2"> 备 </a-radio>
+          <a-radio
+            v-for="(val, key) in cdnPriorityEnum"
+            :key="key"
+            :value="key"
+          >
+            {{ val }}
+          </a-radio>
         </a-radio-group>
         <div class="info-txt">
           优先级为主源站＞备源站，主源站出现故障的情况下，将会回源到备源站
@@ -57,6 +62,7 @@
 </template>
 
 <script>
+import { cdnTypeEnum, cdnPriorityEnum } from "@/utils/enum";
 export default {
   // 双向绑定
   model: {
@@ -107,14 +113,16 @@ export default {
   },
   data() {
     return {
+      cdnTypeEnum,
+      cdnPriorityEnum,
       type: "add",
       labelCol: { span: 6 },
       wrapperCol: { span: 15 },
       loading: false,
       form: {
-        type: 1,
+        type: "oss",
         content: "",
-        priority: 1,
+        priority: "20",
         weight: "",
         port: ""
       },
@@ -166,9 +174,9 @@ export default {
     resetForm() {
       this.$refs.ruleForm.clearValidate();
       this.form = {
-        type: 1,
+        type: "oss",
         content: "",
-        priority: 1,
+        priority: "20",
         weight: "",
         port: ""
       };

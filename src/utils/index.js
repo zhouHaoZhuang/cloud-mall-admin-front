@@ -288,3 +288,52 @@ export const getRandomCode = (len = 4) => {
   }
   return identifyCode;
 };
+// 处理cdn时，前端switch组件需要布尔类型，而参数时字符串off/on,需要转换
+const transformList = [
+  "enable",
+  "enabled",
+  "switch",
+  "https_hsts_include_subdomains",
+  "http2"
+];
+// cdn管理页面处理后端所需参数
+export const getParameter = (form, functionName, domainNames) => {
+  let data = {
+    functions: [
+      {
+        functionArgs: [],
+        functionName
+      }
+    ],
+    domainNames
+  };
+  const formArr = Object.keys(form);
+  if (formArr.length === 0) {
+    return {
+      domainName: domainNames
+    };
+  }
+  data.functions[0].functionArgs = formArr.map((ele) => {
+    return {
+      argName: ele,
+      argValue: transformList.includes(ele)
+        ? form[ele]
+          ? "on"
+          : "off"
+        : form[ele]
+    };
+  });
+  return data;
+};
+// cdn管理页面根据接口返回数据处理前端所需格式form
+export const getForm = (data, form) => {
+  let newForm = { ...form };
+  data.functionArgs.functionArg.forEach((ele) => {
+    newForm[ele.argName] = transformList.includes(ele.argName)
+      ? ele.argValue === "on"
+        ? true
+        : false
+      : ele.argValue;
+  });
+  return newForm;
+};

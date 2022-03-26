@@ -1,10 +1,14 @@
 <template>
   <div class="cdn-basic-container">
     <a-descriptions title="基本信息">
-      <a-descriptions-item label="域名"> Zhou Maomao </a-descriptions-item>
-      <a-descriptions-item label="CNAME"> 1810000000 </a-descriptions-item>
+      <a-descriptions-item label="域名">
+        {{ form.domainName }}
+      </a-descriptions-item>
+      <a-descriptions-item label="CNAME">
+        {{ form.cname }}
+      </a-descriptions-item>
       <a-descriptions-item label="加速区域">
-        仅中国大陆
+        {{ scopeAreaEnum[form.scope] }}
         <a-button type="link" @click="handleUpdate"> 修改 </a-button>
       </a-descriptions-item>
     </a-descriptions>
@@ -15,10 +19,11 @@
         </a-button>
         <a-table
           style="margin-top: 20px"
+          :loading="tableLoading"
           :columns="columns"
-          :data-source="form.data"
+          :data-source="form.sourceModels.sourceModel"
           :pagination="false"
-          rowKey="id"
+          rowKey="content"
         >
           <div slot="type" slot-scope="text">
             {{ cdnTypeEnum[text] }}
@@ -41,7 +46,7 @@
     </a-descriptions>
     <a-descriptions title="IPv6开关" :column="1">
       <a-descriptions-item label="状态">
-        <a-switch>
+        <a-switch v-model="ipv6Form.switch" @change="handleIpv6Change">
           <a-icon slot="checkedChildren" type="check" />
           <a-icon slot="unCheckedChildren" type="close" />
         </a-switch>
@@ -62,15 +67,18 @@
     <UpdateRegionModal
       v-model="regionVisible"
       :domain="domain"
+      :scope="form.scope"
       @success="regionModalSuccess"
     />
   </div>
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 import UpdateSourceStationModal from "@/components/Cdn/domain/updateSourceStationModal";
 import UpdateRegionModal from "@/components/Cdn/domain/manage/basic/updateRegionModal";
-import { cdnTypeEnum, cdnPriorityEnum } from "@/utils/enum";
+import { cdnTypeEnum, cdnPriorityEnum, scopeAreaEnum } from "@/utils/enum";
+import { getParameter, getForm } from "@/utils/index";
 export default {
   props: {
     tabsKey: {
@@ -86,23 +94,26 @@ export default {
   watch: {
     tabsKey: {
       handler(newVal) {
-        if (newVal === "1") {
-          //   this.getData();
+        if (newVal === 1) {
+          this.getBasicConfig();
+          this.getConfig();
         }
-      }
+      },
+      immediate: true
     }
   },
-  computed: {},
+  computed: {
+    ...mapGetters(["productCode"])
+  },
   data() {
     return {
       cdnTypeEnum,
       cdnPriorityEnum,
+      scopeAreaEnum,
       form: {
-        domain: "",
-        type: 1,
-        address: 1,
-        data: [],
-        status: true
+        sourceModels: {
+          sourceModel: []
+        }
       },
       columns: [
         {
@@ -134,38 +145,81 @@ export default {
           scopedSlots: { customRender: "action" }
         }
       ],
+      tableLoading: false,
       visible: false,
       modalDetail: {},
-      regionVisible: false
+      regionVisible: false,
+      ipv6Form: {
+        switch: false,
+        region: "*"
+      }
     };
   },
-  created() {},
   methods: {
+    // 查询基础配置信息
+    getBasicConfig() {
+      this.$store
+        .dispatch("cdn/getDomainBasicConfig", {
+          domainName: this.domain,
+          productCode: this.productCode
+        })
+        .then((res) => {
+          this.form = { ...res.data };
+        })
+        .finally(() => {
+          this.tableLoading = false;
+        });
+    },
+    // 查询ipv6配置信息
+    getConfig() {
+      this.$store
+        .dispatch("cdn/getDomainConfig", {
+          functionNames: "ipv6",
+          domainName: this.domain
+        })
+        .then((res) => {
+          const data = res.data.domainConfigs.domainConfig;
+          if (data.length > 0) {
+            const tempForm = { ...this.ipv6Form };
+            this.ipv6Form = {
+              ...getForm(data[0], tempForm)
+            };
+          }
+        });
+    },
     // 修改加速区域
     handleUpdate() {
       this.regionVisible = true;
     },
     // 修改加速成功回调
-    regionModalSuccess() {},
+    regionModalSuccess() {
+      this.getBasicConfig();
+    },
     // 弹窗成功回调
     modalSuccess(type, val) {
       this.modalDetail = {};
       if (type === "add") {
-        this.form.data.push({
+        this.form.sourceModels.sourceModel.push({
           id: this.getId(),
           ...val
         });
+        this.saveSourceInfo();
         return;
       }
-      const index = this.form.data.findIndex((ele) => ele.id === val.id);
-      this.form.data.splice(index, 1, { ...val });
+      const index = this.form.sourceModels.sourceModel.findIndex(
+        (ele) => ele.id === val.id
+      );
+      this.form.sourceModels.sourceModel.splice(index, 1, { ...val });
+      this.saveSourceInfo();
     },
     // 生成id
     getId() {
       const newId =
-        this.form.data.length === 0
+        this.form.sourceModels.sourceModel.length === 0
           ? -1
-          : this.form.data[this.form.data.length - 1].id - 1;
+          : this.form.sourceModels.sourceModel[
+              this.form.sourceModels.sourceModel.length - 1
+            ].id - 1;
       return newId;
     },
     // 新增源站信息
@@ -182,10 +236,46 @@ export default {
       this.$confirm({
         title: "确定要删除吗?",
         onOk: () => {
-          const index = this.form.data.findIndex((ele) => ele.id === record.id);
-          this.form.data.splice(index, 1);
-          this.$message.success("删除成功");
+          const index = this.form.sourceModels.sourceModel.findIndex(
+            (ele) => ele.id === record.id
+          );
+          this.form.sourceModels.sourceModel.splice(index, 1);
+          this.saveSourceInfo(true);
         }
+      });
+    },
+    // 新增+编辑+删除源站信息
+    saveSourceInfo(showMessage) {
+      this.$store
+        .dispatch("cdn/updateSourceInfo", {
+          domainName: this.domain,
+          sourcesList: {
+            sourceModel: [...this.form.sourceModels.sourceModel]
+          }
+        })
+        .then((res) => {
+          this.tableLoading = true;
+          if (showMessage) {
+            this.$message.success(`删除成功`);
+          }
+          setTimeout(() => {
+            this.getBasicConfig();
+          }, 1000);
+        })
+        .catch(() => {
+          setTimeout(() => {
+            this.getBasicConfig();
+          }, 1000);
+        });
+    },
+    // ipv6 change
+    handleIpv6Change() {
+      const newForm = {
+        ...getParameter(this.ipv6Form, "ipv6", this.domain)
+      };
+      this.$store.dispatch("cdn/saveConfig", newForm).then((res) => {
+        this.$message.success(`设置成功`);
+        this.getConfig();
       });
     }
   }
@@ -194,6 +284,7 @@ export default {
 
 <style lang="less" scoped>
 .cdn-basic-container {
+  width: 100%;
   .info-txt {
     color: #aaa;
     line-height: 22px;
