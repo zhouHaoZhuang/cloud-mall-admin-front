@@ -47,7 +47,7 @@
       <div class="content-row">
         <div class="label">跳转类型</div>
         <div class="value">
-          默认
+          {{ httpForm.type }}
           <div class="txt">同时支持HTTP和HTTPS方式的请求。</div>
         </div>
       </div>
@@ -153,9 +153,11 @@ export default {
     tabsKey: {
       handler(newVal) {
         if (newVal === 4) {
-          this.getBatchConfig();
+          this.getForceConfig();
+          // this.getBatchConfig();
         }
-      }
+      },
+      immediate: true
     }
   },
   computed: {
@@ -197,14 +199,30 @@ export default {
         }
       },
       httpForm: {
-        enable: false
-      },
-      httpsForm: {
-        enable: false
+        type: ""
       }
     };
   },
   methods: {
+    // 获取强制跳转配置
+    getForceConfig() {
+      this.$store
+        .dispatch("cdn/getDomainConfig", {
+          functionNames: "http_force,https_force",
+          domainName: this.domain
+        })
+        .then((res) => {
+          const data = res.data.domainConfigs.domainConfig;
+          if (data.length > 0) {
+            this.httpForm.type =
+              data[0].functionName === "http_force"
+                ? "HTTPS -> HTTP"
+                : "HTTP -> HTTPS";
+          } else {
+            this.httpForm.type = "默认";
+          }
+        });
+    },
     // 批量查询配置信息
     getBatchConfig() {
       Object.keys(this.modalMap).forEach((ele, index) => {
@@ -255,6 +273,10 @@ export default {
     },
     // 弹窗成功回调
     modalSuccess(type) {
+      if (type === 1) {
+        this.getForceConfig();
+        return;
+      }
       this.getConfig(type);
     },
     // 修改https证书

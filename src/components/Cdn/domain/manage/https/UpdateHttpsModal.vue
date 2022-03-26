@@ -96,7 +96,9 @@ export default {
     value: {
       handler(newVal) {
         if (newVal) {
-          this.getConfig();
+          if (this.type === 1) {
+            this.getForceConfig();
+          }
         }
       }
     }
@@ -121,7 +123,27 @@ export default {
     };
   },
   methods: {
-    // 获取配置详情
+    // 获取强制跳转配置
+    getForceConfig() {
+      this.$store
+        .dispatch("cdn/getDomainConfig", {
+          functionNames: "http_force,https_force",
+          domainName: this.domain
+        })
+        .then((res) => {
+          const data = res.data.domainConfigs.domainConfig;
+          if (data.length > 0) {
+            this.form = {
+              enable: data[0].functionName === "http_force" ? 2 : 3
+            };
+          } else {
+            this.form = {
+              enable: 1
+            };
+          }
+        });
+    },
+    // 获取hsts配置详情
     getConfig() {
       this.$store
         .dispatch("cdn/getDomainConfig", {
@@ -135,16 +157,8 @@ export default {
             this.form = {
               ...getForm(data[0], newForm)
             };
-            if (this.type === 1) {
-              this.form = {
-                enable: 3
-              };
-            }
           } else {
             this.form = { ...this.modalMap[this.type].form };
-            if (this.type === 1) {
-              this.form.enable = undefined;
-            }
           }
         });
     },
@@ -152,17 +166,66 @@ export default {
     handleCancel() {
       this.$emit("changeVisible", false);
     },
-    // 重置表单数据
-    resetForm() {
-      this.$refs.ruleForm.clearValidate();
-      this.form = {
-        type: 1
+    // 强制跳转提交
+    forceConfigSubmit() {
+      const req = this.modalMap[this.type].isBeforeDel;
+      let delFunctionName = "http_force,https_force";
+      if (this.form.enable === 2) {
+        delFunctionName = "https_force";
+      }
+      if (this.form.enable === 3) {
+        delFunctionName = "http_force";
+      }
+      const newForm = {
+        functionNames: delFunctionName,
+        domainName: this.domain
       };
+      this.loading = true;
+      this.$store
+        .dispatch(req, newForm)
+        .then((res) => {
+          if (this.form.enable !== 1) {
+            let tempForm = { enable: true };
+            let newFunctionName = "";
+            if (this.form.enable === 2) {
+              newFunctionName = "http_force";
+            }
+            if (this.form.enable === 3) {
+              newFunctionName = "https_force";
+            }
+            const result = {
+              ...getParameter(tempForm, newFunctionName, this.domain)
+            };
+            this.$store
+              .dispatch("cdn/saveConfig", result)
+              .then((res) => {
+                this.$message.success(`设置成功`);
+                this.$emit("success", this.type);
+                this.$emit("changeVisible", false);
+              })
+              .finally(() => {
+                this.loading = false;
+              });
+            return;
+          }
+          this.$message.success(`设置成功`);
+          this.$emit("success", this.type);
+          this.$emit("changeVisible", false);
+        })
+        .finally(() => {
+          if (this.form.enable !== 3) {
+            this.loading = false;
+          }
+        });
     },
     // 弹窗提交
     handleOk() {
       this.$refs.ruleForm.validate((valid) => {
         if (valid) {
+          if (this.type === 1) {
+            this.forceConfigSubmit();
+            return;
+          }
           let req = "";
           let newForm = {};
           if (this.type === 1 && this.modalMap[this.type].isBeforeDel) {
