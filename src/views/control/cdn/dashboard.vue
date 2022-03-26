@@ -6,7 +6,7 @@
           <div class="top-title">基础数据</div>
           <div class="content">
             <div class="top-radios">
-              <a-radio-group>
+              <a-radio-group @change="checkTime">
                 <a-radio-button value="a"> 今日 </a-radio-button>
                 <a-radio-button value="b"> 昨日 </a-radio-button>
                 <a-radio-button value="c"> 当月 </a-radio-button>
@@ -56,14 +56,20 @@
                 </a-button>
               </div>
               <div class="box">
-                <a-button type="link" @click="handleJump('/control/cdn/consumption')">
+                <a-button
+                  type="link"
+                  @click="handleJump('/control/cdn/consumption')"
+                >
                   用量查询
                 </a-button>
               </div>
             </div>
             <div class="item">
               <div class="box">
-                <a-button type="link" @click="handleJump('/control/cdn/consumption')">
+                <a-button
+                  type="link"
+                  @click="handleJump('/control/cdn/consumption')"
+                >
                   用量汇总查询
                 </a-button>
               </div>
@@ -79,12 +85,18 @@
           <div class="content">
             <div class="item">
               <div class="box">
-                <a-button type="link" @click="handleJump('/control/cdn/domain')">
+                <a-button
+                  type="link"
+                  @click="handleJump('/control/cdn/domain')"
+                >
                   创建新域名
                 </a-button>
               </div>
               <div class="box">
-                <a-button type="link" @click="handleJump('/control/cdn/domain')">
+                <a-button
+                  type="link"
+                  @click="handleJump('/control/cdn/domain')"
+                >
                   管理
                 </a-button>
               </div>
@@ -128,7 +140,19 @@ export default {
         }
       ],
       data: [],
-      loading: false
+      loading: false,
+      baseData: {
+        total: 0,
+        used: 0,
+        available: 0
+      },
+      listQuery: {
+        key: "",
+        search: "",
+        currentPage: 1,
+        pageSize: 10,
+        total: 0
+      }
     };
   },
   created() {},
@@ -140,6 +164,30 @@ export default {
     // 控制台跳转
     handleJump(path) {
       this.$router.push(path);
+    },
+    getData() {
+      this.$store.dispatch("cdndashboard/getData").then((res) => {
+        // this.baseData = res.data;
+      });
+    },
+    // 时间选择
+    checkTime(e) {
+      console.log(`checked = ${e.target.value}`);
+      // this.listQuery.currentPage = 1;
+      // this.getData();
+    },
+    // 获取数据
+    getFlowTop() {
+      this.loading = true;
+      this.$store
+        .dispatch("cdndashboard/getList", this.listQuery)
+        .then((res) => {
+          this.loading = false;
+          this.data = res.data.list;
+        })
+        .catch((err) => {
+          this.loading = false;
+        });
     }
   }
 };
