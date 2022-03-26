@@ -159,7 +159,7 @@ export default {
             trigger: ["blur","change"]
           },
           {
-            pattern: /^[0-9]$/,
+            pattern: /^[0-9]*$/,
             message: "基本开户银行账号只能是数字",
             trigger: ["blur", "change"]
           }
