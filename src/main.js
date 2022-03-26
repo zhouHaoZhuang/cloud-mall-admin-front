@@ -19,7 +19,6 @@ import "./global.less"; // global style
 // 自定义指令+过滤器
 import * as Directives from "@/utils/directives/index";
 import * as Filters from "@/utils/filters/index";
-
 Vue.config.productionTip = false;
 
 // ui组件

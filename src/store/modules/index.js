@@ -21,6 +21,7 @@ import billnews from "./billnews.js";
 import withdraw from './withdraw'
 import refundlist from './refundlist'
 import cdn from "./cdn.js";
+import cdndashboard from './cdndashboard'
 export default {
   setting,
   user,
@@ -44,5 +45,6 @@ export default {
   withdraw,
   refundlist,
   cdn,
-  billmanage
+  billmanage,
+  cdndashboard
 };
