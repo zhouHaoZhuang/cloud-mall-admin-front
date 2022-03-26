@@ -25,7 +25,7 @@
       <div class="content-row">
         <div class="label">HTTP/2设置</div>
         <div class="value">
-          <a-switch @change="handleChangeStatus">
+          <a-switch v-model="http2Form.http2" @change="handleChangeHttp2">
             <a-icon slot="checkedChildren" type="check" />
             <a-icon slot="unCheckedChildren" type="close" />
           </a-switch>
@@ -68,7 +68,7 @@
       <div class="content-row">
         <div class="label">TLSv1.0</div>
         <div class="value">
-          <a-switch @change="handleChangeStatus">
+          <a-switch @change="handleChangeHttp2">
             <a-icon slot="checkedChildren" type="check" />
             <a-icon slot="unCheckedChildren" type="close" />
           </a-switch>
@@ -77,7 +77,7 @@
       <div class="content-row">
         <div class="label">TLSv1.1</div>
         <div class="value">
-          <a-switch @change="handleChangeStatus">
+          <a-switch @change="handleChangeHttp2">
             <a-icon slot="checkedChildren" type="check" />
             <a-icon slot="unCheckedChildren" type="close" />
           </a-switch>
@@ -86,7 +86,7 @@
       <div class="content-row">
         <div class="label">TLSv1.2</div>
         <div class="value">
-          <a-switch @change="handleChangeStatus">
+          <a-switch @change="handleChangeHttp2">
             <a-icon slot="checkedChildren" type="check" />
             <a-icon slot="unCheckedChildren" type="close" />
           </a-switch>
@@ -95,7 +95,7 @@
       <div class="content-row">
         <div class="label">TLSv1.3</div>
         <div class="value">
-          <a-switch @change="handleChangeStatus">
+          <a-switch @change="handleChangeHttp2">
             <a-icon slot="checkedChildren" type="check" />
             <a-icon slot="unCheckedChildren" type="close" />
           </a-switch>
@@ -114,7 +114,7 @@
       <div class="content-row">
         <div class="label">HSTS开关</div>
         <div class="value">
-          关闭
+          {{ hstsForm.enabled ? "开启" : "关闭" }}
           <div class="txt">
             开启HSTS后，可以减少第一次访问被劫持的风险，CDN将响应HSTS头部：Strict-Transport-Security。
           </div>
@@ -154,7 +154,7 @@ export default {
       handler(newVal) {
         if (newVal === 4) {
           this.getForceConfig();
-          // this.getBatchConfig();
+          this.getBatchConfig();
         }
       },
       immediate: true
@@ -188,18 +188,26 @@ export default {
           }
         },
         3: {
-          title: "回源SNI",
-          functionName: "https_origin_sni",
-          form: { enabled: true, https_origin_sni: "" }
-        },
-        4: {
-          title: "回源请求超时时间",
-          functionName: "forward_timeout",
-          form: { forward_timeout: 30 }
+          title: "HTTP/2设置",
+          functionName: "https_option",
+          form: { http2: false }
         }
+        // 4: {
+        //   title: "回源请求超时时间",
+        //   functionName: "forward_timeout",
+        //   form: { forward_timeout: 30 }
+        // }
+      },
+      http2Form: {
+        http2: false
       },
       httpForm: {
         type: ""
+      },
+      hstsForm: {
+        enabled: false,
+        https_hsts_max_age: "",
+        https_hsts_include_subdomains: false
       }
     };
   },
@@ -226,7 +234,9 @@ export default {
     // 批量查询配置信息
     getBatchConfig() {
       Object.keys(this.modalMap).forEach((ele, index) => {
-        this.getConfig(index + 1);
+        if (index + 1 !== 1) {
+          this.getConfig(index + 1);
+        }
       });
     },
     // 查询配置信息
@@ -240,21 +250,14 @@ export default {
           const data = res.data.domainConfigs.domainConfig;
           if (data.length > 0) {
             const newForm = { ...this.modalMap[type].form };
-            if (type === 1) {
-              this.httpsForm = {
-                ...getForm(data[0], newForm)
-              };
-              this.hostForm.type =
-                this.hostForm.domain_name === this.domain ? 1 : 3;
-              this.hostForm.enable = true;
-            }
             if (type === 2) {
-              this.agreementForm = {
+              this.hstsForm = {
                 ...getForm(data[0], newForm)
               };
             }
             if (type === 3) {
-              this.sniForm = {
+              console.log("sadad", getForm(data[0], newForm));
+              this.http2Form = {
                 ...getForm(data[0], newForm)
               };
             }
@@ -288,22 +291,15 @@ export default {
       this.modalType = type;
       this.visible = true;
     },
-    // 开启/关闭回源协议
-    // 修改角色状态
-    handleChangeStatus(record) {
-      const statusTxt = !record.status ? "开启" : "关闭";
-      this.$confirm({
-        title: `确认要${statusTxt}当前角色吗？`,
-        onOk: () => {
-          this.$store
-            .dispatch("organization/editRole", {
-              id: record.id,
-              status: record.status ? 0 : 1
-            })
-            .then((res) => {
-              this.$message.success(`${statusTxt}成功`);
-            });
-        }
+    // 开启/关闭HTTP/2设置
+    handleChangeHttp2() {
+      const tempForm = { http2: this.http2Form.http2 };
+      const newForm = {
+        ...getParameter(tempForm, "https_option", this.domain)
+      };
+      this.$store.dispatch("cdn/saveConfig", newForm).then((res) => {
+        this.$message.success(`设置成功`);
+        this.getConfig(3);
       });
     }
   }

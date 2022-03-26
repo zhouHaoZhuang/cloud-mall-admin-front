@@ -26,15 +26,19 @@
         </a-radio-group>
       </a-form-model-item>
       <div v-if="this.type === 2">
-        <a-form-model-item label="HSTS开关" prop="type">
+        <a-form-model-item label="HSTS开关" prop="enabled">
           <a-switch v-model="form.enabled">
             <a-icon slot="checkedChildren" type="check" />
             <a-icon slot="unCheckedChildren" type="close" />
           </a-switch>
         </a-form-model-item>
-        <a-form-model-item label="过期时间" prop="type">
+        <a-form-model-item
+          label="过期时间"
+          :prop="form.enabled ? 'https_hsts_max_age' : ''"
+        >
           <a-input
             v-model="form.https_hsts_max_age"
+            :disabled="!form.enabled"
             v-number-evolution="{ value: 0, min: 0, max: 730 }"
             suffix="天"
             style="width: 100px"
@@ -44,8 +48,11 @@
             响应头在浏览器的缓存时间，建议填入60天，可填时间范围为0-730天。
           </div>
         </a-form-model-item>
-        <a-form-model-item label="包含子域名" prop="type">
-          <a-switch v-model="form.https_hsts_include_subdomains">
+        <a-form-model-item label="包含子域名">
+          <a-switch
+            :disabled="!form.enabled"
+            v-model="form.https_hsts_include_subdomains"
+          >
             <a-icon slot="checkedChildren" type="check" />
             <a-icon slot="unCheckedChildren" type="close" />
           </a-switch>
@@ -99,6 +106,9 @@ export default {
           if (this.type === 1) {
             this.getForceConfig();
           }
+          if (this.type === 2) {
+            this.getConfig();
+          }
         }
       }
     }
@@ -117,6 +127,13 @@ export default {
             required: true,
             message: "请选择跳转类型",
             trigger: "change"
+          }
+        ],
+        https_hsts_max_age: [
+          {
+            required: true,
+            message: "请选择跳转类型",
+            trigger: ["change", "blur"]
           }
         ]
       }
@@ -226,61 +243,21 @@ export default {
             this.forceConfigSubmit();
             return;
           }
-          let req = "";
-          let newForm = {};
-          if (this.type === 1 && this.modalMap[this.type].isBeforeDel) {
-            req = this.modalMap[this.type].isBeforeDel;
-            newForm = {
-              functionNames: this.functionName,
-              domainName: this.domain
-            };
-            this.loading = true;
-            this.$store
-              .dispatch(req, newForm)
-              .then((res) => {
-                if (this.form.enable === 3) {
-                  let tempForm = { enable: true };
-                  const result = {
-                    ...getParameter(tempForm, this.functionName, this.domain)
-                  };
-                  this.$store
-                    .dispatch("cdn/saveConfig", result)
-                    .then((res) => {
-                      this.$message.success(`设置成功`);
-                      this.$emit("success", this.type);
-                      this.$emit("changeVisible", false);
-                    })
-                    .finally(() => {
-                      this.loading = false;
-                    });
-                  return;
-                }
-                this.$message.success(`设置成功`);
-                this.$emit("success", this.type);
-                this.$emit("changeVisible", false);
-              })
-              .finally(() => {
-                if (this.form.enable !== 3) {
-                  this.loading = false;
-                }
-              });
-          } else {
-            let tempForm = { ...this.form };
-            newForm = {
-              ...getParameter(tempForm, this.functionName, this.domain)
-            };
-            this.loading = true;
-            this.$store
-              .dispatch("cdn/saveConfig", newForm)
-              .then((res) => {
-                this.$message.success(`设置成功`);
-                this.$emit("success", this.type);
-                this.$emit("changeVisible", false);
-              })
-              .finally(() => {
-                this.loading = false;
-              });
-          }
+          const tempForm = { ...this.form };
+          const newForm = {
+            ...getParameter(tempForm, this.functionName, this.domain)
+          };
+          this.loading = true;
+          this.$store
+            .dispatch("cdn/saveConfig", newForm)
+            .then((res) => {
+              this.$message.success(`设置成功`);
+              this.$emit("success", this.type);
+              this.$emit("changeVisible", false);
+            })
+            .finally(() => {
+              this.loading = false;
+            });
         }
       });
     }

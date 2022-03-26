@@ -293,7 +293,8 @@ const transformList = [
   "enable",
   "enabled",
   "switch",
-  "https_hsts_include_subdomains"
+  "https_hsts_include_subdomains",
+  "http2"
 ];
 // cdn管理页面处理后端所需参数
 export const getParameter = (form, functionName, domainNames) => {
