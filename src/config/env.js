@@ -16,7 +16,7 @@ const formBaseUrl = {
 };
 // 跳转云商城地址
 const cloudMallUrl = {
-  local: "http://localhost:3000"
+  local: "http://192.168.11.23:3000"
 };
 // 获取云商城地址
 function getCloudMallUrl() {
