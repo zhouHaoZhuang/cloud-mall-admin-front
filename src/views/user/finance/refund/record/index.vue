@@ -17,7 +17,7 @@
           </a-button>
         </div> -->
       <!-- 按钮输入框组 -->
-      <div class="btn3">
+      <!-- <div class="btn3">
         <a-input-group compact>
           <a-select v-model="listQuery.key" style="width: 100px">
             <a-select-option value="orderNo"> 订单编号 </a-select-option>
@@ -33,16 +33,16 @@
             @search="handleSearch"
           />
         </a-input-group>
-      </div>
+      </div> -->
       <a-select
         class="right-skew"
-        v-model="listQuery.enmu"
+        v-model="listQuery.tradeType"
         placeholder="订单类型"
         allowClear
         style="width: 110px"
       >
         <a-select-option
-          v-for="(value, key) in orderType"
+          v-for="(value, key) in tradeType"
           :key="key"
           :value="key"
         >
@@ -51,7 +51,7 @@
       </a-select>
       <a-select
         class="right-skew"
-        v-model="listQuery.state"
+        v-model="listQuery.payStatus"
         placeholder="支付状态"
         allowClear
         style="width: 110px"
@@ -64,7 +64,7 @@
           {{ value }}
         </a-select-option>
       </a-select>
-      <a-select
+      <!-- <a-select
         class="right-skew"
         v-model="listQuery.time"
         placeholder="时间类型"
@@ -78,7 +78,7 @@
         >
           {{ value }}
         </a-select-option>
-      </a-select>
+      </a-select> -->
       <!-- 日历 -->
       <div class="btn2">
         <div class="btn4">
@@ -119,8 +119,15 @@
         <div slot="createTime" slot-scope="text">
           {{ text | formatDate }}
         </div>
-        <div slot="tradeStatus" slot-scope="text">
-          {{ orderStatusEnum[text] }}
+        <div slot="chargingType" slot-scope="text">
+          <span v-if="text === 'Beforepay'">预付费</span>
+          <span v-if="text === 'AfterPay'">后付费</span>
+        </div>
+        <div slot="tradeType" slot-scope="text">
+          {{ tradeType[text] }}
+        </div>
+        <div slot="payStatus" slot-scope="text">
+          {{ payState[text] }}
         </div>
         <div slot="action" slot-scope="text, record">
           <a-space>
@@ -138,7 +145,9 @@ import {
   tradeTypeEnum,
   orderType,
   payState,
-  timeType
+  timeType,
+  tradeType,
+  payStatus
 } from "@/utils/enum";
 
 export default {
@@ -149,6 +158,8 @@ export default {
       orderType,
       payState,
       timeType,
+      tradeType,
+      payStatus,
       cutover: "0",
       topList: [
         {
@@ -163,45 +174,38 @@ export default {
           dataIndex: "orderNo"
         },
         {
-          title: "订单编号",
-          dataIndex: "orderNo2"
-        },
-        {
           title: "订单类型",
-          dataIndex: "orderNo3"
+          dataIndex: "tradeType",
+          scopedSlots: { customRender: "tradeType" }
         },
         {
           title: "订单金额",
-          dataIndex: "outIp",
-          key: "outIp",
-          scopedSlots: {
-            customRender: "outIp"
-          }
+          dataIndex: "actualAmount",
+          key: "actualAmount",
+      
         },
         {
           title: "退款金额",
           dataIndex: "actualAmount",
-          key: "actualAmount"
+          key: "actualAmount2"
         },
         {
           title: "状态",
-          dataIndex: "actualAmount1",
-          key: "actualAmount1"
+          dataIndex: "payStatus",
+          scopedSlots: { customRender: "payStatus" }
         },
         {
           title: "计费方式",
-          dataIndex: "createTime",
-          key: "createTime",
-          scopedSlots: { customRender: "createTime" }
+          dataIndex: "chargingType",
+          scopedSlots: { customRender: "chargingType" }
         },
         {
           title: "创建时间",
-          dataIndex: "remark",
-          key: "remark"
+          dataIndex: "createTimeStr"
         },
         {
           title: "操作",
-          dataIndex: "action2",
+          dataIndex: "action",
           scopedSlots: { customRender: "action" }
         }
       ],
@@ -211,13 +215,13 @@ export default {
         search: "",
         startTime: "",
         endTime: "",
-        createTimeSort: "desc",
         enmu: undefined,
         state: undefined,
         time: undefined,
         currentPage: 1,
         pageSize: 10,
-        total: 0
+        total: 0,
+        tradeType: "55"
       },
       paginationProps: {
         showQuickJumper: true,
@@ -239,9 +243,8 @@ export default {
     //查询数据表格
     getList() {
       this.loading = true;
-      this.$getList("refund/getRecord", this.listQuery)
+      this.$getList("income/getList", this.listQuery)
         .then((res) => {
-          screen;
           console.log(res);
           this.data = [...res.data.list];
           this.paginationProps.total = res.data.totalCount * 1;
@@ -276,7 +279,7 @@ export default {
     //退订详情
     selectPool(record) {
       this.$router.push({
-        path: "/user/finance/refund/recordDetail",
+        path: "/user/finance/recordDetail",
         query: {
           id: record.orderNo
         }

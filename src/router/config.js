@@ -258,6 +258,16 @@ export const asyncRoute = [
                 }
               },
               {
+                path: "recordDetail",
+                name: "退订详情",
+                component: () =>
+                  import("@/views/user/finance/refund/record/detail"),
+                meta: {
+                  hiddenMenu: true,
+                  perm: "user-finance-order"
+                }
+              },
+              {
                 path: "unsubscribe",
                 name: "资源退订",
                 component: () =>
@@ -291,18 +301,10 @@ export const asyncRoute = [
                       perm: "user-finance-refund-record"
                     }
                   },
-                  {
-                    path: "recordDetail",
-                    name: "退订详情",
-                    component: () =>
-                      import("@/views/user/finance/refund/record/detail"),
-                    meta: {
-                      hiddenMenu: true,
-                      perm: "user-finance-recharge"
-                    }
-                  }
+                  
                 ]
               },
+             
               {
                 path: "withdraw",
                 name: "提现申请",

@@ -12,6 +12,10 @@
           :pagination="false"
         >
           <a slot="name" slot-scope="text">{{ text }}</a>
+          <div slot="chargingType" slot-scope="text">
+            <span v-if="text === 'Beforepay'">预付费</span>
+            <span v-if="text === 'AfterPay'">后付费</span>
+          </div>
           <div slot="tradeType" slot-scope="text">
             {{ tradeTypeEnum[text] }}
           </div>
@@ -33,12 +37,9 @@
               </span>
             </div>
           </div>
-          <span slot="period" slot-scope="text, record">
-            {{ text }}{{ record.priceUnit === "Month" ? "个月" : "年" }}
-          </span>
-          <span slot="discountAmount" style="color: #ff6600" slot-scope="text">
-            {{ text }}元
-          </span>
+          <div slot="orderCreateTime" slot-scope="text">
+            <div>{{ text }}</div>
+          </div>
         </a-table>
       </div>
       <div class="outbox">
@@ -63,9 +64,8 @@
           <br />
           <span class="refund-price">退款金额:</span>
           <span class="price-bottom">¥</span>
-
-          <span class="price-one">{{ price.toString().split(".")[0] }}</span
-          >.
+          <span class="price-one">{{ price.toString().split(".")[0] }}</span>
+          <span v-if="priceFlag">.</span>
           <span class="price-other">{{ price.toString().split(".")[1] }}</span>
           <br />
           <br />
@@ -143,22 +143,18 @@ export default {
         },
         {
           title: "计费方式",
-          dataIndex: "period",
-          scopedSlots: { customRender: "period" }
+          dataIndex: "chargingType",
+          scopedSlots: { customRender: "chargingType" }
         },
         {
-          title: "开始/结束时间",
-          dataIndex: "period2",
-          scopedSlots: { customRender: "period2" }
-        },
-        {
-          title: "订单金额",
-          dataIndex: "quantity"
+          title: "订单时间",
+          dataIndex: "orderCreateTime",
+          scopedSlots: { customRender: "orderCreateTime" }
         },
         {
           title: "退款金额",
-          dataIndex: "discountAmount",
-          scopedSlots: { customRender: "discountAmount" }
+          dataIndex: "actualAmount",
+          scopedSlots: { customRender: "actualAmount" }
         }
       ],
       countDownTime: "--时--分--秒",
@@ -168,7 +164,8 @@ export default {
       price: 11.234,
       value1: "配置选择错误",
       textarea: "",
-      checked: false
+      checked: false,
+      priceFlag: false
     };
   },
   created() {
@@ -194,6 +191,14 @@ export default {
         .then((res) => {
           this.orderInfo = { ...res.data };
           this.data = [{ ...res.data }];
+          this.price = this.orderInfo.actualAmount;
+          //判断是否有小数点
+          let isnan = this.price.toString().split("").indexOf(".");
+          if (isnan === -1) {
+            this.priceFlag = false;
+          } else {
+            this.priceFlag = true;
+          }
           if (res.data.tradeStatus === 1) {
             this.startCountDown(res.data.orderCreateTime);
           }

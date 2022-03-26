@@ -20,12 +20,8 @@
             <span>{{ orderInfo.orderNo }}</span>
           </li>
           <li>
-            <span>订单编号:</span>
-            <span>{{ tradeTypeEnum[orderInfo.tradeType] }} </span>
-          </li>
-          <li>
             <span>订单类型:</span>
-            <span>{{ tradeTypeEnum[orderInfo.tradeType] }} </span>
+            <span>{{ tradeType[orderInfo.tradeType] }} </span>
           </li>
           <li>
             <span>创建时间:</span>
@@ -59,6 +55,10 @@
           :pagination="false"
         >
           <a slot="name" slot-scope="text">{{ text }}</a>
+          <div slot="chargingType" slot-scope="text">
+            <span v-if="text === 'Beforepay'">预付费</span>
+            <span v-if="text === 'AfterPay'">后付费</span>
+          </div>
           <div slot="tradeType" slot-scope="text">
             {{ tradeTypeEnum[text] }}
           </div>
@@ -171,7 +171,12 @@ import moment from "moment";
 import DetailHeader from "@/components/Common/detailHeader";
 import PaySelect from "@/components/Finance/paySelect";
 import { useLeftTime } from "@/utils/index";
-import { orderStatusEnum, tradeTypeEnum, regionDataEnum } from "@/utils/enum";
+import {
+  orderStatusEnum,
+  tradeTypeEnum,
+  regionDataEnum,
+  tradeType
+} from "@/utils/enum";
 export default {
   components: { DetailHeader, PaySelect },
   computed: {
@@ -192,6 +197,7 @@ export default {
       orderStatusEnum,
       tradeTypeEnum,
       regionDataEnum,
+      tradeType,
       orderInfo: {},
       data: [],
       columns: [
@@ -211,8 +217,8 @@ export default {
         },
         {
           title: "计费方式",
-          dataIndex: "period",
-          scopedSlots: { customRender: "period" }
+          dataIndex: "chargingType",
+          scopedSlots: { customRender: "chargingType" }
         },
         {
           title: "原价",
@@ -220,20 +226,23 @@ export default {
         },
         {
           title: "推广优惠",
-          dataIndex: "quantity2"
+          dataIndex: "discountAmount",
+          key:1
         },
         {
           title: "折扣",
-          dataIndex: "quantity3"
+          dataIndex: "discountRate"
         },
         {
           title: "成交价",
-          dataIndex: "quantity4"
+          dataIndex: "actualAmount"
         },
         {
           title: "退款金额",
           dataIndex: "discountAmount",
-          scopedSlots: { customRender: "discountAmount" }
+          scopedSlots: { customRender: "discountAmount" },
+          key:2
+
         }
       ],
       countDownTime: "--时--分--秒",

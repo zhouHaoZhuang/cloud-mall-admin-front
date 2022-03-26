@@ -16,8 +16,9 @@ import organization from "./organization.js";
 import mangeaddress from "./mangeaddress.js";
 import billlist from "./billlist.js";
 import billapply from "./billapply.js";
+import billmanage from "./billmanage.js";
 import billnews from "./billnews.js";
-import withdraw from './withdraw'
+import withdraw from "./withdraw";
 
 export default {
   setting,
@@ -39,5 +40,6 @@ export default {
   billlist,
   billapply,
   billnews,
-  withdraw
+  withdraw,
+  billmanage
 };

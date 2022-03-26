@@ -21,7 +21,7 @@
           </li>
           <li>
             <span>订单类型:</span>
-            <span>{{ tradeTypeEnum[orderInfo.tradeType] }} </span>
+            <span>{{ tradeType[orderInfo.tradeType] }} </span>
           </li>
           <li>
             <span>创建时间:</span>
@@ -62,11 +62,11 @@
         <ul class="detail-box">
           <li>
             <span>支付金额:</span>
-            <span>{{ orderInfo.orderNo }}</span>
+            <span>{{ orderInfo.actualAmount }}</span>
           </li>
           <li>
             <span>支付状态:</span>
-            <span>{{ tradeTypeEnum[orderInfo.tradeType] }} </span>
+            <span>{{ payState[orderInfo.payStatus] }} </span>
           </li>
         </ul>
       </div>
@@ -79,8 +79,12 @@
           :pagination="false"
         >
           <a slot="name" slot-scope="text">{{ text }}</a>
+          <div slot="chargingType" slot-scope="text">
+            <span v-if="text === 'Beforepay'">预付费</span>
+            <span v-if="text === 'AfterPay'">后付费</span>
+          </div>
           <div slot="tradeType" slot-scope="text">
-            {{ tradeTypeEnum[text] }}
+            {{ tradeType[text] }}
           </div>
           <div slot="productConfig" slot-scope="text, record">
             <!-- <div>线路:{{ regionDataEnum[record.regionId] }}</div> -->
@@ -107,17 +111,15 @@
           <span slot="period" slot-scope="text, record">
             {{ text }}{{ record.priceUnit === "Month" ? "个月" : "年" }}
           </span>
-          <span slot="discountAmount" style="color: #ff6600" slot-scope="text">
-            {{ text }}元
-          </span>
         </a-table>
       </div>
       <!-- 应付金额 -->
       <div class="should-pay">
         <span class="pay-left">应付金额:</span>
         ¥
-        <span class="price-one">{{ price.toString().split(".")[0] }}</span
-        >.
+        <span class="price-one">{{ price.toString().split(".")[0] }}</span>
+        <span v-if="priceFlag">.</span>
+
         <span class="price-other">{{ price.toString().split(".")[1] }}</span>
       </div>
     </div>
@@ -191,7 +193,13 @@ import moment from "moment";
 import DetailHeader from "@/components/Common/detailHeader";
 import PaySelect from "@/components/Finance/paySelect";
 import { useLeftTime } from "@/utils/index";
-import { orderStatusEnum, tradeTypeEnum, regionDataEnum } from "@/utils/enum";
+import {
+  orderStatusEnum,
+  tradeTypeEnum,
+  regionDataEnum,
+  tradeType,
+  payState
+} from "@/utils/enum";
 export default {
   components: { DetailHeader, PaySelect },
   computed: {
@@ -212,6 +220,8 @@ export default {
       orderStatusEnum,
       tradeTypeEnum,
       regionDataEnum,
+      tradeType,
+      payState,
       orderInfo: {},
       data: [],
       columns: [
@@ -231,24 +241,37 @@ export default {
         },
         {
           title: "计费方式",
-          dataIndex: "period",
-          scopedSlots: { customRender: "period" }
+          dataIndex: "chargingType",
+          scopedSlots: { customRender: "chargingType" }
+        },
+        {
+          title: "数量",
+          dataIndex: "count"
         },
         {
           title: "原价",
-          dataIndex: "quantity"
+          dataIndex: "originAmount"
         },
         {
-          title: "金额",
-          dataIndex: "discountAmount",
-          scopedSlots: { customRender: "discountAmount" }
+          title: "推广优惠",
+          dataIndex: "discountAmount"
+        },
+        {
+          title: "折扣",
+          dataIndex: "discountRate"
+        },
+        {
+          title: "成交价",
+          dataIndex: "actualAmount"
         }
       ],
       countDownTime: "--时--分--秒",
       time: null,
       payTime: null,
       endTime: "",
-      price: 11.234
+      price: 0,
+      priceFlag: false
+      // actualAmount
     };
   },
   created() {
@@ -265,6 +288,14 @@ export default {
         .dispatch("income/getOne", this.$route.query.id)
         .then((res) => {
           this.orderInfo = { ...res.data };
+          this.price = this.orderInfo.actualAmount;
+          //判断是否有小数点
+          let isnan = this.price.toString().split("").indexOf(".");
+          if (isnan === -1) {
+            this.priceFlag = false;
+          } else {
+            this.priceFlag = true;
+          }
           this.data = [{ ...res.data }];
           if (res.data.tradeStatus === 1) {
             this.startCountDown(res.data.orderCreateTime);

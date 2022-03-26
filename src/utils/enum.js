@@ -194,15 +194,21 @@ export const cdnPriorityEnum = {
   2: "备"
 };
 //订单管理中订单类型枚举
-export const orderType = {
-  1: "CDN流量",
-  2: "CDN资源包"
+export const tradeType = {
+  1: "ecs新购",
+  15: "ecs实例续费",
+  25: "渠道商向资源池(云盾)升级配置订单流程",
+  35: "esc实例降低配置",
+  45: "交易关闭",
+  55: "退订",
+  65: "后付费订单"
 };
 //支付状态枚举
 export const payState = {
-  1: "未支付",
-  2: "已支付",
-  3: "作废"
+  0: "待支付",
+  3: "支付中",
+  "-3": "支付失败",
+  5: "完成支付"
 };
 //时间类型枚举
 export const timeType = {

@@ -19,10 +19,15 @@
         <div class="btn3">
           <a-input-group compact>
             <a-select v-model="listQuery.key" style="width: 100px">
-              <a-select-option value="orderNo"> 退单编号 </a-select-option>
+              <a-select-option value="orderNo2"> 退单编号 </a-select-option>
+
               <a-select-option value="orderNo"> 订单编号 </a-select-option>
-              <a-select-option value="orderNo2"> 渠道商名称 </a-select-option>
-              <a-select-option value="orderNo3"> 渠道商ID </a-select-option>
+              <a-select-option value="corporationName">
+                渠道商名称
+              </a-select-option>
+              <a-select-option value="corporationCode">
+                渠道商ID
+              </a-select-option>
             </a-select>
             <a-input-search
               allowClear
@@ -36,23 +41,23 @@
         </div>
         <a-select
           class="right-skew"
-          v-model="listQuery.enmu"
+          v-model="listQuery.tradeType"
           placeholder="订单类型"
           allowClear
           style="width: 110px"
         >
           <a-select-option
-            v-for="(value, key) in orderType"
+            v-for="(value, key) in tradeType"
             :key="key"
             :value="key"
           >
-            {{ value }}
+            <span :title="value">{{ value }}</span>
           </a-select-option>
         </a-select>
         <a-select
           class="right-skew"
-          v-model="listQuery.state"
-          placeholder="订单状态"
+          v-model="listQuery.payStatus"
+          placeholder="支付状态"
           allowClear
           style="width: 110px"
         >
@@ -64,10 +69,10 @@
             {{ value }}
           </a-select-option>
         </a-select>
-        <a-select
+        <!-- <a-select
           class="right-skew"
           v-model="listQuery.time"
-          placeholder="计费方式"
+          placeholder="时间类型"
           allowClear
           style="width: 110px"
         >
@@ -78,7 +83,7 @@
           >
             {{ value }}
           </a-select-option>
-        </a-select>
+        </a-select> -->
         <!-- 日历 -->
         <div class="btn2">
           <div class="btn4">
@@ -117,49 +122,30 @@
           :pagination="paginationProps"
           @change="handleChange"
         >
-          <span slot="orderNo" style="color: #00aaff" slot-scope="text">
-            {{ text }}
-          </span>
-          <span slot="discountAmount" style="color: #ff6600" slot-scope="text">
-            {{ text }}
-          </span>
-
-          <div slot="createTime" slot-scope="text">
+          <div slot="payTime" slot-scope="text">
             {{ text | formatDate }}
           </div>
-
-          <!-- <div
-            :class="{ green: text === 1, blue: text !== 1 }"
-            slot="tradeStatus"
-            slot-scope="text"
-          >
-            {{ orderStatusEnum[text] }}
-          </div> -->
-          <span slot="tradeStatus" style="color: #ff6600" slot-scope="text">
-            {{ text }}
-          </span>
-          <span slot="tradeType" style="color: #ff6600" slot-scope="text">
-            {{ text }}
-          </span>
+          <div slot="payStatus" slot-scope="text">
+            {{ payState[text] }}
+          </div>
+          <div slot="tradeType" slot-scope="text">
+            {{ tradeType[text] }}
+          </div>
           <div slot="action" slot-scope="text, record">
             <a-space>
               <a-button type="link" @click="selectPool(record)">
                 详情
               </a-button>
-              <a-button type="link" @click="subscription(record)">
+              <!-- <a-button type="link" @click="subscription(record)">
                 退订
-              </a-button>
-              <a-button type="link" @click="cancelOrder(record)">
-                支付
-              </a-button>
-              <!-- <a-button
-                type="link"
-                @click="cancelOrder(record)"
-              >
-                关闭
               </a-button> -->
-
-              <a-popconfirm
+              <!-- <a-button type="link" @click="cancelOrder(record)">
+                支付
+              </a-button> -->
+              <a-button type="link" @click="cancelOrder(record)">
+                关闭
+              </a-button>
+              <!-- <a-popconfirm
                 :title="`你要关闭订单${record.orderNo}号为多少的订单吗?`"
                 ok-text="确定"
                 cancel-text="取消"
@@ -167,7 +153,7 @@
                 @cancel="cancel"
               >
                 <a href="#">关闭</a>
-              </a-popconfirm>
+              </a-popconfirm> -->
               <!-- <a-button
                 v-if="record.tradeStatus === 1"
                 type="link"
@@ -188,7 +174,7 @@ import { jumpCloudMall } from "@/utils/index";
 import {
   orderStatusEnum,
   tradeTypeEnum,
-  orderType,
+  tradeType,
   payState,
   timeType
 } from "@/utils/enum";
@@ -197,7 +183,7 @@ export default {
     return {
       orderStatusEnum,
       tradeTypeEnum,
-      orderType,
+      tradeType,
       payState,
       timeType,
       listQuery: {
@@ -205,7 +191,6 @@ export default {
         search: "",
         startTime: "",
         endTime: "",
-        createTimeSort: "desc",
         enmu: undefined,
         state: undefined,
         time: undefined,
@@ -216,44 +201,38 @@ export default {
       columns: [
         {
           title: "订单编号",
-          dataIndex: "orderNo",
-          scopedSlots: { customRender: "orderNo" }
+          dataIndex: "orderNo"
         },
         {
-          title: "产品名称",
-          dataIndex: "订单类型"
-        },
-        {
-          title: "产品",
-          dataIndex: "discountAmount",
-          scopedSlots: { customRender: "discountAmount" }
-        },
-        {
-          title: "原价",
-          dataIndex: "createTime",
-          scopedSlots: { customRender: "createTime" },
-          sorter: true,
-          sortDirections: ["ascend", "descend"]
-        },
-        {
-          title: "应付金额",
-          dataIndex: "tradeStatus",
-          scopedSlots: { customRender: "tradeStatus" }
-        },
-        {
-          title: "创建时间",
+          title: "订单类型",
           dataIndex: "tradeType",
           scopedSlots: { customRender: "tradeType" }
         },
         {
+          title: "产品",
+          dataIndex: "productName"
+        },
+        {
+          title: "原价",
+          dataIndex: "originAmount"
+        },
+        {
+          title: "应付金额",
+          dataIndex: "actualAmount"
+        },
+        {
+          title: "创建时间",
+          dataIndex: "createTimeStr"
+        },
+        {
           title: "支付时间",
-          dataIndex: "action2",
-          scopedSlots: { customRender: "action2" }
+          dataIndex: "payTime",
+          scopedSlots: { customRender: "payTime" }
         },
         {
           title: "支付状态",
-          dataIndex: "action1",
-          scopedSlots: { customRender: "action1" }
+          dataIndex: "payStatus",
+          scopedSlots: { customRender: "payStatus" }
         },
         {
           title: "操作",
@@ -280,21 +259,35 @@ export default {
     this.getList();
   },
   methods: {
+    cancelOrder(record) {
+      this.$confirm({
+        title: "确认要取消订单吗？",
+        onOk: () => {
+          this.$store
+            .dispatch("income/cancelOrder", { id: record.id })
+            .then((res) => {
+              this.$message.success("取消订单成功");
+              this.getDetail();
+            });
+        }
+      });
+    },
+    formatSearch() {
+      if (this.listQuery.key === "orderNo") {
+        this.listQuery["orderNo"] = this.listQuery.search;
+      } else if (this.listQuery.key === "corporationName") {
+        this.listQuery["corporationName"] = this.listQuery.search;
+      } else if (this.listQuery.key === "corporationCode") {
+        this.listQuery["corporationCode"] = this.listQuery.search;
+      }
+    },
     //查询数据表格
     getList() {
       this.loading = true;
+      this.formatSearch();
       this.$getList("income/getList", this.listQuery)
         .then((res) => {
-          // this.data = [...res.data.list];
-          //下方是假数据
-          let aaa = [
-            {
-              orderNo: "22222222",
-              tradeStatus: 22,
-              id: 1
-            }
-          ];
-          this.data = aaa;
+          this.data = [...res.data.list];
           this.paginationProps.total = res.data.totalCount * 1;
         })
         .finally(() => {
@@ -373,20 +366,6 @@ export default {
     // 跳转云商城服务器购买页面
     handleJumpCloudPay() {
       jumpCloudMall("/cloud-price", true);
-    },
-    // 取消订单
-    cancelOrder(record) {
-      this.$confirm({
-        title: "确认要取消订单吗？",
-        onOk: () => {
-          this.$store
-            .dispatch("income/cancelOrder", { id: record.id })
-            .then((res) => {
-              this.$message.success("取消订单成功");
-              this.getList();
-            });
-        }
-      });
     }
   }
 };
