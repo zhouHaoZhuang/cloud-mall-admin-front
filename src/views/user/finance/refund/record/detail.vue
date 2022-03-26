@@ -2,7 +2,7 @@
   <div class="orderInfo">
     <!-- 订单信息 -->
     <div v-if="orderInfo" class="channel">
-      <DetailHeader title="订单详情" back="/user/finance/trash" />
+      <DetailHeader title="退订详情" back="/user/finance/refund/record" />
       <!-- 状态为未支付时的提示文字 -->
       <div v-if="orderInfo.tradeStatus === 1" class="unpaid-box">
         <a-icon class="icon" type="exclamation-circle" />
@@ -16,7 +16,7 @@
         <p class="purchase-tittle">订单信息</p>
         <ul class="detail-box">
           <li>
-            <span>订单编号:</span>
+            <span>退单编号:</span>
             <span>{{ orderInfo.orderNo }}</span>
           </li>
           <li>
@@ -27,46 +27,22 @@
             <span>创建时间:</span>
             <span>{{ orderInfo.orderCreateTime | formatDate }}</span>
           </li>
-          <li v-if="orderInfo.tradeStatus === 1">
-            <span>支付剩余时间:</span>
-            <span class="strong">{{ countDownTime }}</span>
-          </li>
-          <!-- <li>
-          <span>订单状态:</span>
-          <span
-            :class="{
-              green: orderInfo.tradeStatus === 1,
-              blue: orderInfo.tradeStatus !== 1
-            }"
-          >
-            {{ orderStatusEnum[orderInfo.tradeStatus] }}
-          </span>
-        </li> -->
-          <li
-            v-if="
-              orderInfo.tradeStatus !== 1 &&
-              orderInfo.tradeStatus !== 3 &&
-              orderInfo.tradeStatus !== -1
-            "
-          >
-            <span>支付时间:</span>
-            <span>{{ orderInfo.payTime | formatDate }}</span>
-          </li>
-          <li v-if="orderInfo.tradeStatus === 1" class="cancelOrder-btn">
-            <a-button @click="cancelOrder">取消订单</a-button>
+          <li>
+            <span>退款原因:</span>
+            <span>{{ orderInfo.orderCreateTime | formatDate }}</span>
           </li>
         </ul>
       </div>
       <div class="outbox">
-        <p class="purchase-tittle">支付信息</p>
+        <p class="purchase-tittle">退款信息</p>
         <ul class="detail-box">
           <li>
-            <span>支付金额:</span>
-            <span>{{ orderInfo.actualAmount }}</span>
+            <span>退款金额:</span>
+            <span>{{ orderInfo.orderNo }}</span>
           </li>
           <li>
-            <span>支付状态:</span>
-            <span>{{ payState[orderInfo.payStatus] }} </span>
+            <span>退款状态:</span>
+            <span>{{ tradeTypeEnum[orderInfo.tradeType] }} </span>
           </li>
         </ul>
       </div>
@@ -84,7 +60,7 @@
             <span v-if="text === 'AfterPay'">后付费</span>
           </div>
           <div slot="tradeType" slot-scope="text">
-            {{ tradeType[text] }}
+            {{ tradeTypeEnum[text] }}
           </div>
           <div slot="productConfig" slot-scope="text, record">
             <!-- <div>线路:{{ regionDataEnum[record.regionId] }}</div> -->
@@ -111,15 +87,17 @@
           <span slot="period" slot-scope="text, record">
             {{ text }}{{ record.priceUnit === "Month" ? "个月" : "年" }}
           </span>
+          <span slot="discountAmount" style="color: #ff6600" slot-scope="text">
+            {{ text }}元
+          </span>
         </a-table>
       </div>
       <!-- 应付金额 -->
       <div class="should-pay">
         <span class="pay-left">应付金额:</span>
         ¥
-        <span class="price-one">{{ price.toString().split(".")[0] }}</span>
-        <span v-if="priceFlag">.</span>
-
+        <span class="price-one">{{ price.toString().split(".")[0] }}</span
+        >.
         <span class="price-other">{{ price.toString().split(".")[1] }}</span>
       </div>
     </div>
@@ -184,22 +162,7 @@
       v-if="orderInfo.tradeStatus === 1"
       :detail="orderInfo"
       @success="startTime"
-      :WeChatPop="WeChatPop"
     />
-    <a-modal
-      title="请扫描下方二维码完成支付"
-      :visible="visible"
-      :confirm-loading="confirmLoading"
-      @ok="handleOk"
-      @cancel="handleCancel"
-      forceRender
-    >
-      <div class="qrcodeDom">
-        <div id="qrcodeDom"></div>
-        <p>请使用<span>微信</span>扫码完成支付</p>
-        <p>如已支付成功，请点击确认查看订单信息</p>
-      </div>
-    </a-modal>
   </div>
 </template>
 
@@ -212,10 +175,8 @@ import {
   orderStatusEnum,
   tradeTypeEnum,
   regionDataEnum,
-  tradeType,
-  payState
+  tradeType
 } from "@/utils/enum";
-import QRCode from "qrcodejs2";
 export default {
   components: { DetailHeader, PaySelect },
   computed: {
@@ -233,14 +194,10 @@ export default {
   },
   data() {
     return {
-      visible: false,
-      confirmLoading: false,
-      textUrl: "",
       orderStatusEnum,
       tradeTypeEnum,
       regionDataEnum,
       tradeType,
-      payState,
       orderInfo: {},
       data: [],
       columns: [
@@ -264,16 +221,13 @@ export default {
           scopedSlots: { customRender: "chargingType" }
         },
         {
-          title: "数量",
-          dataIndex: "count"
-        },
-        {
           title: "原价",
-          dataIndex: "originAmount"
+          dataIndex: "quantity"
         },
         {
           title: "推广优惠",
-          dataIndex: "discountAmount"
+          dataIndex: "discountAmount",
+          key:1
         },
         {
           title: "折扣",
@@ -282,15 +236,20 @@ export default {
         {
           title: "成交价",
           dataIndex: "actualAmount"
+        },
+        {
+          title: "退款金额",
+          dataIndex: "discountAmount",
+          scopedSlots: { customRender: "discountAmount" },
+          key:2
+
         }
       ],
       countDownTime: "--时--分--秒",
       time: null,
       payTime: null,
       endTime: "",
-      price: 0,
-      priceFlag: false
-      // actualAmount
+      price: 11.234
     };
   },
   created() {
@@ -300,57 +259,13 @@ export default {
     this.time && clearInterval(this.time);
     this.payTime && clearInterval(this.payTime);
   },
-  watch: {
-    orderInfo(val) {
-      if (val.tradeStatus === 5) {
-        this.visible = false;
-      }
-    }
-  },
   methods: {
-    //链接生成二维码 Api
-    transQrcode() {
-      const qrcode = new QRCode("qrcodeDom", {
-        width: 160,
-        height: 160,
-        text: `${this.textUrl}`
-      });
-    },
-    handleCancel(e) {
-      console.log("Clicked cancel button");
-      this.visible = false;
-    },
-    //点击开始进行转化
-    getQrcode() {
-      document.getElementById("qrcodeDom").innerHTML = ""; //先清空之前生成的二维码
-      this.$nextTick(() => {
-        this.transQrcode();
-      });
-    },
-    handleOk(e) {
-      this.visible = false;
-      this.confirmLoading = false;
-    },
-    WeChatPop(url) {
-      this.visible = true;
-      let wechatCode = JSON.parse(url);
-      this.textUrl = wechatCode.code_url;
-      this.getQrcode();
-    },
     // 获取详情
     getDetail() {
       this.$store
         .dispatch("income/getOne", this.$route.query.id)
         .then((res) => {
           this.orderInfo = { ...res.data };
-          this.price = this.orderInfo.actualAmount;
-          //判断是否有小数点
-          let isnan = this.price.toString().split("").indexOf(".");
-          if (isnan === -1) {
-            this.priceFlag = false;
-          } else {
-            this.priceFlag = true;
-          }
           this.data = [{ ...res.data }];
           if (res.data.tradeStatus === 1) {
             this.startCountDown(res.data.orderCreateTime);
@@ -411,21 +326,6 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.qrcodeDom {
-  width: 100%;
-  text-align: center;
-  #qrcodeDom {
-    width: 160px;
-    margin: 20px auto;
-  }
-  p {
-    font-size: 16px;
-    span {
-      color: #ff0000;
-      font-weight: 500;
-    }
-  }
-}
 .orderInfo {
   margin: 0 24px;
   .outbox {

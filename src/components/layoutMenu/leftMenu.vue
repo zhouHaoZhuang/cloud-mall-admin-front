@@ -104,7 +104,9 @@ export default {
                 isOpen: false
               };
             })
-            .filter((ele) => !ele.meta.hiddenMenu);
+            .filter((ele) => {
+              return !ele.meta.hiddenMenu;
+            });
       },
       immediate: true,
       deep: true

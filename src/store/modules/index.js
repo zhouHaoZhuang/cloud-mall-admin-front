@@ -16,6 +16,7 @@ import organization from "./organization.js";
 import mangeaddress from "./mangeaddress.js";
 import billlist from "./billlist.js";
 import billapply from "./billapply.js";
+import billmanage from "./billmanage.js";
 import billnews from "./billnews.js";
 import withdraw from './withdraw'
 import refundlist from './refundlist'
@@ -42,5 +43,6 @@ export default {
   billnews,
   withdraw,
   refundlist,
-  cdn
+  cdn,
+  billmanage
 };
