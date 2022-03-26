@@ -98,7 +98,7 @@ export default {
           {
             required: true,
             message: "开票类型不能为空",
-            trigger: "change"
+            trigger: ["blur", "change"]
           }
         ],
         invoiceTitle: [
@@ -112,7 +112,7 @@ export default {
           {
             required: true,
             message: "发票类型不能为空",
-            trigger: "change"
+            trigger: ["blur", "change"]
           }
         ],
         registerNo: [
@@ -125,12 +125,12 @@ export default {
               }
               callback();
             },
-            trigger: ["blur","change"]
+            trigger: ["blur", "change"]
           },
           {
             pattern: /[0-9A-Z]{18}/,
             message: "税务登记号只能是数字和大写字母且为18位",
-            trigger: "blur"
+            trigger: ["blur", "change"]
           }
         ],
         bank: [
@@ -143,7 +143,7 @@ export default {
               }
               callback();
             },
-            trigger: ["blur","change"]
+            trigger: ["blur", "change"]
           }
         ],
         bankNo: [
@@ -156,7 +156,7 @@ export default {
               }
               callback();
             },
-            trigger: ["blur","change"]
+            trigger: ["blur", "change"]
           },
           {
             pattern: /^[0-9]*$/,
@@ -174,7 +174,7 @@ export default {
               }
               callback();
             },
-            trigger: ["blur","change"]
+            trigger: ["blur", "change"]
           }
         ],
         concatPhone: [
@@ -187,12 +187,13 @@ export default {
               }
               callback();
             },
-            trigger: ["blur","change"]
+            trigger: ["blur", "change"]
           },
           {
             pattern:
               /((\d{11})|^((\d{7,8})|(\d{4}|\d{3})-(\d{7,8})|(\d{4}|\d{3})-(\d{7,8})-(\d{4}|\d{3}|\d{2}|\d{1})|(\d{7,8})-(\d{4}|\d{3}|\d{2}|\d{1}))$)/,
-            message: "请输入正确的联系电话"
+            message: "请输入正确的联系电话",
+            trigger: ["blur", "change"]
           }
         ]
       },

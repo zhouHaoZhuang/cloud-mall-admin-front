@@ -23,7 +23,7 @@
         row-key="id"
         :pagination="paginationProps"
       >
-        <div slot-scope="text" slot="createTime" v-if="text">
+        <div slot-scope="text" slot="finishTime" v-if="text">
           {{ text | formatDate }}
         </div>
         <div slot-scope="text" slot="payTime">
@@ -79,15 +79,15 @@ export default {
         },
         {
           title: "到账日期",
-          dataIndex: "payTime",
-          key: "payTime",
+          dataIndex: "finishTime",
+          key: "finishTime",
           sorter: (a, b) => {
             return (
-              new Date(a.payTime).getTime() - new Date(b.payTime).getTime()
+              new Date(a.finishTime).getTime() - new Date(b.finishTime).getTime()
             );
           },
           scopedSlots: {
-            customRender: "payTime"
+            customRender: "finishTime"
           }
         },
         {
