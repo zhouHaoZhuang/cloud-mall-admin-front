@@ -6,26 +6,26 @@
           <div class="top-title">基础数据</div>
           <div class="content">
             <div class="top-radios">
-              <a-radio-group @change="checkTime">
-                <a-radio-button value="a"> 今日 </a-radio-button>
-                <a-radio-button value="b"> 昨日 </a-radio-button>
-                <a-radio-button value="c"> 当月 </a-radio-button>
-                <a-radio-button value="d"> 上月 </a-radio-button>
+              <a-radio-group v-model="date" @change="checkTime">
+                <a-radio-button value="today"> 今日 </a-radio-button>
+                <a-radio-button value="yesterday"> 昨日 </a-radio-button>
+                <a-radio-button value="thisMonth"> 当月 </a-radio-button>
+                <a-radio-button value="lastMonth"> 上月 </a-radio-button>
               </a-radio-group>
             </div>
             <div class="data-box">
               <div class="item">
                 <div class="title">总流量</div>
                 <div class="info">
-                  <span class="strong">1345.65</span>
-                  MB
+                  <span class="strong">{{ baseData.totalTraf }}</span>
+                  GB
                 </div>
               </div>
               <div class="line"></div>
               <div class="item">
                 <div class="title">HTTPS请求数</div>
                 <div class="info">
-                  <span class="strong">5</span>
+                  <span class="strong">{{ baseData.httpsReqCount }}</span>
                   次
                 </div>
               </div>
@@ -33,9 +33,11 @@
               <div class="item domain">
                 <div class="title">域名</div>
                 <div class="info">
-                  <span class="strong">6</span>
+                  <span class="strong">{{ baseData.domainCount }}</span>
                   个
-                  <div class="txt">产生流量域名0个</div>
+                  <div class="txt">
+                    产生流量域名{{ baseData.useTrafDomainCount }}个
+                  </div>
                 </div>
               </div>
             </div>
@@ -79,7 +81,7 @@
         <div class="public-box">
           <div class="top-title">
             全部域名
-            <span class="color-txt">0</span>
+            <span class="color-txt">{{ baseData.domainCount }}</span>
             个
           </div>
           <div class="content">
@@ -109,12 +111,8 @@
       <div class="public-box">
         <div class="top-title">域名流量排行</div>
         <div class="content">
-          <a-table
-            rowKey="id"
-            :loading="loading"
-            :columns="columns"
-            :data-source="data"
-          >
+          <a-table rowKey="id" :columns="columns" :data-source="data">
+            <div slot="domainTotalTraf" slot-scope="text">{{ text }}GB</div>
           </a-table>
         </div>
       </div>
@@ -124,38 +122,41 @@
 
 <script>
 import { jumpCloudMall } from "@/utils/index";
+import moment from "moment";
+
 export default {
   components: {},
   computed: {},
   data() {
     return {
+      moment,
       columns: [
         {
           title: "域名",
-          dataIndex: "orderNo"
+          dataIndex: "domain"
         },
         {
           title: "总流量",
-          dataIndex: "productName"
+          dataIndex: "domainTotalTraf",
+          scopedSlots: {
+            customRender: "domainTotalTraf"
+          }
         }
       ],
       data: [],
       loading: false,
       baseData: {
-        total: 0,
-        used: 0,
-        available: 0
+        domainCount: "",
+        httpsReqCount: "",
+        totalTraf: "",
+        useTrafDomainCount: ""
       },
-      listQuery: {
-        key: "",
-        search: "",
-        currentPage: 1,
-        pageSize: 10,
-        total: 0
-      }
+      date: "today"
     };
   },
-  created() {},
+  created() {
+    this.getData(this.currentDate()[this.date]);
+  },
   methods: {
     // 跳转云商城价格详情
     handleJumpCloud() {
@@ -165,29 +166,38 @@ export default {
     handleJump(path) {
       this.$router.push(path);
     },
-    getData() {
-      this.$store.dispatch("cdndashboard/getData").then((res) => {
-        // this.baseData = res.data;
+    //获取时间 (今日，昨日,当月，上月)
+    currentDate() {
+      return {
+        thisMonth: {
+          billingCycle: this.moment().startOf("month").format("YYYY-MM"),
+          granularity: "month"
+        },
+        lastMonth: {
+          billingCycle: this.moment().subtract(1, "months").format("YYYY-MM"),
+          granularity: "month"
+        },
+        today: {
+          billingDate: this.moment().format("YYYY-MM-DD"),
+          granularity: "day"
+        },
+        yesterday: {
+          billingDate: this.moment().subtract(1, "days").format("YYYY-MM-DD"),
+          granularity: "day"
+        }
+      };
+    },
+    // 请求概览数据
+    getData(data) {
+      this.$store.dispatch("cdndashboard/getData", data).then((res) => {
+        this.baseData = { ...this.baseData, ...res.data };
+        this.data = res.data.domainList;
       });
     },
     // 时间选择
     checkTime(e) {
-      console.log(`checked = ${e.target.value}`);
-      // this.listQuery.currentPage = 1;
-      // this.getData();
-    },
-    // 获取数据
-    getFlowTop() {
-      this.loading = true;
-      this.$store
-        .dispatch("cdndashboard/getList", this.listQuery)
-        .then((res) => {
-          this.loading = false;
-          this.data = res.data.list;
-        })
-        .catch((err) => {
-          this.loading = false;
-        });
+      console.log(`checked = ${e.target.value}`, this.date);
+      this.getData(this.currentDate()[this.date]);
     }
   }
 };

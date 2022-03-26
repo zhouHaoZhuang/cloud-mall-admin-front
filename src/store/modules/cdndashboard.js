@@ -3,51 +3,14 @@ import request from "@/utils/request";
 const cdndashboard = {
   namespaced: true,
   actions: {
-    // 获取流量排行
-    getList({ commit, state},params ) {
+		// 获取总览数据信息
+    getData({ commit, state }, data) {
       return request({
-				url: "/invoiceInfo",
-				method: "get",
-				params,
-			})
-    },
-		// 获取单个信息
-    getOne({ commit, state }, data) {
-      return request({
-        url: `/invoiceInfo/${data.id}`,
-        method: "get"
-      });
-    },
-    // 添加
-    add({ commit, state }, data) {
-      return request({
-        url: "/invoiceInfo",
+        url: `/cdnDomain/query/cdnHomePageData`,
         method: "post",
         data
       });
     },
-    // 修改
-    edit({ commit, state }, data) {
-      return request({
-        url: `/invoiceInfo/${data.id}`,
-        method: "patch",
-        data
-      });
-    },
-    setDefault({ commit, state }, data) {
-      return request({
-        url: `/invoiceInfo/default/${data.id}`,
-        method: "post"
-      });
-    },
-    // 删除
-    del({ commit, state }, data) {
-      return request({
-        url: `/invoiceInfo/delete`,
-        method: "delete",
-        data
-      });
-    }
   },
 };
 
