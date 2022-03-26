@@ -11,10 +11,6 @@ export default {
     tabsKey: {
       type: Number,
       default: 1
-    },
-    domain: {
-      type: String,
-      default: ""
     }
   },
   components: { Configure },
