@@ -222,13 +222,11 @@ export default {
         },
         {
           title: "申请时间",
-          dataIndex: "createTime",
-          scopedSlots: { customRender: "createTime" }
+          dataIndex: "createTimeShow",
         },
         {
           title: "反馈时间",
-          dataIndex: "feedbackTime",
-          scopedSlots: { customRender: "feedbackTime" }
+          dataIndex: "feedbackTimeShow",
         },
         {
           title: "操作",

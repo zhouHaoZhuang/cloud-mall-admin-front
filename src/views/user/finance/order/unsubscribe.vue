@@ -2,80 +2,13 @@
   <div class="orderInfo">
     <!-- 订单信息 -->
     <div v-if="orderInfo" class="channel">
-      <DetailHeader title="订单详情" back="/user/finance/trash" />
-      <!-- 状态为未支付时的提示文字 -->
-      <div v-if="orderInfo.tradeStatus === 1" class="unpaid-box">
-        <a-icon class="icon" type="exclamation-circle" />
-        请于
-        <span class="time">
-          {{ endTime }}
-        </span>
-        前完成订单。若未及时支付，系统将自动取消订单，该订单将无法再次发起支付。
-      </div>
-      <div class="outbox">
-        <p class="purchase-tittle">订单信息</p>
-        <ul class="detail-box">
-          <li>
-            <span>订单编号:</span>
-            <span>{{ orderInfo.orderNo }}</span>
-          </li>
-          <li>
-            <span>订单类型:</span>
-            <span>{{ tradeType[orderInfo.tradeType] }} </span>
-          </li>
-          <li>
-            <span>创建时间:</span>
-            <span>{{ orderInfo.orderCreateTime | formatDate }}</span>
-          </li>
-          <li v-if="orderInfo.tradeStatus === 1">
-            <span>支付剩余时间:</span>
-            <span class="strong">{{ countDownTime }}</span>
-          </li>
-          <!-- <li>
-          <span>订单状态:</span>
-          <span
-            :class="{
-              green: orderInfo.tradeStatus === 1,
-              blue: orderInfo.tradeStatus !== 1
-            }"
-          >
-            {{ orderStatusEnum[orderInfo.tradeStatus] }}
-          </span>
-        </li> -->
-          <li
-            v-if="
-              orderInfo.tradeStatus !== 1 &&
-              orderInfo.tradeStatus !== 3 &&
-              orderInfo.tradeStatus !== -1
-            "
-          >
-            <span>支付时间:</span>
-            <span>{{ orderInfo.payTime | formatDate }}</span>
-          </li>
-          <li v-if="orderInfo.tradeStatus === 1" class="cancelOrder-btn">
-            <a-button @click="cancelOrder">取消订单</a-button>
-          </li>
-        </ul>
-      </div>
-      <div class="outbox">
-        <p class="purchase-tittle">支付信息</p>
-        <ul class="detail-box">
-          <li>
-            <span>支付金额:</span>
-            <span>{{ orderInfo.actualAmount }}</span>
-          </li>
-          <li>
-            <span>支付状态:</span>
-            <span>{{ payState[orderInfo.payStatus] }} </span>
-          </li>
-        </ul>
-      </div>
+      <DetailHeader title="资源退订" back="/user/finance/trash" />
+
       <div class="config">
-        <p class="purchase-tittle">产品信息</p>
         <a-table
           :columns="columns"
           :data-source="data"
-          rowKey="corporationCode"
+          rowKey="id"
           :pagination="false"
         >
           <a slot="name" slot-scope="text">{{ text }}</a>
@@ -84,7 +17,7 @@
             <span v-if="text === 'AfterPay'">后付费</span>
           </div>
           <div slot="tradeType" slot-scope="text">
-            {{ tradeType[text] }}
+            {{ tradeTypeEnum[text] }}
           </div>
           <div slot="productConfig" slot-scope="text, record">
             <!-- <div>线路:{{ regionDataEnum[record.regionId] }}</div> -->
@@ -102,104 +35,51 @@
               <span v-if="record.autoRenew === 1" style="color: #2bbe22">
                 已开通
               </span>
-              <!-- <span v-if="record.autoRenew === 1">
-                /{{ record.renewPeriod
-                }}{{ getAutoRenewUnit(record.renewUnit) }}
-              </span> -->
             </div>
           </div>
-          <span slot="period" slot-scope="text, record">
-            {{ text }}{{ record.priceUnit === "Month" ? "个月" : "年" }}
-          </span>
+          <div slot="orderCreateTime" slot-scope="text">
+            <div>{{ text }}</div>
+          </div>
         </a-table>
       </div>
-      <!-- 应付金额 -->
-      <div class="should-pay">
-        <span class="pay-left">应付金额:</span>
-        ¥
-        <span class="price-one">{{ price.toString().split(".")[0] }}</span>
-        <span v-if="priceFlag">.</span>
-
-        <span class="price-other">{{ price.toString().split(".")[1] }}</span>
+      <div class="outbox">
+        <p class="purchase-tittle">*退订原因</p>
+        <a-radio-group
+          :options="plainOptions"
+          :default-value="value1"
+          @change="onChange1"
+        />
+        <a-textarea
+          placeholder="少于100字"
+          v-model="textarea"
+          :maxLength="100"
+          :rows="4"
+          class="textarea"
+        />
+        <!-- 应付金额 -->
+        <div class="should-pay">
+          <span>实付金额:</span>
+          <span class="price-top">¥</span>
+          <span>{{ price }}</span>
+          <br />
+          <span class="refund-price">退款金额:</span>
+          <span class="price-bottom">¥</span>
+          <span class="price-one">{{ price.toString().split(".")[0] }}</span>
+          <span v-if="priceFlag">.</span>
+          <span class="price-other">{{ price.toString().split(".")[1] }}</span>
+          <br />
+          <br />
+          <a-checkbox v-model="checked" @change="onChange"> </a-checkbox>
+          <span class="price-bottom">我已知晓退订规则，确认退订金额</span>
+        </div>
       </div>
     </div>
-    <!-- 用户信息 -->
-    <!-- <div class="channel">
-      <p>用户信息</p>
-      <ul>
-        <li>
-          <span>会员ID:</span>
-          <span>{{ data[0].corporationCode }}</span>
-        </li>
-        <li>
-          <span>姓名:</span>
-          <span>{{ data[0].realName }} </span>
-        </li>
-        <li>
-          <span>实名认证:</span>
-          <span>{{ data[0].remark }}</span>
-        </li>
-        <li>
-          <span>联系电话:</span>
-          <span>{{ data[0].phoneNumber }}</span>
-        </li>
-        <li>
-          <span>电子邮箱:</span>
-          <span>{{ data[0].email }}</span>
-        </li>
-        <li>
-          <span>qq账号:</span>
-          <span>{{ data[0].qq }}</span>
-        </li>
-      </ul>
-    </div> -->
-    <!-- 业务信息 -->
-    <!-- <div class="channel">
-      <p>业务信息</p>
-      <ul>
-        <li>
-          <span>业务ID:</span>
-          <span>{{ data[0].id }}</span>
-        </li>
-        <li>
-          <span>产品类型:</span>
-          <span>{{ data[0].tradeType }} </span>
-        </li>
-        <li>
-          <span>IP地址:</span>
-          <span>{{ data[0].outIp }}</span>
-        </li>
-        <li>
-          <span>创建时间:</span>
-          <span>{{ data[0].createTime | formatDate }}</span>
-        </li>
-        <li>
-          <span>到期时间:</span>
-          <span>{{ data[0].stockEndTime | formatDate }}</span>
-        </li>
-      </ul>
-    </div> -->
     <!-- 订单支付模块 -->
     <PaySelect
       v-if="orderInfo.tradeStatus === 1"
       :detail="orderInfo"
       @success="startTime"
-      :WeChatPop="WeChatPop"
     />
-    <a-modal
-      title="请扫描下方二维码完成支付"
-      :visible="visible"
-      :confirm-loading="confirmLoading"
-      @ok="handleOk"
-      @cancel="handleCancel"
-      forceRender
-    >
-      <div class="qrcodeDom">
-        <div id="qrcodeDom"></div>
-        <p>请使用<span>微信</span>扫码完成支付</p>
-        <p>如已支付成功，请点击确认查看订单信息</p>
-      </div>
-    </a-modal>
   </div>
 </template>
 
@@ -208,14 +88,25 @@ import moment from "moment";
 import DetailHeader from "@/components/Common/detailHeader";
 import PaySelect from "@/components/Finance/paySelect";
 import { useLeftTime } from "@/utils/index";
-import {
-  orderStatusEnum,
-  tradeTypeEnum,
-  regionDataEnum,
-  tradeType,
-  payState
-} from "@/utils/enum";
-import QRCode from "qrcodejs2";
+import { orderStatusEnum, tradeTypeEnum, regionDataEnum } from "@/utils/enum";
+const plainOptions = [
+  "配置选择错误",
+  "地域节点选择错误",
+  "不会操作/操作过于复杂",
+  "程序或者软件不兼容",
+  "性能(或网络)不稳定",
+  "业务测试完毕退订",
+  "其他"
+];
+const options = [
+  { label: "配置选择错误", value: "1" },
+  { label: "地域节点选择错误", value: "2" },
+  { label: "不会操作/操作过于复杂", value: "3" },
+  { label: "程序或者软件不兼容", value: "4" },
+  { label: "性能(或网络)不稳定", value: "5" },
+  { label: "业务测试完毕退订", value: "6" },
+  { label: "其他", value: "7" }
+];
 export default {
   components: { DetailHeader, PaySelect },
   computed: {
@@ -233,14 +124,11 @@ export default {
   },
   data() {
     return {
-      visible: false,
-      confirmLoading: false,
-      textUrl: "",
+      plainOptions,
       orderStatusEnum,
       tradeTypeEnum,
       regionDataEnum,
-      tradeType,
-      payState,
+      options,
       orderInfo: {},
       data: [],
       columns: [
@@ -248,11 +136,6 @@ export default {
           title: "产品名称",
           dataIndex: "productName"
         },
-        // {
-        //   title: "类型",
-        //   dataIndex: "tradeType",
-        //   scopedSlots: { customRender: "tradeType" }
-        // },
         {
           title: "具体配置",
           dataIndex: "productConfig",
@@ -264,33 +147,25 @@ export default {
           scopedSlots: { customRender: "chargingType" }
         },
         {
-          title: "数量",
-          dataIndex: "count"
+          title: "订单时间",
+          dataIndex: "orderCreateTime",
+          scopedSlots: { customRender: "orderCreateTime" }
         },
         {
-          title: "原价",
-          dataIndex: "originAmount"
-        },
-        {
-          title: "推广优惠",
-          dataIndex: "discountAmount"
-        },
-        {
-          title: "折扣",
-          dataIndex: "discountRate"
-        },
-        {
-          title: "成交价",
-          dataIndex: "actualAmount"
+          title: "退款金额",
+          dataIndex: "actualAmount",
+          scopedSlots: { customRender: "actualAmount" }
         }
       ],
       countDownTime: "--时--分--秒",
       time: null,
       payTime: null,
       endTime: "",
-      price: 0,
+      price: 11.234,
+      value1: "配置选择错误",
+      textarea: "",
+      checked: false,
       priceFlag: false
-      // actualAmount
     };
   },
   created() {
@@ -300,49 +175,22 @@ export default {
     this.time && clearInterval(this.time);
     this.payTime && clearInterval(this.payTime);
   },
-  watch: {
-    orderInfo(val) {
-      if (val.tradeStatus === 5) {
-        this.visible = false;
-      }
-    }
-  },
   methods: {
-    //链接生成二维码 Api
-    transQrcode() {
-      const qrcode = new QRCode("qrcodeDom", {
-        width: 160,
-        height: 160,
-        text: `${this.textUrl}`
-      });
-    },
-    handleCancel(e) {
-      console.log("Clicked cancel button");
-      this.visible = false;
-    },
-    //点击开始进行转化
-    getQrcode() {
-      document.getElementById("qrcodeDom").innerHTML = ""; //先清空之前生成的二维码
-      this.$nextTick(() => {
-        this.transQrcode();
-      });
-    },
-    handleOk(e) {
-      this.visible = false;
-      this.confirmLoading = false;
-    },
-    WeChatPop(url) {
-      this.visible = true;
-      let wechatCode = JSON.parse(url);
-      this.textUrl = wechatCode.code_url;
-      this.getQrcode();
-    },
-    // 获取详情
     getDetail() {
+      let aaa = [
+        {
+          orderNo: "22222222",
+          tradeStatus: 22,
+          id: 1
+        }
+      ];
+      this.data = aaa;
+      // 测试获取列,上方代码待删除
       this.$store
         .dispatch("income/getOne", this.$route.query.id)
         .then((res) => {
           this.orderInfo = { ...res.data };
+          this.data = [{ ...res.data }];
           this.price = this.orderInfo.actualAmount;
           //判断是否有小数点
           let isnan = this.price.toString().split("").indexOf(".");
@@ -351,11 +199,16 @@ export default {
           } else {
             this.priceFlag = true;
           }
-          this.data = [{ ...res.data }];
           if (res.data.tradeStatus === 1) {
             this.startCountDown(res.data.orderCreateTime);
           }
         });
+    },
+    onChange() {
+      console.log("我是复选框");
+    },
+    onChange1(e) {
+      console.log("radio1 checked", e.target.value);
     },
     // 开启倒计时计算支付剩余时间
     startCountDown(createTime) {
@@ -411,21 +264,6 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.qrcodeDom {
-  width: 100%;
-  text-align: center;
-  #qrcodeDom {
-    width: 160px;
-    margin: 20px auto;
-  }
-  p {
-    font-size: 16px;
-    span {
-      color: #ff0000;
-      font-weight: 500;
-    }
-  }
-}
 .orderInfo {
   margin: 0 24px;
   .outbox {
@@ -453,12 +291,25 @@ export default {
   .channel {
     margin-bottom: 20px;
     background-color: #fff;
+    .outbox {
+      background-color: #f0f2f5;
+      padding: 20px;
+    }
     .should-pay {
       float: right;
-      margin-top: 10px;
-      .pay-left {
-        margin-right: 20px;
+      margin-top: 40px;
+      text-align: right;
+      .price-top {
+        margin-left: 30px;
       }
+      .price-bottom {
+        margin-left: 20px;
+      }
+      .refund-price {
+        font-size: 16px;
+        color: #c35a67;
+      }
+
       .price-one {
         font-size: 16px;
         color: #c35a67;
@@ -528,6 +379,7 @@ export default {
       line-height: 65px;
     }
     .config {
+      margin-top: 20px;
       > div {
         > span:nth-child(1) {
           display: inline-block;
@@ -561,5 +413,8 @@ export default {
       padding: 0 4px;
     }
   }
+}
+::v-deep .ant-radio-wrapper {
+  margin: 0 30px 20px 0;
 }
 </style>

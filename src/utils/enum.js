@@ -236,3 +236,25 @@ export const sourceProtocolEnum = {
   http: "HTTP",
   https: "HTTPS"
 };
+//订单管理中订单类型枚举
+export const tradeType = {
+  1: "ecs新购",
+  15: "ecs实例续费",
+  25: "渠道商向资源池(云盾)升级配置订单流程",
+  35: "esc实例降低配置",
+  45: "交易关闭",
+  55: "退订",
+  65: "后付费订单"
+};
+//支付状态枚举
+export const payState = {
+  0: "待支付",
+  3: "支付中",
+  "-3": "支付失败",
+  5: "完成支付"
+};
+//时间类型枚举
+export const timeType = {
+  1: "创建时间",
+  2: "支付时间"
+};

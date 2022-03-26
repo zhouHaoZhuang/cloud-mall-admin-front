@@ -24,8 +24,8 @@
         <a-descriptions-item label="开票金额">
           ￥{{ dataInfo.invoiceAmount }}
         </a-descriptions-item>
-        <a-descriptions-item label="申请时间" v-if="dataInfo.refundCreateTime">
-          {{ dataInfo.refundCreateTime | formatDate }}
+        <a-descriptions-item label="申请时间" >
+          {{ dataInfo.refundCreateTimeShow }}
         </a-descriptions-item>
       </a-descriptions>
       <a-descriptions title="原收件人信息">

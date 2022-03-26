@@ -157,8 +157,7 @@ export default {
         { title: "可开票金额", dataIndex: "canInvoiceAmount" },
         {
           title: "订单创建时间",
-          dataIndex: "createTime",
-          scopedSlots: { customRender: "createTime" }
+          dataIndex: "createTimeShow",
         }
       ],
       dataDetails: [],
