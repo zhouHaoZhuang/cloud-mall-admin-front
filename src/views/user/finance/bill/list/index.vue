@@ -116,6 +116,7 @@
               :data-source="dataDetails"
               rowKey="id"
               :pagination="false"
+              :scroll="{ y: 200 }"
             >
             </a-table>
           </div>
