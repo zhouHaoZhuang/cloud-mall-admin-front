@@ -6,38 +6,46 @@
           <a-select
             style="width: 100px"
             allowClear
-            v-model="listQuery.a"
+            v-model="listQuery.area"
             placeholder="请选择"
           >
-            <a-select-option value="1"> 中国内地 </a-select-option>
-            <a-select-option value="2"> 境外 </a-select-option>
+            <a-select-option value="CN"> 中国内地 </a-select-option>
+            <a-select-option value="OverSeas"> 全球 </a-select-option>
+            <a-select-option value="all"> 以上全部区域 </a-select-option>
           </a-select>
           <a-select
             style="width: 100px"
             allowClear
-            v-model="listQuery.a"
+            v-model="listQuery.field"
             placeholder="请选择"
           >
-            <a-select-option value="1"> 流量 </a-select-option>
-            <a-select-option value="2"> HTTPS请求数 </a-select-option>
+            <a-select-option value="traf"> 流量 </a-select-option>
+            <a-select-option value="acc"> HTTPS请求数 </a-select-option>
           </a-select>
           <a-select
-            style="width: 100px"
+            style="width: 200px"
             allowClear
-            v-model="listQuery.a"
+            v-model="listQuery.domainName"
             placeholder="请选择"
           >
-            <a-select-option value="1"> 全部域名 </a-select-option>
+            <a-select-option value=""> 全部域名 </a-select-option>
+            <a-select-option
+              :value="item.domain"
+              v-for="item in domainList"
+              :key="item.domain"
+            >
+              {{ item.domain }}
+            </a-select-option>
           </a-select>
         </a-space>
       </div>
       <div class="right">
         <a-space>
-          <a-radio-group v-model="listQuery.b" @change="handleRadioChange">
-            <a-radio-button value="a"> 今天 </a-radio-button>
-            <a-radio-button value="b"> 昨天 </a-radio-button>
-            <a-radio-button value="c"> 近7日 </a-radio-button>
-            <a-radio-button value="d"> 近30日 </a-radio-button>
+          <a-radio-group @change="handleRadioChange">
+            <a-radio-button value="toDay"> 今天 </a-radio-button>
+            <a-radio-button value="yesterday"> 昨天 </a-radio-button>
+            <a-radio-button value="aWeek"> 近7日 </a-radio-button>
+            <a-radio-button value="nearlyMonth"> 近30日 </a-radio-button>
           </a-radio-group>
           <a-range-picker
             :show-time="{
@@ -55,34 +63,40 @@
         </a-space>
       </div>
     </div>
-    <CdnEcharts
+    <!-- <CdnEcharts
       title="流量"
       lineChartType="cpu"
       yUnit="%"
       tooltipUnit="%"
       :tabsKey="tabsKey"
       :listQuery="listQuery"
-    />
+    /> -->
+    <div class="Echarts">
+      <div id="main" style="height: 400px"></div>
+    </div>
     <div class="title">明细</div>
-    <a-table
-      style="margin-top: 20px"
-      :columns="columns"
-      :data-source="data"
-      rowKey="id"
-      :pagination="false"
-    >
-      <template slot="footer">
-        <div class="total">
-          <span>总计</span>
-          <span>40G</span>
-        </div>
-      </template>
-    </a-table>
+    <div v-if="data.length > 0">
+      <a-table
+        style="margin-top: 20px"
+        :columns="columns"
+        :data-source="data"
+        :rowKey="(record,index)=>index"
+        :pagination="false"
+      >
+        <template slot="footer">
+          <div class="total">
+            <span>总计</span>
+            <span>40G</span>
+          </div>
+        </template>
+      </a-table>
+    </div>
   </div>
 </template>
 
 <script>
-import CdnEcharts from "@/components/Cdn/cdnEcharts/index";
+// import CdnEcharts from "@/components/Cdn/cdnEcharts/index";
+import * as echarts from "echarts";
 import moment from "moment";
 export default {
   props: {
@@ -91,36 +105,88 @@ export default {
       default: 1
     }
   },
-  components: {
-    CdnEcharts
-  },
+  // components: {
+  //   CdnEcharts
+  // },
   data() {
     return {
       moment,
+      echarts,
       listQuery: {
-        a: "1",
-        b: "1",
-        c: "1",
+        area: "CN",
+        field: "traf",
         startTime: "",
-        endTime: ""
+        interval: "3600",
+        endTime: "",
+        domainName: ""
       },
+      domainList: [],
       columns: [
         {
           title: "时间",
-          dataIndex: "domain",
+          dataIndex: "timeStamp",
           sorter: (a, b) =>
-            new Date(a.createTime).getTime() - new Date(b.createTime).getTime()
+            new Date(a.timeStamp).getTime() - new Date(b.timeStamp).getTime()
         },
         {
           title: "总流量",
-          dataIndex: "cnameStatus"
+          dataIndex: "value"
         }
       ],
-      data: [{}]
+      data: [{}],
+      option: {
+        title: {
+          text: "流量"
+        },
+        tooltip: {
+          show: true,
+          trigger: "axis"
+        },
+        legend: {
+          data: ["流量"],
+          align: "left"
+        },
+        xAxis: {
+          type: "category",
+          data: ["00.00", "羊毛衫", "雪纺衫", "裤子", "高跟鞋", "袜子"]
+        },
+        yAxis: {
+          type: "value"
+        },
+        toolbox: {
+          show: true,
+          feature: {
+            restore: {}
+          }
+        },
+        dataZoom: [
+          {
+            id: "dataZoomX",
+            type: "slider",
+            xAxisIndex: [0],
+            filterMode: "filter"
+          }
+        ],
+        series: [
+          {
+            name: "流量",
+            type: "line",
+            data: [5, 20, 36, 10, 10, 20]
+          }
+        ]
+      }
     };
   },
-  created() {},
+  created() {
+    console.log(this.getDate());
+    this.getDomainList();
+  },
   methods: {
+    myEcharts() {
+      var myChart = this.echarts.init(document.getElementById("main"));
+      //配置图表
+      myChart.setOption(this.option, true);
+    },
     // 日期选择
     datePickerOnOk(value) {
       if (value.length !== 0) {
@@ -137,8 +203,94 @@ export default {
       }
     },
     // 搜索
-    handleSearch() {},
-    handleRadioChange() {}
+    handleSearch() {
+      console.log(this.listQuery, "listQuery");
+      this.getData();
+    },
+    handleRadioChange(e) {
+      // this.
+      console.log(e.target.value);
+      this.listQuery.startTime = this.getDate()[e.target.value].startTime;
+      this.listQuery.endTime = this.getDate()[e.target.value].endTime;
+    },
+    getDate() {
+      return {
+        toDay: {
+          startTime: this.moment().startOf("day").format("YYYY-MM-DD 00:00:00"),
+          endTime: this.moment().startOf("day").format("YYYY-MM-DD 23:59:59")
+        },
+        yesterday: {
+          startTime: this.moment()
+            .subtract(1, "days")
+            .format("YYYY-MM-DD 00:00:00"),
+          endTime: this.moment()
+            .subtract(1, "days")
+            .format("YYYY-MM-DD 23:59:59")
+        },
+        aWeek: {
+          startTime: this.moment()
+            .subtract(7, "days")
+            .format("YYYY-MM-DD 00:00:00"),
+          endTime: this.moment()
+            .subtract(1, "days")
+            .format("YYYY-MM-DD 23:59:59")
+        },
+        nearlyMonth: {
+          startTime: this.moment()
+            .subtract(30, "days")
+            .format("YYYY-MM-DD 00:00:00"),
+          endTime: this.moment()
+            .subtract(1, "days")
+            .format("YYYY-MM-DD 23:59:59")
+        }
+      };
+    },
+    // 获取表格数据
+    getData(data) {
+      this.$store
+        .dispatch("cdndashboard/getUsage", {
+          ...this.listQuery
+        })
+        .then((res) => {
+          console.log(res, "---------");
+          this.data = res.data.usageDataPerInterval.dataModule;
+          let dateList = [];
+          this.data.forEach((item) => {
+            dateList.push(item.timeStamp.substring(11));
+          });
+          let flowList = [];
+          this.data.forEach((item) => {
+            flowList.push(item.value);
+          });
+          this.$set(this.option, "xAxis", {
+            type: "category",
+            data: dateList
+          });
+          this.$set(this.option, "series", [
+            {
+              name: "流量",
+              type: "line",
+              data: flowList
+            }
+          ]);
+          var myChart = this.echarts.init(document.getElementById("main"));
+          //配置图表
+          myChart.setOption(this.option, true);
+          console.log(this.option.xAxis.data, flowList, "---------");
+        });
+    },
+    // 获取域名列表
+    getDomainList() {
+      this.$store
+        .dispatch("cdndashboard/getDomainList", {
+          pageSize: 999,
+          currentPage: 1
+        })
+        .then((res) => {
+          console.log(res, "---------uk");
+          this.domainList = res.data.list;
+        });
+    }
   }
 };
 </script>
