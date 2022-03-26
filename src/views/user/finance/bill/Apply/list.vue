@@ -124,7 +124,7 @@
           class="next"
           type="primary"
           @click="current = 1"
-          :disabled="selectedRowKeys.length <= 0"
+          :disabled="selectedRowKeys.length <= 0 && invoiceAmount <= 0"
         >
           下一步
         </a-button>
@@ -648,11 +648,12 @@ export default {
     onSelectChange(selectedRowKeys, obj) {
       console.log("selectedRowKeys changed: ", selectedRowKeys, obj);
       this.selectedRowKeys = selectedRowKeys;
-      this.invoiceAmount = obj.reduce((prev, cur) => {
-        return math.format(math.add(prev, cur.originalAmount), {
-          precision: 14
-        });
-      }, 0);
+      this.invoiceAmount =
+        obj.reduce((prev, cur) => {
+          return math.format(math.add(prev, cur.originalAmount), {
+            precision: 14
+          });
+        }, 0) - this.dataAmount.negativeAmount;
     },
     // 欠票表格多选
     arrearsonSelectChange(selectedRowKeys) {
