@@ -25,14 +25,10 @@
           ￥{{ data.invoiceAmount }}
         </a-descriptions-item>
         <a-descriptions-item label="申请时间">
-          <span v-if="data.invoiceInfo.createTime">
-            {{ data.invoiceInfo.createTime | formatDate }}
-          </span>
+          {{ data.invoiceInfo.createTimeShow }}
         </a-descriptions-item>
         <a-descriptions-item label="反馈时间">
-          <span v-if="data.feedbackTime">
-            {{ data.feedbackTime | formatDate }}
-          </span>
+          {{ data.feedbackTimeShow }}
         </a-descriptions-item>
         <a-descriptions-item label="反馈说明">
           {{ data.refundFeedbackRemark }}
@@ -121,10 +117,7 @@ export default {
         },
         {
           title: "订单创建时间",
-          dataIndex: "createTime",
-          scopedSlots: {
-            customRender: "createTime"
-          }
+          dataIndex: "createTimeShow",
         }
       ],
       dataDetails: [],

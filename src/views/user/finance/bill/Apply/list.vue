@@ -337,10 +337,7 @@ export default {
         },
         {
           title: "订单创建时间",
-          dataIndex: "createTime",
-          scopedSlots: {
-            customRender: "createTime"
-          }
+          dataIndex: "createTimeShow"
         }
       ],
       oweColumns: [

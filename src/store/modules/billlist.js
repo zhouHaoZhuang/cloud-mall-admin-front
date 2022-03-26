@@ -6,7 +6,7 @@ const billlist = {
     // 获取发票记录列表
     getList({ commit, state }, params) {
       return request({
-        url: "/channelInvoiceRecord/page",
+        url: "/invoiceRecord/page",
         method: "get",
         params,
       });
