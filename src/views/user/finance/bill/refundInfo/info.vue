@@ -25,17 +25,13 @@
           ￥{{ data.invoiceAmount }}
         </a-descriptions-item>
         <a-descriptions-item label="退票申请时间">
-          <span v-if="data.refundCreateTime">
-            {{ data.refundCreateTime | formatDate }}
-          </span>
+          {{ data.refundCreateTimeShow }}
         </a-descriptions-item>
         <a-descriptions-item label="备注">
           {{ data.refundRemark }}
         </a-descriptions-item>
         <a-descriptions-item label="退票申请反馈时间">
-          <span v-if="data.refundFeedbackTime">
-            {{ data.refundFeedbackTime | formatDate }}
-          </span>
+          {{ data.refundFeedbackTimeShow }}
         </a-descriptions-item>
         <a-descriptions-item label="退票申请反馈说明">
           {{ data.refundFeedbackRemark }}
@@ -99,10 +95,7 @@ export default {
         },
         {
           title: "订单创建时间",
-          dataIndex: "createTime",
-          scopedSlots: {
-            customRender: "createTime"
-          }
+          dataIndex: "createTimeShow",
         }
       ],
       listQuery: {

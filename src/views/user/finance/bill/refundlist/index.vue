@@ -23,12 +23,6 @@
         <div slot="status" slot-scope="text">
           {{ invoiceStatusEnum[text] }}
         </div>
-        <div v-if="text" slot="refundCreateTime" slot-scope="text">
-          {{ text | formatDate }}
-        </div>
-        <div v-if="text" slot="refundFeedbackTime" slot-scope="text">
-          {{ text | formatDate }}
-        </div>
         <div slot="action" slot-scope="text, record">
           <a-button
             type="link"
@@ -87,10 +81,7 @@ export default {
         },
         {
           title: "退票申请时间",
-          dataIndex: "refundCreateTime",
-          scopedSlots: {
-            customRender: "refundCreateTime"
-          }
+          dataIndex: "refundCreateTimeShow",
         },
         {
           title: "备注",
@@ -98,10 +89,7 @@ export default {
         },
         {
           title: "退票申请反馈时间",
-          dataIndex: "refundFeedbackTime",
-          scopedSlots: {
-            customRender: "refundFeedbackTime"
-          }
+          dataIndex: "refundFeedbackTimeShow",
         },
         {
           title: "退票申请反馈说明",
