@@ -68,7 +68,7 @@
       <div class="content-row">
         <div class="label">TLSv1.0</div>
         <div class="value">
-          <a-switch @change="handleChangeHttp2">
+          <a-switch v-model="tlsForm.tls10" @change="handleChangeTls">
             <a-icon slot="checkedChildren" type="check" />
             <a-icon slot="unCheckedChildren" type="close" />
           </a-switch>
@@ -77,7 +77,7 @@
       <div class="content-row">
         <div class="label">TLSv1.1</div>
         <div class="value">
-          <a-switch @change="handleChangeHttp2">
+          <a-switch v-model="tlsForm.tls11" @change="handleChangeTls">
             <a-icon slot="checkedChildren" type="check" />
             <a-icon slot="unCheckedChildren" type="close" />
           </a-switch>
@@ -86,7 +86,7 @@
       <div class="content-row">
         <div class="label">TLSv1.2</div>
         <div class="value">
-          <a-switch @change="handleChangeHttp2">
+          <a-switch v-model="tlsForm.tls12" @change="handleChangeTls">
             <a-icon slot="checkedChildren" type="check" />
             <a-icon slot="unCheckedChildren" type="close" />
           </a-switch>
@@ -95,7 +95,7 @@
       <div class="content-row">
         <div class="label">TLSv1.3</div>
         <div class="value">
-          <a-switch @change="handleChangeHttp2">
+          <a-switch v-model="tlsForm.tls13" @change="handleChangeTls">
             <a-icon slot="checkedChildren" type="check" />
             <a-icon slot="unCheckedChildren" type="close" />
           </a-switch>
@@ -191,12 +191,12 @@ export default {
           title: "HTTP/2设置",
           functionName: "https_option",
           form: { http2: false }
+        },
+        4: {
+          title: "TLS版本控制",
+          functionName: "https_tls_version",
+          form: { tls10: false, tls11: false, tls12: false, tls13: false }
         }
-        // 4: {
-        //   title: "回源请求超时时间",
-        //   functionName: "forward_timeout",
-        //   form: { forward_timeout: 30 }
-        // }
       },
       http2Form: {
         http2: false
@@ -204,6 +204,7 @@ export default {
       httpForm: {
         type: ""
       },
+      tlsForm: { tls10: false, tls11: false, tls12: false, tls13: false },
       hstsForm: {
         enabled: false,
         https_hsts_max_age: "",
@@ -262,15 +263,10 @@ export default {
               };
             }
             if (type === 4) {
-              this.timeoutForm = {
+              this.tlsForm = {
                 ...getForm(data[0], newForm)
               };
             }
-          } else {
-            // if (type === 1) {
-            //   this.hostForm.enable = false;
-            //   this.hostForm.domain_name = this.domain;
-            // }
           }
         });
     },
@@ -300,6 +296,16 @@ export default {
       this.$store.dispatch("cdn/saveConfig", newForm).then((res) => {
         this.$message.success(`设置成功`);
         this.getConfig(3);
+      });
+    },
+    handleChangeTls() {
+      const tempForm = { ...this.tlsForm };
+      const newForm = {
+        ...getParameter(tempForm, "https_tls_version", this.domain)
+      };
+      this.$store.dispatch("cdn/saveConfig", newForm).then((res) => {
+        this.$message.success(`设置成功`);
+        this.getConfig(4);
       });
     }
   }
