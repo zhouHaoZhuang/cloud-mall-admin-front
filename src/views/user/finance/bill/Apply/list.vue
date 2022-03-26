@@ -72,9 +72,10 @@
                 }
               })
             }"
-            :columns="columns"
+            :columns="oweColumns"
             rowKey="id"
             :data-source="arrearsdata"
+            :pagination="false"
           >
             <div slot="companyName" slot-scope="text">{{ text }}</div>
             <div slot="type" slot-scope="text">
@@ -139,13 +140,7 @@
           :row-selection="{
             type: 'radio',
             selectedRowKeys: selectedRowKeysTitle,
-            onChange: onSelectChangeTitle,
-            getCheckboxProps: (record) => ({
-              props: {
-                disabled: record.defaultStatus === 0,
-                defaultStatus: record.defaultStatus
-              }
-            })
+            onChange: onSelectChangeTitle
           }"
           rowKey="id"
           :columns="columnsTitle"
@@ -181,17 +176,17 @@
         请选择收货信息：
       </div>
       <div>
-        <a-table
-          :row-selection="{
-            type: 'radio',
-            selectedRowKeys: selectedRowKeysAddress,
-            onChange: onSelectChangeAddress,
-            getCheckboxProps: (record) => ({
+        <!-- getCheckboxProps: (record) => ({
               props: {
                 disabled: record.defaultSign === 0,
                 defaultSign: record.defaultSign
               }
-            })
+            }) -->
+        <a-table
+          :row-selection="{
+            type: 'radio',
+            selectedRowKeys: selectedRowKeysAddress,
+            onChange: onSelectChangeAddress
           }"
           :columns="columnsAddress"
           :data-source="dataAddress"
@@ -339,6 +334,38 @@ export default {
         {
           title: "可开票金额",
           dataIndex: "canInvoiceAmount"
+        },
+        {
+          title: "订单创建时间",
+          dataIndex: "createTime",
+          scopedSlots: {
+            customRender: "createTime"
+          }
+        }
+      ],
+      oweColumns: [
+        {
+          title: "订单ID",
+          dataIndex: "orderNo"
+        },
+        {
+          title: "类型",
+          dataIndex: "type",
+          scopedSlots: {
+            customRender: "type"
+          }
+        },
+        {
+          title: "产品名称",
+          dataIndex: "bizTypeName"
+        },
+        {
+          title: "订单金额",
+          dataIndex: "originalAmount"
+        },
+        {
+          title: "欠票金额",
+          dataIndex: "debtAmount"
         },
         {
           title: "订单创建时间",
@@ -512,6 +539,7 @@ export default {
     // this.getList();
     this.getDetailsList();
     this.getListTitle();
+    this.getAmount();
     this.getListAddress();
     this.getInvoiceAmountList();
   },

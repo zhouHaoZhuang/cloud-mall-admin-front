@@ -18,7 +18,7 @@
         :pagination="paginationProps"
         rowKey="id"
       >
-        <div slot="invoiceTitle" slot-scope="text">
+        <div slot="invoiceTitle" slot-scope="text, record">
           <span>
             {{ text }}
           </span>
@@ -70,7 +70,7 @@ export default {
           title: "发票抬头",
           dataIndex: "invoiceTitle",
           scopedSlots: {
-            default: "invoiceTitle"
+            customRender: "invoiceTitle"
           }
         },
         {
@@ -142,6 +142,9 @@ export default {
       this.$store.dispatch("billnews/getList", this.listQuery).then((res) => {
         console.log(res);
         this.data = [...res.data.list];
+        this.data.sort((a, b) => {
+          return b.defaultStatus - a.defaultStatus;
+        });
         this.paginationProps.total = res.data.totalCount * 1;
       });
     },

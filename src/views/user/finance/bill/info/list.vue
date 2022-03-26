@@ -4,7 +4,7 @@
     <div class="bill-info" v-if="data">
       <a-descriptions style="margin: 20px 0" title="申请信息">
         <a-descriptions-item label="发票ID">
-          {{ data.invoiceInfo.invoiceInfoId }}
+          {{ data.invoiceNo }}
         </a-descriptions-item>
         <a-descriptions-item label="开具类型">
           {{ issueTypeMap[data.invoiceInfo.issueType] }}
@@ -25,10 +25,14 @@
           ￥{{ data.invoiceAmount }}
         </a-descriptions-item>
         <a-descriptions-item label="申请时间">
-          {{ data.invoiceInfo.createTime }}
+          <span v-if="data.invoiceInfo.createTime">
+            {{ data.invoiceInfo.createTime | formatDate }}
+          </span>
         </a-descriptions-item>
         <a-descriptions-item label="反馈时间">
-          {{ data.refundFeedbackTime }}
+          <span v-if="data.feedbackTime">
+            {{ data.feedbackTime | formatDate }}
+          </span>
         </a-descriptions-item>
         <a-descriptions-item label="反馈说明">
           {{ data.refundFeedbackRemark }}

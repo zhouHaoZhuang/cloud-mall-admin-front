@@ -69,7 +69,7 @@
         </a-table>
       </div>
     </div>
-    <a-button v-show="data && data.length < 5" type="link" icon="plus">
+    <a-button v-show="data && data.length < 5" type="link" icon="plus" @click="$router.push('/user/finance/bill/manageadress')">
       新增常用地址
     </a-button>
     <div style="text-align: center; margin-top: 20px">

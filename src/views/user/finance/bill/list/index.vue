@@ -57,7 +57,7 @@
         >
         <div class="bill-info">
           <div>
-            <a-descriptions title="默认发票信息" :column="2" v-if="invoiceInfo">
+            <a-descriptions title="默认发票信息" :column="2">
               <a-descriptions-item label="开票类型">
                 {{ issueTypeMap[invoiceInfo.issueType] }}
               </a-descriptions-item>
@@ -115,6 +115,7 @@
               :columns="columnsDetails"
               :data-source="dataDetails"
               rowKey="id"
+              :pagination="false"
             >
             </a-table>
           </div>
@@ -141,7 +142,7 @@
         rowKey="id"
       >
         <div slot="companyName" slot-scope="text">{{ text }}</div>
-        <div v-if="text" slot="bizTime" slot-scope="text">
+        <div v-if="text" slot="createTime" slot-scope="text">
           {{ text | formatDate }}
         </div>
         <div v-if="text" slot="feedbackTime" slot-scope="text">
@@ -211,7 +212,7 @@ export default {
         },
         {
           title: "开票金额",
-          dataIndex: "taxAmount"
+          dataIndex: "invoiceAmount"
         },
         {
           title: "申请状态",
@@ -220,8 +221,8 @@ export default {
         },
         {
           title: "申请时间",
-          dataIndex: "bizTime",
-          scopedSlots: { customRender: "bizTime" }
+          dataIndex: "createTime",
+          scopedSlots: { customRender: "createTime" }
         },
         {
           title: "反馈时间",
@@ -255,7 +256,7 @@ export default {
         pageSize: 10,
         total: 0
       },
-      invoiceInfo: null,
+      invoiceInfo: {},
       addressInfo: {},
       paginationProps: {
         showQuickJumper: true,
