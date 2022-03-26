@@ -6,25 +6,26 @@
           <a-select
             style="width: 100px"
             allowClear
-            v-model="listQuery.a"
+            v-model="listQuery.area"
             placeholder="请选择"
           >
-            <a-select-option value="1"> 中国内地 </a-select-option>
-            <a-select-option value="2"> 境外 </a-select-option>
+            <a-select-option value="CN"> 中国内地 </a-select-option>
+            <a-select-option value="OverSeas"> 全球 </a-select-option>
+            <a-select-option value="all"> 以上全部区域 </a-select-option>
           </a-select>
           <a-select
             style="width: 100px"
             allowClear
-            v-model="listQuery.a"
+            v-model="listQuery.field"
             placeholder="请选择"
           >
-            <a-select-option value="1"> 流量 </a-select-option>
-            <a-select-option value="2"> HTTPS请求数 </a-select-option>
+            <a-select-option value="traf"> 流量 </a-select-option>
+            <a-select-option value="acc"> HTTPS请求数 </a-select-option>
           </a-select>
           <a-select
             style="width: 100px"
             allowClear
-            v-model="listQuery.a"
+            v-model="listQuery.domainName"
             placeholder="请选择"
           >
             <a-select-option value="1"> 全部域名 </a-select-option>
@@ -33,7 +34,7 @@
       </div>
       <div class="right">
         <a-space>
-          <a-radio-group v-model="listQuery.b" @change="handleRadioChange">
+          <a-radio-group  @change="handleRadioChange">
             <a-radio-button value="a"> 今天 </a-radio-button>
             <a-radio-button value="b"> 昨天 </a-radio-button>
             <a-radio-button value="c"> 近7日 </a-radio-button>
@@ -98,7 +99,8 @@ export default {
     return {
       moment,
       listQuery: {
-        a: "1",
+        area: "CN",
+        field: "traf",
         b: "1",
         c: "1",
         startTime: "",
@@ -119,6 +121,10 @@ export default {
       data: [{}]
     };
   },
+  created() {
+    // this.getData();
+    // this.getDomainList();
+  },
   created() {},
   methods: {
     // 日期选择
@@ -138,7 +144,24 @@ export default {
     },
     // 搜索
     handleSearch() {},
-    handleRadioChange() {}
+    handleRadioChange() {},
+    // 获取表格数据
+    getData() {
+      this.$store.dispatch("cdndashboard/getUsage").then((res) => {
+        console.log(res, "---------");
+      });
+    },
+    // 获取域名列表
+    getDomainList() {
+      this.$store
+        .dispatch("cdndashboard/getDomainList", {
+          pageSize: 999,
+          currentPage: 1
+        })
+        .then((res) => {
+          console.log(res, "---------");
+        });
+    }
   }
 };
 </script>
