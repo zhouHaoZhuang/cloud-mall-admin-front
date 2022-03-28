@@ -26,9 +26,9 @@
             style="width: 200px"
             allowClear
             v-model="listQuery.domainName"
-            placeholder="请选择"
+            placeholder="请选择域名"
           >
-            <a-select-option value=""> 全部域名 </a-select-option>
+            <!-- <a-select-option value=""> 全部域名 </a-select-option> -->
             <a-select-option
               :value="item.domain"
               v-for="item in domainList"
@@ -86,7 +86,7 @@
         <template slot="footer">
           <div class="total">
             <span>总计</span>
-            <span>40G</span>
+            <span>{{ totalFlow }}G</span>
           </div>
         </template>
       </a-table>
@@ -118,7 +118,7 @@ export default {
         startTime: "",
         interval: "3600",
         endTime: "",
-        domainName: ""
+        domainName: undefined
       },
       domainList: [],
       columns: [
@@ -192,7 +192,8 @@ export default {
             data: [5, 20, 36, 10, 10, 20]
           }
         ]
-      }
+      },
+      totalFlow: ""
     };
   },
   created() {
@@ -275,13 +276,14 @@ export default {
           console.log(res, "---------");
           this.data = res.data.usageDataPerInterval.dataModule;
           let dateList = [];
+          let flowList = [];
+          let totalFlow = 0;
           this.data.forEach((item) => {
             dateList.push(item.timeStamp.substring(11));
-          });
-          let flowList = [];
-          this.data.forEach((item) => {
             flowList.push(item.value);
+            totalFlow += item.value * 1;
           });
+          this.totalFlow = totalFlow;
           this.$set(this.option, "xAxis", {
             type: "category",
             data: dateList
