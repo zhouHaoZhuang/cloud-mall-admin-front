@@ -304,12 +304,12 @@ export default {
         this.listQuery["qp-createTime-ge"] = moment(value[0]).format(
           "YYYY-MM-DD HH:mm:ss"
         );
-        this.listQuery["qp-finishTime-le"] = moment(value[1]).format(
+        this.listQuery["qp-createTime-le"] = moment(value[1]).format(
           "YYYY-MM-DD HH:mm:ss"
         );
       } else {
         this.listQuery["qp-createTime-ge"] = "";
-        this.listQuery["qp-finishTime-le"] = "";
+        this.listQuery["qp-createTime-le"] = "";
       }
     },
     // 取消申请

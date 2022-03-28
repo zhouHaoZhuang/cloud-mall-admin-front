@@ -45,6 +45,7 @@
           <a-input
             v-model="form.memo"
             type="textarea"
+            :max-length="200"
             placeholder="请填写备注信息"
           />
         </a-form-model-item>
