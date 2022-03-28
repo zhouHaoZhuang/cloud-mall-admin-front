@@ -29,7 +29,7 @@
       </a-form-model-item>
       <a-form-model-item label="类型" prop="flag">
         <a-radio-group v-model="form.flag">
-          <a-radio value="rediect"> Redirect </a-radio>
+          <a-radio value="redirect"> Redirect </a-radio>
           <a-radio value="break"> Break </a-radio>
         </a-radio-group>
         <div class="info-txt">
