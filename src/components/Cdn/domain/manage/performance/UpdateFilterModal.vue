@@ -3,6 +3,7 @@
     :visible="value"
     width="680px"
     centered
+    destroyOnClose
     title="过滤参数"
     wrapClassName="update-source-container"
     okText="确定"
@@ -18,7 +19,7 @@
       :wrapper-col="wrapperCol"
     >
       <a-form-model-item label="过滤参数" prop="type">
-        <a-switch v-model="form.type">
+        <a-switch v-model="form.disable">
           <a-icon slot="checkedChildren" type="check" />
           <a-icon slot="unCheckedChildren" type="close" />
         </a-switch>
@@ -27,16 +28,20 @@
           中？之后的参数，有效提高文件缓存命中率，提升分发效率。
         </div>
       </a-form-model-item>
-      <a-form-model-item v-if="this.type === 1" label="保留参数" prop="type">
-        <a-input v-model="form.type" />
+      <a-form-model-item
+        v-if="this.type === 1"
+        label="保留参数"
+        prop="hashkey_args"
+      >
+        <a-input v-model="form.hashkey_args" :disabled="!form.disable" />
         <div class="info-txt">最多10个, 使用英文逗号做分隔符。</div>
       </a-form-model-item>
-      <a-form-model-item v-else label="忽略参数" prop="type">
-        <a-input v-model="form.type" />
+      <a-form-model-item v-else label="忽略参数" prop="ali_remove_args">
+        <a-input v-model="form.ali_remove_args" :disabled="!form.disable" />
         <div class="info-txt">请使用空格分隔。</div>
       </a-form-model-item>
       <a-form-model-item label="保留回源参数" prop="type">
-        <a-switch v-model="form.type">
+        <a-switch v-model="form.keep_oss_args" :disabled="!form.disable">
           <a-icon slot="checkedChildren" type="check" />
           <a-icon slot="unCheckedChildren" type="close" />
         </a-switch>
@@ -49,6 +54,7 @@
 </template>
 
 <script>
+import { getParameter, getForm } from "@/utils/index";
 export default {
   // 双向绑定
   model: {
@@ -65,18 +71,24 @@ export default {
       type: Number,
       default: 1
     },
-    detail: {
+    modalMap: {
       type: Object,
       default: () => {}
+    }
+  },
+  computed: {
+    functionName() {
+      return this.modalMap[this.type].functionName;
+    },
+    domain() {
+      return this.$route.query.domain;
     }
   },
   watch: {
     value: {
       handler(newVal) {
-        if (!newVal) {
-          this.$nextTick(() => {
-            this.resetForm();
-          });
+        if (newVal) {
+          this.getConfig();
         }
       }
     }
@@ -86,14 +98,19 @@ export default {
       labelCol: { span: 6 },
       wrapperCol: { span: 15 },
       loading: false,
-      form: {
-        type: 1
-      },
+      form: {},
       rules: {
-        type: [
+        hashkey_args: [
           {
             required: true,
-            message: "请选择加速区域",
+            message: "请输入参数",
+            trigger: "change"
+          }
+        ],
+        ali_remove_args: [
+          {
+            required: true,
+            message: "请输入参数",
             trigger: "change"
           }
         ]
@@ -101,26 +118,62 @@ export default {
     };
   },
   methods: {
+    // 获取配置详情
+    getConfig() {
+      this.$store
+        .dispatch("cdn/getDomainConfig", {
+          functionNames: this.functionName,
+          domainName: this.domain
+        })
+        .then((res) => {
+          const data = res.data.domainConfigs.domainConfig;
+          if (data.length > 0) {
+            const newForm = { ...this.modalMap[this.type].form };
+            this.form = {
+              ...getForm(data[0], newForm)
+            };
+            if (this.type === 2) {
+              this.form.disable = true;
+            }
+          } else {
+            this.form = { ...this.modalMap[this.type].form };
+          }
+        });
+    },
     // 关闭弹窗
     handleCancel() {
       this.$emit("changeVisible", false);
     },
-    // 重置表单数据
-    resetForm() {
-      this.$refs.ruleForm.clearValidate();
-      this.form = {
-        type: 1
-      };
+    // 过滤参数按钮关闭提交方法
+    removeSubmit() {
+      this.loading = true;
+      const newFunctionName =
+        this.type === 1 ? "ali_remove_args" : "set_hashkey_args";
+      this.$store
+        .dispatch("cdn/delAloneConfig", {
+          functionNames: newFunctionName,
+          domainName: this.domain
+        })
+        .catch(() => {
+          this.loading = false;
+        });
     },
     // 弹窗提交
     handleOk() {
-      this.$refs.ruleForm.validate((valid) => {
+      this.$refs.ruleForm.validate(async (valid) => {
         if (valid) {
-          this.loading = true;
+          await this.removeSubmit();
+          let tempForm = { ...this.form };
+          if (this.type === 2) {
+            delete tempForm.disable;
+          }
+          const newForm = {
+            ...getParameter(tempForm, this.functionName, this.domain)
+          };
           this.$store
-            .dispatch("domain/add", this.form)
+            .dispatch("cdn/saveConfig", newForm)
             .then((res) => {
-              this.$message.success(`修改${this.modalTitle}成功`);
+              this.$message.success(`设置成功`);
               this.$emit("success");
               this.$emit("changeVisible", false);
             })

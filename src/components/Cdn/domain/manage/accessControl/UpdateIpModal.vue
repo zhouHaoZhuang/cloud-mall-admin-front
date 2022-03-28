@@ -3,6 +3,7 @@
     :visible="value"
     width="680px"
     centered
+    destroyOnClose
     title="IP黑/白名单规则"
     wrapClassName="update-source-container"
     okText="确定"
@@ -17,8 +18,8 @@
       :label-col="labelCol"
       :wrapper-col="wrapperCol"
     >
-      <a-form-model-item label="名单类型" prop="type">
-        <a-radio-group v-model="form.type">
+      <a-form-model-item label="名单类型">
+        <a-radio-group v-model="ipType" @change="handleChangeRadio">
           <a-radio :value="1"> 黑名单 </a-radio>
           <a-radio :value="2"> 白名单 </a-radio>
         </a-radio-group>
@@ -26,8 +27,8 @@
           黑、白名单互斥，同一时间只支持其中一种方式生效。请您选择需要生效的方式。
         </div>
       </a-form-model-item>
-      <a-form-model-item label="规则" prop="type">
-        <a-textarea v-model="form.type" :rows="5" />
+      <a-form-model-item label="规则" prop="ip_list">
+        <a-textarea v-model="form.ip_list" :rows="5" />
         <div class="info-txt">
           最多100个使用回车符分隔不可重复支持网段添加，如127.0.0.1/24。
         </div>
@@ -37,6 +38,7 @@
 </template>
 
 <script>
+import { getParameter, getForm } from "@/utils/index";
 export default {
   // 双向绑定
   model: {
@@ -52,24 +54,18 @@ export default {
     type: {
       type: Number,
       default: 1
-    },
-    detail: {
-      type: Object,
-      default: () => {}
     }
   },
   computed: {
-    modalTitle() {
-      return this.modalMap[this.type];
+    domain() {
+      return this.$route.query.domain;
     }
   },
   watch: {
     value: {
       handler(newVal) {
-        if (!newVal) {
-          this.$nextTick(() => {
-            this.resetForm();
-          });
+        if (newVal) {
+          this.getConfig();
         }
       }
     }
@@ -79,14 +75,15 @@ export default {
       labelCol: { span: 6 },
       wrapperCol: { span: 15 },
       loading: false,
+      ipType: 1,
       form: {
-        type: 1
+        ip_list: ""
       },
       rules: {
-        type: [
+        ip_list: [
           {
             required: true,
-            message: "请选择加速区域",
+            message: "请输入规则",
             trigger: "change"
           }
         ]
@@ -94,27 +91,74 @@ export default {
     };
   },
   methods: {
+    // 获取配置详情
+    getConfig() {
+      this.$store
+        .dispatch("cdn/getDomainConfig", {
+          functionNames: "ip_black_list_set,ip_allow_list_set",
+          domainName: this.domain
+        })
+        .then((res) => {
+          const data = res.data.domainConfigs.domainConfig;
+          if (data.length > 0) {
+            this.ipType = data[0].functionName === "ip_black_list_set" ? 1 : 2;
+            const newForm = { ...this.form };
+            this.form = {
+              ...getForm(data[0], newForm)
+            };
+          } else {
+            this.form = {
+              ip_list: ""
+            };
+          }
+        });
+    },
     // 关闭弹窗
     handleCancel() {
       this.$emit("changeVisible", false);
     },
-    // 重置表单数据
-    resetForm() {
-      this.$refs.ruleForm.clearValidate();
-      this.form = {
-        type: 1
-      };
+    // change类型
+    handleChangeRadio() {
+      if (!this.form.ip_list) return;
+      this.$confirm({
+        title: `配置规则删除`,
+        content:
+          "当黑白名单类型切换时，之前配置的规则将会被删除，此操作不可逆。",
+        centered: true,
+        onOk: () => {
+          const newFunctionName =
+            this.ipType === 1 ? "ip_allow_list_set" : "ip_black_list_set";
+          this.$store
+            .dispatch("cdn/delAloneConfig", {
+              functionNames: newFunctionName,
+              domainName: this.domain
+            })
+            .then((res) => {
+              this.getConfig();
+            });
+        },
+        onCancel: () => {
+          const temp = this.ipType;
+          this.ipType = temp === 1 ? 2 : 1;
+        }
+      });
     },
     // 弹窗提交
     handleOk() {
       this.$refs.ruleForm.validate((valid) => {
         if (valid) {
+          const newFunctionName =
+            this.ipType === 1 ? "ip_black_list_set" : "ip_allow_list_set";
+          let tempForm = { ...this.form };
+          const newForm = {
+            ...getParameter(tempForm, newFunctionName, this.domain)
+          };
           this.loading = true;
           this.$store
-            .dispatch("domain/add", this.form)
+            .dispatch("cdn/saveConfig", newForm)
             .then((res) => {
-              this.$message.success(`修改${this.modalTitle}成功`);
-              this.$emit("success");
+              this.$message.success(`设置成功`);
+              this.$emit("success", this.type);
               this.$emit("changeVisible", false);
             })
             .finally(() => {

@@ -8,7 +8,10 @@
       <div class="content-row">
         <div class="label">页面优化</div>
         <div class="value">
-          <a-switch @change="handleChangeStatus">
+          <a-switch
+            v-model="pageForm.enable"
+            @change="handleChange(3, 'pageForm')"
+          >
             <a-icon slot="checkedChildren" type="check" />
             <a-icon slot="unCheckedChildren" type="close" />
           </a-switch>
@@ -27,7 +30,10 @@
       <div class="content-row">
         <div class="label">智能压缩</div>
         <div class="value">
-          <a-switch @change="handleChangeStatus">
+          <a-switch
+            v-model="gzipForm.enable"
+            @change="handleChange(4, 'gzipForm')"
+          >
             <a-icon slot="checkedChildren" type="check" />
             <a-icon slot="unCheckedChildren" type="close" />
           </a-switch>
@@ -46,7 +52,10 @@
       <div class="content-row">
         <div class="label">Brotli压缩</div>
         <div class="value">
-          <a-switch @change="handleChangeStatus">
+          <a-switch
+            v-model="brotliForm.enable"
+            @change="handleChange(5, 'brotliForm')"
+          >
             <a-icon slot="checkedChildren" type="check" />
             <a-icon slot="unCheckedChildren" type="close" />
           </a-switch>
@@ -68,7 +77,7 @@
       <div class="content-row">
         <div class="label">保留过滤参数</div>
         <div class="value">
-          已关闭
+          {{ hashkeyForm.disable ? "已开启" : "已关闭" }}
           <div class="txt">
             回源时会去除 URL
             中？之后的参数，有效提高文件缓存命中率，提升分发效率。
@@ -88,7 +97,7 @@
       <div class="content-row">
         <div class="label">忽略参数</div>
         <div class="value">
-          已关闭
+          {{ removeForm.typeName }}
           <div class="txt">
             删除指定的参数，多个参数之间用空格隔开，剩余参数将不会被忽略。
           </div>
@@ -99,7 +108,7 @@
     <UpdateFilterModal
       v-model="visible"
       :type="modalType"
-      :detail="modalDetail"
+      :modalMap="modalMap"
       @success="modalSuccess"
     />
   </div>
@@ -107,66 +116,165 @@
 
 <script>
 import UpdateFilterModal from "@/components/Cdn/domain/manage/performance/UpdateFilterModal";
+import { getParameter, getForm } from "@/utils/index";
 export default {
   props: {
     tabsKey: {
       type: Number,
       default: 1
-    },
-    domain: {
-      type: String,
-      default: ""
     }
   },
   components: { UpdateFilterModal },
   watch: {
     tabsKey: {
       handler(newVal) {
-        if (newVal === "1") {
-          //   this.getData();
+        if (newVal === 6) {
+          this.getBatchConfig();
         }
-      }
+      },
+      immediate: true
     }
   },
-  computed: {},
+  computed: {
+    domain() {
+      return this.$route.query.domain;
+    }
+  },
   data() {
     return {
       visible: false,
       modalType: 1,
-      modalDetail: {}
+      modalMap: {
+        1: {
+          title: "保留参数",
+          functionName: "set_hashkey_args",
+          form: {
+            disable: false,
+            hashkey_args: "",
+            keep_oss_args: false
+          }
+        },
+        2: {
+          title: "忽略参数",
+          functionName: "ali_remove_args",
+          form: {
+            disable: false,
+            ali_remove_args: "",
+            keep_oss_args: false
+          }
+        },
+        3: {
+          title: "页面优化",
+          functionName: "tesla"
+        },
+        4: {
+          title: "智能压缩",
+          functionName: "gzip"
+        },
+        5: {
+          title: "Brotli压缩",
+          functionName: "brotli"
+        }
+      },
+      hashkeyForm: {
+        disable: false,
+        hashkey_args: "",
+        keep_oss_args: false
+      },
+      removeForm: {
+        typeName: "已关闭",
+        ali_remove_args: "",
+        keep_oss_args: false
+      },
+      pageForm: {
+        enable: false
+      },
+      gzipForm: {
+        enable: false
+      },
+      brotliForm: {
+        enable: false,
+        brotli_level: 1
+      }
     };
   },
-  created() {},
   methods: {
-    // 弹窗成功回调
-    modalSuccess(type, val) {
-      this.modalDetail = {};
+    // 批量查询配置信息
+    getBatchConfig() {
+      Object.keys(this.modalMap).forEach((ele, index) => {
+        this.getConfig(index + 1);
+      });
     },
-    // 修改https证书
-    handleChangeHttps() {
-      this.domainHttpsVisible = true;
+    // 查询配置信息
+    getConfig(type) {
+      this.$store
+        .dispatch("cdn/getDomainConfig", {
+          functionNames: this.modalMap[type].functionName,
+          domainName: this.domain
+        })
+        .then((res) => {
+          const data = res.data.domainConfigs.domainConfig;
+          if (data.length > 0) {
+            const newForm = { ...this.modalMap[type].form };
+            if (type === 1) {
+              this.hashkeyForm = {
+                ...getForm(data[0], newForm)
+              };
+            }
+            if (type === 2) {
+              this.removeForm = {
+                ...getForm(data[0], newForm),
+                typeName: "已开启"
+              };
+            }
+            if (type === 3) {
+              this.pageForm = {
+                ...getForm(data[0], newForm)
+              };
+            }
+            if (type === 4) {
+              this.gzipForm = {
+                ...getForm(data[0], newForm)
+              };
+            }
+            if (type === 5) {
+              this.brotliForm = {
+                ...getForm(data[0], newForm)
+              };
+            }
+          } else {
+            if (type === 1) {
+              this.hashkeyForm = {
+                disable: false,
+                hashkey_args: "",
+                keep_oss_args: false
+              };
+            }
+            if (type === 2) {
+              this.removeForm.typeName = "已关闭";
+            }
+          }
+        });
+    },
+    // 弹窗成功回调
+    modalSuccess() {
+      this.getConfig(1);
+      this.getConfig(2);
     },
     // 修改配置
     handleChangeConfig(type) {
       this.modalType = type;
       this.visible = true;
     },
-    // 开启/关闭回源协议
-    // 修改角色状态
-    handleChangeStatus(record) {
-      const statusTxt = !record.status ? "开启" : "关闭";
-      this.$confirm({
-        title: `确认要${statusTxt}当前角色吗？`,
-        onOk: () => {
-          this.$store
-            .dispatch("organization/editRole", {
-              id: record.id,
-              status: record.status ? 0 : 1
-            })
-            .then((res) => {
-              this.$message.success(`${statusTxt}成功`);
-            });
-        }
+    // 页面优化开关 智能压缩开关 Brotli压缩开关
+    handleChange(type, formName) {
+      const tempForm = { ...this[formName] };
+      const newForm = {
+        ...getParameter(tempForm, this.modalMap[type].functionName, this.domain)
+      };
+      this.$store.dispatch("cdn/saveConfig", newForm).then((res) => {
+        this.$message.success(`设置成功`);
+        this.getConfig(type);
       });
     }
   }

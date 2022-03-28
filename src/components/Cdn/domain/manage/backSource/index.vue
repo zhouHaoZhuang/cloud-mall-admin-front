@@ -20,13 +20,8 @@ export default {
       type: Number,
       default: 1
     },
-    domain: {
-      type: String,
-      default: ""
-    }
   },
   components: { Configure, Custom },
-  computed: {},
   data() {
     return {
       tabCurrent: 1

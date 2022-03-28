@@ -19,7 +19,7 @@
         </div>
       </div>
     </div>
-    <div class="public-manage-box">
+    <div v-if="false" class="public-manage-box">
       <div class="head-box">
         <div class="label">生成鉴权URL</div>
         <div class="value"></div>
@@ -83,7 +83,7 @@
       <div class="content-row">
         <div class="label">Refer防盗链类型</div>
         <div class="value">
-          未设置
+          {{ referForm.typeName }}
           <div class="txt">
             通过黑/白名单来对访问者身份进行识别和过滤，支持IPV6地址填写。
           </div>
@@ -101,7 +101,7 @@
       </div>
       <div class="content-row">
         <div class="label">IP黑/白名单类型</div>
-        <div class="value">未设置</div>
+        <div class="value">{{ ipForm.typeName }}</div>
       </div>
     </div>
     <div class="public-manage-box">
@@ -115,7 +115,11 @@
       </div>
       <div class="content-row">
         <div class="label">名单类型</div>
-        <div class="value">未设置</div>
+        <div class="value">
+          <span v-if="!uaForm.type">未设置</span>
+          <span v-if="uaForm.type === 'black'">黑名单</span>
+          <span v-if="uaForm.type === 'white'">白名单</span>
+        </div>
       </div>
     </div>
     <!-- 鉴权url弹窗 -->
@@ -129,21 +133,18 @@
     <UpdateReferModal
       v-model="referVisible"
       :type="modalType"
-      :modalMap="modalMap"
       @success="modalSuccess"
     />
     <!-- ip弹窗 -->
     <UpdateIpModal
       v-model="ipVisible"
       :type="modalType"
-      :modalMap="modalMap"
       @success="modalSuccess"
     />
     <!-- ua弹窗 -->
     <UpdateUaModal
       v-model="uaVisible"
       :type="modalType"
-      :modalMap="modalMap"
       @success="modalSuccess"
     />
   </div>
@@ -205,27 +206,30 @@ export default {
           }
         },
         2: {
-          title: "HSTS 设置",
-          functionName: "HSTS",
-          form: {
-            enabled: false,
-            https_hsts_max_age: "",
-            https_hsts_include_subdomains: false
-          }
+          title: "Refer防盗链",
+          functionName: "referer_black_list_set,referer_white_list_set"
         },
         3: {
-          title: "HTTP/2设置",
-          functionName: "https_option",
-          form: { http2: false }
+          title: "IP黑/白名单",
+          functionName: "ip_black_list_set,ip_allow_list_set"
         },
         4: {
-          title: "TLS版本控制",
-          functionName: "https_tls_version",
-          form: { tls10: false, tls11: false, tls12: false, tls13: false }
+          title: "UA黑/白名单",
+          functionName: "ali_ua"
         }
       },
       aliauthForm: {
         enable: false
+      },
+      referForm: {
+        typeName: "未设置"
+      },
+      ipForm: {
+        typeName: "未设置"
+      },
+      uaForm: {
+        ua: "",
+        type: ""
       }
     };
   },
@@ -256,17 +260,23 @@ export default {
               };
             }
             if (type === 2) {
-              this.hstsForm = {
-                ...getForm(data[0], newForm)
+              this.referForm = {
+                typeName:
+                  data[0].functionName === "referer_black_list_set"
+                    ? "黑名单"
+                    : "白名单"
               };
             }
             if (type === 3) {
-              this.http2Form = {
-                ...getForm(data[0], newForm)
+              this.ipForm = {
+                typeName:
+                  data[0].functionName === "ip_black_list_set"
+                    ? "黑名单"
+                    : "白名单"
               };
             }
             if (type === 4) {
-              this.tlsForm = {
+              this.uaForm = {
                 ...getForm(data[0], newForm)
               };
             }
