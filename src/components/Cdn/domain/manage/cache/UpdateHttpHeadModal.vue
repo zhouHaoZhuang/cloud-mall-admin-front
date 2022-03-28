@@ -19,7 +19,7 @@
     >
       <a-form-model-item label="参数">
         <a-select
-          v-model="form.type"
+          v-model="form.key"
           :disabled="type === 'modify'"
           placeholder="请选择"
         >
@@ -92,8 +92,8 @@ export default {
         if (newVal) {
           if (JSON.stringify(this.detail) !== "{}") {
             this.type = "modify";
+            console.log("sdadsa", this.detail);
             this.form = {
-              type: this.detail.key ? -1 : this.detail.key,
               key: this.detail.key,
               value: this.detail.value
             };
