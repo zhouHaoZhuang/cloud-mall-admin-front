@@ -93,7 +93,7 @@ export default {
           },
           {
             validator: (rule, value, callback) => {
-              if (value !== this.identifyCode) {
+              if (value.toLowerCase() !== this.identifyCode.toLowerCase()) {
                 callback(new Error("图形验证码不正确"));
               }
               callback();
