@@ -304,7 +304,12 @@ const transformList = [
   "keep_oss_args"
 ];
 // cdn管理页面处理后端所需参数
-export const getParameter = (form, functionName, domainNames) => {
+export const getParameter = (
+  form,
+  functionName,
+  domainNames,
+  skipFilter = []
+) => {
   let data = {
     functions: [
       {
@@ -323,24 +328,26 @@ export const getParameter = (form, functionName, domainNames) => {
   data.functions[0].functionArgs = formArr.map((ele) => {
     return {
       argName: ele,
-      argValue: transformList.includes(ele)
-        ? form[ele]
-          ? "on"
-          : "off"
-        : form[ele]
+      argValue:
+        transformList.includes(ele) && !skipFilter.includes(ele)
+          ? form[ele]
+            ? "on"
+            : "off"
+          : form[ele]
     };
   });
   return data;
 };
 // cdn管理页面根据接口返回数据处理前端所需格式form
-export const getForm = (data, form) => {
+export const getForm = (data, form, skipFilter = []) => {
   let newForm = { ...form };
   data.functionArgs.functionArg.forEach((ele) => {
-    newForm[ele.argName] = transformList.includes(ele.argName)
-      ? ele.argValue === "on"
-        ? true
-        : false
-      : ele.argValue;
+    newForm[ele.argName] =
+      transformList.includes(ele.argName) && !skipFilter.includes(ele.argName)
+        ? ele.argValue === "on"
+          ? true
+          : false
+        : ele.argValue;
   });
   return newForm;
 };
