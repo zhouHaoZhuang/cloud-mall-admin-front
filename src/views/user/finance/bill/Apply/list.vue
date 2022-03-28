@@ -206,7 +206,7 @@
       <a-button
         type="link"
         icon="plus"
-        @click="$router.push('/user/finance/bill/manageadress')"
+        @click="$router.push('/user/finance/manageadress')"
       >
         新增常用地址
       </a-button>
