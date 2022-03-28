@@ -26,9 +26,9 @@
             style="width: 200px"
             allowClear
             v-model="listQuery.domainName"
-            placeholder="请选择"
+            placeholder="请选择域名"
           >
-            <a-select-option value=""> 全部域名 </a-select-option>
+            <!-- <a-select-option value=""> 全部域名 </a-select-option> -->
             <a-select-option
               :value="item.domain"
               v-for="item in domainList"
@@ -41,7 +41,7 @@
       </div>
       <div class="right">
         <a-space>
-          <a-radio-group @change="handleRadioChange">
+          <a-radio-group v-model="date" @change="handleRadioChange">
             <a-radio-button value="toDay"> 今天 </a-radio-button>
             <a-radio-button value="yesterday"> 昨天 </a-radio-button>
             <a-radio-button value="aWeek"> 近7日 </a-radio-button>
@@ -80,13 +80,13 @@
         style="margin-top: 20px"
         :columns="columns"
         :data-source="data"
-        :rowKey="(record,index)=>index"
+        :rowKey="(record, index) => index"
         :pagination="false"
       >
         <template slot="footer">
           <div class="total">
             <span>总计</span>
-            <span>40G</span>
+            <span>{{ totalFlow }}G</span>
           </div>
         </template>
       </a-table>
@@ -118,7 +118,7 @@ export default {
         startTime: "",
         interval: "3600",
         endTime: "",
-        domainName: ""
+        domainName: undefined
       },
       domainList: [],
       columns: [
@@ -133,6 +133,7 @@ export default {
           dataIndex: "value"
         }
       ],
+      date: "toDay",
       data: [{}],
       option: {
         title: {
@@ -148,7 +149,7 @@ export default {
         },
         xAxis: {
           type: "category",
-          data: ["00.00", "羊毛衫", "雪纺衫", "裤子", "高跟鞋", "袜子"]
+          data: ["00.00", "00.10", "00.20", "00.30", "00.40", "00.50"]
         },
         yAxis: {
           type: "value"
@@ -159,6 +160,23 @@ export default {
             restore: {}
           }
         },
+        // geo: {
+        //   componentType: "geo",
+        //   // Geo 组件在 option 中的 index
+        //   geoIndex: '1',
+        //   // 点击区域的名称，比如"上海"
+        //   name: '上海',
+        //   // 传入的点击区域的 region 对象，见 geo.regions
+        //   region: [
+        //     {
+        //       name: "广东",
+        //       itemStyle: {
+        //         areaColor: "red",
+        //         color: "red"
+        //       }
+        //     }
+        //   ]
+        // },
         dataZoom: [
           {
             id: "dataZoomX",
@@ -174,12 +192,15 @@ export default {
             data: [5, 20, 36, 10, 10, 20]
           }
         ]
-      }
+      },
+      totalFlow: ""
     };
   },
   created() {
     console.log(this.getDate());
     this.getDomainList();
+    this.listQuery.startTime = this.getDate()[this.date].startTime;
+    this.listQuery.endTime = this.getDate()[this.date].endTime;
   },
   methods: {
     myEcharts() {
@@ -255,13 +276,14 @@ export default {
           console.log(res, "---------");
           this.data = res.data.usageDataPerInterval.dataModule;
           let dateList = [];
+          let flowList = [];
+          let totalFlow = 0;
           this.data.forEach((item) => {
             dateList.push(item.timeStamp.substring(11));
-          });
-          let flowList = [];
-          this.data.forEach((item) => {
             flowList.push(item.value);
+            totalFlow += item.value * 1;
           });
+          this.totalFlow = totalFlow;
           this.$set(this.option, "xAxis", {
             type: "category",
             data: dateList

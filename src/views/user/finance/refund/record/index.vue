@@ -141,9 +141,6 @@
 
 <script>
 import {
-  orderStatusEnum,
-  tradeTypeEnum,
-  orderType,
   payState,
   timeType,
   tradeType,
@@ -153,9 +150,6 @@ import {
 export default {
   data() {
     return {
-      orderStatusEnum,
-      tradeTypeEnum,
-      orderType,
       payState,
       timeType,
       tradeType,
@@ -181,13 +175,12 @@ export default {
         {
           title: "订单金额",
           dataIndex: "actualAmount",
-          key: "actualAmount",
-      
+          key:"1"
         },
         {
           title: "退款金额",
           dataIndex: "actualAmount",
-          key: "actualAmount2"
+          key:"2"
         },
         {
           title: "状态",
