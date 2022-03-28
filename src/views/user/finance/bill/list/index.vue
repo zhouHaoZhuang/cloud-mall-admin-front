@@ -72,7 +72,7 @@
               </a-descriptions-item>
               <a-descriptions-item label=""> </a-descriptions-item>
               <a-descriptions-item label="">
-                <a @click="$router.push('/user/finance/bill/billmanage')">
+                <a @click="$router.push('/user/finance/bill/managebill')">
                   管理发票信息→
                 </a>
               </a-descriptions-item>
