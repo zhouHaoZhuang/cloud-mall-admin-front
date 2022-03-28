@@ -101,7 +101,7 @@
       </div>
       <div class="content-row">
         <div class="label">IP黑/白名单类型</div>
-        <div class="value">未设置</div>
+        <div class="value">{{ ipForm.typeName }}</div>
       </div>
     </div>
     <div class="public-manage-box">
@@ -115,7 +115,11 @@
       </div>
       <div class="content-row">
         <div class="label">名单类型</div>
-        <div class="value">未设置</div>
+        <div class="value">
+          <span v-if="!uaForm.type">未设置</span>
+          <span v-if="uaForm.type === 'black'">黑名单</span>
+          <span v-if="uaForm.type === 'white'">白名单</span>
+        </div>
       </div>
     </div>
     <!-- 鉴权url弹窗 -->
@@ -135,14 +139,12 @@
     <UpdateIpModal
       v-model="ipVisible"
       :type="modalType"
-      :modalMap="modalMap"
       @success="modalSuccess"
     />
     <!-- ua弹窗 -->
     <UpdateUaModal
       v-model="uaVisible"
       :type="modalType"
-      :modalMap="modalMap"
       @success="modalSuccess"
     />
   </div>
@@ -209,13 +211,11 @@ export default {
         },
         3: {
           title: "IP黑/白名单",
-          functionName: "https_option",
-          form: { http2: false }
+          functionName: "ip_black_list_set,ip_allow_list_set"
         },
         4: {
           title: "UA黑/白名单",
-          functionName: "https_tls_version",
-          form: { tls10: false, tls11: false, tls12: false, tls13: false }
+          functionName: "ali_ua"
         }
       },
       aliauthForm: {
@@ -223,6 +223,13 @@ export default {
       },
       referForm: {
         typeName: "未设置"
+      },
+      ipForm: {
+        typeName: "未设置"
+      },
+      uaForm: {
+        ua: "",
+        type: ""
       }
     };
   },
@@ -261,12 +268,15 @@ export default {
               };
             }
             if (type === 3) {
-              this.http2Form = {
-                ...getForm(data[0], newForm)
+              this.ipForm = {
+                typeName:
+                  data[0].functionName === "ip_black_list_set"
+                    ? "黑名单"
+                    : "白名单"
               };
             }
             if (type === 4) {
-              this.tlsForm = {
+              this.uaForm = {
                 ...getForm(data[0], newForm)
               };
             }

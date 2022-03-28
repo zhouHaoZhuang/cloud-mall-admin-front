@@ -3,6 +3,7 @@
     :visible="value"
     width="680px"
     centered
+    destroyOnClose
     title="Refer防盗链"
     wrapClassName="update-source-container"
     okText="确定"
@@ -97,7 +98,7 @@ export default {
     };
   },
   methods: {
-    // 获取hsts配置详情
+    // 获取配置详情
     getConfig() {
       this.$store
         .dispatch("cdn/getDomainConfig", {
