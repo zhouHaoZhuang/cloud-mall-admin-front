@@ -205,27 +205,30 @@ export default {
           }
         },
         2: {
-          title: "HSTS 设置",
-          functionName: "HSTS",
+          title: "Refer防盗链",
+          functionName: "referer_black_list_set,referer_white_list_set",
           form: {
-            enabled: false,
-            https_hsts_max_age: "",
-            https_hsts_include_subdomains: false
+            allow_empty: false,
+            refer_domain_deny_list: "",
+            refer_domain_allow_list: ""
           }
         },
         3: {
-          title: "HTTP/2设置",
+          title: "IP黑/白名单",
           functionName: "https_option",
           form: { http2: false }
         },
         4: {
-          title: "TLS版本控制",
+          title: "UA黑/白名单",
           functionName: "https_tls_version",
           form: { tls10: false, tls11: false, tls12: false, tls13: false }
         }
       },
       aliauthForm: {
         enable: false
+      },
+      referForm: {
+        typeName: "未设置"
       }
     };
   },

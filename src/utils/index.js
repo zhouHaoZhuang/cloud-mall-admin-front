@@ -298,7 +298,8 @@ const transformList = [
   "tls10",
   "tls11",
   "tls12",
-  "tls13"
+  "tls13",
+  'allow_empty'
 ];
 // cdn管理页面处理后端所需参数
 export const getParameter = (form, functionName, domainNames) => {
