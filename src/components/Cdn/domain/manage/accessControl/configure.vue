@@ -83,7 +83,7 @@
       <div class="content-row">
         <div class="label">Refer防盗链类型</div>
         <div class="value">
-          未设置
+          {{ referForm.typeName }}
           <div class="txt">
             通过黑/白名单来对访问者身份进行识别和过滤，支持IPV6地址填写。
           </div>
@@ -129,7 +129,6 @@
     <UpdateReferModal
       v-model="referVisible"
       :type="modalType"
-      :modalMap="modalMap"
       @success="modalSuccess"
     />
     <!-- ip弹窗 -->
@@ -206,12 +205,7 @@ export default {
         },
         2: {
           title: "Refer防盗链",
-          functionName: "referer_black_list_set,referer_white_list_set",
-          form: {
-            allow_empty: false,
-            refer_domain_deny_list: "",
-            refer_domain_allow_list: ""
-          }
+          functionName: "referer_black_list_set,referer_white_list_set"
         },
         3: {
           title: "IP黑/白名单",
@@ -259,8 +253,11 @@ export default {
               };
             }
             if (type === 2) {
-              this.hstsForm = {
-                ...getForm(data[0], newForm)
+              this.referForm = {
+                typeName:
+                  data[0].functionName === "referer_black_list_set"
+                    ? "黑名单"
+                    : "白名单"
               };
             }
             if (type === 3) {
