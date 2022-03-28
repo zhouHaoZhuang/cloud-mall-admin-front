@@ -23,10 +23,6 @@
         <div class="btn2">
           <a-form-model-item>
             <a-range-picker
-              :show-time="{
-                hideDisabledOptions: true,
-                defaultValue: [moment('00:00:00'), moment('11:59:59')]
-              }"
               format="YYYY-MM-DD"
               :placeholder="['开始时间', '结束时间']"
               @change="datePickerOnOk"
@@ -86,6 +82,7 @@ export default {
         {
           title: "支付状态",
           dataIndex: "owe",
+          key: "1",
           scopedSlots: { customRender: "owe" }
         },
         {
@@ -118,7 +115,7 @@ export default {
         {
           title: "欠费金额",
           dataIndex: "owe",
-          key: 1
+          key: "2"
         },
         {
           title: "消费时间",
@@ -168,21 +165,10 @@ export default {
           this.loading = false;
         });
     },
-
-    goDetail(record) {
-      console.log("我是详情", record);
-      // this.visibleDetail = true;
-      // this.$store
-      //   .dispatch("withdraw/getRecordDetail", record.id)
-      //   .then(res => {
-      //     this.detailInfo = res.data;
-      //   })
-      //   .finally(() => {
-      //     this.visibleDetail = true;
-      //   });
-    },
+    //查询之前转化查询条件格式
     datePickerOnOk(value) {
       if (value.length !== 0) {
+        console.log(value);
         this.listQuery["qp-consumeTime-ge"] = moment(value[0]).format(
           "YYYY-MM-DD"
         );
