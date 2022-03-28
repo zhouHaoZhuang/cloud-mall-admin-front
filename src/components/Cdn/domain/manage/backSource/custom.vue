@@ -28,6 +28,7 @@
     <!-- 自定义回源弹窗 -->
     <UpdateCustomModal
       v-model="visible"
+      :functionName="functionName"
       :detail="modalDetail"
       @success="modalSuccess"
     />
@@ -36,7 +37,7 @@
 
 <script>
 import UpdateCustomModal from "@/components/Cdn/domain/manage/backSource/UpdateCustomModal";
-import { getParameter, getForm } from "@/utils/index";
+import { getForm } from "@/utils/index";
 export default {
   props: {
     tabsKey: {
@@ -112,11 +113,12 @@ export default {
         });
     },
     // 弹窗成功回调
-    modalSuccess(type, val) {
-      this.modalDetail = {};
+    modalSuccess() {
+      this.getConfig()
     },
     // 新增
     handleAdd() {
+      this.modalDetail = {};
       this.visible = true;
     },
     // 编辑
@@ -126,17 +128,21 @@ export default {
     },
     // 删除
     handleDel(record) {
-      console.log("dsadsa", record);
-      // this.$confirm({
-      //   title: "确定要删除吗?",
-      //   onOk: () => {
-      //     this.$store.dispatch("domain/add", this.form).then((res) => {
-      //       this.$message.success("删除成功");
-      //       this.$emit("success");
-      //       this.$emit("changeVisible", false);
-      //     });
-      //   }
-      // });
+      this.$confirm({
+        title: "确定要删除吗?",
+        onOk: () => {
+          this.$store
+            .dispatch("cdn/delAloneConfig", {
+              functionNames: this.functionName,
+              domainName: this.domain,
+              configId: record.configId
+            })
+            .then((res) => {
+              this.$message.success("删除成功");
+              this.getConfig();
+            });
+        }
+      });
     }
   }
 };
