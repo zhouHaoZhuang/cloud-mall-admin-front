@@ -31,7 +31,6 @@
     <!-- 缓存过期弹窗 -->
     <UpdateCacheOverdueModal
       v-model="visible"
-      :functionName="functionName"
       :detail="modalDetail"
       @success="modalSuccess"
     />

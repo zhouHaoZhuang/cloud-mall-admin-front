@@ -134,7 +134,11 @@ export default {
       loading: false,
       timeType: "1",
       form: {
-        type: 1
+        type: 1,
+        file_type: "",
+        path: "",
+        ttl: "",
+        weight: ""
       },
       rules: {
         path: [
@@ -177,7 +181,11 @@ export default {
     resetForm() {
       this.$refs.ruleForm.clearValidate();
       this.form = {
-        type: 1
+        type: 1,
+        file_type: "",
+        path: "",
+        ttl: "",
+        weight: ""
       };
     },
     // 弹窗提交
