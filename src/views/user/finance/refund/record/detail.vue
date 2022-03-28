@@ -172,7 +172,6 @@ import DetailHeader from "@/components/Common/detailHeader";
 import PaySelect from "@/components/Finance/paySelect";
 import { useLeftTime } from "@/utils/index";
 import {
-  orderStatusEnum,
   tradeTypeEnum,
   regionDataEnum,
   tradeType
@@ -194,7 +193,6 @@ export default {
   },
   data() {
     return {
-      orderStatusEnum,
       tradeTypeEnum,
       regionDataEnum,
       tradeType,
@@ -205,11 +203,6 @@ export default {
           title: "产品名称",
           dataIndex: "productName"
         },
-        // {
-        //   title: "类型",
-        //   dataIndex: "tradeType",
-        //   scopedSlots: { customRender: "tradeType" }
-        // },
         {
           title: "具体配置",
           dataIndex: "productConfig",
