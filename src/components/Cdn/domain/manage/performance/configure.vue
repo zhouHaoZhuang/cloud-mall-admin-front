@@ -99,7 +99,6 @@
     <UpdateFilterModal
       v-model="visible"
       :type="modalType"
-      :detail="modalDetail"
       @success="modalSuccess"
     />
   </div>
@@ -112,10 +111,6 @@ export default {
     tabsKey: {
       type: Number,
       default: 1
-    },
-    domain: {
-      type: String,
-      default: ""
     }
   },
   components: { UpdateFilterModal },
@@ -133,15 +128,36 @@ export default {
     return {
       visible: false,
       modalType: 1,
-      modalDetail: {}
+      modalMap: {
+        1: {
+          title: "鉴权URL设置",
+          functionName: "aliauth",
+          form: {
+            auth_type: "type_a",
+            auth_key1: "",
+            auth_key2: "",
+            ali_auth_delta: 1800
+          }
+        },
+        2: {
+          title: "Refer防盗链",
+          functionName: "referer_black_list_set,referer_white_list_set"
+        },
+        3: {
+          title: "IP黑/白名单",
+          functionName: "ip_black_list_set,ip_allow_list_set"
+        },
+        4: {
+          title: "UA黑/白名单",
+          functionName: "ali_ua"
+        }
+      }
     };
   },
   created() {},
   methods: {
     // 弹窗成功回调
-    modalSuccess(type, val) {
-      this.modalDetail = {};
-    },
+    modalSuccess(type) {},
     // 修改https证书
     handleChangeHttps() {
       this.domainHttpsVisible = true;
