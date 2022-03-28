@@ -386,7 +386,8 @@ export default {
       this.$store
         .dispatch("cloud/getRegionDetail", {
           regionId: this.detail.regionId,
-          specFamily: this.form.specFamily,
+          specFamily: "general-purpose",
+          family: "general-purpose",
           cpuCoreCount: this.form.cpu,
           memorySize: this.form.memory,
           operatorType: this.isUpgrade ? "upgrade" : "downgrade",
