@@ -19,7 +19,7 @@
         </div>
       </div>
     </div>
-    <div class="public-manage-box">
+    <div v-if="false" class="public-manage-box">
       <div class="head-box">
         <div class="label">生成鉴权URL</div>
         <div class="value"></div>
