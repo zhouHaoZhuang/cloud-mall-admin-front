@@ -44,6 +44,7 @@
                 selectLeftPath === ele.path ? 'inner-item active' : 'inner-item'
               "
               @click="goTo(item, ele)"
+              v-show="!ele.meta.hiddenMenu"
             >
               {{ ele.name }}
             </div>

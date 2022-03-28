@@ -95,7 +95,7 @@
               </a-descriptions-item>
               <a-descriptions-item label=""> </a-descriptions-item>
               <a-descriptions-item label="">
-                <a @click="$router.push('/user/finance/bill/manageadress')">
+                <a @click="$router.push('/user/finance/manageadress')">
                   管理常用地址→
                 </a>
               </a-descriptions-item>
