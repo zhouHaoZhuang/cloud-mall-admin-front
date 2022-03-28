@@ -8,14 +8,12 @@
         <a-button type="primary" @click="handleAdd"> 添加 </a-button>
         <a-table
           style="margin-top: 20px"
+          :loading="tableLoading"
           :columns="columns"
           :data-source="data"
           :pagination="false"
-          rowKey="id"
+          rowKey="configId"
         >
-          <!-- <div slot="priority" slot-scope="text">
-            {{ cdnPriorityEnum[text] }}
-          </div> -->
           <div slot="action" slot-scope="text, record">
             <a-space>
               <a-button type="link" @click="handleEdit(record)">
@@ -38,43 +36,41 @@
 
 <script>
 import UpdateCustomModal from "@/components/Cdn/domain/manage/backSource/UpdateCustomModal";
+import { getParameter, getForm } from "@/utils/index";
 export default {
   props: {
     tabsKey: {
       type: Number,
       default: 1
-    },
-    domain: {
-      type: String,
-      default: ""
     }
   },
   components: { UpdateCustomModal },
+  computed: {
+    domain() {
+      return this.$route.query.domain;
+    }
+  },
   watch: {
     tabsKey: {
       handler(newVal) {
-        if (newVal === "1") {
-          //   this.getData();
+        if (newVal === 2) {
+          this.getConfig();
         }
-      }
+      },
+      immediate: true
     }
   },
-  computed: {},
   data() {
     return {
+      tableLoading: false,
       columns: [
         {
           title: "参数",
-          dataIndex: "type"
+          dataIndex: "key"
         },
         {
           title: "取值",
-          dataIndex: "content"
-        },
-        {
-          title: "状态",
-          dataIndex: "priority",
-          scopedSlots: { customRender: "priority" }
+          dataIndex: "value"
         },
         {
           title: "操作",
@@ -83,12 +79,38 @@ export default {
           scopedSlots: { customRender: "action" }
         }
       ],
-      data: [{}],
+      data: [],
+      functionName: "set_req_header",
+      tempForm: {
+        key: "",
+        value: ""
+      },
       visible: false,
       modalDetail: {}
     };
   },
   methods: {
+    // 查询配置信息
+    getConfig() {
+      this.tableLoading = true;
+      this.$store
+        .dispatch("cdn/getDomainConfig", {
+          functionNames: this.functionName,
+          domainName: this.domain
+        })
+        .then((res) => {
+          const newRes = res.data.domainConfigs.domainConfig;
+          this.data = newRes.map((ele) => {
+            return {
+              ...ele,
+              ...getForm(ele, this.tempForm)
+            };
+          });
+        })
+        .finally(() => {
+          this.tableLoading = false;
+        });
+    },
     // 弹窗成功回调
     modalSuccess(type, val) {
       this.modalDetail = {};
@@ -104,16 +126,17 @@ export default {
     },
     // 删除
     handleDel(record) {
-      this.$confirm({
-        title: "确定要删除吗?",
-        onOk: () => {
-          this.$store.dispatch("domain/add", this.form).then((res) => {
-            this.$message.success("删除成功");
-            this.$emit("success");
-            this.$emit("changeVisible", false);
-          });
-        }
-      });
+      console.log("dsadsa", record);
+      // this.$confirm({
+      //   title: "确定要删除吗?",
+      //   onOk: () => {
+      //     this.$store.dispatch("domain/add", this.form).then((res) => {
+      //       this.$message.success("删除成功");
+      //       this.$emit("success");
+      //       this.$emit("changeVisible", false);
+      //     });
+      //   }
+      // });
     }
   }
 };
