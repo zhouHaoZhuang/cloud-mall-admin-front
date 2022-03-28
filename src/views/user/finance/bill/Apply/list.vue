@@ -196,7 +196,7 @@
           <div slot="companyName" slot-scope="text">{{ text }}</div>
           <div slot="adress" slot-scope="text, record">
             {{ record.province }}/ {{ record.city }}/
-            {{ record.area }}
+            {{ record.county }}
           </div>
           <div slot="action" slot-scope="text, record">
             <a-button type="link" @click="showModal(record.id)">编辑</a-button>
@@ -656,6 +656,7 @@ export default {
           math.bignumber(this.dataAmount.negativeAmount)
         )
       );
+      console.log(this.invoiceAmount, "this.invoiceAmount");
     },
     // 欠票表格多选
     arrearsonSelectChange(selectedRowKeys) {
