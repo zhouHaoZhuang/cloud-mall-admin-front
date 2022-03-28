@@ -26,9 +26,8 @@
         <div slot-scope="text" slot="finishTime" v-if="text">
           {{ text | formatDate }}
         </div>
-        <div slot-scope="text" slot="payTime">
+        <div slot-scope="text" slot="createTime">
           <span v-if="text">{{ text | formatDate }}</span>
-          <span v-else>-----</span>
         </div>
         <div slot="detailType" slot-scope="text">
           {{ rechargeTypeMap[text] }}

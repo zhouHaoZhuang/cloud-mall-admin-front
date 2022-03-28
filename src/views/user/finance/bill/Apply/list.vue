@@ -124,7 +124,7 @@
           class="next"
           type="primary"
           @click="current = 1"
-          :disabled="selectedRowKeys.length <= 0 && invoiceAmount <= 0"
+          :disabled="selectedRowKeys.length <= 0 || invoiceAmount * 1 <= 0"
         >
           下一步
         </a-button>
@@ -272,14 +272,14 @@
 <script>
 import { options } from "@/utils/city";
 import DetailHeader from "@/components/Common/detailHeader.vue";
-import { add, bignumber, create, all } from "mathjs";
+import { add, bignumber, create, all, subtract } from "mathjs";
 
 const config = {
   number: "number"
 };
 const math = create(all, config);
 math.config({
-  number: "number"
+  number: "BigNumber"
 });
 export default {
   components: {
@@ -645,12 +645,17 @@ export default {
     onSelectChange(selectedRowKeys, obj) {
       console.log("selectedRowKeys changed: ", selectedRowKeys, obj);
       this.selectedRowKeys = selectedRowKeys;
-      this.invoiceAmount =
-        obj.reduce((prev, cur) => {
-          return math.format(math.add(prev, cur.originalAmount), {
-            precision: 14
-          });
-        }, 0) - this.dataAmount.negativeAmount;
+      this.invoiceAmount = obj.reduce((prev, cur) => {
+        return math.format(math.add(prev, cur.originalAmount), {
+          precision: 14
+        });
+      }, 0);
+      this.invoiceAmount = math.format(
+        math.subtract(
+          math.bignumber(this.invoiceAmount),
+          math.bignumber(this.dataAmount.negativeAmount)
+        )
+      );
     },
     // 欠票表格多选
     arrearsonSelectChange(selectedRowKeys) {
