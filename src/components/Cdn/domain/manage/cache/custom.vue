@@ -1,21 +1,17 @@
 <template>
   <div class="cdn-basic-container">
-    <div class="head-info">
-      可自定义设置404、403、503、504等页面。
-    </div>
+    <div class="head-info">可自定义设置404、403、503、504等页面。</div>
     <a-descriptions>
       <a-descriptions-item>
         <a-button type="primary" @click="handleAdd"> 添加 </a-button>
         <a-table
           style="margin-top: 20px"
+          :loading="tableLoading"
           :columns="columns"
           :data-source="data"
           :pagination="false"
-          rowKey="id"
+          rowKey="configId"
         >
-          <!-- <div slot="priority" slot-scope="text">
-            {{ cdnPriorityEnum[text] }}
-          </div> -->
           <div slot="action" slot-scope="text, record">
             <a-space>
               <a-button type="link" @click="handleEdit(record)">
@@ -30,6 +26,7 @@
     <!-- 自定义页面弹窗 -->
     <UpdateCustomModal
       v-model="visible"
+      :functionName="functionName"
       :detail="modalDetail"
       @success="modalSuccess"
     />
@@ -38,43 +35,41 @@
 
 <script>
 import UpdateCustomModal from "@/components/Cdn/domain/manage/cache/UpdateCustomModal";
+import { getForm } from "@/utils/index";
 export default {
   props: {
     tabsKey: {
       type: Number,
       default: 1
-    },
-    domain: {
-      type: String,
-      default: ""
     }
   },
   components: { UpdateCustomModal },
+  computed: {
+    domain() {
+      return this.$route.query.domain;
+    }
+  },
   watch: {
     tabsKey: {
       handler(newVal) {
-        if (newVal === "1") {
-          //   this.getData();
+        if (newVal === 4) {
+          this.getConfig();
         }
-      }
+      },
+      immediate: true
     }
   },
-  computed: {},
   data() {
     return {
+      tableLoading: false,
       columns: [
         {
           title: "错误码",
-          dataIndex: "type"
+          dataIndex: "error_code"
         },
         {
           title: "链接",
-          dataIndex: "content"
-        },
-        {
-          title: "状态",
-          dataIndex: "priority",
-          scopedSlots: { customRender: "priority" }
+          dataIndex: "rewrite_page"
         },
         {
           title: "操作",
@@ -83,18 +78,45 @@ export default {
           scopedSlots: { customRender: "action" }
         }
       ],
-      data: [{}],
+      data: [],
+      functionName: "error_page",
+      tempForm: {
+        error_code: "",
+        rewrite_page: ""
+      },
       visible: false,
       modalDetail: {}
     };
   },
   methods: {
+    // 查询配置信息
+    getConfig() {
+      this.tableLoading = true;
+      this.$store
+        .dispatch("cdn/getDomainConfig", {
+          functionNames: this.functionName,
+          domainName: this.domain
+        })
+        .then((res) => {
+          const newRes = res.data.domainConfigs.domainConfig;
+          this.data = newRes.map((ele) => {
+            return {
+              ...ele,
+              ...getForm(ele, this.tempForm)
+            };
+          });
+        })
+        .finally(() => {
+          this.tableLoading = false;
+        });
+    },
     // 弹窗成功回调
-    modalSuccess(type, val) {
-      this.modalDetail = {};
+    modalSuccess() {
+      this.getConfig();
     },
     // 新增
     handleAdd() {
+      this.modalDetail = {};
       this.visible = true;
     },
     // 编辑
@@ -107,11 +129,16 @@ export default {
       this.$confirm({
         title: "确定要删除吗?",
         onOk: () => {
-          this.$store.dispatch("domain/add", this.form).then((res) => {
-            this.$message.success("删除成功");
-            this.$emit("success");
-            this.$emit("changeVisible", false);
-          });
+          this.$store
+            .dispatch("cdn/delAloneConfig", {
+              functionNames: this.functionName,
+              domainName: this.domain,
+              configId: record.configId
+            })
+            .then((res) => {
+              this.$message.success("删除成功");
+              this.getConfig();
+            });
         }
       });
     }

@@ -8,14 +8,12 @@
         <a-button type="primary" @click="handleAdd"> 添加 </a-button>
         <a-table
           style="margin-top: 20px"
+          :loading="tableLoading"
           :columns="columns"
           :data-source="data"
           :pagination="false"
-          rowKey="id"
+          rowKey="configId"
         >
-          <!-- <div slot="priority" slot-scope="text">
-            {{ cdnPriorityEnum[text] }}
-          </div> -->
           <div slot="action" slot-scope="text, record">
             <a-space>
               <a-button type="link" @click="handleEdit(record)">
@@ -30,6 +28,7 @@
     <!-- 重写设置弹窗 -->
     <UpdateRewriteModal
       v-model="visible"
+      :functionName="functionName"
       :detail="modalDetail"
       @success="modalSuccess"
     />
@@ -38,47 +37,45 @@
 
 <script>
 import UpdateRewriteModal from "@/components/Cdn/domain/manage/cache/UpdateRewriteModal";
+import { getForm } from "@/utils/index";
 export default {
   props: {
     tabsKey: {
       type: Number,
       default: 1
-    },
-    domain: {
-      type: String,
-      default: ""
     }
   },
   components: { UpdateRewriteModal },
+  computed: {
+    domain() {
+      return this.$route.query.domain;
+    }
+  },
   watch: {
     tabsKey: {
       handler(newVal) {
-        if (newVal === "1") {
-          //   this.getData();
+        if (newVal === 5) {
+          this.getConfig();
         }
-      }
+      },
+      immediate: true
     }
   },
-  computed: {},
   data() {
     return {
+      tableLoading: false,
       columns: [
         {
           title: "待重写URL",
-          dataIndex: "type"
+          dataIndex: "regex"
         },
         {
           title: "目标URL",
-          dataIndex: "content"
-        },
-         {
-          title: "执行规则",
-          dataIndex: "content"
+          dataIndex: "replacement"
         },
         {
-          title: "状态",
-          dataIndex: "priority",
-          scopedSlots: { customRender: "priority" }
+          title: "执行规则",
+          dataIndex: "flag"
         },
         {
           title: "操作",
@@ -87,18 +84,46 @@ export default {
           scopedSlots: { customRender: "action" }
         }
       ],
-      data: [{}],
+      data: [],
+      functionName: "host_redirect",
+      tempForm: {
+        regex: "",
+        replacement: "",
+        flag: ""
+      },
       visible: false,
       modalDetail: {}
     };
   },
   methods: {
+    // 查询配置信息
+    getConfig() {
+      this.tableLoading = true;
+      this.$store
+        .dispatch("cdn/getDomainConfig", {
+          functionNames: this.functionName,
+          domainName: this.domain
+        })
+        .then((res) => {
+          const newRes = res.data.domainConfigs.domainConfig;
+          this.data = newRes.map((ele) => {
+            return {
+              ...ele,
+              ...getForm(ele, this.tempForm)
+            };
+          });
+        })
+        .finally(() => {
+          this.tableLoading = false;
+        });
+    },
     // 弹窗成功回调
-    modalSuccess(type, val) {
-      this.modalDetail = {};
+    modalSuccess() {
+      this.getConfig();
     },
     // 新增
     handleAdd() {
+      this.modalDetail = {};
       this.visible = true;
     },
     // 编辑
@@ -111,11 +136,16 @@ export default {
       this.$confirm({
         title: "确定要删除吗?",
         onOk: () => {
-          this.$store.dispatch("domain/add", this.form).then((res) => {
-            this.$message.success("删除成功");
-            this.$emit("success");
-            this.$emit("changeVisible", false);
-          });
+          this.$store
+            .dispatch("cdn/delAloneConfig", {
+              functionNames: this.functionName,
+              domainName: this.domain,
+              configId: record.configId
+            })
+            .then((res) => {
+              this.$message.success("删除成功");
+              this.getConfig();
+            });
         }
       });
     }
