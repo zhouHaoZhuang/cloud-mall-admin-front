@@ -299,7 +299,9 @@ const transformList = [
   "tls11",
   "tls12",
   "tls13",
-  'allow_empty'
+  "allow_empty",
+  "disable",
+  "keep_oss_args"
 ];
 // cdn管理页面处理后端所需参数
 export const getParameter = (form, functionName, domainNames) => {
