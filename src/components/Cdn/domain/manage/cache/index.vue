@@ -2,19 +2,19 @@
   <div class="cdn-source-container">
     <a-tabs v-model="tabCurrent" type="card">
       <a-tab-pane :key="1" tab="缓存过期时间">
-        <CacheOverdue />
+        <CacheOverdue :tabsKey="tabCurrent" />
       </a-tab-pane>
       <a-tab-pane :key="2" tab="状态码过期时间">
-        <StatusOverdue />
+        <StatusOverdue :tabsKey="tabCurrent" />
       </a-tab-pane>
       <a-tab-pane :key="3" tab="HTTP头">
-        <HttpHead />
+        <HttpHead :tabsKey="tabCurrent" />
       </a-tab-pane>
       <a-tab-pane :key="4" tab="自定义页面">
-        <Custom />
+        <Custom :tabsKey="tabCurrent" />
       </a-tab-pane>
       <a-tab-pane :key="5" tab="重写">
-        <Rewrite />
+        <Rewrite :tabsKey="tabCurrent" />
       </a-tab-pane>
     </a-tabs>
   </div>
@@ -31,23 +31,9 @@ export default {
     tabsKey: {
       type: Number,
       default: 1
-    },
-    domain: {
-      type: String,
-      default: ""
     }
   },
   components: { CacheOverdue, StatusOverdue, HttpHead, Custom, Rewrite },
-  watch: {
-    tabsKey: {
-      handler(newVal) {
-        if (newVal === "1") {
-          //   this.getData();
-        }
-      }
-    }
-  },
-  computed: {},
   data() {
     return {
       tabCurrent: 1
