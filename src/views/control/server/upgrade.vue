@@ -217,14 +217,41 @@ export default {
   methods: {
     // 获取分类列表
     getTypeList() {
-      this.$store.dispatch("cloud/typeList").then((res) => {
-        this.typeList = [...res.data];
-        // this.form.specFamily =
-        //   Array.isArray(res.data) && res.data.length > 0
-        //     ? res.data[0].typeFamily
-        //     : undefined;
-        this.getCpu();
-      });
+      this.typeList = [
+        {
+          title: "通用型",
+          value: "general-purpose"
+        },
+        {
+          title: "计算型",
+          value: "compute-optimized"
+        },
+        {
+          title: "内存型",
+          value: "memory-optimized"
+        },
+        {
+          title: "大数据型",
+          value: "big-data"
+        },
+        {
+          title: "本地SSD",
+          value: "local-ssd"
+        },
+        {
+          title: "高主频型",
+          value: "high-clockSpeed"
+        },
+        {
+          title: "共享型",
+          value: "basic"
+        },
+        {
+          title: "增强型",
+          value: "enhancement"
+        }
+      ];
+      this.getCpu();
     },
     // 分类change
     typeChange() {
