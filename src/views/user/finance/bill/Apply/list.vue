@@ -656,6 +656,7 @@ export default {
           math.bignumber(this.dataAmount.negativeAmount)
         )
       );
+      console.log(this.invoiceAmount, "this.invoiceAmount");
     },
     // 欠票表格多选
     arrearsonSelectChange(selectedRowKeys) {
