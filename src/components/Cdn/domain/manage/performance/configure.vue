@@ -108,6 +108,7 @@
     <UpdateFilterModal
       v-model="visible"
       :type="modalType"
+      :modalMap="modalMap"
       @success="modalSuccess"
     />
   </div>
@@ -241,12 +242,24 @@ export default {
                 ...getForm(data[0], newForm)
               };
             }
+          } else {
+            if (type === 1) {
+              this.hashkeyForm = {
+                disable: false,
+                hashkey_args: "",
+                keep_oss_args: false
+              };
+            }
+            if (type === 2) {
+              this.removeForm.typeName = "已关闭";
+            }
           }
         });
     },
     // 弹窗成功回调
-    modalSuccess(type) {
-      this.getConfig(type);
+    modalSuccess() {
+      this.getConfig(1);
+      this.getConfig(2);
     },
     // 修改配置
     handleChangeConfig(type) {

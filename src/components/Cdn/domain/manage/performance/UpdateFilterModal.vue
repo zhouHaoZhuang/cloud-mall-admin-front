@@ -130,11 +130,13 @@ export default {
           if (data.length > 0) {
             const newForm = { ...this.modalMap[this.type].form };
             this.form = {
-              ...getForm(data[0], newForm),
-              enable: true
+              ...getForm(data[0], newForm)
             };
+            if (this.type === 2) {
+              this.form.disable = true;
+            }
           } else {
-            this.form = { ...this.modalMap[this.type].form, enable: false };
+            this.form = { ...this.modalMap[this.type].form };
           }
         });
     },
@@ -142,27 +144,25 @@ export default {
     handleCancel() {
       this.$emit("changeVisible", false);
     },
-    // 提交删除过滤参数,只有关闭删除参数时需要使用
+    // 过滤参数按钮关闭提交方法
     removeSubmit() {
+      this.loading = true;
+      const newFunctionName =
+        this.type === 1 ? "ali_remove_args" : "set_hashkey_args";
       this.$store
         .dispatch("cdn/delAloneConfig", {
-          functionNames: this.functionName,
+          functionNames: newFunctionName,
           domainName: this.domain
         })
-        .then((res) => {
-          this.$message.success(`设置成功`);
-          this.$emit("success", this.type);
-          this.$emit("changeVisible", false);
+        .catch(() => {
+          this.loading = false;
         });
     },
     // 弹窗提交
     handleOk() {
-      this.$refs.ruleForm.validate((valid) => {
+      this.$refs.ruleForm.validate(async (valid) => {
         if (valid) {
-          if (this.type === 2 && !this.form.disable) {
-            this.removeSubmit();
-            return;
-          }
+          await this.removeSubmit();
           let tempForm = { ...this.form };
           if (this.type === 2) {
             delete tempForm.disable;
@@ -170,12 +170,11 @@ export default {
           const newForm = {
             ...getParameter(tempForm, this.functionName, this.domain)
           };
-          this.loading = true;
           this.$store
             .dispatch("cdn/saveConfig", newForm)
             .then((res) => {
               this.$message.success(`设置成功`);
-              this.$emit("success", this.type);
+              this.$emit("success");
               this.$emit("changeVisible", false);
             })
             .finally(() => {
