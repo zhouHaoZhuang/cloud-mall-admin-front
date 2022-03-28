@@ -165,6 +165,7 @@ export default {
         // 开通过
         if (res.code === "000000") {
           if (res.data === true) {
+            this.getData(this.currentDate()[this.date]);
             console.log("已开通CDN服务");
           } else {
             // 未开通
