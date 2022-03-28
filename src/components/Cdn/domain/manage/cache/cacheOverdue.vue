@@ -15,7 +15,7 @@
           rowKey="configId"
         >
           <div slot="ttl" slot-scope="text">
-            
+            {{ getTime(text) }}
           </div>
           <div slot="action" slot-scope="text, record">
             <a-space>
@@ -41,6 +41,7 @@
 <script>
 import UpdateCacheOverdueModal from "@/components/Cdn/domain/manage/cache/UpdateCacheOverdueModal";
 import { getForm } from "@/utils/index";
+import { overdueTimeEnum } from "@/utils/enum";
 export default {
   props: {
     tabsKey: {
@@ -66,6 +67,7 @@ export default {
   },
   data() {
     return {
+      overdueTimeEnum,
       tableLoading: false,
       columns: [
         {
@@ -76,11 +78,11 @@ export default {
           title: "类型",
           dataIndex: "type"
         },
-        {
-          title: "过期时间",
-          dataIndex: "ttl",
-          scopedSlots: { customRender: "ttl" }
-        },
+        // {
+        //   title: "过期时间",
+        //   dataIndex: "ttl",
+        //   scopedSlots: { customRender: "ttl" }
+        // },
         {
           title: "权重",
           dataIndex: "weight"
@@ -105,6 +107,12 @@ export default {
     };
   },
   methods: {
+    getTime(num) {
+      const timeType = Object.keys(this.overdueTimeEnum).find(
+        (ele) => num % ele === 0 && num >= ele
+      );
+      return timeType;
+    },
     // 查询配置信息
     getConfig() {
       this.tableLoading = true;

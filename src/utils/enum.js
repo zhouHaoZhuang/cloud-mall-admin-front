@@ -210,3 +210,12 @@ export const sourceProtocolEnum = {
   http: "HTTP",
   https: "HTTPS"
 };
+// 过期时间map
+export const overdueTimeEnum = {
+  1: "秒",
+  60: "分钟",
+  3600: "小时",
+  86400: "天",
+  2592000: "月",
+  31104000: "年"
+};
