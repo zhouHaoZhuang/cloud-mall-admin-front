@@ -41,7 +41,7 @@
       </div>
       <div class="right">
         <a-space>
-          <a-radio-group @change="handleRadioChange">
+          <a-radio-group v-model="date" @change="handleRadioChange">
             <a-radio-button value="toDay"> 今天 </a-radio-button>
             <a-radio-button value="yesterday"> 昨天 </a-radio-button>
             <a-radio-button value="aWeek"> 近7日 </a-radio-button>
@@ -80,7 +80,7 @@
         style="margin-top: 20px"
         :columns="columns"
         :data-source="data"
-        :rowKey="(record,index)=>index"
+        :rowKey="(record, index) => index"
         :pagination="false"
       >
         <template slot="footer">
@@ -133,6 +133,7 @@ export default {
           dataIndex: "value"
         }
       ],
+      date: "toDay",
       data: [{}],
       option: {
         title: {
@@ -148,7 +149,7 @@ export default {
         },
         xAxis: {
           type: "category",
-          data: ["00.00", "羊毛衫", "雪纺衫", "裤子", "高跟鞋", "袜子"]
+          data: ["00.00", "00.10", "00.20", "00.30", "00.40", "00.50"]
         },
         yAxis: {
           type: "value"
@@ -159,6 +160,23 @@ export default {
             restore: {}
           }
         },
+        // geo: {
+        //   componentType: "geo",
+        //   // Geo 组件在 option 中的 index
+        //   geoIndex: '1',
+        //   // 点击区域的名称，比如"上海"
+        //   name: '上海',
+        //   // 传入的点击区域的 region 对象，见 geo.regions
+        //   region: [
+        //     {
+        //       name: "广东",
+        //       itemStyle: {
+        //         areaColor: "red",
+        //         color: "red"
+        //       }
+        //     }
+        //   ]
+        // },
         dataZoom: [
           {
             id: "dataZoomX",
@@ -180,6 +198,8 @@ export default {
   created() {
     console.log(this.getDate());
     this.getDomainList();
+    this.listQuery.startTime = this.getDate()[this.date].startTime;
+    this.listQuery.endTime = this.getDate()[this.date].endTime;
   },
   methods: {
     myEcharts() {
