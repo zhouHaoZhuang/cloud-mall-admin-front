@@ -14,6 +14,9 @@
           :pagination="false"
           rowKey="configId"
         >
+          <div slot="ttl" slot-scope="text">
+            
+          </div>
           <div slot="action" slot-scope="text, record">
             <a-space>
               <a-button type="link" @click="handleEdit(record)">
@@ -67,20 +70,20 @@ export default {
       columns: [
         {
           title: "地址",
-          dataIndex: "type"
+          dataIndex: "address"
         },
         {
           title: "类型",
-          dataIndex: "content"
+          dataIndex: "type"
         },
         {
           title: "过期时间",
-          dataIndex: "priority",
-          scopedSlots: { customRender: "priority" }
+          dataIndex: "ttl",
+          scopedSlots: { customRender: "ttl" }
         },
         {
           title: "权重",
-          dataIndex: "priority"
+          dataIndex: "weight"
         },
         {
           title: "操作",
@@ -90,10 +93,12 @@ export default {
         }
       ],
       data: [],
-      functionName: "filetype_based_ttl_set",
+      functionName: "path_based_ttl_set,filetype_based_ttl_set",
       tempForm: {
-        key: "",
-        value: ""
+        file_type: "",
+        path: "",
+        ttl: "",
+        weight: ""
       },
       visible: false,
       modalDetail: {}
@@ -111,9 +116,12 @@ export default {
         .then((res) => {
           const newRes = res.data.domainConfigs.domainConfig;
           this.data = newRes.map((ele) => {
+            const newData = getForm(ele, this.tempForm);
             return {
               ...ele,
-              ...getForm(ele, this.tempForm)
+              ...newData,
+              address: newData.file_type || newData.path,
+              type: newData.file_type ? "文件后缀名" : "目录"
             };
           });
         })
