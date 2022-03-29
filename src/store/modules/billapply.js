@@ -8,7 +8,7 @@ const billapply = {
       return request({
         url: "/ccInvoiceInfo",
         method: "get",
-        params,
+        params
       });
     },
     // 获取明细列表
@@ -16,7 +16,7 @@ const billapply = {
       return request({
         url: `/ccInvoiceInfo`,
         method: "get",
-        params,
+        params
       });
     },
     // 获取发票抬头
@@ -24,7 +24,7 @@ const billapply = {
       return request({
         url: `/ccInvoiceEvaluate/invoiceTitle`,
         method: "get",
-        params,
+        params
       });
     },
     // 获取发票详情 金额数据
@@ -32,7 +32,7 @@ const billapply = {
       return request({
         url: `/ccInvoiceEvaluate/amount`,
         method: "get",
-        params,
+        params
       });
     },
     // 申请发票data
@@ -40,7 +40,7 @@ const billapply = {
       return request({
         url: `/invoiceRecord/issue`,
         method: "post",
-        data,
+        data
       });
     },
     // 获取发票详情 发票信息
@@ -48,7 +48,7 @@ const billapply = {
       return request({
         url: `/invoiceRecord/${params.id}`,
         method: "get",
-        params,
+        params
       });
     },
     // 获取发票详情 发票信息
@@ -56,7 +56,7 @@ const billapply = {
       return request({
         url: `/ccInvoiceEvaluate/addressInfo`,
         method: "get",
-        params,
+        params
       });
     },
     // 退票申请
@@ -64,7 +64,7 @@ const billapply = {
       return request({
         url: `/invoiceRecord/refund/${data.id}`,
         method: "patch",
-        data,
+        data
       });
     },
     // 修改地址
@@ -72,7 +72,9 @@ const billapply = {
       return request({
         url: `/invoiceRecord/updateAddress/${params.id}`,
         method: "patch",
-        params,
+        params: {
+          addressInfoId: params.addressInfoId
+        }
       });
     },
     // 获取
@@ -80,7 +82,7 @@ const billapply = {
       console.log(state);
       return request({
         url: `/ccInvoiceRecord/${id}`,
-        method: "get",
+        method: "get"
       });
     },
     // 添加
@@ -88,7 +90,7 @@ const billapply = {
       return request({
         url: "/pcOfflineRecharge/user",
         method: "post",
-        data: params,
+        data: params
       });
     },
     // 修改
@@ -96,17 +98,17 @@ const billapply = {
       return request({
         url: `/pcOfflineRecharge/user/${params.id}`,
         method: "put",
-        data: params,
+        data: params
       });
     },
     // 删除
     del({ commit, state }, id) {
       return request({
         url: `/pcOfflineRecharge/user/${id}`,
-        method: "delete",
+        method: "delete"
       });
-    },
-  },
+    }
+  }
 };
 
 export default billapply;

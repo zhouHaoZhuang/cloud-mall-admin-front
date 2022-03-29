@@ -325,7 +325,7 @@ export default {
         },
         {
           title: "产品名称",
-          dataIndex: "bizTypeName"
+          dataIndex: "productName"
         },
         {
           title: "订单金额",
@@ -354,7 +354,7 @@ export default {
         },
         {
           title: "产品名称",
-          dataIndex: "bizTypeName"
+          dataIndex: "productName"
         },
         {
           title: "订单金额",

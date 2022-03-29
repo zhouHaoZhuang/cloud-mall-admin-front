@@ -153,7 +153,7 @@ export default {
           dataIndex: "type",
           scopedSlots: { customRender: "type" }
         },
-        { title: "产品名称", dataIndex: "name" },
+        { title: "产品名称", dataIndex: "productName" },
         { title: "可开票金额", dataIndex: "canInvoiceAmount" },
         {
           title: "订单创建时间",
