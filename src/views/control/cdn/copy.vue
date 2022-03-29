@@ -78,7 +78,6 @@ export default {
     rowSelection() {
       const _this = this;
       const { selectedRowKeys } = this;
-      this.forbidArr = [];
       return {
         selectedRowKeys,
         onChange: this.onSelectChange,
