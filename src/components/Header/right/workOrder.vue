@@ -1,6 +1,8 @@
 <template>
   <div class="work-container" @click="$router.push('/user/workOrder/submit')">
-    <a-icon type="profile" /> 工单
+  
+    <img src="@/assets/img/menu/bill.png" class="img" width="18" height="20">
+   工单
   </div>
 </template>
 
@@ -26,5 +28,8 @@ export default {
 .work-container {
   padding: 0 20px;
   cursor: pointer;
+}
+.img{
+  margin-right: 6px;
 }
 </style>

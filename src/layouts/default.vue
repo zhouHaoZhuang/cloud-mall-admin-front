@@ -98,7 +98,9 @@ export default {
     .logo-wrap {
       width: 100%;
       height: 56px;
-      background-color: @primary-color;
+      // background-color: @primary-color;
+      background: url("../assets/img/menu/new_logo.png") no-repeat center;
+      background-color: #3B77E3;
       text-indent: -99999px;
       overflow: hidden;
       position: relative;
@@ -126,7 +128,7 @@ export default {
       .layout-box {
         flex: 1;
         height: 100%;
-        background: #fff;
+        background: #F5F7FD;
         padding: 24px 40px;
       }
     }
