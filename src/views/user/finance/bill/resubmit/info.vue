@@ -12,7 +12,7 @@
         <a-descriptions-item label="发票ID">
           {{ data.invoiceNo }}
         </a-descriptions-item>
-        <a-descriptions-item label="开具类型"> 
+        <a-descriptions-item label="开具类型">
           {{ issueTypeMap[data.invoiceInfo.issueType] }}
         </a-descriptions-item>
         <a-descriptions-item label="发票类型">
@@ -36,6 +36,14 @@
           :pagination="false"
           rowKey="id"
         >
+          <div slot="canInvoiceAmount" slot-scope="text, record">
+            <span v-if="record.consumptionType === 2">
+              {{ record.debtAmount }}
+            </span>
+            <span v-if="record.consumptionType === 1">
+              {{ record.canInvoiceAmount }}
+            </span>
+          </div>
           <div slot="type" slot-scope="text">
             {{ typeMap[text] }}
           </div>
@@ -89,7 +97,7 @@ export default {
   },
   data() {
     return {
-      data:null,
+      data: null,
       typeMap: {
         1: "订单",
         2: "账单"
@@ -136,7 +144,7 @@ export default {
               /((\d{11})|^((\d{7,8})|(\d{4}|\d{3})-(\d{7,8})|(\d{4}|\d{3})-(\d{7,8})-(\d{4}|\d{3}|\d{2}|\d{1})|(\d{7,8})-(\d{4}|\d{3}|\d{2}|\d{1}))$)/,
             message: "请输入正确的联系电话",
             trigger: ["blur", "change"]
-          },
+          }
         ],
         refundRemark: [
           {
@@ -155,10 +163,16 @@ export default {
           scopedSlots: { customRender: "type" }
         },
         { title: "产品名称", dataIndex: "productName" },
-        { title: "可开票金额", dataIndex: "canInvoiceAmount" },
+        {
+          title: "开票金额",
+          dataIndex: "canInvoiceAmount",
+          scopedSlots: {
+            customRender: "canInvoiceAmount"
+          }
+        },
         {
           title: "订单创建时间",
-          dataIndex: "createTimeShow",
+          dataIndex: "createTimeShow"
         }
       ],
       dataDetails: [],

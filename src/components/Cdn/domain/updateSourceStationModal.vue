@@ -24,7 +24,7 @@
           </a-radio>
         </a-radio-group>
       </a-form-model-item>
-      <a-form-model-item label="域名" prop="content">
+      <a-form-model-item :label="cdnTypeEnum[form.type]" prop="content">
         <a-input v-model="form.content" placeholder="请输入" />
       </a-form-model-item>
       <a-form-model-item label="优先级" prop="priority">
@@ -44,7 +44,7 @@
       <a-form-model-item label="权重" prop="weight">
         <a-input
           v-model="form.weight"
-          v-number-evolution="{ value: 0, min: 0, max: 100 }"
+          v-number-evolution="{ value: 0, min: 1, max: 100 }"
           style="width: 120px"
         />
         <div class="info-txt">
@@ -52,7 +52,11 @@
         </div>
       </a-form-model-item>
       <a-form-model-item label="端口" prop="port">
-        <a-input v-model="form.port" v-number-evolution style="width: 120px" />
+        <a-input
+          v-model="form.port"
+          v-number-evolution="{ value: 0, min: 1, max: 65535 }"
+          style="width: 120px"
+        />
         <div class="info-txt">
           HTTP支持端口1-65535，HTTPS支持443端口，如果需要HTTPS支持自定义端口，请提交工单
         </div>
@@ -137,7 +141,7 @@ export default {
         content: [
           {
             required: true,
-            message: "请输入域名",
+            message: "请输入",
             trigger: ["blur", "change"]
           }
         ],

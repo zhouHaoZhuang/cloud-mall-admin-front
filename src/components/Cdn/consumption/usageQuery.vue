@@ -83,10 +83,13 @@
         :rowKey="(record, index) => index"
         :pagination="false"
       >
+        <div v-if="text" slot="value" slot-scope="text">
+          {{ (text / 1024 ** 3).toFixed(2) }}
+        </div>
         <template slot="footer">
           <div class="total">
             <span>总计</span>
-            <span>{{ totalFlow }}G</span>
+            <span>{{ totalFlow !== "" ? totalFlow.toFixed(2) : "" }}G</span>
           </div>
         </template>
       </a-table>
@@ -130,7 +133,8 @@ export default {
         },
         {
           title: "总流量",
-          dataIndex: "value"
+          dataIndex: "value",
+          scopedSlots: { customRender: "value" }
         }
       ],
       date: "toDay",
@@ -232,13 +236,15 @@ export default {
       // this.
       console.log(e.target.value);
       this.listQuery.startTime = this.getDate()[e.target.value].startTime;
+      this.listQuery.interval = this.getDate()[e.target.value].interval;
       this.listQuery.endTime = this.getDate()[e.target.value].endTime;
     },
     getDate() {
       return {
         toDay: {
           startTime: this.moment().startOf("day").format("YYYY-MM-DD 00:00:00"),
-          endTime: this.moment().startOf("day").format("YYYY-MM-DD 23:59:59")
+          endTime: this.moment().startOf("day").format("YYYY-MM-DD 23:59:59"),
+          interval: "3600"
         },
         yesterday: {
           startTime: this.moment()
@@ -246,7 +252,8 @@ export default {
             .format("YYYY-MM-DD 00:00:00"),
           endTime: this.moment()
             .subtract(1, "days")
-            .format("YYYY-MM-DD 23:59:59")
+            .format("YYYY-MM-DD 23:59:59"),
+          interval: "3600"
         },
         aWeek: {
           startTime: this.moment()
@@ -254,7 +261,8 @@ export default {
             .format("YYYY-MM-DD 00:00:00"),
           endTime: this.moment()
             .subtract(1, "days")
-            .format("YYYY-MM-DD 23:59:59")
+            .format("YYYY-MM-DD 23:59:59"),
+          interval: "86400"
         },
         nearlyMonth: {
           startTime: this.moment()
@@ -262,7 +270,8 @@ export default {
             .format("YYYY-MM-DD 00:00:00"),
           endTime: this.moment()
             .subtract(1, "days")
-            .format("YYYY-MM-DD 23:59:59")
+            .format("YYYY-MM-DD 23:59:59"),
+          interval: "86400"
         }
       };
     },
@@ -279,11 +288,15 @@ export default {
           let flowList = [];
           let totalFlow = 0;
           this.data.forEach((item) => {
-            dateList.push(item.timeStamp.substring(11));
-            flowList.push(item.value);
+            if (this.date === "aWeek" || this.date === "nearlyMonth") {
+              dateList.push(item.timeStamp.substring(5, 11));
+            } else {
+              dateList.push(item.timeStamp.substring(11, 16));
+            }
+            flowList.push((item.value / 1024 ** 3).toFixed(2));
             totalFlow += item.value * 1;
           });
-          this.totalFlow = totalFlow;
+          this.totalFlow = totalFlow / 1024 ** 3;
           this.$set(this.option, "xAxis", {
             type: "category",
             data: dateList

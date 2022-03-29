@@ -47,7 +47,8 @@
       <div v-if="agreementForm.enable" class="content-row">
         <div class="label">协议类型</div>
         <div class="value">
-          <span>
+          <span v-if="agreementForm.scheme_origin === 'follow'"> 跟随 </span>
+          <span v-else>
             {{ agreementForm.scheme_origin }}
           </span>
         </div>

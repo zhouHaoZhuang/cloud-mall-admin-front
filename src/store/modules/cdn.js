@@ -117,6 +117,22 @@ const cdn = {
         method: "post",
         data
       });
+    },
+    // 获取加速域名的配置信息
+    getCdnConfig({ commit, state }, data) {
+      return request({
+        url: "/aliyun/cdn/describeCdnDomainDistinctConfigs",
+        method: "post",
+        data
+      });
+    },
+    // 复制配置
+    copyConfig({ commit, state }, data) {
+      return request({
+        url: "/aliyun/cdn/copyConfig",
+        method: "post",
+        data
+      });
     }
   }
 };

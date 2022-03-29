@@ -65,6 +65,10 @@ export default {
           this.$nextTick(() => {
             this.resetForm();
           });
+        } else {
+          this.form = {
+            scope: this.scope
+          };
         }
       }
     }
@@ -76,7 +80,7 @@ export default {
       wrapperCol: { span: 15 },
       loading: false,
       form: {
-        scope: this.scope
+        scope: ""
       },
       rules: {
         scope: [
@@ -93,6 +97,13 @@ export default {
     // 关闭弹窗
     handleCancel() {
       this.$emit("changeVisible", false);
+    },
+    // 重置表单数据
+    resetForm() {
+      this.$refs.ruleForm.clearValidate();
+      this.form = {
+        scope: ""
+      };
     },
     // 弹窗提交
     handleOk() {
