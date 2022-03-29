@@ -457,7 +457,7 @@ export const asyncRoute = [
                   ),
                 meta: {
                   hiddenMenu: true,
-                  perm: "user-setting-changPwd"
+                  perm: "user-setting-changePwd"
                 }
               },
               {

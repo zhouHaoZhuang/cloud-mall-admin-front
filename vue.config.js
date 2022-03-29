@@ -35,14 +35,14 @@ module.exports = {
     // open: "true",  //自动打开浏览器
     proxy: {
       "/ims": {
-        target: "http://site.ydidc.com/ims",
+        target: "http://site.sailayun.com/ims",
         changeOrigin: true,
         pathRewrite: {
           "^/ims": ""
         }
       },
       "/fs": {
-        target: "http://site.ydidc.com/fs",
+        target: "http://site.sailayun.com/fs",
         changeOrigin: true,
         pathRewrite: {
           "^/fs": ""
