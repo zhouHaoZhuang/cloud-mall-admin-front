@@ -30,6 +30,7 @@ const assetsCDN = {
 };
 
 module.exports = {
+  lintOnSave:false,
   devServer: {
     port: 8000, //自定义项目运行端口
     // open: "true",  //自动打开浏览器
