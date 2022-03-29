@@ -156,7 +156,7 @@ export default {
           let tempForm = {
             key: this.form.key,
             value: this.form.value,
-            header_operation_type: this.type
+            header_operation_type: 'add'
           };
           const newForm = {
             ...getParameter(tempForm, this.functionName, this.domain)

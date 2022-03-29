@@ -112,9 +112,12 @@ export default {
       handler(newVal) {
         if (JSON.stringify(newVal) !== "{}") {
           this.type = "edit";
-          this.timeType = "1";
+          const newArr = Object.keys(this.overdueTimeEnum).reverse();
+          const timeType = newArr.find((ele) => newVal.ttl % ele === 0);
+          this.timeType = timeType.toString();
           this.form = {
             ...newVal,
+            ttl: newVal.ttl / timeType,
             type: newVal.file_type ? 2 : 1
           };
         } else {
@@ -192,6 +195,12 @@ export default {
     handleOk() {
       this.$refs.ruleForm.validate((valid) => {
         if (valid) {
+          const newTtl = this.form.ttl * this.timeType;
+          const count = 93312000;
+          if (newTtl > count) {
+            this.$message.warning(`过期时间不可以超过3年`);
+            return;
+          }
           let newFunctionName = "";
           let tempForm = {
             ttl: this.form.ttl * this.timeType,
