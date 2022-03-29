@@ -104,16 +104,18 @@
         </span>
         <div slot="action" slot-scope="text, record">
           <a-space>
-            <a-button type="link" @click="handleManage(record)">
+            <a-button type="link" @click="handleManage(record)" :disabled="record.corporationLockStatus == 0 || record.systemLockStatus == 0">
               管理
             </a-button>
-            <a-button type="link" @click="handleCopy(record)">
+            <a-button type="link" @click="handleCopy(record)" >
+              <!-- :disabled="record.corporationLockStatus == 0 || record.systemLockStatus == 0" -->
               复制配置
             </a-button>
             <a-button
               v-if="record.cdnStatus === 2"
               type="link"
               @click="handleChangeStatus('open', [record.id])"
+              :disabled="record.corporationLockStatus == 0 || record.systemLockStatus == 0"
             >
               启用
             </a-button>
@@ -121,10 +123,11 @@
               v-if="record.cdnStatus === 1"
               type="link"
               @click="handleChangeStatus('stop', [record.id])"
+              :disabled="record.corporationLockStatus == 0 || record.systemLockStatus == 0"
             >
               停用
             </a-button>
-            <a-button type="link" @click="handleDel([record.id])">
+            <a-button type="link" @click="handleDel([record.id])" :disabled="record.corporationLockStatus == 0 || record.systemLockStatus == 0">
               删除
             </a-button>
           </a-space>
@@ -298,6 +301,7 @@ export default {
       this.$router.push({
         path: "/control/cdn/copy",
         query: {
+          domain:record.domain
           // id: record.id,
           // monitor: true
         }
