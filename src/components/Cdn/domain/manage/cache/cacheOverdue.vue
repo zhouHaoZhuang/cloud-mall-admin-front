@@ -77,11 +77,11 @@ export default {
           title: "类型",
           dataIndex: "type"
         },
-        // {
-        //   title: "过期时间",
-        //   dataIndex: "ttl",
-        //   scopedSlots: { customRender: "ttl" }
-        // },
+        {
+          title: "过期时间",
+          dataIndex: "ttl",
+          scopedSlots: { customRender: "ttl" }
+        },
         {
           title: "权重",
           dataIndex: "weight"
@@ -107,10 +107,24 @@ export default {
   },
   methods: {
     getTime(num) {
-      const timeType = Object.keys(this.overdueTimeEnum).find(
-        (ele) => num % ele === 0 && num >= ele
-      );
-      return timeType;
+      // if (num < 60) {
+      //   return num + "秒";
+      // } else {
+      //   var min_total = num / 60; // 分钟
+      //   if (min_total < 60) {
+      //     return min_total + "分钟";
+      //   } else {
+      //     var hour_total = Math.floor(min_total / 60); // 小时数
+      //     if (hour_total < 24) {
+      //       return hour_total + "小时";
+      //     } else {
+      //       var day_total = Math.floor(hour_total / 24); // 天数
+      //     }
+      //   }
+      // }
+      const newArr = Object.keys(this.overdueTimeEnum).reverse();
+      const timeType = newArr.find((ele) => num % ele === 0);
+      return num / timeType + this.overdueTimeEnum[timeType];
     },
     // 查询配置信息
     getConfig() {

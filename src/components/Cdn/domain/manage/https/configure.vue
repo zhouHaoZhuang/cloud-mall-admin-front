@@ -10,7 +10,7 @@
       <div class="content-row">
         <div class="label">HTTPS证书</div>
         <div class="value">
-          已关闭
+          {{ sslForm.enable ? "已开启" : "已关闭" }}
           <div class="txt">
             提供全链路HTTPS安全加速方案, 支持证书上传和状态管理。
           </div>
@@ -153,6 +153,7 @@ export default {
     tabsKey: {
       handler(newVal) {
         if (newVal === 4) {
+          this.getDomainHttps();
           this.getForceConfig();
           this.getBatchConfig();
         }
@@ -198,6 +199,9 @@ export default {
           form: { tls10: false, tls11: false, tls12: false, tls13: false }
         }
       },
+      sslForm: {
+        enable: false
+      },
       http2Form: {
         http2: false
       },
@@ -213,6 +217,17 @@ export default {
     };
   },
   methods: {
+    // 获取https配置
+    getDomainHttps() {
+      this.$store
+        .dispatch("cdn/getDomainHttps", { domainName: this.domain })
+        .then((res) => {
+          const newData = res.data.certInfos.certInfo[0];
+          this.sslForm = {
+            enable: newData.enable === "on" ? true : false
+          };
+        });
+    },
     // 获取强制跳转配置
     getForceConfig() {
       this.$store
@@ -257,7 +272,6 @@ export default {
               };
             }
             if (type === 3) {
-              console.log("sadad", getForm(data[0], newForm));
               this.http2Form = {
                 ...getForm(data[0], newForm)
               };
@@ -272,6 +286,10 @@ export default {
     },
     // 弹窗成功回调
     modalSuccess(type) {
+      if (type === -1) {
+        this.getDomainHttps();
+        return;
+      }
       if (type === 1) {
         this.getForceConfig();
         return;

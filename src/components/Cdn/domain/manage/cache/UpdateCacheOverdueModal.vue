@@ -192,6 +192,12 @@ export default {
     handleOk() {
       this.$refs.ruleForm.validate((valid) => {
         if (valid) {
+          const newTtl = this.form.ttl * this.timeType;
+          const count = 93312000;
+          if (newTtl > count) {
+            this.$message.warning(`过期时间不可以超过3年`);
+            return;
+          }
           let newFunctionName = "";
           let tempForm = {
             ttl: this.form.ttl * this.timeType,
