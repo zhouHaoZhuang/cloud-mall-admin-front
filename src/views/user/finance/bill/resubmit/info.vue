@@ -164,7 +164,7 @@ export default {
         },
         { title: "产品名称", dataIndex: "productName" },
         {
-          title: "可开票金额",
+          title: "开票金额",
           dataIndex: "canInvoiceAmount",
           scopedSlots: {
             customRender: "canInvoiceAmount"

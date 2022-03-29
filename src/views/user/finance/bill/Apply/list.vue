@@ -340,7 +340,7 @@ export default {
           dataIndex: "originalAmount"
         },
         {
-          title: "可开票金额",
+          title: "开票金额",
           dataIndex: "canInvoiceAmount",
           scopedSlots: {
             customRender: "canInvoiceAmount"
