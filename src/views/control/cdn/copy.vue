@@ -84,10 +84,7 @@ export default {
         getCheckboxProps: (record) => ({
           props: {
             // 全部默认禁止选中
-            // disabled: true,
-            disabled: this.forbidArr.forEach((element) => {
-              element.configId == record.configId;
-            }),
+            disabled: record.disabled,
             // 某几项默认选中(R: 当state等于1时)
             defaultChecked: record.state == 1
           }
@@ -101,11 +98,9 @@ export default {
       // 穿梭框
       domainData: [],
       targetKeys: [],
-      forbidArr: [],
-      newObj: [],
-      showSuccess:false,
-      selectedKeys: ['1'], //默认选择域名
-      copyType:undefined, //复制类型：sourceInfo:复制源站信息；other:其他配置信息
+      showSuccess: false,
+      selectedKeys: ["1"], //默认选择域名
+      copyType: undefined, //复制类型：sourceInfo:复制源站信息；other:其他配置信息
       // 表格
       tableLoading: false,
       columns: [
@@ -118,10 +113,10 @@ export default {
           dataIndex: "configEnable"
         }
       ],
-      data: [{}],
+      data: [],
       selectedRowKeys: [],
       loading: false,
-      targetDomains:'', //目标配置
+      targetDomains: "", //目标配置
       listQuery: {
         key: undefined,
         search: "",
@@ -130,11 +125,11 @@ export default {
         currentPage: 1,
         pageSize: 10,
         total: 0
-      }
+      },
+      defaultConfigId: ""
     };
   },
   created() {
-    console.log(this.forbidArr, "forbidArr");
     this.getConfig();
     this.getList();
   },
@@ -164,7 +159,7 @@ export default {
                 functionNames: this.functionName
               })
               .then((res) => {
-                this.showSuccess = true
+                this.showSuccess = true;
                 this.$message.success("复制成功");
                 // this.getConfig();
                 // this.current = 1
@@ -188,8 +183,14 @@ export default {
               id: 0
             }
           ];
-          this.newObj = res.data.domainConfigs.domainConfig;
-          this.data = obj.concat(this.newObj);
+          const newData = res.data.domainConfigs.domainConfig;
+          this.data = newData.map((ele) => {
+            return {
+              ...ele,
+              disabled: false
+            };
+          });
+          this.defaultConfigId = newData.length > 1 ? newData[0].configId : "";
         });
     },
     //查询列表
@@ -208,28 +209,32 @@ export default {
         .finally(() => {});
     },
     onSelectChange(selectedRowKeys) {
-      //获取选择的行
-      // 选中的数组中有id为0的 其他的不能选 放进禁用的数组中 没有1的 1不能选 1放在禁用数组中
-      // 新的数组放置要禁用的数组id
-      this.selectedRowKeys = selectedRowKeys;
-      if (this.selectedRowKeys.length) {
-        if (this.selectedRowKeys.includes(0)) {
-          this.forbidArr = this.newObj;
-          this.copyType = 'sourceInfo'
-        } else {
-          this.forbidArr = this.data[0];
-          this.copyType = 'other'
-        }
+      const newData = [...this.data];
+      if (selectedRowKeys.length === 0) {
+        this.data = newData.map((ele) => {
+          return {
+            ...ele,
+            disabled: false
+          };
+        });
+        this.selectedRowKeys = selectedRowKeys;
+        return;
       }
-
-      console.log(this.forbidArr, "forbidArr");
-
-      // if (this.selectedRowKeys.length) {
-      //   this.disabled = false;
-      // } else {
-      //   this.disabled = true;
-      // }
-    },
+      const flag = selectedRowKeys.indexOf(this.defaultConfigId) !== -1;
+      this.data = newData.map((ele, index) => {
+        let disabled = false;
+        if (flag) {
+          disabled = index === 0 ? false : true;
+        } else {
+          disabled = index !== 0 ? false : true;
+        }
+        return {
+          ...ele,
+          disabled
+        };
+      });
+      this.selectedRowKeys = selectedRowKeys;
+    }
   }
 };
 </script>
