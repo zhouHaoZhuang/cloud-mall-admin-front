@@ -107,8 +107,7 @@
             <a-button type="link" @click="handleManage(record)" :disabled="record.corporationLockStatus == 0 || record.systemLockStatus == 0">
               管理
             </a-button>
-            <a-button type="link" @click="handleCopy(record)" >
-              <!-- :disabled="record.corporationLockStatus == 0 || record.systemLockStatus == 0" -->
+            <a-button type="link" @click="handleCopy(record)" :disabled="record.corporationLockStatus == 0 || record.systemLockStatus == 0" >
               复制配置
             </a-button>
             <a-button
