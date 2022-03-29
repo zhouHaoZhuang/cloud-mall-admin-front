@@ -35,7 +35,7 @@
             @change="handleRadioChange"
           >
             <a-radio :value="1"> 加速域名 </a-radio>
-            <a-radio :value="2" :disabled="true"> 源站域名 </a-radio>
+            <!-- <a-radio :value="2"> 源站域名 </a-radio> -->
             <a-radio :value="3"> 自定义域名 </a-radio>
           </a-radio-group>
         </a-form-model-item>
@@ -223,7 +223,7 @@ export default {
             domain_name: this.form.domain_name
           };
         }
-        if (this.type === 3 && !this.form.enable) {
+        if (this.type === 3 && !this.form.enabled) {
           tempForm = {
             enabled: this.form.enabled
           };
@@ -231,6 +231,7 @@ export default {
         newForm = {
           ...getParameter(tempForm, this.functionName, this.domain)
         };
+        console.log(tempForm, newForm);
       }
       this.$refs.ruleForm.validate((valid) => {
         if (valid) {

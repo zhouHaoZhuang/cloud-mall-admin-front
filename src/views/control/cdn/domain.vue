@@ -96,6 +96,9 @@
           <a-tag v-if="text === 1"> 未开启 </a-tag>
           <a-tag v-if="text === 2" color="green"> 已开启 </a-tag>
         </div>
+        <div slot="sourceInfo" slot-scope="text">
+          <div class="text-overflow">{{ text }}</div>
+        </div>
         <span slot="createTime" slot-scope="text">
           {{ text | formatDate }}
         </span>
@@ -170,7 +173,8 @@ export default {
         },
         {
           title: "源站信息",
-          dataIndex: "sourceInfo"
+          dataIndex: "sourceInfo",
+          scopedSlots: { customRender: "sourceInfo" }
         },
         {
           title: "创建时间",
@@ -246,6 +250,7 @@ export default {
               sourceInfo: newSourceInfo
             };
           });
+          console.log(this.data);
           this.paginationProps.total = res.data.totalCount * 1;
         })
         .finally(() => {

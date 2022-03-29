@@ -46,16 +46,16 @@
         <a-radio value="none">
           <div class="box">不使用第三方支付</div>
         </a-radio>
-        <a-radio value="ali">
+        <a-radio v-if="allConfig.online_pay" value="ali">
           <div class="box">
             支付宝
             <a-icon class="alipay-icon" type="alipay-circle" />
           </div>
         </a-radio>
-        <a-radio value="wechat">
+        <a-radio v-if="allConfig.online_pay" value="wechat">
           <div class="box">
             微信
-            <a-icon class="wechat-icon"  type="wechat" />
+            <a-icon class="wechat-icon" type="wechat" />
           </div>
         </a-radio>
       </a-radio-group>
@@ -150,7 +150,8 @@ export default {
   },
   computed: {
     ...mapState({
-      companyInfo: (state) => state.dashboard.companyInfo
+      companyInfo: (state) => state.dashboard.companyInfo,
+      allConfig: (state) => state.user.allConfig
     }),
     // 判断账户余额是否足够支付当前订单
     getTotalAmountIsPay() {
@@ -262,7 +263,6 @@ export default {
 </script>
 
 <style lang="less" scoped>
-
 .pay-select-container {
   font-size: 12px;
   color: #262829;
@@ -343,9 +343,9 @@ export default {
         transform: translateY(-50%);
         right: 20px;
       }
-      .wechat-icon{
+      .wechat-icon {
         font-size: 40px;
-        color: #08C161;
+        color: #08c161;
         position: absolute;
         top: 50%;
         transform: translateY(-50%);
