@@ -329,7 +329,7 @@ export default {
     },
     // 跳转云商城价格详情
     handleJumpCloud() {
-      jumpCloudMall("/cloud-price", true);
+      jumpCloudMall("/price-detail", true);
     },
     // 弹窗成功回调
     modalSuccess(type, val) {
