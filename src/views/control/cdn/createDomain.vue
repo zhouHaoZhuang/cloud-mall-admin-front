@@ -120,7 +120,11 @@
           源站类型支持OSS域名、IP、源站域名，源站总数量最大不超过20个，并支持在多源站场景下设置源站的主备优先级和负载均衡权重。
         </div>
         <a-form-model-item label="源站信息">
-          <a-button type="primary" @click="handleAddSource">
+          <a-button
+            type="primary"
+            :disabled="form.sourceInfo.sourceModel.length === 20"
+            @click="handleAddSource"
+          >
             新增源站信息
           </a-button>
           <a-table
@@ -163,7 +167,9 @@
           <a-space>
             <a-button
               type="primary"
-              :disabled="!form.domain"
+              :disabled="
+                !form.domain || form.sourceInfo.sourceModel.length === 0
+              "
               :loading="loading"
               @click="handleNext"
             >
@@ -412,7 +418,13 @@ export default {
     },
     // 取消
     handleCancel() {
-      this.$router.back();
+      this.$confirm({
+        title: "退出后将丢失已填写信息，是否确认退出域名添加流程？",
+        centered: true,
+        onOk: () => {
+          this.$router.back();
+        }
+      });
     },
     // 如何设置域名
     handleCourse() {
