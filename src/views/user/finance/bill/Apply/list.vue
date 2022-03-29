@@ -101,6 +101,14 @@
           rowKey="id"
           :pagination="paginationPropsInvoice"
         >
+          <div slot="canInvoiceAmount" slot-scope="text, record">
+            <span v-if="record.consumptionType === 2">
+              {{ record.debtAmount }}
+            </span>
+            <span v-if="record.consumptionType === 1">
+              {{ record.canInvoiceAmount }}
+            </span>
+          </div>
           <div slot="type" slot-scope="text">
             {{ typeMap[text] }}
           </div>
@@ -333,7 +341,10 @@ export default {
         },
         {
           title: "可开票金额",
-          dataIndex: "canInvoiceAmount"
+          dataIndex: "canInvoiceAmount",
+          scopedSlots: {
+            customRender: "canInvoiceAmount"
+          }
         },
         {
           title: "订单创建时间",
