@@ -10,7 +10,7 @@
       <!-- 步骤 -->
       <a-steps :current="current">
         <a-step title="选择配置项" />
-        <a-step title="选择域名" />
+        <!-- <a-step title="选择域名" /> -->
         <a-step title="完成" />
       </a-steps>
       <div class="box">
@@ -31,7 +31,7 @@
           </a-table>
         </div>
         <!-- 选择域名 -->
-        <div v-if="current === 1" class="transfer">
+        <!-- <div v-if="current === 1" class="transfer">
           <a-transfer
             :titles="['域名', '已选域名']"
             :rowKey="(record) => record.id"
@@ -47,7 +47,7 @@
             :render="(item) => item.domain"
             @change="handleChange"
           />
-        </div>
+        </div> -->
         <!-- 完成 -->
         <a-result v-if="showSuccess" status="success" title="复制配置完成">
           <template #extra>
@@ -59,7 +59,12 @@
         <!-- 按钮 -->
         <div v-if="!showSuccess" class="btn-box">
           <a-space>
-            <a-button type="primary" :loading="loading" @click="handleNext">
+            <a-button
+              type="primary"
+              :loading="loading"
+              :disabled="!this.selectedRowKeys.length"
+              @click="handleNext"
+            >
               下一步
             </a-button>
             <a-button @click="handleCancel"> 取消 </a-button>
@@ -103,6 +108,7 @@ export default {
       copyType: undefined, //复制类型：sourceInfo:复制源站信息；other:其他配置信息
       // 表格
       tableLoading: false,
+      functionNames: undefined,
       columns: [
         {
           title: "配置项",
@@ -145,8 +151,16 @@ export default {
     },
     // 提交下一步
     handleNext() {
-      this.current += 1;
-      if (this.current == 2) {
+      if (this.current === 0) {
+        let arrs = [];
+        this.data.forEach((val) => {
+          this.selectedRowKeys.forEach((element) => {
+            if (val.configId == element) {
+              arrs.push(val.functionName);
+            }
+          });
+        });
+        this.functionNames = arrs.toString();
         this.$confirm({
           title:
             "您确定要批量复制配置项吗?域名配置复制后，操作不可逆，请务必确认您的域名复制选择无误",
@@ -156,16 +170,18 @@ export default {
                 copyType: this.copyType, //复制类型：sourceInfo:复制源站信息；other:其他配置信息
                 sourceDomain: this.$route.query.domain,
                 targetDomains: this.targetDomains,
-                functionNames: this.functionName
+                functionNames: this.functionNames
               })
               .then((res) => {
                 this.showSuccess = true;
                 this.$message.success("复制成功");
                 // this.getConfig();
-                // this.current = 1
+                this.current += 1
               });
           }
         });
+      }else{
+        this.current += 1;
       }
     },
     // 取消
@@ -180,10 +196,10 @@ export default {
             {
               functionNameCn: "回源信息",
               configEnable: "已设置",
-              id: 0
+              configId: 0
             }
           ];
-          const newData = res.data.domainConfigs.domainConfig;
+          const newData = obj.concat(res.data.domainConfigs.domainConfig);
           this.data = newData.map((ele) => {
             return {
               ...ele,
@@ -228,12 +244,20 @@ export default {
         } else {
           disabled = index !== 0 ? false : true;
         }
+
         return {
           ...ele,
           disabled
         };
       });
       this.selectedRowKeys = selectedRowKeys;
+      this.selectedRowKeys.forEach((val) => {
+        if (val == 0) {
+          this.copyType = "sourceInfo";
+        } else {
+          this.copyType = "other";
+        }
+      });
     }
   }
 };
