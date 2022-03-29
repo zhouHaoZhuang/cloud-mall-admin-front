@@ -23,7 +23,7 @@
           <div class="info-txt">支持添加泛域名，如"*.example.com"</div>
         </a-form-model-item>
         <a-form-model-item
-          v-if="isShowCheck"
+          v-if="isShowCheck && form.domain"
           :wrapper-col="{ span: 10, offset: 3 }"
         >
           <div class="check-domain-box">
@@ -315,9 +315,8 @@ export default {
           if (res.data !== "success") {
             this.verifyCode = res.data;
             this.$message.warning("验证失败");
-            this.verifyStatus = "err";
+            // this.verifyStatus = "err";
           } else {
-            this.isShowCheck = false;
             this.verifyCode = "";
             this.verifyStatus = "wait";
             this.$message.success("域名归属权校验成功");
@@ -325,6 +324,7 @@ export default {
         })
         .finally(() => {
           this.checkDomainStatus = "";
+          this.isShowCheck = false;
         });
     },
     // 跳转云商城价格详情
