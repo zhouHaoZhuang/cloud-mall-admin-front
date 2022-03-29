@@ -36,17 +36,17 @@
             {{ example.memory }}G
           </span>
         </a-form-model-item>
-        <a-form-model-item v-if="tabKey === '1'" label="分类">
+        <!-- <a-form-model-item v-if="tabKey === '1'" label="分类">
           <a-radio-group v-model="form.specFamily" @change="typeChange">
             <a-radio
               v-for="item in typeList"
-              :key="item.typeFamily"
-              :value="item.typeFamily"
+              :key="item.value"
+              :value="item.value"
             >
-              {{ item.description }}
+              {{ item.title }}
             </a-radio>
           </a-radio-group>
-        </a-form-model-item>
+        </a-form-model-item> -->
         <a-form-model-item class="cpu-wrap" v-if="tabKey === '1'" label="CPU">
           <a-select
             style="width: 160px"
@@ -413,7 +413,7 @@ export default {
       this.$store
         .dispatch("cloud/getRegionDetail", {
           regionId: this.detail.regionId,
-          specFamily: "general-purpose",
+          specFamily: this.form.specFamily,
           family: "general-purpose",
           cpuCoreCount: this.form.cpu,
           memorySize: this.form.memory,
