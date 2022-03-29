@@ -101,6 +101,22 @@ const cdn = {
         method: "post",
         data
       });
+    },
+    // 查询当前域名的https配置
+    getDomainHttps({ commit, state }, data) {
+      return request({
+        url: `/aliyun/cdn/describeDomainCertificateInfo`,
+        method: "post",
+        data
+      });
+    },
+    // 配置当前域名的https配置
+    saveDomainHttps({ commit, state }, data) {
+      return request({
+        url: "/aliyun/cdn/setDomainServerCertificate",
+        method: "post",
+        data
+      });
     }
   }
 };

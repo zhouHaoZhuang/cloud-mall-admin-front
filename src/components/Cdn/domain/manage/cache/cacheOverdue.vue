@@ -77,11 +77,11 @@ export default {
           title: "类型",
           dataIndex: "type"
         },
-        // {
-        //   title: "过期时间",
-        //   dataIndex: "ttl",
-        //   scopedSlots: { customRender: "ttl" }
-        // },
+        {
+          title: "过期时间",
+          dataIndex: "ttl",
+          scopedSlots: { customRender: "ttl" }
+        },
         {
           title: "权重",
           dataIndex: "weight"
@@ -107,10 +107,9 @@ export default {
   },
   methods: {
     getTime(num) {
-      const timeType = Object.keys(this.overdueTimeEnum).find(
-        (ele) => num % ele === 0 && num >= ele
-      );
-      return timeType;
+      const newArr = Object.keys(this.overdueTimeEnum).reverse();
+      const timeType = newArr.find((ele) => num % ele === 0);
+      return num / timeType + this.overdueTimeEnum[timeType];
     },
     // 查询配置信息
     getConfig() {
