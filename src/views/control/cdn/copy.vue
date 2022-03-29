@@ -149,10 +149,6 @@ export default {
     handleChange(targetKeys, direction, moveKeys) {
       this.targetKeys = [...targetKeys];
     },
-    // 表格多选
-    onSelectChange(selectedRowKeys) {
-      this.selectedRowKeys = selectedRowKeys;
-    },
     // 提交下一步
     handleNext() {
       this.current += 1;
