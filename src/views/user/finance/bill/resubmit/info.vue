@@ -132,10 +132,11 @@ export default {
             trigger: "blur"
           },
           {
-            pattern: /^1[3456789]\d{9}$/,
-            message: "请填写正确的联系电话",
-            trigger: "blur"
-          }
+            pattern:
+              /((\d{11})|^((\d{7,8})|(\d{4}|\d{3})-(\d{7,8})|(\d{4}|\d{3})-(\d{7,8})-(\d{4}|\d{3}|\d{2}|\d{1})|(\d{7,8})-(\d{4}|\d{3}|\d{2}|\d{1}))$)/,
+            message: "请输入正确的联系电话",
+            trigger: ["blur", "change"]
+          },
         ],
         refundRemark: [
           {
@@ -153,7 +154,7 @@ export default {
           dataIndex: "type",
           scopedSlots: { customRender: "type" }
         },
-        { title: "产品名称", dataIndex: "name" },
+        { title: "产品名称", dataIndex: "productName" },
         { title: "可开票金额", dataIndex: "canInvoiceAmount" },
         {
           title: "订单创建时间",
