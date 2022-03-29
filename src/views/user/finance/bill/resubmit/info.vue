@@ -132,10 +132,11 @@ export default {
             trigger: "blur"
           },
           {
-            pattern: /^1[3456789]\d{9}$/,
-            message: "请填写正确的联系电话",
-            trigger: "blur"
-          }
+            pattern:
+              /((\d{11})|^((\d{7,8})|(\d{4}|\d{3})-(\d{7,8})|(\d{4}|\d{3})-(\d{7,8})-(\d{4}|\d{3}|\d{2}|\d{1})|(\d{7,8})-(\d{4}|\d{3}|\d{2}|\d{1}))$)/,
+            message: "请输入正确的联系电话",
+            trigger: ["blur", "change"]
+          },
         ],
         refundRemark: [
           {
