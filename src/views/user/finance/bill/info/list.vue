@@ -25,13 +25,13 @@
           ￥{{ data.invoiceAmount }}
         </a-descriptions-item>
         <a-descriptions-item label="申请时间">
-          {{ data.invoiceInfo.createTimeShow }}
+          {{ data.createTimeShow }}
         </a-descriptions-item>
         <a-descriptions-item label="反馈时间">
-          {{ data.feedbackTimeShow }}
+          {{ data.rejectTimeShow }}
         </a-descriptions-item>
         <a-descriptions-item label="反馈说明">
-          {{ data.refundFeedbackRemark }}
+          {{ data.rejectRemark }}
         </a-descriptions-item>
       </a-descriptions>
       <a-descriptions style="margin: 20px 0" title="收件人信息">
@@ -49,7 +49,7 @@
           {{ data.addressInfo.address }}
         </a-descriptions-item>
         <a-descriptions-item label="物流单号">
-          {{ data.expressDelivery }}
+          {{ data.businessExpressDelivery }}
         </a-descriptions-item>
       </a-descriptions>
     </div>
@@ -109,7 +109,7 @@ export default {
         },
         {
           title: "产品名称",
-          dataIndex: "bizTypeName"
+          dataIndex: "productName"
         },
         {
           title: "可开票金额",
