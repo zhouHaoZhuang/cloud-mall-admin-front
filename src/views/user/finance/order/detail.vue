@@ -88,25 +88,30 @@
             {{ text | formatDate }}
           </span>
           <div slot="productConfig" slot-scope="text, record">
-            <!-- <div>线路:{{ regionDataEnum[record.regionId] }}</div> -->
-            <div>CPU:{{ record.cpu }}核</div>
-            <div>内存:{{ record.memory }}G</div>
-            <div>带宽:{{ record.internetMaxBandwidthOut }}M</div>
-            <div>镜像:{{ record.osName }}</div>
-            <div>系统盘:{{ record.systemDiskSize }}G</div>
-            <div>数据盘:{{ record.dataDiskSize }}G</div>
-            <div>
-              自动续费:
-              <span v-if="record.autoRenew === 0" style="color: red">
-                未开通
-              </span>
-              <span v-if="record.autoRenew === 1" style="color: #2bbe22">
-                已开通
-              </span>
-              <!-- <span v-if="record.autoRenew === 1">
+            <div v-if="record.chargingType == '按量付费'">
+              {{productName}}功能开通：按流量计费
+            </div>
+            <div v-else>
+              <!-- <div>线路:{{ regionDataEnum[record.regionId] }}</div> -->
+              <div>CPU:{{ record.cpu }}核</div>
+              <div>内存:{{ record.memory }}G</div>
+              <div>带宽:{{ record.internetMaxBandwidthOut }}M</div>
+              <div>镜像:{{ record.osName }}</div>
+              <div>系统盘:{{ record.systemDiskSize }}G</div>
+              <div>数据盘:{{ record.dataDiskSize }}G</div>
+              <div>
+                自动续费:
+                <span v-if="record.autoRenew === 0" style="color: red">
+                  未开通
+                </span>
+                <span v-if="record.autoRenew === 1" style="color: #2bbe22">
+                  已开通
+                </span>
+                <!-- <span v-if="record.autoRenew === 1">
                 /{{ record.renewPeriod
                 }}{{ getAutoRenewUnit(record.renewUnit) }}
               </span> -->
+              </div>
             </div>
           </div>
           <span slot="period" slot-scope="text, record">
@@ -114,7 +119,7 @@
           </span>
           <div slot="discountRate" slot-scope="text, record">
             <span v-if="record.chargingType == '按量付费'">--</span>
-            <span v-else>{{text}}</span>
+            <span v-else>{{ text }}</span>
           </div>
         </a-table>
       </div>
