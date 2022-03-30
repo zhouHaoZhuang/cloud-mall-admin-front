@@ -94,8 +94,9 @@
         <template slot="footer">
           <div class="total">
             <span>总计</span>
-            <span>
-              {{ totalFlow !== "" ? totalFlow : "" }}
+            <span
+              >{{ totalFlow !== "" ? totalFlow.toFixed(2) : "" }}
+              {{ this.listQuery.field === "traf" ? "G" : "万次" }}
             </span>
           </div>
         </template>
@@ -139,8 +140,9 @@ export default {
             new Date(a.timeStamp).getTime() - new Date(b.timeStamp).getTime()
         },
         {
+          // title: { customRender: "titleValue" },
           dataIndex: "value",
-          slots: { title: "titleValue" },
+          slots: { title: 'titleValue' },
           scopedSlots: { customRender: "value" }
         }
       ],
@@ -293,6 +295,7 @@ export default {
           this.data = res.data.usageDataPerInterval.dataModule;
           let dateList = [];
           let flowList = [];
+          let totalFlow = 0;
           this.data.forEach((item) => {
             if (this.date === "aWeek" || this.date === "nearlyMonth") {
               dateList.push(item.timeStamp.substring(5, 11));
@@ -300,8 +303,9 @@ export default {
               dateList.push(item.timeStamp.substring(11, 16));
             }
             flowList.push((item.value / 1024 ** 3).toFixed(2));
+            totalFlow += item.value * 1;
           });
-          this.totalFlow = res.data.switchTotalUseData;
+          this.totalFlow = totalFlow / 1024 ** 3;
           this.$set(this.option, "xAxis", {
             type: "category",
             data: dateList
@@ -342,7 +346,6 @@ export default {
 
 <style lang="less" scoped>
 .cdn-query-container {
-  width: 86%;
   .top-search {
     display: flex;
     margin-bottom: 20px;
