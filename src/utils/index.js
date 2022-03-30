@@ -311,13 +311,16 @@ export const getParameter = (
   form,
   functionName,
   domainNames,
-  skipFilter = []
+  skipFilter = [],
+  configId = undefined
 ) => {
+  console.log("dasdasd", configId);
   let data = {
     functions: [
       {
         functionArgs: [],
-        functionName
+        functionName,
+        configId
       }
     ],
     domainNames

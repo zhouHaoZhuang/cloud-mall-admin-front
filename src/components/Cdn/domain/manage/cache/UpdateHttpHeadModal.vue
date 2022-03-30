@@ -92,13 +92,14 @@ export default {
         if (newVal) {
           if (JSON.stringify(this.detail) !== "{}") {
             this.type = "modify";
-            console.log("sdadsa", this.detail);
+            this.configId = newVal.configId;
             this.form = {
               key: this.detail.key,
               value: this.detail.value
             };
           } else {
             this.type = "add";
+            this.configId = undefined;
           }
         } else {
           this.resetForm();
@@ -109,6 +110,7 @@ export default {
   data() {
     return {
       type: "add",
+      configId: undefined,
       labelCol: { span: 6 },
       wrapperCol: { span: 15 },
       loading: false,
@@ -156,10 +158,16 @@ export default {
           let tempForm = {
             key: this.form.key,
             value: this.form.value,
-            header_operation_type: 'add'
+            header_operation_type: "add"
           };
           const newForm = {
-            ...getParameter(tempForm, this.functionName, this.domain)
+            ...getParameter(
+              tempForm,
+              this.functionName,
+              this.domain,
+              [],
+              this.configId
+            )
           };
           this.loading = true;
           this.$store

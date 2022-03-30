@@ -41,8 +41,8 @@
           {{ errorCodeEnum[form.error_code].info }}
         </span>
       </a-form-model-item>
-      <a-form-model-item label="取值" prop="rewrite_page">
-        <a-input v-model="form.rewrite_page" placeholder="请输入取值" />
+      <a-form-model-item label="链接" prop="rewrite_page">
+        <a-input v-model="form.rewrite_page" placeholder="请输入链接" />
       </a-form-model-item>
     </a-form-model>
   </a-modal>
@@ -86,12 +86,14 @@ export default {
         if (newVal) {
           if (JSON.stringify(this.detail) !== "{}") {
             this.type = "edit";
+            this.configId = newVal.configId;
             this.form = {
               error_code: this.detail.error_code,
               rewrite_page: this.detail.rewrite_page
             };
           } else {
             this.type = "add";
+            this.configId = undefined;
           }
         } else {
           this.resetForm();
@@ -103,6 +105,7 @@ export default {
     return {
       errorCodeEnum,
       type: "add",
+      configId: undefined,
       labelCol: { span: 6 },
       wrapperCol: { span: 15 },
       loading: false,
@@ -121,7 +124,7 @@ export default {
         rewrite_page: [
           {
             required: true,
-            message: "请输入取值",
+            message: "请输入链接",
             trigger: "change"
           }
         ]
@@ -151,7 +154,13 @@ export default {
             ...this.form
           };
           const newForm = {
-            ...getParameter(tempForm, this.functionName, this.domain)
+            ...getParameter(
+              tempForm,
+              this.functionName,
+              this.domain,
+              [],
+              this.configId
+            )
           };
           this.loading = true;
           this.$store

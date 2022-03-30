@@ -34,29 +34,25 @@
         <div class="info-txt">文件后缀如输入多个须以半角逗号分隔如jpg,txt</div>
       </a-form-model-item>
       <a-form-model-item label="过期时间" prop="ttl">
-        <a-row>
-          <a-space>
-            <a-input
-              v-model="form.ttl"
-              v-number-evolution="{ value: 0, min: 1, max: 999999 }"
-              style="width: 150px"
-              placeholder="请输入过期时间"
-            />
-            <a-select
-              v-model="timeType"
-              style="width: 80px"
-              placeholder="请选择"
-            >
-              <a-select-option
-                v-for="(val, key) in overdueTimeEnum"
-                :key="key"
-                :value="key"
-              >
-                {{ val }}
-              </a-select-option>
-            </a-select>
-          </a-space>
-        </a-row>
+        <a-input
+          v-model="form.ttl"
+          v-number-evolution="{ value: 0, min: 1, max: 999999 }"
+          style="width: 150px"
+          placeholder="请输入过期时间"
+        />
+        <a-select
+          v-model="timeType"
+          style="width: 80px; margin-left: 10px"
+          placeholder="请选择"
+        >
+          <a-select-option
+            v-for="(val, key) in overdueTimeEnum"
+            :key="key"
+            :value="key"
+          >
+            {{ val }}
+          </a-select-option>
+        </a-select>
       </a-form-model-item>
       <a-form-model-item label="权重" prop="weight">
         <a-input
@@ -65,6 +61,7 @@
           style="width: 100px"
           placeholder="请输入权重"
         />
+        <div class="info-txt">最大99，最小1</div>
       </a-form-model-item>
     </a-form-model>
   </a-modal>
@@ -112,6 +109,7 @@ export default {
       handler(newVal) {
         if (JSON.stringify(newVal) !== "{}") {
           this.type = "edit";
+          this.configId = newVal.configId;
           const newArr = Object.keys(this.overdueTimeEnum).reverse();
           const timeType = newArr.find((ele) => newVal.ttl % ele === 0);
           this.timeType = timeType.toString();
@@ -122,6 +120,7 @@ export default {
           };
         } else {
           this.type = "add";
+          this.configId = undefined;
           this.timeType = "1";
         }
       },
@@ -132,6 +131,7 @@ export default {
     return {
       overdueTimeEnum,
       type: "add",
+      configId: undefined,
       labelCol: { span: 6 },
       wrapperCol: { span: 15 },
       loading: false,
@@ -160,9 +160,16 @@ export default {
         ],
         ttl: [
           {
-            required: true,
-            message: "请输入过期时间",
-            trigger: "change"
+            validator: (rule, value, callback) => {
+              if (!this.form.ttl) {
+                callback(new Error("请输入过期时间"));
+              } else if (this.form.ttl * this.timeType > 93312000) {
+                callback(new Error("过期时间最多为3年"));
+              } else {
+                callback();
+              }
+            },
+            trigger: ["change", "blur"]
           }
         ],
         weight: [
@@ -195,12 +202,6 @@ export default {
     handleOk() {
       this.$refs.ruleForm.validate((valid) => {
         if (valid) {
-          const newTtl = this.form.ttl * this.timeType;
-          const count = 93312000;
-          if (newTtl > count) {
-            this.$message.warning(`过期时间不可以超过3年`);
-            return;
-          }
           let newFunctionName = "";
           let tempForm = {
             ttl: this.form.ttl * this.timeType,
@@ -215,7 +216,13 @@ export default {
             newFunctionName = "filetype_based_ttl_set";
           }
           const newForm = {
-            ...getParameter(tempForm, newFunctionName, this.domain)
+            ...getParameter(
+              tempForm,
+              newFunctionName,
+              this.domain,
+              [],
+              this.configId
+            )
           };
           this.loading = true;
           this.$store

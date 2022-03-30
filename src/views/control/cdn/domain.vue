@@ -47,9 +47,8 @@
             placeholder="请选择"
           >
             <a-select-option value="domain"> 域名 </a-select-option>
-            <a-select-option value="channelName"> 渠道商名称 </a-select-option>
-            <a-select-option value="channelCode"> 渠道商ID </a-select-option>
             <a-select-option value="cnameValue"> cname </a-select-option>
+            <a-select-option value="sourceInfo"> 源站信息 </a-select-option>
           </a-select>
         </a-form-model-item>
         <a-form-model-item>
@@ -105,6 +104,11 @@
         <div slot="action" slot-scope="text, record">
           <a-space>
             <a-button
+              v-if="
+                record.cdnStatus === 1 ||
+                record.cdnStatus === 3 ||
+                record.cdnStatus === 5
+              "
               type="link"
               @click="handleManage(record)"
               :disabled="
@@ -115,6 +119,11 @@
               管理
             </a-button>
             <a-button
+              v-if="
+                record.cdnStatus === 1 ||
+                record.cdnStatus === 3 ||
+                record.cdnStatus === 5
+              "
               type="link"
               @click="handleCopy(record)"
               :disabled="
@@ -244,7 +253,7 @@ export default {
       return {
         selectedRowKeys,
         onChange: (selectedRowKeys) => {
-          this.selectedRowKeys = selectedRowKeys;
+          this.selectedRowKeys = [...selectedRowKeys];
         },
         getCheckboxProps: (record) => ({
           props: {
@@ -276,7 +285,7 @@ export default {
             );
             return {
               ...ele,
-              sourceInfo: newSourceInfo.slice(0, 2).join(',')
+              sourceInfo: newSourceInfo.slice(0, 2).join(",")
             };
           });
           console.log(this.data);
@@ -337,10 +346,9 @@ export default {
     handleChangeStatus(type, ids) {
       const statusTxt = type === "open" ? "启用" : "停用";
       const newIds = ids ? [...ids] : [...this.selectedRowKeys];
-      const result = this.data.map((ele) => {
-        if (newIds.includes(ele.id)) {
-          return ele.domain;
-        }
+      const result = newIds.map((ele) => {
+        const index = this.data.findIndex((item) => item.id === ele);
+        return this.data[index].domain;
       });
       const req =
         type === "open" ? "cdn/changeDomainOpen" : "cdn/changeDomainOff";

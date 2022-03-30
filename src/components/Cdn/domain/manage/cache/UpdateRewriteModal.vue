@@ -32,8 +32,11 @@
           <a-radio value="redirect"> Redirect </a-radio>
           <a-radio value="break"> Break </a-radio>
         </a-radio-group>
-        <div class="info-txt">
+        <div v-if="form.flag === 'redirect'" class="info-txt">
           若请求的URI匹配了当前规则，该请求将被302重定向跳转到目标URI。
+        </div>
+        <div v-else class="info-txt">
+          若请求的URI匹配了当前规则，执行完当前规则后，将不再匹配剩余规则。
         </div>
       </a-form-model-item>
     </a-form-model>
@@ -77,6 +80,7 @@ export default {
         if (newVal) {
           if (JSON.stringify(this.detail) !== "{}") {
             this.type = "edit";
+            this.configId = newVal.configId;
             this.form = {
               regex: this.detail.regex,
               replacement: this.detail.replacement,
@@ -84,6 +88,7 @@ export default {
             };
           } else {
             this.type = "add";
+            this.configId = undefined;
           }
         } else {
           this.resetForm();
@@ -94,6 +99,7 @@ export default {
   data() {
     return {
       type: "add",
+      configId: undefined,
       labelCol: { span: 6 },
       wrapperCol: { span: 15 },
       loading: false,
@@ -151,7 +157,13 @@ export default {
             ...this.form
           };
           const newForm = {
-            ...getParameter(tempForm, this.functionName, this.domain)
+            ...getParameter(
+              tempForm,
+              this.functionName,
+              this.domain,
+              [],
+              this.configId
+            )
           };
           this.loading = true;
           this.$store
