@@ -83,21 +83,10 @@
         :rowKey="(record, index) => index"
         :pagination="false"
       >
-        <div slot="titleValue">
-          {{
-            this.listQuery.field === "traf" ? "总流量（G）" : "总流量（万次）"
-          }}
-        </div>
-        <div v-if="text" slot="value" slot-scope="text">
-          {{ (text / 1024 ** 3).toFixed(2) }}
-        </div>
         <template slot="footer">
           <div class="total">
             <span>总计</span>
-            <span
-              >{{ totalFlow !== "" ? totalFlow.toFixed(2) : "" }}
-              {{ this.listQuery.field === "traf" ? "G" : "万次" }}
-            </span>
+            <span>{{ totalFlow }} </span>
           </div>
         </template>
       </a-table>
@@ -140,10 +129,9 @@ export default {
             new Date(a.timeStamp).getTime() - new Date(b.timeStamp).getTime()
         },
         {
-          // title: { customRender: "titleValue" },
-          dataIndex: "value",
-          slots: { title: 'titleValue' },
-          scopedSlots: { customRender: "value" }
+          title: "总流量",
+          dataIndex: "switchValue",
+          slots: { title: "titleValue" }
         }
       ],
       date: "toDay",
@@ -154,7 +142,44 @@ export default {
         },
         tooltip: {
           show: true,
-          trigger: "axis"
+          trigger: "axis",
+          formatter: (params) => {
+            let value = params[0].data;
+            if (value / (1024 * 1024 * 1024) > 10) {
+              return (
+                params[0].axisValue +
+                "<br/>" +
+                (this.listQuery.field === "traf" ? "流量：" : "HTTPS请求数：") +
+                (value / (1024 * 1024 * 1024)).toFixed(2) +
+                " Gbps"
+              );
+            } else if (value / (1024 * 1024) > 10) {
+              return (
+                params[0].axisValue +
+                "<br/>" +
+                (this.listQuery.field === "traf" ? "流量：" : "HTTPS请求数：") +
+                (value / (1024 * 1024)).toFixed(2) +
+                " Mbps"
+              );
+            } else if (value / 1024 > 10) {
+              return (
+                "时间" +
+                params[0].axisValue +
+                "<br/>" +
+                (this.listQuery.field === "traf" ? "流量：" : "HTTPS请求数：") +
+                (value / 1024).toFixed(2) +
+                " Kbps"
+              );
+            } else {
+              return (
+                params[0].axisValue +
+                "<br/>" +
+                (this.listQuery.field === "traf" ? "流量：" : "HTTPS请求数：") +
+                value +
+                " bps"
+              );
+            }
+          }
         },
         legend: {
           data: ["流量"],
@@ -165,7 +190,20 @@ export default {
           data: ["00.00", "00.10", "00.20", "00.30", "00.40", "00.50"]
         },
         yAxis: {
-          type: "value"
+          type: "value",
+          axisLabel: {
+            formatter: function (value) {
+              if (value / (1024 * 1024 * 1024) > 10) {
+                return (value / (1024 * 1024 * 1024)).toFixed(2) + " Gbps";
+              } else if (value / (1024 * 1024) > 10) {
+                return (value / (1024 * 1024)).toFixed(2) + " Mbps";
+              } else if (value / 1024 > 10) {
+                return (value / 1024).toFixed(2) + " Kbps";
+              } else {
+                return value + " bps";
+              }
+            }
+          }
         },
         toolbox: {
           show: true,
@@ -295,17 +333,15 @@ export default {
           this.data = res.data.usageDataPerInterval.dataModule;
           let dateList = [];
           let flowList = [];
-          let totalFlow = 0;
           this.data.forEach((item) => {
             if (this.date === "aWeek" || this.date === "nearlyMonth") {
               dateList.push(item.timeStamp.substring(5, 11));
             } else {
               dateList.push(item.timeStamp.substring(11, 16));
             }
-            flowList.push((item.value / 1024 ** 3).toFixed(2));
-            totalFlow += item.value * 1;
+            flowList.push(item.value);
           });
-          this.totalFlow = totalFlow / 1024 ** 3;
+          this.totalFlow = res.data.switchTotalUseData;
           this.$set(this.option, "xAxis", {
             type: "category",
             data: dateList
