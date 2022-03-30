@@ -10,7 +10,7 @@
       <!-- 步骤 -->
       <a-steps :current="current">
         <a-step title="选择配置项" />
-        <!-- <a-step title="选择域名" /> -->
+        <a-step title="选择域名" />
         <a-step title="完成" />
       </a-steps>
       <div class="box">
@@ -31,11 +31,11 @@
           </a-table>
         </div>
         <!-- 选择域名 -->
-        <!-- <div v-if="current === 1" class="transfer">
-          <a-transfer
+        <div v-if="current === 1" class="transfer">
+          <!-- <a-transfer
             :titles="['域名', '已选域名']"
             :rowKey="(record) => record.id"
-            :selected-keys="selectedKeys"
+            :disabled="1"
             :data-source="domainData"
             :list-style="{
               width: '400px',
@@ -46,8 +46,33 @@
             :target-keys="targetKeys"
             :render="(item) => item.domain"
             @change="handleChange"
-          />
-        </div> -->
+          /> -->
+          <!-- 选择域名 -->
+          <div>
+            <a-table
+              style="margin-top: 20px"
+              :columns="columnsDomain"
+              :data-source="domainData"
+              rowKey="id"
+              :pagination="false"
+              :row-selection="rowSelectionDomain"
+            >
+            </a-table>
+         
+
+          <br />
+          <!-- 已选域名列表 -->
+        
+            <a-table
+              style="margin-top: 20px"
+              :columns="sedomainData"
+              :data-source="selectedData"
+              rowKey="id"
+              :pagination="false"
+            >
+            </a-table>
+          </div>
+        </div>
         <!-- 完成 -->
         <a-result v-if="showSuccess" status="success" title="复制配置完成">
           <template #extra>
@@ -97,18 +122,41 @@ export default {
       };
     }
   },
+
   data() {
     return {
+      rowSelectionDomain: {
+        onSelect: (record, selected, selectedRows) => {
+          this.selectedData = selectedRows;
+          let domainArr = [];
+          selectedRows.forEach((element) => {
+            if (element.domain !== this.$route.query.domain) {
+              domainArr.push(element.domain);
+              // console.log('shidehside');
+            }
+          });
+          this.submitObj.targetDomains = domainArr.toString();
+        },
+        getCheckboxProps: (record) => ({
+          props: {
+            // 全部默认禁止选中
+            disabled: record.state == 1
+            // 某几项默认选中(R: 当state等于1时)
+            // defaultChecked: record.state == 1
+          }
+        })
+      },
       current: 0,
+      domianNames: "",
       // 穿梭框
       domainData: [],
       targetKeys: [],
       showSuccess: false,
+      selectedData: [],
       selectedKeys: ["1"], //默认选择域名
       copyType: undefined, //复制类型：sourceInfo:复制源站信息；other:其他配置信息
       // 表格
       tableLoading: false,
-      functionNames: undefined,
       columns: [
         {
           title: "配置项",
@@ -119,10 +167,21 @@ export default {
           dataIndex: "configEnable"
         }
       ],
+      columnsDomain: [
+        {
+          title: "域名",
+          dataIndex: "domain"
+        }
+      ],
+      sedomainData: [
+        {
+          title: "已选域名",
+          dataIndex: "domain"
+        }
+      ],
       data: [],
       selectedRowKeys: [],
       loading: false,
-      targetDomains: "", //目标配置
       listQuery: {
         key: undefined,
         search: "",
@@ -132,12 +191,16 @@ export default {
         pageSize: 10,
         total: 0
       },
-      defaultConfigId: ""
+      defaultConfigId: "",
+      submitObj: {
+        sourceDomain: this.$route.query.domain
+      }
     };
   },
   created() {
     this.getConfig();
     this.getList();
+    this.domianNames = this.$route.query.domain;
   },
   methods: {
     // 穿梭框
@@ -151,7 +214,11 @@ export default {
     },
     // 提交下一步
     handleNext() {
-      if (this.current === 0) {
+      if (this.current === 1) {
+        if (!this.selectedData.length) {
+          this.$message.error("请先选择域名");
+          return;
+        }
         let arrs = [];
         this.data.forEach((val) => {
           this.selectedRowKeys.forEach((element) => {
@@ -160,27 +227,27 @@ export default {
             }
           });
         });
-        this.functionNames = arrs.toString();
+
+        this.submitObj.functionNames = arrs.length ? arrs.toString() : "";
+        if(this.submitObj.functionNames == ''){
+          delete this.submitObj.functionNames
+        }
+
         this.$confirm({
           title:
             "您确定要批量复制配置项吗?域名配置复制后，操作不可逆，请务必确认您的域名复制选择无误",
           onOk: () => {
             this.$store
-              .dispatch("cdn/copyConfig", {
-                copyType: this.copyType, //复制类型：sourceInfo:复制源站信息；other:其他配置信息
-                sourceDomain: this.$route.query.domain,
-                targetDomains: this.targetDomains,
-                functionNames: this.functionNames
-              })
+              .dispatch("cdn/copyConfig", this.submitObj)
               .then((res) => {
                 this.showSuccess = true;
                 this.$message.success("复制成功");
                 // this.getConfig();
-                this.current += 1
+                this.current += 1;
               });
           }
         });
-      }else{
+      } else {
         this.current += 1;
       }
     },
@@ -213,14 +280,13 @@ export default {
     getList() {
       this.$getListQp("cdn/getDomainList", this.listQuery)
         .then((res) => {
-          this.domainData = res.data.list;
-          let newArr = [];
-          this.domainData.forEach((element) => {
-            if (element.domain !== this.$route.query.domain) {
-              newArr.push(element.domain);
+          res.data.list.forEach((element) => {
+            if (element.domain == this.$route.query.domain) {
+              element.state = 1;
             }
           });
-          this.targetDomains = newArr.toString();
+          this.domainData = res.data.list;
+          console.log(this.domainData, "this.domainData");
         })
         .finally(() => {});
     },
@@ -253,9 +319,9 @@ export default {
       this.selectedRowKeys = selectedRowKeys;
       this.selectedRowKeys.forEach((val) => {
         if (val == 0) {
-          this.copyType = "sourceInfo";
+          this.submitObj.copyType = "sourceInfo";
         } else {
-          this.copyType = "other";
+          this.submitObj.copyType = "other";
         }
       });
     }
