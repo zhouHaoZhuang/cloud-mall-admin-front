@@ -37,7 +37,7 @@
           v-filterInput-input
           :disabled="!form.enable"
         />
-        <div class="info-txt">6~32个字符支持大写字母、小写字母、数字。</div>
+        <div class="info-txt">16~32个字符支持大写字母、小写字母、数字。</div>
       </a-form-model-item>
       <a-form-model-item label="备KEY">
         <a-input
@@ -45,7 +45,7 @@
           v-filterInput-input
           :disabled="!form.enable"
         />
-        <div class="info-txt">6~32个字符支持大写字母、小写字母、数字。</div>
+        <div class="info-txt">16~32个字符支持大写字母、小写字母、数字。</div>
       </a-form-model-item>
     </a-form-model>
   </a-modal>
