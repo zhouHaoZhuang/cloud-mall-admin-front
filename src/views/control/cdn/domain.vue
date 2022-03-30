@@ -105,6 +105,11 @@
         <div slot="action" slot-scope="text, record">
           <a-space>
             <a-button
+              v-if="
+                record.cdnStatus === 1 ||
+                record.cdnStatus === 3 ||
+                record.cdnStatus === 5
+              "
               type="link"
               @click="handleManage(record)"
               :disabled="
@@ -115,6 +120,11 @@
               管理
             </a-button>
             <a-button
+              v-if="
+                record.cdnStatus === 1 ||
+                record.cdnStatus === 3 ||
+                record.cdnStatus === 5
+              "
               type="link"
               @click="handleCopy(record)"
               :disabled="
@@ -355,7 +365,7 @@ export default {
         title: `确认要${statusTxt}吗？`,
         onOk: () => {
           this.$store
-            .dispatch(req, { domainNames: result.join(',') })
+            .dispatch(req, { domainNames: result.join(",") })
             .then((res) => {
               this.$message.success(`${statusTxt}成功`);
               this.getList();
