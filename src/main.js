@@ -20,6 +20,9 @@ import "./global.less"; // global style
 import * as Directives from "@/utils/directives/index";
 import * as Filters from "@/utils/filters/index";
 Vue.config.productionTip = false;
+//公共样式
+import "@/assets/public.less";
+
 
 // ui组件
 Vue.use(Antd);

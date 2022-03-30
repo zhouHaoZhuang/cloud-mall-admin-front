@@ -18,13 +18,13 @@
       <!-- 日历 -->
       <div class="btn2">
         <a-form-model-item>
-          <a-range-picker
-            format="YYYY-MM-DD"
-            :placeholder="['开始时间', '结束时间']"
+          <a-month-picker
+            format="YYYY-MM"
+            placeholder="请选择月份"
             @change="datePickerOnOk"
           >
             <a-icon slot="suffixIcon" type="calendar" />
-          </a-range-picker>
+          </a-month-picker>
         </a-form-model-item>
       </div>
       <div class="btn6">
@@ -143,6 +143,8 @@ export default {
     getList() {
       this.loading = true;
       this.formatSearch();
+      this.listQuery["qp-billType-eq"] = "month"
+
       this.$getList("billmanage/getList", this.listQuery)
         .then((res) => {
           this.data = [...res.data.list];
@@ -155,16 +157,11 @@ export default {
     //查询之前转化查询条件格式
     datePickerOnOk(value) {
       if (value.length !== 0) {
-        console.log(value);
-        this.listQuery["qp-consumeTime-ge"] = moment(value[0]).format(
-          "YYYY-MM-DD"
-        );
-        this.listQuery["qp-consumeTime-le"] = moment(value[1]).format(
-          "YYYY-MM-DD"
+        this.listQuery["qp-billPeriod-eq"] = moment(value[0]).format(
+          "YYYY-MM"
         );
       } else {
-        this.listQuery["qp-consumeTime-ge"] = "";
-        this.listQuery["qp-consumeTime-le"] = "";
+        this.listQuery["qp-billPeriod-eq"] = "";
       }
     },
     //查询

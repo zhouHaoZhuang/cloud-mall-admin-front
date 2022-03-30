@@ -141,6 +141,7 @@
         :data-source="data"
         :pagination="paginationProps"
         rowKey="id"
+        :scroll="{ y: 200 }"
       >
         <div slot="companyName" slot-scope="text">{{ text }}</div>
         <div v-if="text" slot="createTime" slot-scope="text">
@@ -222,11 +223,11 @@ export default {
         },
         {
           title: "申请时间",
-          dataIndex: "createTimeShow",
+          dataIndex: "createTimeShow"
         },
         {
           title: "反馈时间",
-          dataIndex: "feedbackTimeShow",
+          dataIndex: "feedbackTimeShow"
         },
         {
           title: "操作",
@@ -281,7 +282,6 @@ export default {
     //查询数据表格 开票记录
     getList() {
       this.$getList("billlist/getList", this.listQuery).then((res) => {
-        console.log(res);
         this.data = [...res.data.list];
         this.paginationProps.total = res.data.totalCount * 1;
       });
@@ -380,4 +380,8 @@ h1 {
 /deep/.ant-table {
   min-width: 0 !important;
 }
+// ::v-deep .ant-table-tbody{
+//   height: 200px!important;
+//   overflow-y: scroll!important;
+// }
 </style>
