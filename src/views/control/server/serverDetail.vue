@@ -97,6 +97,9 @@
         <a-tab-pane key="2" tab="性能监控">
           <CloudMonitor :tabsKey="tabsKey" :detail="detail" />
         </a-tab-pane>
+        <a-tab-pane key="3" tab="快照">
+          <Snapshoot />
+        </a-tab-pane>
         <!-- <a-tab-pane key="3" tab="备案白名单"></a-tab-pane>
         <a-tab-pane key="4" tab="操作日志"></a-tab-pane> -->
       </a-tabs>
@@ -129,6 +132,7 @@ import { runningStatusEnum } from "@/utils/enum";
 import DetailHeader from "@/components/Common/detailHeader";
 import CloudDetail from "@/components/Cloud/cloudDetail";
 import CloudMonitor from "@/components/Cloud/cloudMonitor";
+import Snapshoot from '@/components/Cloud/snapshoot'
 import UpdatePwdModal from "@/components/Cloud/CloudModal/updatePwdModal";
 import CloudActionModal from "@/components/Cloud/CloudModal/cloudActionModal";
 import UpdateSystemModal from "@/components/Cloud/CloudModal/updateSystemModal";
@@ -138,6 +142,7 @@ export default {
     DetailHeader,
     CloudDetail,
     CloudMonitor,
+    Snapshoot,
     UpdatePwdModal,
     CloudActionModal,
     UpdateSystemModal,
