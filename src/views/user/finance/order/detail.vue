@@ -393,7 +393,7 @@ export default {
       this.$store
         .dispatch("income/getOne", this.$route.query.id)
         .then((res) => {
-          if (res.data.tradeStatus !== 1) {
+          if (res.data.tradeStatus !== 5) {
             this.orderInfo = { ...res.data };
             clearInterval(this.payTime);
           }
