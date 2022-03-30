@@ -17,13 +17,14 @@
           <a-input
             v-model="form.domain"
             placeholder="请输入单个域名，例如：slayun.com"
+            @change="handleInputChange"
             @blur="checkDamain"
             @pressEnter="checkDamain"
           />
           <div class="info-txt">支持添加泛域名，如"*.example.com"</div>
         </a-form-model-item>
         <a-form-model-item
-          v-if="isShowCheck && form.domain"
+          v-if="isShowCheck"
           :wrapper-col="{ span: 10, offset: 3 }"
         >
           <div class="check-domain-box">
@@ -219,6 +220,7 @@ import {
   businessTypeEnum,
   scopeAreaEnum
 } from "@/utils/enum";
+import { log } from "mathjs";
 export default {
   components: { DetailHeader, UpdateSourceStationModal, CourseModal },
   data() {
@@ -285,6 +287,12 @@ export default {
   },
   created() {},
   methods: {
+    // 域名输入框change
+    handleInputChange() {
+      if (!this.form.domain && this.isShowCheck) {
+        this.isShowCheck = false;
+      }
+    },
     // 域名输入框失焦或回车
     checkDamain() {
       if (!this.form.domain) return;
