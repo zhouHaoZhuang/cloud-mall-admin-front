@@ -4,7 +4,7 @@
     <div class="btns">
       <div class="left">
         <a-space>
-          <a-button type="">创建快照</a-button>
+          <a-button type="" @click="toAdd">创建快照</a-button>
           <a-button type="danger">删除快照</a-button>
         </a-space>
       </div>
@@ -35,13 +35,27 @@
         </div>
       </a-table>
     </div>
+    <!-- 创建快照 -->
+    <CreateSnapshoot v-model="addVisible" />
+    <!-- 删除快照 -->
+    <!-- 回滚磁盘 -->
+    <a-modal v-model="rollbackVisible" title="回滚磁盘" @ok="hideModal">
+      <p>{{ rollbackText }}</p>
+      <template>
+        <a-button>确认</a-button>
+        <a-button>取消</a-button>
+      </template>
+    </a-modal>
   </div>
 </template>
 
 <script>
 import moment from "moment";
+import CreateSnapshoot from "@/components/Cloud/CloudModal/createSnapshoot.vue";
 export default {
-  components: {},
+  components: {
+    CreateSnapshoot
+  },
   data() {
     return {
       listQuery: {
@@ -148,8 +162,10 @@ export default {
       tableLoading: false,
       selectedRowKeys: [],
       // 弹窗相关------start
-      rollbackVisible: false,
+      addVisible: false,
       delVisible: false,
+      rollbackVisible: false,
+      rollbackText: "",
       modalDetail: {}
       // 弹窗相关------end
     };
@@ -190,10 +206,15 @@ export default {
     onSelectChange(selectedRowKeys) {
       this.selectedRowKeys = selectedRowKeys;
     },
+    //点击创建快照
+    toAdd() {
+      this.addVisible = true;
+    },
     // 点击回滚磁盘
     toRollback(record) {
       this.modalDetail = record;
-      this.rollbackVisible = true;
+      this.rollbackText = `对于云盘YP2022022800001将进行回滚操作，回滚至2022年3月29日 16：03快照数据，您是否确定操作？`;
+      //  this.rollbackText = `只有已停止的实例才可以回滚云盘，当前实例 i-bp1aowywz67oqml38nek 的状态未停止。`
     },
     // 点击删除快照
     handleDel(record) {
