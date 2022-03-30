@@ -104,17 +104,34 @@
         </span>
         <div slot="action" slot-scope="text, record">
           <a-space>
-            <a-button type="link" @click="handleManage(record)" :disabled="record.corporationLockStatus == 0 || record.systemLockStatus == 0">
+            <a-button
+              type="link"
+              @click="handleManage(record)"
+              :disabled="
+                record.corporationLockStatus == 0 ||
+                record.systemLockStatus == 0
+              "
+            >
               管理
             </a-button>
-            <a-button type="link" @click="handleCopy(record)" :disabled="record.corporationLockStatus == 0 || record.systemLockStatus == 0" >
+            <a-button
+              type="link"
+              @click="handleCopy(record)"
+              :disabled="
+                record.corporationLockStatus == 0 ||
+                record.systemLockStatus == 0
+              "
+            >
               复制配置
             </a-button>
             <a-button
               v-if="record.cdnStatus === 2"
               type="link"
               @click="handleChangeStatus('open', [record.id])"
-              :disabled="record.corporationLockStatus == 0 || record.systemLockStatus == 0"
+              :disabled="
+                record.corporationLockStatus == 0 ||
+                record.systemLockStatus == 0
+              "
             >
               启用
             </a-button>
@@ -122,11 +139,21 @@
               v-if="record.cdnStatus === 1"
               type="link"
               @click="handleChangeStatus('stop', [record.id])"
-              :disabled="record.corporationLockStatus == 0 || record.systemLockStatus == 0"
+              :disabled="
+                record.corporationLockStatus == 0 ||
+                record.systemLockStatus == 0
+              "
             >
               停用
             </a-button>
-            <a-button type="link" @click="handleDel([record.id])" :disabled="record.corporationLockStatus == 0 || record.systemLockStatus == 0">
+            <a-button
+              type="link"
+              @click="handleDel([record.id])"
+              :disabled="
+                record.corporationLockStatus == 0 ||
+                record.systemLockStatus == 0
+              "
+            >
               删除
             </a-button>
           </a-space>
@@ -244,12 +271,12 @@ export default {
       this.$getListQp("cdn/getDomainList", this.listQuery)
         .then((res) => {
           this.data = res.data.list.map((ele) => {
-            const newSourceInfo = ele.sourceInfo.sourceModel
-              .map((item) => item.content)
-              .join(",");
+            const newSourceInfo = ele.sourceInfo.sourceModel.map(
+              (item) => item.content
+            );
             return {
               ...ele,
-              sourceInfo: newSourceInfo
+              sourceInfo: newSourceInfo.slice(0, 2).join(',')
             };
           });
           console.log(this.data);
@@ -300,7 +327,7 @@ export default {
       this.$router.push({
         path: "/control/cdn/copy",
         query: {
-          domain:record.domain
+          domain: record.domain
           // id: record.id,
           // monitor: true
         }
