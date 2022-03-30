@@ -77,6 +77,7 @@ export default {
         if (newVal) {
           if (JSON.stringify(this.detail) !== "{}") {
             this.type = "edit";
+            this.configId = newVal.configId;
             this.form = {
               regex: this.detail.regex,
               replacement: this.detail.replacement,
@@ -84,6 +85,7 @@ export default {
             };
           } else {
             this.type = "add";
+            this.configId = undefined;
           }
         } else {
           this.resetForm();
@@ -94,6 +96,7 @@ export default {
   data() {
     return {
       type: "add",
+      configId: undefined,
       labelCol: { span: 6 },
       wrapperCol: { span: 15 },
       loading: false,
@@ -151,7 +154,13 @@ export default {
             ...this.form
           };
           const newForm = {
-            ...getParameter(tempForm, this.functionName, this.domain)
+            ...getParameter(
+              tempForm,
+              this.functionName,
+              this.domain,
+              [],
+              this.configId
+            )
           };
           this.loading = true;
           this.$store

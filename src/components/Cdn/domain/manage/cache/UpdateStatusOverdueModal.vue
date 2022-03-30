@@ -90,12 +90,14 @@ export default {
       handler(newVal) {
         if (JSON.stringify(newVal) !== "{}") {
           this.type = "edit";
+          this.configId = newVal.configId;
           this.form = {
             ...newVal,
             type: newVal.file_type ? 2 : 1
           };
         } else {
           this.type = "add";
+          this.configId = undefined;
         }
       },
       immediate: true
@@ -104,6 +106,7 @@ export default {
   data() {
     return {
       type: "add",
+      configId: undefined,
       labelCol: { span: 6 },
       wrapperCol: { span: 15 },
       loading: false,
@@ -170,7 +173,13 @@ export default {
             newFunctionName = "filetype_force_ttl_code";
           }
           const newForm = {
-            ...getParameter(tempForm, newFunctionName, this.domain)
+            ...getParameter(
+              tempForm,
+              newFunctionName,
+              this.domain,
+              [],
+              this.configId
+            )
           };
           this.loading = true;
           this.$store

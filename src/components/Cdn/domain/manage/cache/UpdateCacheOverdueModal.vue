@@ -109,6 +109,7 @@ export default {
       handler(newVal) {
         if (JSON.stringify(newVal) !== "{}") {
           this.type = "edit";
+          this.configId = newVal.configId;
           const newArr = Object.keys(this.overdueTimeEnum).reverse();
           const timeType = newArr.find((ele) => newVal.ttl % ele === 0);
           this.timeType = timeType.toString();
@@ -119,6 +120,7 @@ export default {
           };
         } else {
           this.type = "add";
+          this.configId = undefined;
           this.timeType = "1";
         }
       },
@@ -129,6 +131,7 @@ export default {
     return {
       overdueTimeEnum,
       type: "add",
+      configId: undefined,
       labelCol: { span: 6 },
       wrapperCol: { span: 15 },
       loading: false,
@@ -213,7 +216,13 @@ export default {
             newFunctionName = "filetype_based_ttl_set";
           }
           const newForm = {
-            ...getParameter(tempForm, newFunctionName, this.domain)
+            ...getParameter(
+              tempForm,
+              newFunctionName,
+              this.domain,
+              [],
+              this.configId
+            )
           };
           this.loading = true;
           this.$store
