@@ -14,7 +14,7 @@
             <a-select-option value="all"> 以上全部区域 </a-select-option>
           </a-select>
           <a-select
-            style="width: 100px"
+            style="width: 150px"
             allowClear
             v-model="listQuery.field"
             placeholder="请选择"
@@ -83,13 +83,21 @@
         :rowKey="(record, index) => index"
         :pagination="false"
       >
+        <div slot="titleValue">
+          {{
+            this.listQuery.field === "traf" ? "总流量（G）" : "总流量（万次）"
+          }}
+        </div>
         <div v-if="text" slot="value" slot-scope="text">
           {{ (text / 1024 ** 3).toFixed(2) }}
         </div>
         <template slot="footer">
           <div class="total">
             <span>总计</span>
-            <span>{{ totalFlow !== "" ? totalFlow.toFixed(2) : "" }}G</span>
+            <span
+              >{{ totalFlow !== "" ? totalFlow.toFixed(2) : "" }}
+              {{ this.listQuery.field === "traf" ? "G" : "万次" }}
+            </span>
           </div>
         </template>
       </a-table>
@@ -132,8 +140,9 @@ export default {
             new Date(a.timeStamp).getTime() - new Date(b.timeStamp).getTime()
         },
         {
-          title: "总流量",
+          // title: { customRender: "titleValue" },
           dataIndex: "value",
+          slots: { title: 'titleValue' },
           scopedSlots: { customRender: "value" }
         }
       ],
@@ -303,11 +312,16 @@ export default {
           });
           this.$set(this.option, "series", [
             {
-              name: "流量",
+              name: this.listQuery.field === "traf" ? "流量" : "HTTPS请求数",
               type: "line",
               data: flowList
             }
           ]);
+          this.option.title.text =
+            this.listQuery.field === "traf" ? "流量" : "HTTPS请求数";
+          this.option.legend.data = [
+            this.listQuery.field === "traf" ? "流量" : "HTTPS请求数"
+          ];
           var myChart = this.echarts.init(document.getElementById("main"));
           //配置图表
           myChart.setOption(this.option, true);
@@ -334,6 +348,7 @@ export default {
 .cdn-query-container {
   .top-search {
     display: flex;
+    margin-bottom: 20px;
     justify-content: space-between;
     flex-wrap: wrap;
   }

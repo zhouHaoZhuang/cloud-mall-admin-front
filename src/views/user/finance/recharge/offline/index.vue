@@ -48,6 +48,7 @@
                 <a-form-model-item ref="amount" label="汇款金额" prop="amount">
                   <a-input-number
                     :min="1"
+                    :max="999999999"
                     v-model="form.amount"
                     style="margin-right: 10px"
                   />元
