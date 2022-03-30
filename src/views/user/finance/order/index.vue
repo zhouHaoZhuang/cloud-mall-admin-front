@@ -20,7 +20,6 @@
           <a-input-group compact>
             <a-select v-model="listQuery.key" style="width: 100px">
               <a-select-option value="orderNo2"> 退单编号 </a-select-option>
-
               <a-select-option value="orderNo"> 订单编号 </a-select-option>
               <a-select-option value="productName">
                 产品
