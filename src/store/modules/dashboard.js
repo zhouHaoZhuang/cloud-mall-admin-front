@@ -28,6 +28,13 @@ const cloud = {
         data
       });
     },
+    //获取首页消费趋势数据最新接口
+    newTrendData({ commit, state }) {
+      return request({
+        url: "/customerAccountLog/query/getMonthLine",
+        method: "get"
+      });
+    },
     // 获取首页消费趋势数据
     trendData({ commit, state }) {
       return request({

@@ -1,7 +1,7 @@
 <template>
   <div class="open-menu-container">
-    <a-icon v-if="menuOpen" type="menu-fold" @click="changeMenuOpen" />
-    <a-icon v-else type="menu-unfold" @click="changeMenuOpen" />
+    <img  v-if="menuOpen"  @click="changeMenuOpen"  src="@/assets/img/dashboard/shape.png">
+    <img  v-else  @click="changeMenuOpen"  src="@/assets/img/dashboard/shape-a.jpg">
   </div>
 </template>
 

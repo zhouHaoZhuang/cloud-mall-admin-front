@@ -9,24 +9,29 @@
         <p>3、如充值后款项没有到账，请联系在线客服帮助处理，或提交工单</p>
       </div>
       <h1>
-        <span>账户余额：</span><span>{{ balanceData.userAmount }} 元</span>
+        <span>账户余额：</span
+        ><span class="price-one"
+          >{{ balanceData.userAmount }} <span class="price-two">元</span>
+        </span>
       </h1>
       <!-- <p>暂未开启充值</p> -->
-      <div>
-        <span> 充值金额： </span>
-        <a-input-number
-          style="width: 180px"
-          v-number-evolution="{
-            min: allConfig.min_recharge,
-            max: 9999999,
-            value: 2
-          }"
-          v-model="rechargeBtnForm.totalAmount"
-        />
-      </div>
-      <div class="paymentMethod">
-        <span class="paymentMethod-type">支付方式：</span>
-        <!-- <div :class="{WeChatply:true,Alipay:}">
+      <div class="recharge-amount">
+        <div>
+          <span> 充值金额： </span>
+          <a-input-number
+            style="width: 180px"
+            v-number-evolution="{
+              min: allConfig.min_recharge,
+              max: 9999999,
+              value: 2
+            }"
+            v-model="rechargeBtnForm.totalAmount"
+            placeholder="请输入充值金额"
+          />
+        </div>
+        <div class="paymentMethod">
+          <span class="paymentMethod-type">支付方式：</span>
+          <!-- <div :class="{WeChatply:true,Alipay:}">
           <img width="30px" src="@/assets/img/pay/WeChat.png" />
           <span>微信支付</span>
         </div>
@@ -34,25 +39,49 @@
           <img width="40px" src="@/assets/img/pay/Alipay.png" />
           <span>支付宝支付</span>
         </div> -->
-        <a-radio-group v-model="payType" @change="onChange">
-          <a-radio value="ali" v-show="allConfig.alipay_switch === '1'">
-            <span>支付宝</span>
-            <img
-              style="margin-left: 5px"
-              width="20px"
-              src="@/assets/img/pay/Alipay.png"
-            />
-          </a-radio>
-          <a-radio value="wechat" v-show="allConfig.wxpay_switch === '1'">
-            <span>微信</span>
-            <img
-              style="margin-left: 5px"
-              width="22px"
-              src="@/assets/img/pay/WeChat.png"
-            />
-          </a-radio>
-        </a-radio-group>
+          <a-radio-group v-model="payType" @change="onChange">
+            <a-radio
+              value="ali"
+              class="radio-class"
+              v-show="allConfig.alipay_switch === '1'"
+            >
+              <img
+                style="margin-left: 5px; margin-right: 10px"
+                width="30px"
+                src="@/assets/img/pay/Alipay.png"
+              />
+              <span>支付宝支付</span>
+              <img
+                style="margin-left: 5px; margin-right: 10px"
+                width="22px"
+                src="@/assets/img/menu/checked.png"
+                class="img-checked-one"
+                v-if="payType == 'ali'"
+              />
+            </a-radio>
+            <a-radio
+              value="wechat"
+              class="radio-class radio-two"
+              v-show="allConfig.wxpay_switch === '1'"
+            >
+              <img
+                style="margin-left: 5px; margin-right: 10px"
+                width="20px"
+                src="@/assets/img/pay/WeChat.png"
+              />
+              <span>微信支付</span>
+              <img
+                style="margin-left: 5px; margin-right: 10px"
+                width="22px"
+                src="@/assets/img/menu/checked.png"
+                class="img-checked-two"
+                v-if="payType == 'wechat'"
+              />
+            </a-radio>
+          </a-radio-group>
+        </div>
       </div>
+
       <RechargeBtn
         v-show="
           allConfig.alipay_switch === '1' || allConfig.wxpay_switch === '1'
@@ -119,6 +148,8 @@ export default {
   },
   methods: {
     onChange(e) {
+      // ali
+      // wechat
       console.log("radio checked", e.target.value);
       this.rechargeBtnForm.payType = [e.target.value, "balance"];
     },
@@ -146,13 +177,15 @@ export default {
 <style lang="less" scoped>
 .online {
   margin-top: 20px;
+  background-color: #fff;
+  height: 740px;
   .warn {
-    padding: 7px 22px 5px 37px;
-    background: #fff3eb url(../../../../../assets/img/pay/ExclamationMark.png)
-      no-repeat 10px 8px;
-    border: 1px solid #ffdac2;
+    padding: 20px 22px 4px 20px;
+    // background: #fff3eb url(../../../../../assets/img/pay/ExclamationMark.png)
+    // no-repeat 10px 8px;
+    // border: 1px solid #ffdac2;
     border-radius: 2px;
-    color: #ff660a;
+    color: #e62828;
     font-size: 12px;
     > p {
       margin-bottom: 10px;
@@ -169,6 +202,30 @@ export default {
     align-items: center;
     margin-top: 10px;
     margin-bottom: 20px;
+    .radio-class {
+      width: 170px;
+      height: 50px;
+      .img-checked-one {
+        position: relative;
+        right: 0px;
+        top: 20px;
+      }
+      .img-checked-two {
+        position: relative;
+        right: -24px;
+        top: 20px;
+      }
+    }
+    .radio-class:hover {
+      box-shadow: 0px 0px 6px 0px rgba(0, 0, 0, 0.09);
+    }
+    .radio-class:active {
+      box-shadow: 0px 0px 6px 0px rgba(0, 0, 0, 0.09);
+    }
+    .radio-two {
+      float: right;
+      line-height: 26px;
+    }
   }
   .paymentMethod-type {
     display: inline-block;
@@ -200,10 +257,32 @@ h1 {
   > span:last-child {
     font-size: 16px;
     font-weight: bold;
-    color: #ff6600;
+    font-size: 25px;
+    color: #999999;
   }
 }
 .rechargeBtn {
-  margin-left: 75px;
+  margin-left: 20px;
+}
+.price-two {
+  color: #999 !important;
+  font-size: 20px;
+}
+.price-one {
+  color: #3b77e3 !important;
+}
+.recharge-amount {
+  margin-left: 20px;
+}
+.ant-radio-wrapper {
+  width: 170px;
+  height: 50px;
+  padding: 10px 20px;
+}
+.ant-radio-wrapper-checked {
+  box-shadow: 0px 0px 6px 0px rgba(0, 0, 0, 0.09);
+}
+::v-deep .ant-radio-inner {
+  display: none !important;
 }
 </style>

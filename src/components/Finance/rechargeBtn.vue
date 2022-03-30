@@ -1,7 +1,7 @@
 <template>
   <div>
     <a-button type="primary" :loading="loading" @click="handleRecharge">
-      充值
+      立即充值
     </a-button>
     <a-modal
       title="请扫描下方二维码完成支付"

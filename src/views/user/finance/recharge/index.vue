@@ -57,8 +57,8 @@ export default {
     list-style: none;
     display: flex;
     padding: 0;
-    background-color: #f0f3f5;
     > li {
+      cursor: pointer;
       width: 132px;
       height: 38px;
       text-align: center;
@@ -66,11 +66,10 @@ export default {
       border-top: 3px solid transparent;
     }
     .buleTop {
-      border-top: 3px solid #00aaff;
       background-color: #fff;
-      border-left: 1px solid #eeeeee;
-      border-right: 1px solid #eeeeee;
+    
       color: #00aaff;
+      box-shadow: 0px 0px 13px 7px rgba(189, 192, 253, 0.23);
     }
   }
   > div {

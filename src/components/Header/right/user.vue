@@ -2,7 +2,9 @@
   <div class="user-container">
     <a-dropdown>
       <span class="ant-dropdown-link" @click="(e) => e.preventDefault()">
-        <img width="30px" src="@/assets/img/user.png" alt="" />
+        
+         <img src="@/assets/img/menu/userinfo.png" class="img" width="18" height="20">
+        <!-- <img width="30px" src="@/assets/img/user.png" alt="" /> -->
         <span class="user-name">{{ realName }}</span>
         <a-icon type="down" />
       </span>
