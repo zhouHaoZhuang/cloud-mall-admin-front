@@ -14,7 +14,7 @@
             <a-select-option value="all"> 以上全部区域 </a-select-option>
           </a-select>
           <a-select
-            style="width: 100px"
+            style="width: 150px"
             allowClear
             v-model="listQuery.field"
             placeholder="请选择"
@@ -83,13 +83,20 @@
         :rowKey="(record, index) => index"
         :pagination="false"
       >
+        <div slot="titleValue">
+          {{
+            this.listQuery.field === "traf" ? "总流量（G）" : "总流量（万次）"
+          }}
+        </div>
         <div v-if="text" slot="value" slot-scope="text">
           {{ (text / 1024 ** 3).toFixed(2) }}
         </div>
         <template slot="footer">
           <div class="total">
             <span>总计</span>
-            <span>{{ totalFlow !== "" ? totalFlow.toFixed(2) : "" }}G</span>
+            <span>
+              {{ totalFlow !== "" ? totalFlow : "" }}
+            </span>
           </div>
         </template>
       </a-table>
@@ -132,8 +139,8 @@ export default {
             new Date(a.timeStamp).getTime() - new Date(b.timeStamp).getTime()
         },
         {
-          title: "总流量",
           dataIndex: "value",
+          slots: { title: "titleValue" },
           scopedSlots: { customRender: "value" }
         }
       ],
@@ -286,7 +293,6 @@ export default {
           this.data = res.data.usageDataPerInterval.dataModule;
           let dateList = [];
           let flowList = [];
-          let totalFlow = 0;
           this.data.forEach((item) => {
             if (this.date === "aWeek" || this.date === "nearlyMonth") {
               dateList.push(item.timeStamp.substring(5, 11));
@@ -294,20 +300,24 @@ export default {
               dateList.push(item.timeStamp.substring(11, 16));
             }
             flowList.push((item.value / 1024 ** 3).toFixed(2));
-            totalFlow += item.value * 1;
           });
-          this.totalFlow = totalFlow / 1024 ** 3;
+          this.totalFlow = res.data.switchTotalUseData;
           this.$set(this.option, "xAxis", {
             type: "category",
             data: dateList
           });
           this.$set(this.option, "series", [
             {
-              name: "流量",
+              name: this.listQuery.field === "traf" ? "流量" : "HTTPS请求数",
               type: "line",
               data: flowList
             }
           ]);
+          this.option.title.text =
+            this.listQuery.field === "traf" ? "流量" : "HTTPS请求数";
+          this.option.legend.data = [
+            this.listQuery.field === "traf" ? "流量" : "HTTPS请求数"
+          ];
           var myChart = this.echarts.init(document.getElementById("main"));
           //配置图表
           myChart.setOption(this.option, true);
@@ -332,8 +342,10 @@ export default {
 
 <style lang="less" scoped>
 .cdn-query-container {
+  width: 86%;
   .top-search {
     display: flex;
+    margin-bottom: 20px;
     justify-content: space-between;
     flex-wrap: wrap;
   }
