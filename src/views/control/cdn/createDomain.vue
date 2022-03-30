@@ -220,7 +220,6 @@ import {
   businessTypeEnum,
   scopeAreaEnum
 } from "@/utils/enum";
-import { log } from "mathjs";
 export default {
   components: { DetailHeader, UpdateSourceStationModal, CourseModal },
   data() {
