@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="submit-container">
     <h2 class="verified-title">
       <div v-show="activeKey === 4" class="icon-wrap" @click="activeKey = 1">
         <a-icon type="left" />

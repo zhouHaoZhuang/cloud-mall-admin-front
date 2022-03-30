@@ -63,7 +63,7 @@ export default {
         search: "",
         currentPage: 1,
         pageSize: 10,
-        total: 0
+        total: 0,
       },
       columns: [
         {
@@ -143,8 +143,12 @@ export default {
     formatSearch() {
       if (this.listQuery.key === "billNo") {
         this.listQuery["qp-billNo-like"] = this.listQuery.search;
+        this.listQuery["qp-orderNo-like"] = "";
+
       } else if (this.listQuery.key === "orderNo") {
         this.listQuery["qp-orderNo-like"] = this.listQuery.search;
+        this.listQuery["qp-billNo-like"] = "";
+
       } else {
         this.listQuery["qp-billNo-like"] = "";
         this.listQuery["qp-orderNo-like"] = "";
@@ -154,6 +158,7 @@ export default {
     getList() {
       this.loading = true;
       this.formatSearch();
+      this.listQuery["qp-billType-eq"] = "day"
       this.$getList("billmanage/getList", this.listQuery)
         .then((res) => {
           this.data = [...res.data.list];
