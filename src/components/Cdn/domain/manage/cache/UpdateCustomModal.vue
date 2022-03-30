@@ -41,8 +41,8 @@
           {{ errorCodeEnum[form.error_code].info }}
         </span>
       </a-form-model-item>
-      <a-form-model-item label="取值" prop="rewrite_page">
-        <a-input v-model="form.rewrite_page" placeholder="请输入取值" />
+      <a-form-model-item label="链接" prop="rewrite_page">
+        <a-input v-model="form.rewrite_page" placeholder="请输入链接" />
       </a-form-model-item>
     </a-form-model>
   </a-modal>
@@ -124,7 +124,7 @@ export default {
         rewrite_page: [
           {
             required: true,
-            message: "请输入取值",
+            message: "请输入链接",
             trigger: "change"
           }
         ]
