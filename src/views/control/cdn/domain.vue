@@ -47,9 +47,8 @@
             placeholder="请选择"
           >
             <a-select-option value="domain"> 域名 </a-select-option>
-            <a-select-option value="channelName"> 渠道商名称 </a-select-option>
-            <a-select-option value="channelCode"> 渠道商ID </a-select-option>
             <a-select-option value="cnameValue"> cname </a-select-option>
+            <a-select-option value="sourceInfo"> 源站信息 </a-select-option>
           </a-select>
         </a-form-model-item>
         <a-form-model-item>

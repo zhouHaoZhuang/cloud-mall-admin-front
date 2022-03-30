@@ -31,18 +31,20 @@
           <a-radio value="type_c"> C方式 </a-radio>
         </a-radio-group>
       </a-form-model-item>
-      <a-form-model-item label="主KEY">
+      <a-form-model-item label="主KEY" prop="auth_key1">
         <a-input
           v-model="form.auth_key1"
           v-filterInput-input
+          :max-length="32"
           :disabled="!form.enable"
         />
         <div class="info-txt">16~32个字符支持大写字母、小写字母、数字。</div>
       </a-form-model-item>
-      <a-form-model-item label="备KEY">
+      <a-form-model-item label="备KEY" prop="auth_key2">
         <a-input
           v-model="form.auth_key2"
           v-filterInput-input
+          :max-length="32"
           :disabled="!form.enable"
         />
         <div class="info-txt">16~32个字符支持大写字母、小写字母、数字。</div>
@@ -101,18 +103,28 @@ export default {
       loading: false,
       form: {},
       rules: {
-        key1: [
+        auth_key1: [
           {
             required: true,
             message: "请输入主KEY",
-            trigger: "blur"
+            trigger: ["blur", "change"]
+          },
+          {
+            min: 16,
+            message: "请至少输入16位字符",
+            trigger: ["blur", "change"]
           }
         ],
-        abc: [
+        auth_key2: [
           {
             required: true,
             message: "请输入备KEY",
-            trigger: "blur"
+            trigger: ["blur", "change"]
+          },
+          {
+            min: 16,
+            message: "请至少输入16位字符",
+            trigger: ["blur", "change"]
           }
         ]
       }
