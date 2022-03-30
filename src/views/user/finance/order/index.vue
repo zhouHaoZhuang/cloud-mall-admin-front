@@ -22,12 +22,10 @@
               <a-select-option value="orderNo2"> 退单编号 </a-select-option>
 
               <a-select-option value="orderNo"> 订单编号 </a-select-option>
-              <a-select-option value="corporationName">
-                渠道商名称
+              <a-select-option value="productName">
+                产品
               </a-select-option>
-              <a-select-option value="corporationCode">
-                渠道商ID
-              </a-select-option>
+            
             </a-select>
             <a-input-search
               allowClear

@@ -6,6 +6,18 @@
         :class="menuOpen ? 'menu-title-box' : 'menu-title-box menu-box-hover'"
         @click="changeMenu(index, item)"
       >
+        <!-- 图标位置 -->
+        <img
+          src="@/assets/img/menu/icon-one.png"
+          v-if="item.name == '控制台' && menuOpen"
+          class="icon-font"
+        />
+        <img
+          src="@/assets/img/menu/icon-two.png"
+          v-if="item.name == '用户中心' && menuOpen"
+          class="icon-font"
+        />
+
         <div v-if="menuOpen" class="title">{{ item.name }}</div>
         <a-icon v-if="item.open" type="caret-down" class="icon" />
         <a-icon v-else type="caret-right" class="icon" />
@@ -26,7 +38,7 @@
         >
           <Iconfont
             :class="menuOpen ? 'item-icon item-icon-open' : 'item-icon'"
-            :style="`margin-left:${menuOpen ? '24' : '0'}px`"
+            :style="`margin-left:${menuOpen ? '16' : '0'}px`"
             :type="ele.meta.icon"
           />
           <div v-if="menuOpen" class="item-title">
@@ -54,12 +66,14 @@ export default {
   watch: {
     $route: {
       handler(newVal) {
-        this.menuList = this.menuData.map((ele) => {
-          return {
-            ...ele,
-            open: true
-          };
-        }).filter((ele) => !ele.meta.hiddenMenu);
+        this.menuList = this.menuData
+          .map((ele) => {
+            return {
+              ...ele,
+              open: true
+            };
+          })
+          .filter((ele) => !ele.meta.hiddenMenu);
         const routeArr = newVal.path.split("/").slice(1, 3);
         const newOneMenuData = this.menuList.find(
           (ele) => ele.path === "/" + routeArr[0]
@@ -114,10 +128,10 @@ export default {
 <style lang="less" scoped>
 .side-menu-container {
   flex: 1;
-  background-color: #2d3438;
+  background-color: #3b77e3;
   color: #fff;
   .menu-item {
-    background-color: #2d3438;
+    background-color: #3b77e3;
     font-size: 12px;
     color: #879399;
     cursor: pointer;
@@ -126,9 +140,15 @@ export default {
       align-items: center;
       position: relative;
       height: 40px;
-      background: #3d4448;
+      background: #3770d6;
+      color: #fff;
+      .icon-font {
+        position: absolute;
+        left: 14px;
+      }
       .title {
-        margin-left: 24px;
+        margin-left: 40px;
+        font-size: 14px;
       }
       .icon {
         position: absolute;
@@ -180,7 +200,7 @@ export default {
         .item-title {
           width: 120px;
           position: absolute;
-          margin-left: 24px;
+          margin-left: 16px;
         }
         .item-icon {
           position: absolute;
@@ -194,11 +214,11 @@ export default {
           left: 9px;
         }
         &:hover {
-          background-color: #00aaff;
+          background-color: #1a5acd;
         }
       }
       #active {
-        background-color: #00aaff;
+        background-color: #1a5acd;
       }
     }
     .menu-title-box:hover {

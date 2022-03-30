@@ -2,24 +2,12 @@
   <div class="dashboard-container">
     <!-- 头部用户信息 -->
     <div class="header-user-info">
-      <a-avatar :size="64" icon="user" />
+      <img src="@/assets/img/dashboard/new_user.png" />
+      <!-- <a-avatar :size="64" icon="user" /> -->
       <span class="welcome">欢迎您回来，</span>
       <span class="name">{{ realName }}</span>
       <div class="icons">
-        <div class="icon-item" @click="handleJump('/user/setting/realname')">
-          <a-tooltip placement="bottom">
-            <template slot="title">
-              <span>实名认证</span>
-            </template>
-            <div class="icon-item-imgs">
-              <img
-                v-if="!userRealInfo.realName"
-                src="@/assets/img/dashboard/card.png"
-              />
-              <img v-else src="@/assets/img/dashboard/card-a.png" />
-            </div>
-          </a-tooltip>
-        </div>
+      
         <div class="icon-item" @click="handleJump('/user/setting/security')">
           <a-tooltip placement="bottom">
             <template slot="title">
@@ -45,6 +33,20 @@
             </div>
           </a-tooltip>
         </div>
+          <div class="icon-item" @click="handleJump('/user/setting/realname')">
+          <a-tooltip placement="bottom">
+            <template slot="title">
+              <span>实名认证</span>
+            </template>
+            <div class="icon-item-imgs">
+              <img
+                v-if="!userRealInfo.realName"
+                src="@/assets/img/dashboard/card.png"
+              />
+              <img v-else src="@/assets/img/dashboard/card-a.png" />
+            </div>
+          </a-tooltip>
+        </div>
         <!-- <div class="icon-item" @click="handleJump('/user/setting/security')">
           <a-tooltip placement="bottom">
             <template slot="title">
@@ -65,18 +67,23 @@
         <!-- 账户概览 -->
         <div class="public-box overview">
           <div class="public-tit">账户概览</div>
-          <div class="info">
-            <div class="left-box">
+          <div class="info box-one">
+            <div class="top-box">
               <span class="txt">可用余额（元）</span>
-              <div class="price strong">{{ overviewData.balance.balance }}</div>
-            </div>
-            <div class="coupon">
-              <span class="txt">可用代金券（元）</span>
-              <div class="price">{{ overviewData.coupon.balance }}</div>
+              <div class="price strong">
+                {{ overviewData.balance.balance }}
+              </div>
+
+              <a-button class="btns" type="primary" @click="goRecharge"
+                >充值</a-button
+              >
             </div>
           </div>
-          <div class="btns">
-            <a-button type="primary" @click="goRecharge">充值</a-button>
+          <div class="info box-two">
+            <div class="bottom-box">
+              <span class="txt">可用代金券（元）</span>
+              <div class="price strong">{{ overviewData.coupon.balance }}</div>
+            </div>
           </div>
         </div>
         <!-- 消费趋势 -->
@@ -100,14 +107,14 @@
                 <span class="count">{{ todoObj.ecsCount }}</span>
                 个待续费产品
               </div>
-              <div class="jump">前往续费></div>
+              <a-button type="primary">前往续费</a-button>
             </div>
             <div class="todo-item" @click="handleJump('/user/finance/trash')">
               <div class="left-txt">
                 <span class="count">{{ todoObj.toPayOrder }}</span>
                 个未完成订单
               </div>
-              <div class="jump">前往支付></div>
+              <a-button type="primary">前往支付</a-button>
             </div>
             <!-- <div class="todo-item">
               <div class="left-txt">
@@ -245,43 +252,44 @@ export default {
         });
         this.overviewData = { ...newData };
       });
-      this.$store.dispatch("dashboard/trendData").then((res) => {
-        let newData = [];
-        if (res.data && res.data.length > 0) {
-          const I = res.data.find((ele) => ele.type === "I");
-          const O = res.data.find((ele) => ele.type === "O");
-          const newIDealAmount = (I && I.dealAmount) || 0;
-          const newODealAmount = (O && O.dealAmount) || 0;
-          this.trendIn = newIDealAmount;
-          this.trendOut = newODealAmount;
-          newData = [
-            {
-              type: "I",
-              value: newIDealAmount,
-              name: "收入记录"
-            },
-            {
-              type: "O",
-              value: newODealAmount,
-              name: "消费记录"
-            }
-          ];
-        } else {
-          newData = [
-            {
-              type: "I",
-              value: 0,
-              name: "收入记录"
-            },
-            {
-              type: "O",
-              value: 0,
-              name: "消费记录"
-            }
-          ];
-        }
-        this.trendData.data = [...newData];
-        this.initEcharts();
+      this.$store.dispatch("dashboard/newTrendData").then((res) => {
+        // let newData = [];
+        // if (res.data && res.data.length > 0) {
+        //   const I = res.data.find((ele) => ele.type === "I");
+        //   const O = res.data.find((ele) => ele.type === "O");
+        //   const newIDealAmount = (I && I.dealAmount) || 0;
+        //   const newODealAmount = (O && O.dealAmount) || 0;
+        //   this.trendIn = newIDealAmount;
+        //   this.trendOut = newODealAmount;
+        //   newData = [
+        //     {
+        //       type: "I",
+        //       value: newIDealAmount,
+        //       name: "收入记录"
+        //     },
+        //     {
+        //       type: "O",
+        //       value: newODealAmount,
+        //       name: "消费记录"
+        //     }
+        //   ];
+        // } else {
+        //   newData = [
+        //     {
+        //       type: "I",
+        //       value: 0,
+        //       name: "收入记录"
+        //     },
+        //     {
+        //       type: "O",
+        //       value: 0,
+        //       name: "消费记录"
+        //     }
+        //   ];
+        // }
+        // this.trendData.data = [...newData];
+        // console.log(this.trendData.data,"echarts数据")
+        // this.initEcharts();
       });
       // 获取服务器数量
       this.$store.dispatch("dashboard/getCloudCount").then((res) => {
@@ -329,7 +337,7 @@ export default {
 <style lang="less" scoped>
 .dashboard-container {
   height: 100%;
-  background: #f3f4f5;
+  background: #f5f7fd;
   position: absolute;
   left: 0;
   right: 0;
@@ -343,21 +351,29 @@ export default {
     height: 184px;
     margin-bottom: 60px;
   }
+  .header-user-info:hover {
+    box-shadow: 0px 0px 13px 7px rgba(189, 192, 253, 0.23);
+  }
+
   .header-user-info {
     display: flex;
     align-items: center;
-    height: 56px;
+    height: 110px;
     margin-top: 8px;
     margin-bottom: 24px;
+    background-color: #fff;
+    padding: 25px 0 25px 40px;
     .welcome {
       color: #a0a2a3;
       font-size: 14px;
       margin: 0 20px;
       margin-right: 5px;
+      margin-left: 40px;
     }
     .name {
       font-size: 22px;
       margin-right: 25px;
+      color: #3b77e3;
     }
     .icons {
       display: flex;
@@ -383,7 +399,8 @@ export default {
     .public-tit {
       padding-top: 24px;
       font-size: 16px;
-      color: #a0a2a3;
+      color: #333333;
+      font-weight: 600;
     }
   }
   .content {
@@ -391,28 +408,91 @@ export default {
       display: flex;
       margin-bottom: 24px;
       justify-content: space-between;
-      .overview,
-      .trend,
-      .todolist,
-      .news {
-        width: 32.5%;
-        height: 240px;
+      .overview {
+        width: 410px;
+        height: 294px;
+        position: relative;
+        .box-one {
+          width: 100%;
+          height: 90px;
+          line-height: 40px;
+          border-bottom: 1px solid #f0f0f0;
+          padding-bottom: 30px;
+          .top-box {
+            .strong {
+              font-weight: 600;
+              font-size: 28px;
+              color: #3b77e3;
+            }
+            .btns {
+              position: absolute;
+              right: 24px;
+              top: 80px;
+            }
+            .txt {
+              color: #666666;
+            }
+          }
+        }
+        .box-two {
+          width: 100%;
+          height: 90px;
+          line-height: 40px;
+          .bottom-box {
+            margin-top: 16px;
+            .strong {
+              font-weight: 600;
+              font-size: 28px;
+              color: #3b77e3;
+            }
+            .txt {
+              color: #666666;
+            }
+          }
+        }
+      }
+      .trend {
+        width: 770px;
+        height: 294px;
         position: relative;
       }
+      .todolist {
+        width: 460px;
+        height: 294px;
+        position: relative;
+      }
+      .news:hover,
+      .overview:hover,
+      .trend:hover,
+      .todolist:hover {
+        box-shadow: 0px 0px 13px 7px rgba(189, 192, 253, 0.23);
+      }
+      .news {
+        width: 460px;
+        height: 294px;
+        position: relative;
+      }
+      // .overview,
+      // .trend,
+      // .todolist,
+      // .news {
+      //   width: 32.5%;
+      //   height: 240px;
+      //   position: relative;
+      // }
+      .open-product:hover {
+        box-shadow: 0px 0px 13px 7px rgba(189, 192, 253, 0.23);
+      }
       .open-product {
-        width: 66.25%;
+        width: 1190px;
+        height: 294px;
+        position: relative;
       }
       .overview {
         .public-tit {
-          margin-bottom: 35px;
+          margin-bottom: 12px;
         }
         .info {
-          cursor: pointer;
-          display: flex;
-          justify-content: space-around;
-          padding: 0 20px 0 0;
-          margin-bottom: 35px;
-          height: 62px;
           .left-box,
           .coupon {
             width: 50%;
@@ -449,10 +529,11 @@ export default {
       .todolist {
         .list {
           margin-top: 18px;
+          .todo-item:nth-child(1) {
+            border-bottom: 1px solid #f9f9f9;
+          }
           .todo-item {
-            height: 44px;
-            background: #f7f9fa;
-            border: 1px solid #f7f9fa;
+            height: 84px;
             font-size: 12px;
             margin-top: 6px;
             color: #636566;
@@ -466,7 +547,7 @@ export default {
               align-items: center;
               .count {
                 margin-right: 10px;
-                font-size: 20px;
+                font-size: 22px;
                 color: #272829;
               }
             }
@@ -475,7 +556,7 @@ export default {
               color: #00aaff;
             }
             &:hover {
-              border-color: #00aaff;
+              // border-color: #00aaff;
               background: #fff;
             }
           }

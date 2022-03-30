@@ -51,8 +51,8 @@ export default {
   width: 100%;
   min-width: 900px;
   height: 56px;
-  color: #fff;
-  background-color: @primary-color;
+  color: #3B77E3;
+  background-color: #fff;
   flex-shrink: 0;
   position: fixed;
   top: 0;
@@ -61,22 +61,26 @@ export default {
   justify-content: space-between;
   padding-right: 168px;
   z-index: 3;
+  box-shadow: 0px 2px 6px 0px rgba(59, 119, 227, 0.1);
   .left {
     display: flex;
     .dashboard {
       width: 96px;
       line-height: 55px;
-      padding-left: 20px;
+      padding-left: 34px;
       text-indent: 17px;
-      background: url("../assets/img/menu/header_icon_overview.png") no-repeat;
-      background-position: 17px center;
+      background: url("../assets/img/menu/tuanduizonglan.png") no-repeat;
+      background-position: 20px center;
       font-size: 16px;
-      padding-right: 24px;
-      border-left: 1px solid #039ce9;
-      border-right: 1px solid #039ce9;
+      // padding-right: 24px;
+      // border-left: 1px solid #039ce9;
+      // border-right: 1px solid #039ce9;
       cursor: pointer;
       &:hover {
-        background-color: #0099e5;
+        
+      background: url("../assets/img/menu/tuanduizonglan-a.png") no-repeat 20px center;
+background-color: #0099e5;
+        color: #fff;
       }
     }
   }

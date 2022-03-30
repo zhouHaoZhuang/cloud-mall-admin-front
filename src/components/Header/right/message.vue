@@ -9,7 +9,8 @@
           </a-button>
         </div>
       </template>
-      <span> <a-icon type="mail" /> 站内信 </span>
+      
+      <span>  <img src="@/assets/img/menu/envelope.png" class="img" width="22" height="16"> 站内信 </span>
     </a-popover>
   </div>
 </template>
@@ -33,5 +34,8 @@ export default {
 <style lang="less" scoped>
 .message-container {
   padding: 0 20px;
+}
+.img{
+  margin-right: 6px;
 }
 </style>
