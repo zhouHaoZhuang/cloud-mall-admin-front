@@ -165,10 +165,7 @@ export default {
         { title: "产品名称", dataIndex: "productName" },
         {
           title: "开票金额",
-          dataIndex: "canInvoiceAmount",
-          scopedSlots: {
-            customRender: "canInvoiceAmount"
-          }
+          dataIndex: "originalAmountShow"
         },
         {
           title: "订单创建时间",
