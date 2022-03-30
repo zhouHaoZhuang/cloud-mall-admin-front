@@ -258,6 +258,13 @@ export default {
     handleOk() {
       this.$refs.ruleForm.validate((valid) => {
         if (valid) {
+          if (
+            this.form.sslPub === this.sslPub ||
+            this.form.sslPri === this.sslPri
+          ) {
+            this.$message.error("示例证书不能提交");
+            return
+          }
           this.loading = true;
           this.$store
             .dispatch("cdn/saveDomainHttps", {
