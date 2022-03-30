@@ -5,44 +5,70 @@
         <a-select
           style="width: 100px"
           allowClear
-          v-model="listQuery.a"
+          v-model="listQuery.granularity"
           placeholder="请选择"
+          @change="changeDate"
         >
-          <a-select-option value="1"> 按日查询 </a-select-option>
-          <a-select-option value="2"> 按月查询 </a-select-option>
+          <a-select-option value="day"> 按日查询 </a-select-option>
+          <a-select-option value="month"> 按月查询 </a-select-option>
         </a-select>
-        <a-date-picker @change="onChange" />
-        <a-month-picker @change="onChange" />
+        <a-date-picker
+          :disabled="listQuery.granularity !== 'day'"
+          @change="onChange"
+          :default-value="moment(listQuery.billingDate, 'YYYY-MM-DD')"
+        />
+        <a-month-picker
+          :disabled="listQuery.granularity !== 'month'"
+          @change="onChange"
+        />
         <a-button type="primary" @click="handleSearch"> 查询 </a-button>
       </a-space>
     </div>
     <div class="table-box">
       <div class="top">
         <div class="title">按流量计费</div>
-        <div class="title">2022-03-16 00:00:00至2022-03-16 23:59:59</div>
+        <div class="title">
+          {{
+            listQuery.granularity === "day"
+              ? listQuery.billingDate
+              : listQuery.billingCycle
+          }}
+        </div>
       </div>
       <div class="content">
         <a-table
           :columns="columns"
           :data-source="data"
-          rowKey="id"
+          :rowKey="(record, index) => index"
           :pagination="false"
         >
+          <div v-if="record" slot="domaina" slot-scope="text, record">
+            {{ record.value + record.unit }}
+          </div>
         </a-table>
       </div>
     </div>
     <div class="table-box">
       <div class="top">
         <div class="title">按增值服务计费</div>
-        <div class="title">2022-03-16 00:00:00至2022-03-16 23:59:59</div>
+        <div class="title">
+          {{
+            listQuery.granularity === "day"
+              ? listQuery.billingDate
+              : listQuery.billingCycle
+          }}
+        </div>
       </div>
       <div class="content">
         <a-table
           :columns="plusColumns"
           :data-source="plusData"
-          rowKey="id"
+          :rowKey="(record, index) => index"
           :pagination="false"
         >
+          <div v-if="record" slot="domaina" slot-scope="text, record">
+            {{ record.value + record.unit }}
+          </div>
         </a-table>
       </div>
     </div>
@@ -62,49 +88,97 @@ export default {
     return {
       moment,
       listQuery: {
-        a: "1",
-        b: "1",
-        c: "1",
-        startTime: "",
-        endTime: ""
+        granularity: "day",
+        billingDate: new Date()
       },
       columns: [
         {
           title: "时间",
-          dataIndex: "domain"
+          dataIndex: "time"
         },
         {
-          title: "中国内地",
-          dataIndex: "domaina"
-        },
-        {
-          title: "境外",
-          dataIndex: "cnameStatus"
+          title: "全球",
+          key: "domaina",
+          scopedSlots: {
+            customRender: "domaina"
+          }
         }
+        // {
+        //   title: "境外",
+        //   dataIndex: "cnameStatus"
+        // }
       ],
       data: [{}],
       plusColumns: [
         {
           title: "时间",
-          dataIndex: "domain"
+          dataIndex: "time"
         },
         {
           title: "静态HTTPS请求次数",
-          dataIndex: "domaina"
+          key: "domaina",
+          scopedSlots: {
+            customRender: "domaina"
+          }
         }
       ],
       plusData: [{}]
     };
   },
-  created() {},
+  created() {
+    this.listQuery.billingDate = moment(this.listQuery.billingDate).format(
+      "YYYY-MM-DD"
+    );
+    this.handleSummary();
+  },
   methods: {
+    // 切换时间类型
+    changeDate() {
+      if (this.listQuery.granularity === "day") {
+        this.listQuery.billingCycle = "";
+      }
+      if (this.listQuery.granularity === "month") {
+        this.listQuery.billingDate = "";
+      }
+    },
     // 日期选择
     onChange(date, dateString) {
       console.log(date, dateString);
+      if (this.listQuery.granularity === "day") {
+        this.listQuery.billingDate = dateString;
+        this.listQuery.billingCycle = "";
+      }
+      if (this.listQuery.granularity === "month") {
+        this.listQuery.billingCycle = dateString;
+        this.listQuery.billingDate = "";
+      }
     },
     // 搜索
-    handleSearch() {},
-    handleRadioChange() {}
+    handleSearch() {
+      this.handleSummary();
+    },
+    handleRadioChange() {},
+    // 用量汇总
+    handleSummary() {
+      this.$store
+        .dispatch("cdndashboard/getUsageSum", {
+          ...this.listQuery,
+          type: "cdn_hour_flow"
+        })
+        .then((res) => {
+          console.log(res, "用量汇总");
+          this.data = res.data.useDataList;
+        });
+      this.$store
+        .dispatch("cdndashboard/getUsageSum", {
+          ...this.listQuery,
+          type: "cdnHourVas"
+        })
+        .then((res) => {
+          console.log(res, "增值服务汇总");
+          this.plusData = res.data.useDataList;
+        });
+    }
   }
 };
 </script>

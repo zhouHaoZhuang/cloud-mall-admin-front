@@ -59,13 +59,15 @@
       >
         <div slot="canInvoiceAmount" slot-scope="text, record">
           <span v-if="record.consumptionType === 2">
-            {{ record.debtAmount }}
+            {{ record.originalAmountShow }}
           </span>
           <span v-if="record.consumptionType === 1">
             {{ record.canInvoiceAmount }}
           </span>
         </div>
-
+        <div slot="type" slot-scope="text">
+          {{ typeMap[text] }}
+        </div>
         <div v-if="text" slot="createTime" slot-scope="text">
           {{ text | formatDate }}
         </div>
@@ -85,6 +87,10 @@ export default {
     return {
       data: null,
       invoiceStatusEnum,
+      typeMap: {
+        1: "订单",
+        2: "账单"
+      },
       columns: [
         {
           title: "订单ID",
@@ -92,7 +98,10 @@ export default {
         },
         {
           title: "类型",
-          dataIndex: "type"
+          dataIndex: "type",
+          scopedSlots: {
+            customRender: "type"
+          }
         },
         {
           title: "产品名称",

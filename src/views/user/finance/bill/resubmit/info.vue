@@ -38,7 +38,7 @@
         >
           <div slot="canInvoiceAmount" slot-scope="text, record">
             <span v-if="record.consumptionType === 2">
-              {{ record.debtAmount }}
+              {{ record.originalAmountShow }}
             </span>
             <span v-if="record.consumptionType === 1">
               {{ record.canInvoiceAmount }}
