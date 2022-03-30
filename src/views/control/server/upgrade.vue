@@ -36,17 +36,17 @@
             {{ example.memory }}G
           </span>
         </a-form-model-item>
-        <a-form-model-item v-if="tabKey === '1'" label="分类">
+        <!-- <a-form-model-item v-if="tabKey === '1'" label="分类">
           <a-radio-group v-model="form.specFamily" @change="typeChange">
             <a-radio
               v-for="item in typeList"
-              :key="item.typeFamily"
-              :value="item.typeFamily"
+              :key="item.value"
+              :value="item.value"
             >
-              {{ item.description }}
+              {{ item.title }}
             </a-radio>
           </a-radio-group>
-        </a-form-model-item>
+        </a-form-model-item> -->
         <a-form-model-item class="cpu-wrap" v-if="tabKey === '1'" label="CPU">
           <a-select
             style="width: 160px"
@@ -217,14 +217,41 @@ export default {
   methods: {
     // 获取分类列表
     getTypeList() {
-      this.$store.dispatch("cloud/typeList").then((res) => {
-        this.typeList = [...res.data];
-        // this.form.specFamily =
-        //   Array.isArray(res.data) && res.data.length > 0
-        //     ? res.data[0].typeFamily
-        //     : undefined;
-        this.getCpu();
-      });
+      this.typeList = [
+        {
+          title: "通用型",
+          value: "general-purpose"
+        },
+        {
+          title: "计算型",
+          value: "compute-optimized"
+        },
+        {
+          title: "内存型",
+          value: "memory-optimized"
+        },
+        {
+          title: "大数据型",
+          value: "big-data"
+        },
+        {
+          title: "本地SSD",
+          value: "local-ssd"
+        },
+        {
+          title: "高主频型",
+          value: "high-clockSpeed"
+        },
+        {
+          title: "共享型",
+          value: "basic"
+        },
+        {
+          title: "增强型",
+          value: "enhancement"
+        }
+      ];
+      this.getCpu();
     },
     // 分类change
     typeChange() {
@@ -387,6 +414,7 @@ export default {
         .dispatch("cloud/getRegionDetail", {
           regionId: this.detail.regionId,
           specFamily: this.form.specFamily,
+          family: "general-purpose",
           cpuCoreCount: this.form.cpu,
           memorySize: this.form.memory,
           operatorType: this.isUpgrade ? "upgrade" : "downgrade",

@@ -3,7 +3,7 @@
     :visible="value"
     width="680px"
     centered
-    :title="modalTitle"
+    title="HTTP头设置"
     wrapClassName="update-source-container"
     okText="确定"
     :confirmLoading="loading"
@@ -17,26 +17,49 @@
       :label-col="labelCol"
       :wrapper-col="wrapperCol"
     >
-      <a-form-model-item label="参数" prop="type">
-        <a-select v-model="form.type" placeholder="请选择">
-          <a-select-option :value="1"> 小秒 </a-select-option>
-          <!-- <a-select-option
-            v-for="item in roleList"
-            :key="item.id"
-            :value="item.code"
-          >
-            {{ item.code }}
-          </a-select-option> -->
+      <a-form-model-item label="参数">
+        <a-select
+          v-model="form.key"
+          :disabled="type === 'modify'"
+          placeholder="请选择"
+        >
+          <a-select-option value="Cache-Control">
+            Cache-Control
+          </a-select-option>
+          <a-select-option value="Content-Disposition">
+            Content-Disposition
+          </a-select-option>
+          <a-select-option value="Content-Type"> Content-Type</a-select-option>
+          <a-select-option value="Pragma"> Pragma </a-select-option>
+          <a-select-option value="Access-Control-Allow-Origin">
+            Access-Control-Allow-Origin
+          </a-select-option>
+          <a-select-option value="Access-Control-Allow-Methods">
+            Access-Control-Allow-Methods
+          </a-select-option>
+          <a-select-option value="Access-Control-Allow-Headers">
+            Access-Control-Allow-Headers
+          </a-select-option>
+          <a-select-option value="Access-Control-Expose-Headers">
+            Access-Control-Expose-Headers
+          </a-select-option>
+          <a-select-option value="Access-Control-Allow-Credentials">
+            Access-Control-Allow-Credentials
+          </a-select-option>
+          <a-select-option value="Access-Control-Max-Age">
+            Access-Control-Max-Age
+          </a-select-option>
         </a-select>
       </a-form-model-item>
-      <a-form-model-item label="取值" prop="type">
-        <a-input v-model="form.type" placeholder="请输入取值" />
+      <a-form-model-item label="取值" prop="value">
+        <a-input v-model="form.value" placeholder="请输入取值" />
       </a-form-model-item>
     </a-form-model>
   </a-modal>
 </template>
 
 <script>
+import { getParameter } from "@/utils/index";
 export default {
   // 双向绑定
   model: {
@@ -49,51 +72,64 @@ export default {
       type: Boolean,
       default: false
     },
+    functionName: {
+      type: String,
+      default: ""
+    },
     detail: {
       type: Object,
       default: () => {}
     }
   },
   computed: {
-    modalTitle() {
-      return this.type === "add" ? "添加HTTP头设置" : "修改HTTP头设置";
+    domain() {
+      return this.$route.query.domain;
     }
   },
   watch: {
     value: {
       handler(newVal) {
-        if (!newVal) {
-          this.$nextTick(() => {
-            this.resetForm();
-          });
+        if (newVal) {
+          if (JSON.stringify(this.detail) !== "{}") {
+            this.type = "modify";
+            this.configId = newVal.configId;
+            this.form = {
+              key: this.detail.key,
+              value: this.detail.value
+            };
+          } else {
+            this.type = "add";
+            this.configId = undefined;
+          }
+        } else {
+          this.resetForm();
         }
       }
-    },
-    detail: {
-      handler(newVal) {
-        if (JSON.stringify(newVal) !== "{}") {
-          this.type = "edit";
-        } else {
-          this.type = "add";
-        }
-      },
-      immediate: true
     }
   },
   data() {
     return {
       type: "add",
+      configId: undefined,
       labelCol: { span: 6 },
       wrapperCol: { span: 15 },
       loading: false,
       form: {
-        type: 1
+        key: "Cache-Control",
+        value: ""
       },
       rules: {
-        type: [
+        key: [
           {
             required: true,
-            message: "请选择加速区域",
+            message: "请选择参数",
+            trigger: "change"
+          }
+        ],
+        value: [
+          {
+            required: true,
+            message: "请输入取值",
             trigger: "change"
           }
         ]
@@ -107,20 +143,37 @@ export default {
     },
     // 重置表单数据
     resetForm() {
-      this.$refs.ruleForm.clearValidate();
+      this.$nextTick(() => {
+        this.$refs.ruleForm.clearValidate();
+      });
       this.form = {
-        type: 1
+        key: "Cache-Control",
+        value: ""
       };
     },
     // 弹窗提交
     handleOk() {
       this.$refs.ruleForm.validate((valid) => {
         if (valid) {
+          let tempForm = {
+            key: this.form.key,
+            value: this.form.value,
+            header_operation_type: "add"
+          };
+          const newForm = {
+            ...getParameter(
+              tempForm,
+              this.functionName,
+              this.domain,
+              [],
+              this.configId
+            )
+          };
           this.loading = true;
           this.$store
-            .dispatch("domain/add", this.form)
+            .dispatch("cdn/saveConfig", newForm)
             .then((res) => {
-              this.$message.success(`修改${this.modalTitle}成功`);
+              this.$message.success(`设置成功`);
               this.$emit("success");
               this.$emit("changeVisible", false);
             })

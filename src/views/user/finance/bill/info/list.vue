@@ -25,13 +25,13 @@
           ￥{{ data.invoiceAmount }}
         </a-descriptions-item>
         <a-descriptions-item label="申请时间">
-          {{ data.invoiceInfo.createTimeShow }}
+          {{ data.createTimeShow }}
         </a-descriptions-item>
         <a-descriptions-item label="反馈时间">
-          {{ data.feedbackTimeShow }}
+          {{ data.rejectTimeShow }}
         </a-descriptions-item>
         <a-descriptions-item label="反馈说明">
-          {{ data.refundFeedbackRemark }}
+          {{ data.rejectRemark }}
         </a-descriptions-item>
       </a-descriptions>
       <a-descriptions style="margin: 20px 0" title="收件人信息">
@@ -49,7 +49,7 @@
           {{ data.addressInfo.address }}
         </a-descriptions-item>
         <a-descriptions-item label="物流单号">
-          {{ data.expressDelivery }}
+          {{ data.businessExpressDelivery }}
         </a-descriptions-item>
       </a-descriptions>
     </div>
@@ -61,6 +61,14 @@
         :pagination="false"
         rowKey="id"
       >
+        <div slot="canInvoiceAmount" slot-scope="text, record">
+          <span v-if="record.consumptionType === 2">
+            {{ record.originalAmountShow }}
+          </span>
+          <span v-if="record.consumptionType === 1">
+            {{ record.canInvoiceAmount }}
+          </span>
+        </div>
         <div slot="type" slot-scope="text">
           {{ typeMap[text] }}
         </div>
@@ -109,15 +117,15 @@ export default {
         },
         {
           title: "产品名称",
-          dataIndex: "bizTypeName"
+          dataIndex: "productName"
         },
         {
-          title: "可开票金额",
-          dataIndex: "canInvoiceAmount"
+          title: "开票金额",
+          dataIndex: "originalAmountShow",
         },
         {
           title: "订单创建时间",
-          dataIndex: "createTimeShow",
+          dataIndex: "createTimeShow"
         }
       ],
       dataDetails: [],

@@ -21,15 +21,15 @@ export const basicRoute = [
       {
         path: "not",
         name: "notLogin",
-        component: () => import("@/views/exception/notLogin"),
+        component: () => import("@/views/exception/notLogin")
       },
       {
         path: "404",
         name: "404",
-        component: () => import("@/views/exception/404"),
-      },
-    ],
-  },
+        component: () => import("@/views/exception/404")
+      }
+    ]
+  }
 ];
 // 动态路由
 export const asyncRoute = [
@@ -46,8 +46,8 @@ export const asyncRoute = [
         component: () => import("@/views/dashboard/index"),
         meta: {
           hiddenMenu: true,
-          perm: "dashboard",
-        },
+          perm: "dashboard"
+        }
       },
       // 消息中心
       {
@@ -56,8 +56,8 @@ export const asyncRoute = [
         component: () => import("@/views/dashboard/message.vue"),
         meta: {
           hiddenMenu: true,
-          perm: "message",
-        },
+          perm: "message"
+        }
       },
       // 消息中心详情
       {
@@ -66,8 +66,8 @@ export const asyncRoute = [
         component: () => import("@/views/dashboard/messageInfo.vue"),
         meta: {
           hiddenMenu: true,
-          perm: "message",
-        },
+          perm: "message"
+        }
       },
       // 控制台
       {
@@ -75,7 +75,7 @@ export const asyncRoute = [
         name: "控制台",
         component: Content,
         meta: {
-          perm: "control",
+          perm: "control"
         },
         children: [
           {
@@ -84,7 +84,7 @@ export const asyncRoute = [
             component: RouteView,
             meta: {
               icon: "icon-yunfuwuqi",
-              perm: "control-cloud",
+              perm: "control-cloud"
             },
             children: [
               {
@@ -92,8 +92,8 @@ export const asyncRoute = [
                 name: "云服务器管理",
                 component: () => import("@/views/control/server/serverAdmin"),
                 meta: {
-                  perm: "control-cloud-manage",
-                },
+                  perm: "control-cloud-manage"
+                }
               },
               {
                 path: "detail",
@@ -101,8 +101,8 @@ export const asyncRoute = [
                 component: () => import("@/views/control/server/serverDetail"),
                 meta: {
                   hiddenMenu: true,
-                  perm: "control-cloud-manage",
-                },
+                  perm: "control-cloud-manage"
+                }
               },
               {
                 path: "upgrade",
@@ -110,9 +110,9 @@ export const asyncRoute = [
                 component: () => import("@/views/control/server/upgrade"),
                 meta: {
                   hiddenMenu: true,
-                  perm: "control-cloud-manage",
-                },
-              },
+                  perm: "control-cloud-manage"
+                }
+              }
               // {
               //   path: "transfer",
               //   name: "过户",
@@ -211,7 +211,7 @@ export const asyncRoute = [
         name: "用户中心",
         component: Content,
         meta: {
-          perm: "user",
+          perm: "user"
         },
         children: [
           {
@@ -220,7 +220,7 @@ export const asyncRoute = [
             component: RouteView,
             meta: {
               icon: "icon-caiwu",
-              perm: "user-finance",
+              perm: "user-finance"
             },
             children: [
               {
@@ -228,8 +228,8 @@ export const asyncRoute = [
                 name: "充值中心",
                 component: () => import("@/views/user/finance/recharge/index"),
                 meta: {
-                  perm: "user-finance-recharge",
-                },
+                  perm: "user-finance-recharge"
+                }
               },
               {
                 path: "transaction",
@@ -237,16 +237,16 @@ export const asyncRoute = [
                 component: () =>
                   import("@/views/user/finance/transaction/index"),
                 meta: {
-                  perm: "user-finance-transaction",
-                },
+                  perm: "user-finance-transaction"
+                }
               },
               {
                 path: "trash",
                 name: "订单管理",
                 component: () => import("@/views/user/finance/order/index"),
                 meta: {
-                  perm: "user-finance-order",
-                },
+                  perm: "user-finance-order"
+                }
               },
               {
                 path: "orderDetail",
@@ -254,8 +254,8 @@ export const asyncRoute = [
                 component: () => import("@/views/user/finance/order/detail"),
                 meta: {
                   hiddenMenu: true,
-                  perm: "user-finance-order",
-                },
+                  perm: "user-finance-order"
+                }
               },
               {
                 path: "recordDetail",
@@ -282,7 +282,7 @@ export const asyncRoute = [
                 name: "退款管理",
                 component: RouteView,
                 meta: {
-                  perm: "user-finance-refund",
+                  perm: "user-finance-refund"
                 },
                 children: [
                   // {
@@ -298,25 +298,36 @@ export const asyncRoute = [
                     component: () =>
                       import("@/views/user/finance/refund/record/index"),
                     meta: {
-                      perm: "user-finance-refund-record",
-                    },
-                  },
-                ],
+                      perm: "user-finance-refund-record"
+                    }
+                  }
+                ]
               },
               {
                 path: "withdraw",
                 name: "提现申请",
                 component: () => import("@/views/user/finance/withdraw"),
                 meta: {
-                  perm: "user-finance-refund-record",
-                },
+                  perm: "user-finance-refund-record"
+                }
+              },
+              {
+                path: "manageadress",
+                name: "常用地址管理",
+                component: () =>
+                  import(
+                    "@/views/user/finance/bill/manageadress/index.vue"
+                  ),
+                meta: {
+                  perm: "user-finance-refund"
+                }
               },
               {
                 path: "bill",
                 name: "发票管理",
                 component: RouteView,
                 meta: {
-                  perm: "user-finance-refund",
+                  perm: "user-finance-refund"
                 },
                 children: [
                   {
@@ -326,8 +337,8 @@ export const asyncRoute = [
                       import("@/views/user/finance/bill/Apply/list.vue"),
                     meta: {
                       hiddenMenu: true,
-                      perm: "user-finance-refund",
-                    },
+                      perm: "user-finance-refund"
+                    }
                   },
                   {
                     path: "list",
@@ -335,69 +346,59 @@ export const asyncRoute = [
                     component: () =>
                       import("@/views/user/finance/bill/list/index.vue"),
                     meta: {
-                      perm: "user-finance-refund",
-                    },
+                      perm: "user-finance-refund"
+                    }
                   },
                   {
                     path: "info",
                     name: "发票申请详情",
                     component: () =>
                       import("@/views/user/finance/bill/info/list.vue"),
-                    meta: { perm: "user-finance-refund" },
+                    meta: { perm: "user-finance-refund", hiddenMenu: true }
                   },
                   {
                     path: "address",
                     name: "修改地址",
                     component: () =>
                       import("@/views/user/finance/bill/address/index.vue"),
-                    meta: { perm: "user-finance-refund" },
+                    meta: { perm: "user-finance-refund", hiddenMenu: true }
                   },
                   {
                     path: "refundlist",
                     name: "退票列表",
                     component: () =>
                       import("@/views/user/finance/bill/refundlist/index.vue"),
-                    meta: { perm: "user-finance-refund" },
+                    meta: { perm: "user-finance-refund" }
                   },
                   {
                     path: "refundInfo",
                     name: "退票详情",
                     component: () =>
                       import("@/views/user/finance/bill/refundInfo/info.vue"),
-                    meta: { perm: "user-finance-refund" },
+                    meta: { perm: "user-finance-refund", hiddenMenu: true }
                   },
                   {
                     path: "resubmit",
                     name: "重新提交退票申请",
                     component: () =>
                       import("@/views/user/finance/bill/resubmit/info.vue"),
-                    meta: { perm: "user-finance-refund" },
+                    meta: { perm: "user-finance-refund", hiddenMenu: true }
                   },
                   {
-                    path: "billmanage",
+                    path: "managebill",
                     name: "发票信息管理",
                     component: () =>
                       import("@/views/user/finance/bill/billmanage/index.vue"),
-                    meta: { perm: "user-finance-refund" },
+                    meta: { perm: "user-finance-refund" }
                   },
                   {
                     path: "addBillInfo",
                     name: "新增发票信息",
                     component: () =>
                       import("@/views/user/finance/bill/addBillInfo/index.vue"),
-                    meta: { perm: "user-finance-refund" },
+                    meta: { perm: "user-finance-refund", hiddenMenu: true }
                   },
-                  {
-                    path: "manageadress",
-                    name: "常用地址管理",
-                    component: () =>
-                      import(
-                        "@/views/user/finance/bill/manageadress/index.vue"
-                      ),
-                    meta: {
-                      perm: "user-finance-refund"
-                    }
-                  }
+                  
                 ]
               },
               {
@@ -416,7 +417,7 @@ export const asyncRoute = [
             component: RouteView,
             meta: {
               icon: "icon-xufei",
-              perm: "user-renew",
+              perm: "user-renew"
             },
             children: [
               {
@@ -424,10 +425,10 @@ export const asyncRoute = [
                 name: "云服务器续费管理",
                 component: () => import("@/views/user/renew/cloud/index"),
                 meta: {
-                  perm: "user-renew-cloudRenew",
-                },
-              },
-            ],
+                  perm: "user-renew-cloudRenew"
+                }
+              }
+            ]
           },
           {
             path: "setting",
@@ -435,7 +436,7 @@ export const asyncRoute = [
             component: RouteView,
             meta: {
               icon: "icon-zhanghaoquanxianguanli",
-              perm: "user-setting",
+              perm: "user-setting"
             },
             children: [
               {
@@ -444,8 +445,8 @@ export const asyncRoute = [
                 component: () =>
                   import("@/views/user/setting/securitySettings/index.vue"),
                 meta: {
-                  perm: "user-setting-security",
-                },
+                  perm: "user-setting-security"
+                }
               },
               {
                 path: "changePassword",
@@ -456,8 +457,8 @@ export const asyncRoute = [
                   ),
                 meta: {
                   hiddenMenu: true,
-                  perm: "user-setting-changPwd",
-                },
+                  perm: "user-setting-changePwd"
+                }
               },
               {
                 path: "emailBinding",
@@ -468,8 +469,8 @@ export const asyncRoute = [
                   ),
                 meta: {
                   hiddenMenu: true,
-                  perm: "user-setting-email",
-                },
+                  perm: "user-setting-email"
+                }
               },
               {
                 path: "phoneBinding",
@@ -480,8 +481,8 @@ export const asyncRoute = [
                   ),
                 meta: {
                   hiddenMenu: true,
-                  perm: "user-setting-phone",
-                },
+                  perm: "user-setting-phone"
+                }
               },
               {
                 path: "info",
@@ -489,8 +490,8 @@ export const asyncRoute = [
                 component: () =>
                   import("@/views/user/setting/material/index.vue"),
                 meta: {
-                  perm: "user-setting-data",
-                },
+                  perm: "user-setting-data"
+                }
               },
               {
                 path: "realname",
@@ -498,8 +499,8 @@ export const asyncRoute = [
                 component: () =>
                   import("@/views/user/setting/verified/realName.vue"),
                 meta: {
-                  perm: "user-setting-auth",
-                },
+                  perm: "user-setting-auth"
+                }
               },
               {
                 path: "personalRealname",
@@ -508,8 +509,8 @@ export const asyncRoute = [
                   import("@/views/user/setting/verified/index.vue"),
                 meta: {
                   hiddenMenu: true,
-                  perm: "user-setting-auth",
-                },
+                  perm: "user-setting-auth"
+                }
               },
               {
                 path: "enterprise",
@@ -518,8 +519,8 @@ export const asyncRoute = [
                   import("@/views/user/setting/verified/enterprise.vue"),
                 meta: {
                   hiddenMenu: true,
-                  perm: "user-setting-auth",
-                },
+                  perm: "user-setting-auth"
+                }
               },
               {
                 path: "changerealname",
@@ -528,8 +529,8 @@ export const asyncRoute = [
                   import("@/views/user/setting/verified/changeVerified.vue"),
                 meta: {
                   hiddenMenu: true,
-                  perm: "user-setting-auth",
-                },
+                  perm: "user-setting-auth"
+                }
               },
               {
                 path: "changephone",
@@ -538,8 +539,8 @@ export const asyncRoute = [
                   import("@/views/user/setting/verified/changephone.vue"),
                 meta: {
                   hiddenMenu: true,
-                  perm: "user-setting-auth",
-                },
+                  perm: "user-setting-auth"
+                }
               },
               // {
               //   path: "address",
@@ -562,18 +563,17 @@ export const asyncRoute = [
                 name: "子账号管理",
                 meta: {
                   icon: "home",
-                  perm: "user-setting-account",
+                  perm: "user-setting-account"
                 },
-                component: () =>
-                  import("@/views/user/setting/role/account.vue"),
+                component: () => import("@/views/user/setting/role/account.vue")
               },
               {
                 path: "role",
                 name: "角色管理",
                 component: () => import("@/views/user/setting/role/role.vue"),
                 meta: {
-                  perm: "user-setting-role",
-                },
+                  perm: "user-setting-role"
+                }
               },
               {
                 path: "relation",
@@ -582,10 +582,10 @@ export const asyncRoute = [
                   import("@/views/user/setting/role/relation.vue"),
                 meta: {
                   hiddenMenu: true,
-                  perm: "user-setting-role",
-                },
-              },
-            ],
+                  perm: "user-setting-role"
+                }
+              }
+            ]
           },
           {
             path: "workOrder",
@@ -593,7 +593,7 @@ export const asyncRoute = [
             component: RouteView,
             meta: {
               icon: "icon-gongdanguanli",
-              perm: "user-workOrder",
+              perm: "user-workOrder"
             },
             children: [
               {
@@ -602,16 +602,16 @@ export const asyncRoute = [
                 component: () =>
                   import("@/views/user/workOrder/submit/index.vue"),
                 meta: {
-                  perm: "user-workOrder-submit",
-                },
+                  perm: "user-workOrder-submit"
+                }
               },
               {
                 path: "my",
                 name: "我的工单",
                 component: () => import("@/views/user/workOrder/my/index.vue"),
                 meta: {
-                  perm: "user-workOrder-my",
-                },
+                  perm: "user-workOrder-my"
+                }
               },
               {
                 path: "detail",
@@ -619,8 +619,8 @@ export const asyncRoute = [
                 component: () => import("@/views/user/workOrder/my/detail.vue"),
                 meta: {
                   hiddenMenu: true,
-                  perm: "user-workOrder-my",
-                },
+                  perm: "user-workOrder-my"
+                }
               },
               {
                 path: "comment",
@@ -629,19 +629,19 @@ export const asyncRoute = [
                   import("@/views/user/workOrder/my/comment.vue"),
                 meta: {
                   hiddenMenu: true,
-                  perm: "user-workOrder-my",
-                },
-              },
-            ],
-          },
-        ],
-      },
-    ],
-  },
+                  perm: "user-workOrder-my"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
 ];
 
 const options = {
-  routes: [...basicRoute, ...asyncRoute],
+  routes: [...basicRoute, ...asyncRoute]
 };
 
 // 重置之前的路由
@@ -649,7 +649,7 @@ export function resetRouter(router) {
   const newRouter = new Router({
     mode: "history",
     base: "console",
-    routes: basicRoute,
+    routes: basicRoute
   });
   router.matcher = newRouter.matcher;
 }

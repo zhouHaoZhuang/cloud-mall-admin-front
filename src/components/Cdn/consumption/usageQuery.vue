@@ -14,7 +14,7 @@
             <a-select-option value="all"> 以上全部区域 </a-select-option>
           </a-select>
           <a-select
-            style="width: 100px"
+            style="width: 150px"
             allowClear
             v-model="listQuery.field"
             placeholder="请选择"
@@ -86,7 +86,7 @@
         <template slot="footer">
           <div class="total">
             <span>总计</span>
-            <span>{{ totalFlow }}G</span>
+            <span>{{ totalFlow }} </span>
           </div>
         </template>
       </a-table>
@@ -130,7 +130,8 @@ export default {
         },
         {
           title: "总流量",
-          dataIndex: "value"
+          dataIndex: "switchValue",
+          slots: { title: "titleValue" }
         }
       ],
       date: "toDay",
@@ -141,7 +142,44 @@ export default {
         },
         tooltip: {
           show: true,
-          trigger: "axis"
+          trigger: "axis",
+          formatter: (params) => {
+            let value = params[0].data;
+            if (value / (1024 * 1024 * 1024) > 10) {
+              return (
+                params[0].axisValue +
+                "<br/>" +
+                (this.listQuery.field === "traf" ? "流量：" : "HTTPS请求数：") +
+                (value / (1024 * 1024 * 1024)).toFixed(2) +
+                " Gbps"
+              );
+            } else if (value / (1024 * 1024) > 10) {
+              return (
+                params[0].axisValue +
+                "<br/>" +
+                (this.listQuery.field === "traf" ? "流量：" : "HTTPS请求数：") +
+                (value / (1024 * 1024)).toFixed(2) +
+                " Mbps"
+              );
+            } else if (value / 1024 > 10) {
+              return (
+                "时间" +
+                params[0].axisValue +
+                "<br/>" +
+                (this.listQuery.field === "traf" ? "流量：" : "HTTPS请求数：") +
+                (value / 1024).toFixed(2) +
+                " Kbps"
+              );
+            } else {
+              return (
+                params[0].axisValue +
+                "<br/>" +
+                (this.listQuery.field === "traf" ? "流量：" : "HTTPS请求数：") +
+                value +
+                " bps"
+              );
+            }
+          }
         },
         legend: {
           data: ["流量"],
@@ -152,7 +190,20 @@ export default {
           data: ["00.00", "00.10", "00.20", "00.30", "00.40", "00.50"]
         },
         yAxis: {
-          type: "value"
+          type: "value",
+          axisLabel: {
+            formatter: function (value) {
+              if (value / (1024 * 1024 * 1024) > 10) {
+                return (value / (1024 * 1024 * 1024)).toFixed(2) + " Gbps";
+              } else if (value / (1024 * 1024) > 10) {
+                return (value / (1024 * 1024)).toFixed(2) + " Mbps";
+              } else if (value / 1024 > 10) {
+                return (value / 1024).toFixed(2) + " Kbps";
+              } else {
+                return value + " bps";
+              }
+            }
+          }
         },
         toolbox: {
           show: true,
@@ -232,13 +283,15 @@ export default {
       // this.
       console.log(e.target.value);
       this.listQuery.startTime = this.getDate()[e.target.value].startTime;
+      this.listQuery.interval = this.getDate()[e.target.value].interval;
       this.listQuery.endTime = this.getDate()[e.target.value].endTime;
     },
     getDate() {
       return {
         toDay: {
           startTime: this.moment().startOf("day").format("YYYY-MM-DD 00:00:00"),
-          endTime: this.moment().startOf("day").format("YYYY-MM-DD 23:59:59")
+          endTime: this.moment().startOf("day").format("YYYY-MM-DD 23:59:59"),
+          interval: "3600"
         },
         yesterday: {
           startTime: this.moment()
@@ -246,7 +299,8 @@ export default {
             .format("YYYY-MM-DD 00:00:00"),
           endTime: this.moment()
             .subtract(1, "days")
-            .format("YYYY-MM-DD 23:59:59")
+            .format("YYYY-MM-DD 23:59:59"),
+          interval: "3600"
         },
         aWeek: {
           startTime: this.moment()
@@ -254,7 +308,8 @@ export default {
             .format("YYYY-MM-DD 00:00:00"),
           endTime: this.moment()
             .subtract(1, "days")
-            .format("YYYY-MM-DD 23:59:59")
+            .format("YYYY-MM-DD 23:59:59"),
+          interval: "86400"
         },
         nearlyMonth: {
           startTime: this.moment()
@@ -262,7 +317,8 @@ export default {
             .format("YYYY-MM-DD 00:00:00"),
           endTime: this.moment()
             .subtract(1, "days")
-            .format("YYYY-MM-DD 23:59:59")
+            .format("YYYY-MM-DD 23:59:59"),
+          interval: "86400"
         }
       };
     },
@@ -277,24 +333,31 @@ export default {
           this.data = res.data.usageDataPerInterval.dataModule;
           let dateList = [];
           let flowList = [];
-          let totalFlow = 0;
           this.data.forEach((item) => {
-            dateList.push(item.timeStamp.substring(11));
+            if (this.date === "aWeek" || this.date === "nearlyMonth") {
+              dateList.push(item.timeStamp.substring(5, 11));
+            } else {
+              dateList.push(item.timeStamp.substring(11, 16));
+            }
             flowList.push(item.value);
-            totalFlow += item.value * 1;
           });
-          this.totalFlow = totalFlow;
+          this.totalFlow = res.data.switchTotalUseData;
           this.$set(this.option, "xAxis", {
             type: "category",
             data: dateList
           });
           this.$set(this.option, "series", [
             {
-              name: "流量",
+              name: this.listQuery.field === "traf" ? "流量" : "HTTPS请求数",
               type: "line",
               data: flowList
             }
           ]);
+          this.option.title.text =
+            this.listQuery.field === "traf" ? "流量" : "HTTPS请求数";
+          this.option.legend.data = [
+            this.listQuery.field === "traf" ? "流量" : "HTTPS请求数"
+          ];
           var myChart = this.echarts.init(document.getElementById("main"));
           //配置图表
           myChart.setOption(this.option, true);
@@ -321,6 +384,7 @@ export default {
 .cdn-query-container {
   .top-search {
     display: flex;
+    margin-bottom: 20px;
     justify-content: space-between;
     flex-wrap: wrap;
   }

@@ -118,9 +118,7 @@ export default {
       labelCol: { span: 6 },
       wrapperCol: { span: 15 },
       loading: false,
-      form: {
-        type: 1
-      },
+      form: {},
       rules: {
         enable: [
           {
@@ -132,7 +130,7 @@ export default {
         https_hsts_max_age: [
           {
             required: true,
-            message: "请选择跳转类型",
+            message: "请输入过期时间",
             trigger: ["change", "blur"]
           }
         ]
@@ -172,7 +170,9 @@ export default {
           if (data.length > 0) {
             const newForm = { ...this.modalMap[this.type].form };
             this.form = {
-              ...getForm(data[0], newForm)
+              ...getForm(data[0], newForm),
+              https_hsts_max_age:
+                getForm(data[0], newForm).getForm(data[0], newForm) / 86400
             };
           } else {
             this.form = { ...this.modalMap[this.type].form };
@@ -243,7 +243,10 @@ export default {
             this.forceConfigSubmit();
             return;
           }
-          const tempForm = { ...this.form };
+          const tempForm = {
+            ...this.form,
+            https_hsts_max_age: this.form.https_hsts_max_age * 86400
+          };
           const newForm = {
             ...getParameter(tempForm, this.functionName, this.domain)
           };

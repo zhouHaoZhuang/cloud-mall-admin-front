@@ -17,33 +17,40 @@
       :label-col="labelCol"
       :wrapper-col="wrapperCol"
     >
-      <a-form-model-item label="错误码" prop="type">
+      <a-form-model-item label="错误码" prop="error_code">
         <a-select
-          v-model="form.type"
+          v-model="form.error_code"
           style="width: 100%"
           placeholder="请选择"
         >
-          <a-select-option :value="1"> 自定义回源头 </a-select-option>
-          <!-- <a-select-option
-            v-for="item in roleList"
-            :key="item.id"
-            :value="item.code"
-          >
-            {{ item.code }}
-          </a-select-option> -->
+          <a-select-option value="404"> 404 </a-select-option>
+          <a-select-option value="400"> 400 </a-select-option>
+          <a-select-option value="403"> 403 </a-select-option>
+          <a-select-option value="405"> 405 </a-select-option>
+          <a-select-option value="414"> 414 </a-select-option>
+          <a-select-option value="416"> 416 </a-select-option>
+          <a-select-option value="500"> 500 </a-select-option>
+          <a-select-option value="501"> 501 </a-select-option>
+          <a-select-option value="502"> 502 </a-select-option>
+          <a-select-option value="503"> 503 </a-select-option>
+          <a-select-option value="504"> 504 </a-select-option>
         </a-select>
       </a-form-model-item>
-      <a-form-model-item label="描述" prop="type">
-        
+      <a-form-model-item label="描述">
+        <span v-if="form.error_code">
+          {{ errorCodeEnum[form.error_code].info }}
+        </span>
       </a-form-model-item>
-      <a-form-model-item label="取值" prop="type">
-        <a-input v-model="form.type" placeholder="请输入取值" />
+      <a-form-model-item label="链接" prop="rewrite_page">
+        <a-input v-model="form.rewrite_page" placeholder="请输入链接" />
       </a-form-model-item>
     </a-form-model>
   </a-modal>
 </template>
 
 <script>
+import { getParameter } from "@/utils/index";
+import { errorCodeEnum } from "@/utils/enum";
 export default {
   // 双向绑定
   model: {
@@ -56,9 +63,9 @@ export default {
       type: Boolean,
       default: false
     },
-    type: {
-      type: Number,
-      default: 1
+    functionName: {
+      type: String,
+      default: ""
     },
     detail: {
       type: Object,
@@ -68,32 +75,56 @@ export default {
   computed: {
     modalTitle() {
       return this.type === "add" ? "添加自定义页面" : "修改自定义页面";
+    },
+    domain() {
+      return this.$route.query.domain;
     }
   },
   watch: {
     value: {
       handler(newVal) {
-        if (!newVal) {
-          this.$nextTick(() => {
-            this.resetForm();
-          });
+        if (newVal) {
+          if (JSON.stringify(this.detail) !== "{}") {
+            this.type = "edit";
+            this.configId = newVal.configId;
+            this.form = {
+              error_code: this.detail.error_code,
+              rewrite_page: this.detail.rewrite_page
+            };
+          } else {
+            this.type = "add";
+            this.configId = undefined;
+          }
+        } else {
+          this.resetForm();
         }
       }
     }
   },
   data() {
     return {
+      errorCodeEnum,
+      type: "add",
+      configId: undefined,
       labelCol: { span: 6 },
       wrapperCol: { span: 15 },
       loading: false,
       form: {
-        type: 1
+        error_code: "",
+        rewrite_page: ""
       },
       rules: {
-        type: [
+        error_code: [
           {
             required: true,
-            message: "请选择加速区域",
+            message: "请选择错误码",
+            trigger: "change"
+          }
+        ],
+        rewrite_page: [
+          {
+            required: true,
+            message: "请输入链接",
             trigger: "change"
           }
         ]
@@ -107,20 +138,35 @@ export default {
     },
     // 重置表单数据
     resetForm() {
-      this.$refs.ruleForm.clearValidate();
+      this.$nextTick(() => {
+        this.$refs.ruleForm.clearValidate();
+      });
       this.form = {
-        type: 1
+        error_code: "",
+        rewrite_page: ""
       };
     },
     // 弹窗提交
     handleOk() {
       this.$refs.ruleForm.validate((valid) => {
         if (valid) {
+          let tempForm = {
+            ...this.form
+          };
+          const newForm = {
+            ...getParameter(
+              tempForm,
+              this.functionName,
+              this.domain,
+              [],
+              this.configId
+            )
+          };
           this.loading = true;
           this.$store
-            .dispatch("domain/add", this.form)
+            .dispatch("cdn/saveConfig", newForm)
             .then((res) => {
-              this.$message.success(`修改${this.modalTitle}成功`);
+              this.$message.success(`设置成功`);
               this.$emit("success");
               this.$emit("changeVisible", false);
             })

@@ -8,14 +8,15 @@
         <a-button type="primary" @click="handleAdd"> 添加 </a-button>
         <a-table
           style="margin-top: 20px"
+          :loading="tableLoading"
           :columns="columns"
           :data-source="data"
           :pagination="false"
-          rowKey="id"
+          rowKey="configId"
         >
-          <!-- <div slot="priority" slot-scope="text">
-            {{ cdnPriorityEnum[text] }}
-          </div> -->
+          <div slot="ttl" slot-scope="text">
+            {{ getTime(text) }}
+          </div>
           <div slot="action" slot-scope="text, record">
             <a-space>
               <a-button type="link" @click="handleEdit(record)">
@@ -38,52 +39,52 @@
 
 <script>
 import UpdateCacheOverdueModal from "@/components/Cdn/domain/manage/cache/UpdateCacheOverdueModal";
+import { getForm } from "@/utils/index";
+import { overdueTimeEnum } from "@/utils/enum";
 export default {
   props: {
     tabsKey: {
       type: Number,
       default: 1
-    },
-    domain: {
-      type: String,
-      default: ""
     }
   },
   components: { UpdateCacheOverdueModal },
+  computed: {
+    domain() {
+      return this.$route.query.domain;
+    }
+  },
   watch: {
     tabsKey: {
       handler(newVal) {
-        if (newVal === "1") {
-          //   this.getData();
+        if (newVal === 1) {
+          this.getConfig();
         }
-      }
+      },
+      immediate: true
     }
   },
-  computed: {},
   data() {
     return {
+      overdueTimeEnum,
+      tableLoading: false,
       columns: [
         {
           title: "地址",
-          dataIndex: "type"
+          dataIndex: "address"
         },
         {
           title: "类型",
-          dataIndex: "content"
+          dataIndex: "type"
         },
         {
           title: "过期时间",
-          dataIndex: "priority",
-          scopedSlots: { customRender: "priority" }
+          dataIndex: "ttl",
+          scopedSlots: { customRender: "ttl" }
         },
         {
           title: "权重",
-          dataIndex: "priority"
-        },
-        {
-          title: "状态",
-          dataIndex: "priority",
-          scopedSlots: { customRender: "priority" }
+          dataIndex: "weight"
         },
         {
           title: "操作",
@@ -92,18 +93,55 @@ export default {
           scopedSlots: { customRender: "action" }
         }
       ],
-      data: [{}],
+      data: [],
+      functionName: "path_based_ttl_set,filetype_based_ttl_set",
+      tempForm: {
+        file_type: "",
+        path: "",
+        ttl: "",
+        weight: ""
+      },
       visible: false,
       modalDetail: {}
     };
   },
   methods: {
+    getTime(num) {
+      const newArr = Object.keys(this.overdueTimeEnum).reverse();
+      const timeType = newArr.find((ele) => num % ele === 0);
+      return num / timeType + this.overdueTimeEnum[timeType];
+    },
+    // 查询配置信息
+    getConfig() {
+      this.tableLoading = true;
+      this.$store
+        .dispatch("cdn/getDomainConfig", {
+          functionNames: this.functionName,
+          domainName: this.domain
+        })
+        .then((res) => {
+          const newRes = res.data.domainConfigs.domainConfig;
+          this.data = newRes.map((ele) => {
+            const newData = getForm(ele, this.tempForm);
+            return {
+              ...ele,
+              ...newData,
+              address: newData.file_type || newData.path,
+              type: newData.file_type ? "文件后缀名" : "目录"
+            };
+          });
+        })
+        .finally(() => {
+          this.tableLoading = false;
+        });
+    },
     // 弹窗成功回调
-    modalSuccess(type, val) {
-      this.modalDetail = {};
+    modalSuccess() {
+      this.getConfig();
     },
     // 新增
     handleAdd() {
+      this.modalDetail = {};
       this.visible = true;
     },
     // 编辑
@@ -116,11 +154,16 @@ export default {
       this.$confirm({
         title: "确定要删除吗?",
         onOk: () => {
-          this.$store.dispatch("domain/add", this.form).then((res) => {
-            this.$message.success("删除成功");
-            this.$emit("success");
-            this.$emit("changeVisible", false);
-          });
+          this.$store
+            .dispatch("cdn/delAloneConfig", {
+              functionNames: this.functionName,
+              domainName: this.domain,
+              configId: record.configId
+            })
+            .then((res) => {
+              this.$message.success("删除成功");
+              this.getConfig();
+            });
         }
       });
     }

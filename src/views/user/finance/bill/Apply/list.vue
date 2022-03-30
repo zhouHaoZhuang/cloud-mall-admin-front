@@ -101,6 +101,9 @@
           rowKey="id"
           :pagination="paginationPropsInvoice"
         >
+          <div slot="canInvoiceAmount" slot-scope="text, record">
+              {{ record.originalAmountShow }}
+          </div>
           <div slot="type" slot-scope="text">
             {{ typeMap[text] }}
           </div>
@@ -196,7 +199,7 @@
           <div slot="companyName" slot-scope="text">{{ text }}</div>
           <div slot="adress" slot-scope="text, record">
             {{ record.province }}/ {{ record.city }}/
-            {{ record.area }}
+            {{ record.county }}
           </div>
           <div slot="action" slot-scope="text, record">
             <a-button type="link" @click="showModal(record.id)">编辑</a-button>
@@ -206,7 +209,7 @@
       <a-button
         type="link"
         icon="plus"
-        @click="$router.push('/user/finance/bill/manageadress')"
+        @click="$router.push('/user/finance/manageadress')"
       >
         新增常用地址
       </a-button>
@@ -325,15 +328,15 @@ export default {
         },
         {
           title: "产品名称",
-          dataIndex: "bizTypeName"
+          dataIndex: "productName"
         },
         {
           title: "订单金额",
           dataIndex: "originalAmount"
         },
         {
-          title: "可开票金额",
-          dataIndex: "canInvoiceAmount"
+          title: "开票金额",
+          dataIndex: "originalAmountShow",
         },
         {
           title: "订单创建时间",
@@ -354,7 +357,7 @@ export default {
         },
         {
           title: "产品名称",
-          dataIndex: "bizTypeName"
+          dataIndex: "productName"
         },
         {
           title: "订单金额",
@@ -656,6 +659,7 @@ export default {
           math.bignumber(this.dataAmount.negativeAmount)
         )
       );
+      console.log(this.invoiceAmount, "this.invoiceAmount");
     },
     // 欠票表格多选
     arrearsonSelectChange(selectedRowKeys) {

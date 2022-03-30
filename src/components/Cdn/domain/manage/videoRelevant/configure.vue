@@ -12,7 +12,9 @@
       <div class="content-row">
         <div class="label">Range回源</div>
         <div class="value">
-          关闭
+          <span v-if="rangeForm.enable === 'on'">开启</span>
+          <span v-if="rangeForm.enable === 'off'">关闭</span>
+          <span v-if="rangeForm.enable === 'force'">强制开启</span>
           <div class="txt">
             指客户端通知源站服务器只返回指定范围的部分内容，
             对于较大文件的分发加速有很大帮助，
@@ -29,7 +31,10 @@
       <div class="content-row">
         <div class="label">拖拽播放</div>
         <div class="value">
-          <a-switch @change="handleChangeStatus">
+          <a-switch
+            v-model="dragForm.enable"
+            @change="handleChange(3, 'dragForm')"
+          >
             <a-icon slot="checkedChildren" type="check" />
             <a-icon slot="unCheckedChildren" type="close" />
           </a-switch>
@@ -45,7 +50,10 @@
       <div class="content-row">
         <div class="label">听视频</div>
         <div class="value">
-          <a-switch @change="handleChangeStatus">
+          <a-switch
+            v-model="hearForm.enable"
+            @change="handleChange(4, 'hearForm')"
+          >
             <a-icon slot="checkedChildren" type="check" />
             <a-icon slot="unCheckedChildren" type="close" />
           </a-switch>
@@ -63,7 +71,10 @@
       <div class="content-row">
         <div class="label">音视频试看</div>
         <div class="value">
-          <a-switch @change="handleChangeStatus">
+          <a-switch
+            v-model="lookForm.enable"
+            @change="handleChange(5, 'lookForm')"
+          >
             <a-icon slot="checkedChildren" type="check" />
             <a-icon slot="unCheckedChildren" type="close" />
           </a-switch>
@@ -85,7 +96,7 @@
     <UpdateVideoModal
       v-model="visible"
       :type="modalType"
-      :detail="modalDetail"
+      :modalMap="modalMap"
       @success="modalSuccess"
     />
   </div>
@@ -93,66 +104,141 @@
 
 <script>
 import UpdateVideoModal from "@/components/Cdn/domain/manage/videoRelevant/UpdateVideoModal";
+import { getParameter, getForm } from "@/utils/index";
 export default {
   props: {
     tabsKey: {
       type: Number,
       default: 1
-    },
-    domain: {
-      type: String,
-      default: ""
     }
   },
   components: { UpdateVideoModal },
+  computed: {
+    domain() {
+      return this.$route.query.domain;
+    }
+  },
   watch: {
     tabsKey: {
       handler(newVal) {
-        if (newVal === "1") {
-          //   this.getData();
+        if (newVal === 7) {
+          this.getBatchConfig();
         }
-      }
+      },
+      immediate: true
     }
   },
-  computed: {},
   data() {
     return {
       visible: false,
       modalType: 1,
-      modalDetail: {}
+      modalMap: {
+        1: {
+          title: "Range回源设置",
+          functionName: "range",
+          form: {
+            enable: "off"
+          }
+        },
+        2: {
+          title: "音视频试看",
+          functionName: "ali_video_preview",
+          form: {
+            enable: false,
+            ali_video_preview_argument: ""
+          }
+        },
+        3: {
+          title: "拖拽播放",
+          functionName: "video_seek"
+        },
+        4: {
+          title: "听视频",
+          functionName: "ali_video_split"
+        },
+        5: {
+          title: "视频试看",
+          functionName: "ali_video_preview"
+        }
+      },
+      rangeForm: {
+        enable: "off"
+      },
+      dragForm: {
+        enable: false
+      },
+      hearForm: {
+        enable: false
+      },
+      lookForm: {
+        enable: false,
+        ali_video_preview_argument: "fds"
+      }
     };
   },
-  created() {},
   methods: {
-    // 弹窗成功回调
-    modalSuccess(type, val) {
-      this.modalDetail = {};
+    // 批量查询配置信息
+    getBatchConfig() {
+      Object.keys(this.modalMap).forEach((ele, index) => {
+        this.getConfig(index + 1);
+      });
     },
-    // 修改https证书
-    handleChangeHttps() {
-      this.domainHttpsVisible = true;
+    // 查询配置信息
+    getConfig(type) {
+      this.$store
+        .dispatch("cdn/getDomainConfig", {
+          functionNames: this.modalMap[type].functionName,
+          domainName: this.domain
+        })
+        .then((res) => {
+          const data = res.data.domainConfigs.domainConfig;
+          if (data.length > 0) {
+            const newForm = { ...this.modalMap[type].form };
+            if (type === 1) {
+              this.rangeForm = {
+                ...getForm(data[0], newForm, ["enable"])
+              };
+            }
+            if (type === 3) {
+              this.dragForm = {
+                ...getForm(data[0], newForm)
+              };
+            }
+            if (type === 4) {
+              this.hearForm = {
+                ...getForm(data[0], newForm)
+              };
+            }
+            if (type === 2 || type === 5) {
+              this.lookForm = {
+                ...getForm(data[0], newForm)
+              };
+            }
+          } else {
+            // if (type === 2) {
+            //   this.removeForm.typeName = "已关闭";
+            // }
+          }
+        });
+    },
+    // 弹窗成功回调
+    modalSuccess(type) {
+      this.getConfig(type);
     },
     // 修改配置
     handleChangeConfig(type) {
       this.modalType = type;
       this.visible = true;
     },
-    // 开启/关闭回源协议
-    // 修改角色状态
-    handleChangeStatus(record) {
-      const statusTxt = !record.status ? "开启" : "关闭";
-      this.$confirm({
-        title: `确认要${statusTxt}当前角色吗？`,
-        onOk: () => {
-          this.$store
-            .dispatch("organization/editRole", {
-              id: record.id,
-              status: record.status ? 0 : 1
-            })
-            .then((res) => {
-              this.$message.success(`${statusTxt}成功`);
-            });
-        }
+    // 页面开关事件
+    handleChange(type, formName) {
+      const tempForm = { ...this[formName] };
+      const newForm = {
+        ...getParameter(tempForm, this.modalMap[type].functionName, this.domain)
+      };
+      this.$store.dispatch("cdn/saveConfig", newForm).then((res) => {
+        this.$message.success(`设置成功`);
+        this.getConfig(type);
       });
     }
   }

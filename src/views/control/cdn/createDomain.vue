@@ -17,6 +17,7 @@
           <a-input
             v-model="form.domain"
             placeholder="请输入单个域名，例如：slayun.com"
+            @change="handleInputChange"
             @blur="checkDamain"
             @pressEnter="checkDamain"
           />
@@ -120,7 +121,11 @@
           源站类型支持OSS域名、IP、源站域名，源站总数量最大不超过20个，并支持在多源站场景下设置源站的主备优先级和负载均衡权重。
         </div>
         <a-form-model-item label="源站信息">
-          <a-button type="primary" @click="handleAddSource">
+          <a-button
+            type="primary"
+            :disabled="form.sourceInfo.sourceModel.length === 20"
+            @click="handleAddSource"
+          >
             新增源站信息
           </a-button>
           <a-table
@@ -163,7 +168,9 @@
           <a-space>
             <a-button
               type="primary"
-              :disabled="!form.domain"
+              :disabled="
+                !form.domain || form.sourceInfo.sourceModel.length === 0
+              "
               :loading="loading"
               @click="handleNext"
             >
@@ -279,6 +286,12 @@ export default {
   },
   created() {},
   methods: {
+    // 域名输入框change
+    handleInputChange() {
+      if (!this.form.domain && this.isShowCheck) {
+        this.isShowCheck = false;
+      }
+    },
     // 域名输入框失焦或回车
     checkDamain() {
       if (!this.form.domain) return;
@@ -315,9 +328,8 @@ export default {
           if (res.data !== "success") {
             this.verifyCode = res.data;
             this.$message.warning("验证失败");
-            this.verifyStatus = "err";
+            // this.verifyStatus = "err";
           } else {
-            this.isShowCheck = false;
             this.verifyCode = "";
             this.verifyStatus = "wait";
             this.$message.success("域名归属权校验成功");
@@ -325,11 +337,12 @@ export default {
         })
         .finally(() => {
           this.checkDomainStatus = "";
+          this.isShowCheck = false;
         });
     },
     // 跳转云商城价格详情
     handleJumpCloud() {
-      jumpCloudMall("/cloud-price", true);
+      jumpCloudMall("/price-detail", true);
     },
     // 弹窗成功回调
     modalSuccess(type, val) {
@@ -412,7 +425,13 @@ export default {
     },
     // 取消
     handleCancel() {
-      this.$router.back();
+      this.$confirm({
+        title: "退出后将丢失已填写信息，是否确认退出域名添加流程？",
+        centered: true,
+        onOk: () => {
+          this.$router.back();
+        }
+      });
     },
     // 如何设置域名
     handleCourse() {

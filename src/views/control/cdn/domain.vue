@@ -47,9 +47,8 @@
             placeholder="请选择"
           >
             <a-select-option value="domain"> 域名 </a-select-option>
-            <a-select-option value="channelName"> 渠道商名称 </a-select-option>
-            <a-select-option value="channelCode"> 渠道商ID </a-select-option>
             <a-select-option value="cnameValue"> cname </a-select-option>
+            <a-select-option value="sourceInfo"> 源站信息 </a-select-option>
           </a-select>
         </a-form-model-item>
         <a-form-model-item>
@@ -96,21 +95,52 @@
           <a-tag v-if="text === 1"> 未开启 </a-tag>
           <a-tag v-if="text === 2" color="green"> 已开启 </a-tag>
         </div>
+        <div slot="sourceInfo" slot-scope="text">
+          <div class="text-overflow">{{ text }}</div>
+        </div>
         <span slot="createTime" slot-scope="text">
           {{ text | formatDate }}
         </span>
         <div slot="action" slot-scope="text, record">
           <a-space>
-            <a-button type="link" @click="handleManage(record)">
+            <a-button
+              v-if="
+                record.cdnStatus === 1 ||
+                record.cdnStatus === 3 ||
+                record.cdnStatus === 5
+              "
+              type="link"
+              @click="handleManage(record)"
+              :disabled="
+                record.corporationLockStatus == 0 ||
+                record.systemLockStatus == 0
+              "
+            >
               管理
             </a-button>
-            <a-button type="link" @click="handleCopy(record)">
+            <a-button
+              v-if="
+                record.cdnStatus === 1 ||
+                record.cdnStatus === 3 ||
+                record.cdnStatus === 5
+              "
+              type="link"
+              @click="handleCopy(record)"
+              :disabled="
+                record.corporationLockStatus == 0 ||
+                record.systemLockStatus == 0
+              "
+            >
               复制配置
             </a-button>
             <a-button
               v-if="record.cdnStatus === 2"
               type="link"
               @click="handleChangeStatus('open', [record.id])"
+              :disabled="
+                record.corporationLockStatus == 0 ||
+                record.systemLockStatus == 0
+              "
             >
               启用
             </a-button>
@@ -118,10 +148,21 @@
               v-if="record.cdnStatus === 1"
               type="link"
               @click="handleChangeStatus('stop', [record.id])"
+              :disabled="
+                record.corporationLockStatus == 0 ||
+                record.systemLockStatus == 0
+              "
             >
               停用
             </a-button>
-            <a-button type="link" @click="handleDel([record.id])">
+            <a-button
+              type="link"
+              @click="handleDel([record.id])"
+              :disabled="
+                record.corporationLockStatus == 0 ||
+                record.systemLockStatus == 0
+              "
+            >
               删除
             </a-button>
           </a-space>
@@ -170,7 +211,8 @@ export default {
         },
         {
           title: "源站信息",
-          dataIndex: "sourceInfo"
+          dataIndex: "sourceInfo",
+          scopedSlots: { customRender: "sourceInfo" }
         },
         {
           title: "创建时间",
@@ -211,7 +253,7 @@ export default {
       return {
         selectedRowKeys,
         onChange: (selectedRowKeys) => {
-          this.selectedRowKeys = selectedRowKeys;
+          this.selectedRowKeys = [...selectedRowKeys];
         },
         getCheckboxProps: (record) => ({
           props: {
@@ -238,14 +280,15 @@ export default {
       this.$getListQp("cdn/getDomainList", this.listQuery)
         .then((res) => {
           this.data = res.data.list.map((ele) => {
-            const newSourceInfo = ele.sourceInfo.sourceModel
-              .map((item) => item.content)
-              .join(",");
+            const newSourceInfo = ele.sourceInfo.sourceModel.map(
+              (item) => item.content
+            );
             return {
               ...ele,
-              sourceInfo: newSourceInfo
+              sourceInfo: newSourceInfo.slice(0, 2).join(",")
             };
           });
+          console.log(this.data);
           this.paginationProps.total = res.data.totalCount * 1;
         })
         .finally(() => {
@@ -293,6 +336,7 @@ export default {
       this.$router.push({
         path: "/control/cdn/copy",
         query: {
+          domain: record.domain
           // id: record.id,
           // monitor: true
         }
@@ -302,10 +346,9 @@ export default {
     handleChangeStatus(type, ids) {
       const statusTxt = type === "open" ? "启用" : "停用";
       const newIds = ids ? [...ids] : [...this.selectedRowKeys];
-      const result = this.data.map((ele) => {
-        if (newIds.includes(ele.id)) {
-          return ele.domain;
-        }
+      const result = newIds.map((ele) => {
+        const index = this.data.findIndex((item) => item.id === ele);
+        return this.data[index].domain;
       });
       const req =
         type === "open" ? "cdn/changeDomainOpen" : "cdn/changeDomainOff";

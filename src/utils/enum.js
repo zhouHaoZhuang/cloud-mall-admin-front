@@ -110,12 +110,14 @@ export const regionDataEnum = {
   "cn-chengdu": "西南1（成都）",
   "cn-hongkong": "中国（香港）",
   "ap-northeast-1": "日本（东京）",
+  "ap-northeast-2": "韩国（首尔）",
   "ap-southeast-1": "新加坡",
   "ap-southeast-2": "澳大利亚（悉尼）",
   "ap-southeast-3": "马来西亚（吉隆坡）",
   "ap-southeast-6": "菲律宾（马尼拉）",
   "ap-southeast-5": "印度尼西亚（雅加达）",
   "ap-south-1": "印度（孟买）",
+  "ap-southeast-7": "泰国（曼谷）",
   "us-east-1": "美国（弗吉尼亚）",
   "us-west-1": "美国（硅谷）",
   "eu-west-1": "英国（伦敦）",
@@ -257,4 +259,60 @@ export const payState = {
 export const timeType = {
   1: "创建时间",
   2: "支付时间"
+};
+// 过期时间map
+export const overdueTimeEnum = {
+  1: "秒",
+  60: "分钟",
+  3600: "小时",
+  86400: "天",
+  2592000: "月",
+  31104000: "年"
+};
+// 错误码
+export const errorCodeEnum = {
+  404: {
+    title: "404",
+    info: "服务器上不存在的网页时返回此代码"
+  },
+  400: {
+    title: "400",
+    info: "您访问的页面请求错误时返回此代码"
+  },
+  403: {
+    title: "403",
+    info: "服务器拒绝请求时返回此代码"
+  },
+  405: {
+    title: "405",
+    info: "禁用请求中指定的方法时返回此代码"
+  },
+  414: {
+    title: "414",
+    info: "请求的URL过长服务器无法处理时返回此代码"
+  },
+  416: {
+    title: "416",
+    info: "页面无法提供请求的范围时返回此代码"
+  },
+  500: {
+    title: "500",
+    info: "服务器遇到错误无法完成请求时返回此代码"
+  },
+  501: {
+    title: "501",
+    info: "服务器不具备完成请求的功能时返回此代码"
+  },
+  502: {
+    title: "502",
+    info: "服务器作为网关或代理从上游服务器收到无效响应时返回此代码"
+  },
+  503: {
+    title: "503",
+    info: "服务器目前无法使用时返回此代码"
+  },
+  504: {
+    title: "504",
+    info: "服务器作为网关或代理无法及时从上游服务器收到请求时返回此代码"
+  }
 };

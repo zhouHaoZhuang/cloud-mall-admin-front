@@ -26,6 +26,14 @@ const cdndashboard = {
         method: "get",
         params
       });
+    },
+    // 用量汇总接口
+    getUsageSum({ commit, state }, data) {
+      return request({
+        url: `/cdnDomain/query/queryTotalUseData`,
+        method: "post",
+        data
+      });
     }
   },
 };

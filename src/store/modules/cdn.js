@@ -101,6 +101,38 @@ const cdn = {
         method: "post",
         data
       });
+    },
+    // 查询当前域名的https配置
+    getDomainHttps({ commit, state }, data) {
+      return request({
+        url: `/aliyun/cdn/describeDomainCertificateInfo`,
+        method: "post",
+        data
+      });
+    },
+    // 配置当前域名的https配置
+    saveDomainHttps({ commit, state }, data) {
+      return request({
+        url: "/aliyun/cdn/setDomainServerCertificate",
+        method: "post",
+        data
+      });
+    },
+    // 获取加速域名的配置信息
+    getCdnConfig({ commit, state }, data) {
+      return request({
+        url: "/aliyun/cdn/describeCdnDomainDistinctConfigs",
+        method: "post",
+        data
+      });
+    },
+    // 复制配置
+    copyConfig({ commit, state }, data) {
+      return request({
+        url: "/aliyun/cdn/copyConfig",
+        method: "post",
+        data
+      });
     }
   }
 };
