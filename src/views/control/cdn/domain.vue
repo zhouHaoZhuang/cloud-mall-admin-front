@@ -244,7 +244,7 @@ export default {
       return {
         selectedRowKeys,
         onChange: (selectedRowKeys) => {
-          this.selectedRowKeys = selectedRowKeys;
+          this.selectedRowKeys = [...selectedRowKeys];
         },
         getCheckboxProps: (record) => ({
           props: {
@@ -276,7 +276,7 @@ export default {
             );
             return {
               ...ele,
-              sourceInfo: newSourceInfo.slice(0, 2).join(',')
+              sourceInfo: newSourceInfo.slice(0, 2).join(",")
             };
           });
           console.log(this.data);
@@ -337,10 +337,9 @@ export default {
     handleChangeStatus(type, ids) {
       const statusTxt = type === "open" ? "启用" : "停用";
       const newIds = ids ? [...ids] : [...this.selectedRowKeys];
-      const result = this.data.map((ele) => {
-        if (newIds.includes(ele.id)) {
-          return ele.domain;
-        }
+      const result = newIds.map((ele) => {
+        const index = this.data.findIndex((item) => item.id === ele);
+        return this.data[index].domain;
       });
       const req =
         type === "open" ? "cdn/changeDomainOpen" : "cdn/changeDomainOff";
@@ -356,7 +355,7 @@ export default {
         title: `确认要${statusTxt}吗？`,
         onOk: () => {
           this.$store
-            .dispatch(req, { domainNames: result.join(",") })
+            .dispatch(req, { domainNames: result.join(',') })
             .then((res) => {
               this.$message.success(`${statusTxt}成功`);
               this.getList();
