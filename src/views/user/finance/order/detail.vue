@@ -79,38 +79,48 @@
           :pagination="false"
         >
           <a slot="name" slot-scope="text">{{ text }}</a>
-          <div slot="chargingType" slot-scope="text">
-            <span v-if="text === 'Beforepay'">预付费</span>
-            <span v-if="text === 'AfterPay'">后付费</span>
-          </div>
+
           <div slot="tradeType" slot-scope="text">
             {{ tradeType[text] }}
           </div>
+
+          <span slot="payTime" slot-scope="text">
+            {{ text | formatDate }}
+          </span>
           <div slot="productConfig" slot-scope="text, record">
-            <!-- <div>线路:{{ regionDataEnum[record.regionId] }}</div> -->
-            <div>CPU:{{ record.cpu }}核</div>
-            <div>内存:{{ record.memory }}G</div>
-            <div>带宽:{{ record.internetMaxBandwidthOut }}M</div>
-            <div>镜像:{{ record.osName }}</div>
-            <div>系统盘:{{ record.systemDiskSize }}G</div>
-            <div>数据盘:{{ record.dataDiskSize }}G</div>
-            <div>
-              自动续费:
-              <span v-if="record.autoRenew === 0" style="color: red">
-                未开通
-              </span>
-              <span v-if="record.autoRenew === 1" style="color: #2bbe22">
-                已开通
-              </span>
-              <!-- <span v-if="record.autoRenew === 1">
+            <div v-if="record.chargingType == '按量付费'">
+              {{productName}}功能开通：按流量计费
+            </div>
+            <div v-else>
+              <!-- <div>线路:{{ regionDataEnum[record.regionId] }}</div> -->
+              <div>CPU:{{ record.cpu }}核</div>
+              <div>内存:{{ record.memory }}G</div>
+              <div>带宽:{{ record.internetMaxBandwidthOut }}M</div>
+              <div>镜像:{{ record.osName }}</div>
+              <div>系统盘:{{ record.systemDiskSize }}G</div>
+              <div>数据盘:{{ record.dataDiskSize }}G</div>
+              <div>
+                自动续费:
+                <span v-if="record.autoRenew === 0" style="color: red">
+                  未开通
+                </span>
+                <span v-if="record.autoRenew === 1" style="color: #2bbe22">
+                  已开通
+                </span>
+                <!-- <span v-if="record.autoRenew === 1">
                 /{{ record.renewPeriod
                 }}{{ getAutoRenewUnit(record.renewUnit) }}
               </span> -->
+              </div>
             </div>
           </div>
           <span slot="period" slot-scope="text, record">
             {{ text }}{{ record.priceUnit === "Month" ? "个月" : "年" }}
           </span>
+          <div slot="discountRate" slot-scope="text, record">
+            <span v-if="record.chargingType == '按量付费'">--</span>
+            <span v-else>{{ text }}</span>
+          </div>
         </a-table>
       </div>
       <!-- 应付金额 -->
@@ -260,12 +270,11 @@ export default {
         },
         {
           title: "计费方式",
-          dataIndex: "chargingType",
-          scopedSlots: { customRender: "chargingType" }
+          dataIndex: "chargingType"
         },
         {
           title: "数量",
-          dataIndex: "count"
+          dataIndex: "quantity"
         },
         {
           title: "原价",
@@ -277,11 +286,16 @@ export default {
         },
         {
           title: "折扣",
-          dataIndex: "discountRate"
+          dataIndex: "discountRate",
+          scopedSlots: { customRender: "discountRate" }
         },
         {
           title: "成交价",
           dataIndex: "actualAmount"
+        },
+        {
+          title: "支付时间",
+          dataIndex: "payTime"
         }
       ],
       countDownTime: "--时--分--秒",

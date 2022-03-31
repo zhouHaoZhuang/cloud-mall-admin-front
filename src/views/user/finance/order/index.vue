@@ -21,10 +21,7 @@
             <a-select v-model="listQuery.key" style="width: 100px">
               <a-select-option value="orderNo2"> 退单编号 </a-select-option>
               <a-select-option value="orderNo"> 订单编号 </a-select-option>
-              <a-select-option value="productName">
-                产品
-              </a-select-option>
-            
+              <a-select-option value="productName"> 产品 </a-select-option>
             </a-select>
             <a-input-search
               allowClear
@@ -119,11 +116,12 @@
           :pagination="paginationProps"
           @change="handleChange"
         >
-          <div slot="payTime" slot-scope="text">
-            {{ text | formatDate }}
+          <div slot="payTime" slot-scope="text, record">
+            <span v-if="record.tradeStatus === 5">{{ text | formatDate }}</span>
+            <span v-else>--</span>
           </div>
-          <div slot="payStatus" slot-scope="text">
-            {{ payState[text] }}
+          <div slot="tradeStatus" slot-scope="text">
+            {{ orderStatusEnum[text] }}
           </div>
           <div slot="tradeType" slot-scope="text">
             {{ tradeType[text] }}
@@ -228,8 +226,8 @@ export default {
         },
         {
           title: "支付状态",
-          dataIndex: "payStatus",
-          scopedSlots: { customRender: "payStatus" }
+          dataIndex: "tradeStatus",
+          scopedSlots: { customRender: "tradeStatus" }
         },
         {
           title: "操作",
