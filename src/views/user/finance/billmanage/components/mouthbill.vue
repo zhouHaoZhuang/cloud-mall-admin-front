@@ -2,7 +2,7 @@
   <div>
     <div class="btns">
       <!-- 按钮输入框组 -->
-      <div class="btn3">
+      <!-- <div class="btn3">
         <a-select v-model="listQuery.key" style="width: 100px">
           <a-select-option value="billNo"> 账单编号 </a-select-option>
           <a-select-option value="orderNo"> 订单编号 </a-select-option>
@@ -14,9 +14,11 @@
           enter-button
           v-model="listQuery.search"
         />
-      </div>
+      </div> -->
       <!-- 日历 -->
       <div class="btn2">
+        
+        <span class="month-text">账期：</span>
         <a-form-model-item>
           <a-month-picker
             format="YYYY-MM"
@@ -211,6 +213,10 @@ export default {
       .btn2 {
         margin-top: -4px;
         display: flex;
+        .month-text{
+          line-height: 36px;
+          margin-right: 10px;
+        }
         .btn4 {
           width: 170px;
           > span {
