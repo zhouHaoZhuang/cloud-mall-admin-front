@@ -336,7 +336,7 @@ export default {
         },
         {
           title: "开票金额",
-          dataIndex: "originalAmountShow",
+          dataIndex: "canInvoiceAmount",
         },
         {
           title: "订单创建时间",
