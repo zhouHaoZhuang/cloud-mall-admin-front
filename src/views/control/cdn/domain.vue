@@ -31,7 +31,7 @@
           v-permission="'add'"
           :disabled="!hasSelected"
           :loading="delLoading"
-          @click="handleDel"
+          @click="handleDel()"
         >
           删除
         </a-button>
@@ -379,12 +379,12 @@ export default {
     // 删除+批量
     handleDel(ids) {
       const newIds = ids ? [...ids] : [...this.selectedRowKeys];
-      if (!ids) {
-        this.delLoading = true;
-      }
       this.$confirm({
         title: "确定要删除吗?",
         onOk: () => {
+          if (!ids) {
+            this.delLoading = true;
+          }
           this.$store
             .dispatch("cdn/delDomain", { ids: newIds })
             .then((res) => {
