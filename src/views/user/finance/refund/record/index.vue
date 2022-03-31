@@ -40,6 +40,7 @@
         placeholder="订单类型"
         allowClear
         style="width: 110px"
+        disabled
       >
         <a-select-option
           v-for="(value, key) in tradeType"

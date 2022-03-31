@@ -74,6 +74,10 @@ export default {
           title: "订单编号",
           dataIndex: "orderNo"
         },
+         {
+          title: "实例",
+          dataIndex: "splitId"
+        },
         {
           title: "支付状态",
           dataIndex: "owe",

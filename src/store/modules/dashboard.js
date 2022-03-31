@@ -31,7 +31,7 @@ const cloud = {
     //获取首页消费趋势数据最新接口
     newTrendData({ commit, state }) {
       return request({
-        url: "/customerAccountLog/query/getMonthLine",
+        url: "/customerAccountLog/query/monthLine",
         method: "get"
       });
     },

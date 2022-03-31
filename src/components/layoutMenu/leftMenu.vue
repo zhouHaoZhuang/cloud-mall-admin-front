@@ -7,9 +7,9 @@
     }px`"
   >
     <div v-if="leftOpen" class="wrap">
-      <div class="top-title">
+      <!-- <div class="top-title">
         {{ leftMenuData.name }}
-      </div>
+      </div> -->
       <div class="con-list">
         <div
           v-for="(item, index) in menuList"
@@ -24,12 +24,12 @@
             <a-icon
               class="icon"
               v-if="item.isTwoMenu && !item.isOpen"
-              type="down"
+              type="caret-down"
             />
             <a-icon
               class="icon"
               v-if="item.isTwoMenu && item.isOpen"
-              type="up"
+              type="caret-up"
             />
           </div>
           <div
@@ -145,8 +145,8 @@ export default {
   height: 100%;
   position: fixed;
   top: 56px;
-  background: #f0f3f5;
-  border-right: 1px solid #e1e4e6;
+  background: #fff;
+  // border-right: 1px solid #e1e4e6;
   transition: all 0.3s;
   z-index: 99;
   .top-title {
@@ -154,10 +154,11 @@ export default {
     height: 40px;
     width: 160px;
     line-height: 40px;
-    text-align: center;
-    font-weight: bold;
+    text-align: left;
+    font-weight: 500;
     font-size: 14px;
-    color: #a0a2a3;
+    color: #3b77e3;
+    padding-left: 20px;
   }
   .con-list {
     color: #262829;
@@ -166,32 +167,43 @@ export default {
       cursor: pointer;
       .name {
         width: 100%;
-        height: 48px;
         line-height: 48px;
         padding-left: 24px;
+
         display: flex;
         align-items: center;
         justify-content: space-between;
+        color: #3b77e3;
         .icon {
           margin-right: 24px;
         }
       }
       .inner-list {
         .inner-item {
-          height: 48px;
-          line-height: 48px;
-          background: url("../../assets/img/menu/icon_submenu_prefix.png")
-            no-repeat 26px center;
-          padding-left: 40px;
+          height: 38px;
+          line-height: 38px;
+          // background: url("../../assets/img/menu/icon_submenu_prefix.png")
+          //   no-repeat 26px center;
+          // padding-left: 40px;
+          text-align: center;
           font-size: 12px;
+          margin: 10px;
+          // width: 140px;
+          background-color: #eaf0fc;
+          color: #4981e5;
+          border-radius: 4px;
         }
       }
     }
     .name:hover,
     .active,
     .inner-item:hover {
-      background-color: #f7f9fa !important;
-      color: #00aaff;
+      background-color: #3b77e3 !important;
+      color: #fff !important;
+    }
+    .inner-item:active {
+      background-color: #eaf0fc;
+      color: #3b77e3;
     }
   }
 }

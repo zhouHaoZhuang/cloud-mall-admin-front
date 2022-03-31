@@ -242,7 +242,7 @@ export const sourceProtocolEnum = {
 export const tradeType = {
   1: "ecs新购",
   15: "ecs实例续费",
-  25: "渠道商向资源池(云盾)升级配置订单流程",
+  25: "升配",
   35: "esc实例降低配置",
   45: "交易关闭",
   55: "退订",
@@ -252,7 +252,7 @@ export const tradeType = {
 export const payState = {
   0: "待支付",
   3: "支付中",
-  "-3": "支付失败",
+  "-2": "支付失败",
   5: "完成支付"
 };
 //时间类型枚举

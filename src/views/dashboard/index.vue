@@ -7,7 +7,6 @@
       <span class="welcome">欢迎您回来，</span>
       <span class="name">{{ realName }}</span>
       <div class="icons">
-      
         <div class="icon-item" @click="handleJump('/user/setting/security')">
           <a-tooltip placement="bottom">
             <template slot="title">
@@ -33,7 +32,7 @@
             </div>
           </a-tooltip>
         </div>
-          <div class="icon-item" @click="handleJump('/user/setting/realname')">
+        <div class="icon-item" @click="handleJump('/user/setting/realname')">
           <a-tooltip placement="bottom">
             <template slot="title">
               <span>实名认证</span>
@@ -93,10 +92,10 @@
             <!-- <div class="jump">查看></div> -->
           </div>
           <div id="echarts" class="echarts-pie-content"></div>
-          <div class="consumption text-overflow">
+          <!-- <div class="consumption text-overflow">
             本月消费：￥{{ trendOut }}
-          </div>
-          <div class="income text-overflow">本月收入：￥{{ trendIn }}</div>
+          </div> -->
+          <!-- <div class="income text-overflow">本月收入：￥{{ trendIn }}</div> -->
         </div>
         <!-- 待办事项 -->
         <div class="public-box todolist">
@@ -163,6 +162,7 @@
 
 <script>
 import { mapState } from "vuex";
+import moment from "moment";
 import * as echarts from "echarts";
 require("echarts/theme/macarons"); //引入主题
 export default {
@@ -183,6 +183,10 @@ export default {
     return {
       charts: null,
       chartLine: null,
+      outMoney: [],
+      inMoney: [],
+      monthData: [],
+
       // 账户余额信息
       overviewData: {
         balance: {},
@@ -231,6 +235,7 @@ export default {
     window.addEventListener("resize", () => {
       this.chartLine.resize(); //刷新画布 监听屏幕大小，来刷新画布
     });
+    //获取每一天的日期
   },
   methods: {
     // 获取数据
@@ -252,7 +257,27 @@ export default {
         });
         this.overviewData = { ...newData };
       });
+      //获取每一天的消费记录
       this.$store.dispatch("dashboard/newTrendData").then((res) => {
+        let data = res.data;
+        if (data.O && data.O.length > 0) {
+          data.O.map((ele) => {
+            this.outMoney.push(ele.dealAmount);
+          });
+        }
+        if (data.I && data.I.length > 0) {
+          data.I.map((ele) => {
+            this.inMoney.push(ele.dealAmount);
+          });
+        }
+        let first = moment().startOf("month").format("MM-DD"); // 本月第一天
+        let last = moment().endOf("month").format("MM-DD"); // 本月最后一天
+        // let middleDay =   parseInt((last.substring(last.length-2) - first.substring(first.length-2))/2)
+       
+
+        this.monthData.push(first);
+        this.monthData.push(last);
+        // monthData
         // let newData = [];
         // if (res.data && res.data.length > 0) {
         //   const I = res.data.find((ele) => ele.type === "I");
@@ -288,8 +313,7 @@ export default {
         //   ];
         // }
         // this.trendData.data = [...newData];
-        // console.log(this.trendData.data,"echarts数据")
-        // this.initEcharts();
+        this.initEcharts();
       });
       // 获取服务器数量
       this.$store.dispatch("dashboard/getCloudCount").then((res) => {
@@ -314,21 +338,63 @@ export default {
     },
     initEcharts() {
       this.charts = echarts.init(document.getElementById("echarts"));
-      this.charts.setOption({
+      const option = {
         tooltip: {
-          trigger: "item",
-          formatter: "{a} <br/>{b} : {c} ({d}%)"
+          trigger: "axis"
         },
-        color: ["#00BBFF", "#FFAD33"],
+        color: ["#9ECBFB", "#FECD84"],
         legend: {
-          data: ["消费记录", "收入记录"],
-          left: "73%",
-          top: "center",
+          itemHeight: 2,
+          itemWidth: 20,
           orient: "vertical",
-          itemGap: 50
+          right: "4%",
+          data: [
+            {
+              name: "消费记录(元)",
+              icon: "rect"
+            },
+            {
+              name: "收入记录(元)",
+              icon: "rect"
+            }
+          ]
         },
-        series: this.trendData
-      });
+        xAxis: {
+          type: "category",
+          boundaryGap: false,
+          data: this.monthData,
+          axisTick: {
+            show: false
+          }
+        },
+        yAxis: {
+          type: "value",
+          splitLine: {
+            show: false
+          }
+        },
+
+        series: [
+          {
+            name: "消费记录(元)",
+            type: "line",
+            smooth: true,
+            stack: "Total",
+            symbol: "none",
+            data: this.outMoney
+          },
+          {
+            name: "收入记录(元)",
+            symbol: "none",
+
+            type: "line",
+            smooth: true,
+            stack: "Total",
+            data: this.inMoney
+          }
+        ]
+      };
+      this.charts.setOption(option);
     }
   }
 };
@@ -345,11 +411,13 @@ export default {
   bottom: 0;
   padding: 24px 40px;
   .echarts-pie-content {
-    position: absolute;
-    left: -65px;
-    width: 355px;
-    height: 184px;
-    margin-bottom: 60px;
+    width: 570px;
+    height: 270px;
+    // position: absolute;
+    // left: -65px;
+    // width: 355px;
+    // height: 184px;
+    // margin-bottom: 60px;
   }
   .header-user-info:hover {
     box-shadow: 0px 0px 13px 7px rgba(189, 192, 253, 0.23);
@@ -484,7 +552,7 @@ export default {
         box-shadow: 0px 0px 13px 7px rgba(189, 192, 253, 0.23);
       }
       .open-product {
-        width: 1190px;
+        width: 1210px;
         height: 294px;
         position: relative;
       }
