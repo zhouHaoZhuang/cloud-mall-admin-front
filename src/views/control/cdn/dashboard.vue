@@ -18,7 +18,7 @@
                 <div class="title">总流量</div>
                 <div class="info">
                   <span class="strong">{{ baseData.totalTraf }}</span>
-                  GB
+                  {{ baseData.totalTrafUint }}
                 </div>
               </div>
               <div class="line"></div>
@@ -26,7 +26,7 @@
                 <div class="title">HTTPS请求数</div>
                 <div class="info">
                   <span class="strong">{{ baseData.httpsReqCount }}</span>
-                  次
+                  {{ baseData.httpsReqCountUnit }}
                 </div>
               </div>
               <div class="line"></div>
@@ -111,8 +111,15 @@
       <div class="public-box">
         <div class="top-title">域名流量排行</div>
         <div class="content">
-          <a-table :pagination='false' rowKey="id" :columns="columns" :data-source="data">
-            <div slot="domainTotalTraf" slot-scope="text">{{ text }}GB</div>
+          <a-table
+            :pagination="false"
+            :rowKey="(record, index) => index"
+            :columns="columns"
+            :data-source="data"
+          >
+            <div slot="domainTotalTraf" slot-scope="text, record">
+              {{ text }}{{ record.unit }}
+            </div>
           </a-table>
         </div>
       </div>
@@ -148,7 +155,9 @@ export default {
         domainCount: "",
         httpsReqCount: "",
         totalTraf: "",
-        useTrafDomainCount: ""
+        useTrafDomainCount: "",
+        httpsReqCountUnit: "",
+        totalTrafUint: ""
       },
       date: "today"
     };
