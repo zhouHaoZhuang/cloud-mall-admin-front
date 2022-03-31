@@ -92,7 +92,7 @@ export default {
         if (newVal) {
           if (JSON.stringify(this.detail) !== "{}") {
             this.type = "modify";
-            this.configId = newVal.configId;
+            this.configId = this.detail.configId;
             this.form = {
               key: this.detail.key,
               value: this.detail.value
