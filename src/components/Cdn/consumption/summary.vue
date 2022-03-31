@@ -15,11 +15,12 @@
         <a-date-picker
           :disabled="listQuery.granularity !== 'day'"
           @change="onChange"
-          :default-value="moment(listQuery.billingDate, 'YYYY-MM-DD')"
+          v-model="billingDate"
         />
         <a-month-picker
           :disabled="listQuery.granularity !== 'month'"
           @change="onChange"
+          v-model="billingCycle"
         />
         <a-button type="primary" @click="handleSearch"> 查询 </a-button>
       </a-space>
@@ -122,13 +123,16 @@ export default {
           }
         }
       ],
-      plusData: [{}]
+      plusData: [{}],
+      billingCycle: null,
+      billingDate: null
     };
   },
   created() {
     this.listQuery.billingDate = moment(this.listQuery.billingDate).format(
       "YYYY-MM-DD"
     );
+    this.billingDate = this.listQuery.billingDate;
     this.handleSummary();
   },
   methods: {
@@ -136,9 +140,11 @@ export default {
     changeDate() {
       if (this.listQuery.granularity === "day") {
         this.listQuery.billingCycle = "";
+        this.billingCycle = null;
       }
       if (this.listQuery.granularity === "month") {
         this.listQuery.billingDate = "";
+        this.billingDate = null;
       }
     },
     // 日期选择
@@ -149,8 +155,8 @@ export default {
         this.listQuery.billingCycle = "";
       }
       if (this.listQuery.granularity === "month") {
+        this.billingCycle = date;
         this.listQuery.billingCycle = dateString;
-        this.listQuery.billingDate = "";
       }
     },
     // 搜索
