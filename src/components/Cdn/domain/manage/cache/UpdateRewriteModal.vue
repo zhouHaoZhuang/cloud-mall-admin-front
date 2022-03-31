@@ -80,7 +80,7 @@ export default {
         if (newVal) {
           if (JSON.stringify(this.detail) !== "{}") {
             this.type = "edit";
-            this.configId = newVal.configId;
+            this.configId = this.detail.configId;
             this.form = {
               regex: this.detail.regex,
               replacement: this.detail.replacement,

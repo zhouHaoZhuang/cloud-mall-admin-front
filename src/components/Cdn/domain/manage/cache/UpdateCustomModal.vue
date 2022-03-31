@@ -86,7 +86,7 @@ export default {
         if (newVal) {
           if (JSON.stringify(this.detail) !== "{}") {
             this.type = "edit";
-            this.configId = newVal.configId;
+            this.configId = this.detail.configId;
             this.form = {
               error_code: this.detail.error_code,
               rewrite_page: this.detail.rewrite_page

@@ -352,17 +352,17 @@ export default {
       });
       const req =
         type === "open" ? "cdn/changeDomainOpen" : "cdn/changeDomainOff";
-      if (!ids) {
-        if (type === "open") {
-          this.startLoading = true;
-        }
-        if (type === "off") {
-          this.stopLoading = true;
-        }
-      }
       this.$confirm({
         title: `确认要${statusTxt}吗？`,
         onOk: () => {
+          if (!ids) {
+            if (type === "open") {
+              this.startLoading = true;
+            }
+            if (type === "off") {
+              this.stopLoading = true;
+            }
+          }
           this.$store
             .dispatch(req, { domainNames: result.join(",") })
             .then((res) => {
