@@ -80,8 +80,9 @@
           :columns="columns"
           :tableList="data"
         >
-          <div slot="view">
+          <div slot="view" class="icon-download">
             <img src="@/assets/img/cdn/download.png" alt="" />
+            <a class="download-text">下载</a>
           </div>
         </ExportTable>
       </div>
@@ -412,6 +413,19 @@ export default {
       right: 50px;
     }
   }
+  .download-text {
+    display: none;
+    font-size: 10px;
+  }
+  .icon-download{
+    text-align: center;
+    width: 30px;
+  }
+  .icon-download:hover {
+    .download-text {
+      display: block;
+    }
+  }
   .top-search {
     display: flex;
     margin-bottom: 20px;
@@ -425,6 +439,7 @@ export default {
   }
   .total {
     display: flex;
+    width: 80%;
     justify-content: space-between;
   }
 }
