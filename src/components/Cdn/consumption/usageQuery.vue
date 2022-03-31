@@ -439,7 +439,7 @@ export default {
   }
   .total {
     display: flex;
-    width: 80%;
+    width: 71%;
     justify-content: space-between;
   }
 }
