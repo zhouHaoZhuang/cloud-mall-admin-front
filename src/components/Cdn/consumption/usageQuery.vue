@@ -28,7 +28,7 @@
             v-model="listQuery.domainName"
             placeholder="请选择域名"
           >
-            <!-- <a-select-option value=""> 全部域名 </a-select-option> -->
+            <a-select-option value=""> 全部域名 </a-select-option>
             <a-select-option
               :value="item.domain"
               v-for="item in domainList"
@@ -118,7 +118,7 @@ export default {
         startTime: "",
         interval: "3600",
         endTime: "",
-        domainName: undefined
+        domainName: ""
       },
       domainList: [],
       columns: [
@@ -395,6 +395,7 @@ export default {
   }
   .total {
     display: flex;
+    width: 71%;
     justify-content: space-between;
   }
 }
