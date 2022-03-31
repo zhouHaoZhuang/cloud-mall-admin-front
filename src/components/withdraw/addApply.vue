@@ -171,7 +171,7 @@ export default {
             title = "确认保存申请吗?";
             this.form.status = 0;
             if (this.apply == 1) {
-              this.add(title);
+              this.add(title,'保存成功');
             }
             if (this.apply == 2) {
               this.edit(title);
@@ -181,7 +181,7 @@ export default {
             title = "确认提交申请吗?";
             this.form.status = 2;
             if (this.apply == 1) {
-              this.add(title);
+              this.add(title,'提交成功，等待审核');
             }
             if (this.apply == 2) {
               this.edit(title);
@@ -200,14 +200,14 @@ export default {
       this.$emit("changeVisible", false);
     },
     // 新增
-    add(title) {
+    add(title,tig) {
       this.$confirm({
         title: title,
         onOk: () => {
           this.$store
             .dispatch("withdraw/addRecord", this.form)
             .then((res) => {
-              this.$message.success("提交成功");
+              this.$message.success(tig,4);
               this.$emit("changeVisible", false);
               this.$emit("success");
             })
