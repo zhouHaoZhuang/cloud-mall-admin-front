@@ -98,7 +98,7 @@
           <CloudMonitor :tabsKey="tabsKey" :detail="detail" />
         </a-tab-pane>
         <a-tab-pane key="3" tab="快照">
-          <Snapshoot />
+          <Snapshoot :detail="detail" />
         </a-tab-pane>
         <!-- <a-tab-pane key="3" tab="备案白名单"></a-tab-pane>
         <a-tab-pane key="4" tab="操作日志"></a-tab-pane> -->
@@ -475,6 +475,7 @@ export default {
 <style lang="less" scoped>
 .cloud-detail-container {
   background-color: #fff;
+  padding: 20px;
   .header {
     display: flex;
     font-weight: 500;

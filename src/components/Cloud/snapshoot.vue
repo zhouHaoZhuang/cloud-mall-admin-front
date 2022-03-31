@@ -4,8 +4,13 @@
     <div class="btns">
       <div class="left">
         <a-space>
-          <a-button type="" @click="toAdd">创建快照</a-button>
-          <a-button type="danger">删除快照</a-button>
+          <a-button type="primary" @click="toAdd">创建快照</a-button>
+          <a-button
+            type="danger"
+            @click="handleDel(multipleSelection)"
+            :disabled="multipleSelection.length === 0"
+            >删除快照</a-button
+          >
         </a-space>
       </div>
     </div>
@@ -15,7 +20,7 @@
         :loading="tableLoading"
         :columns="columns"
         :data-source="data"
-        :scroll="{ x: 1000 }"
+        :scroll="{ x: 800 }"
         :pagination="paginationProps"
         :row-selection="{
           selectedRowKeys: selectedRowKeys,
@@ -28,9 +33,6 @@
             <a-button type="link" size="small" @click="toRollback(record)">
               回滚磁盘
             </a-button>
-            <a-button type="link" size="small" @click="handleDel(record)">
-              删除快照
-            </a-button>
           </div>
         </div>
       </a-table>
@@ -38,12 +40,27 @@
     <!-- 创建快照 -->
     <CreateSnapshoot v-model="addVisible" />
     <!-- 删除快照 -->
+    <a-modal v-model="delVisible" title="删除快照" @ok="toDel">
+      <p>
+        您所选的{{ multipleSelection.length }}个快照
+        将执行删除快照操作，您是否确定操作？
+      </p>
+      <div v-for="(item, index) in multipleSelection" :key="index">
+        <a-input disabled></a-input>
+      </div>
+    </a-modal>
     <!-- 回滚磁盘 -->
-    <a-modal v-model="rollbackVisible" title="回滚磁盘" @ok="hideModal">
+    <a-modal
+      v-model="rollbackVisible"
+      title="回滚磁盘"
+      @cancel="rollbackVisible = false"
+    >
       <p>{{ rollbackText }}</p>
-      <template>
-        <a-button>确认</a-button>
-        <a-button>取消</a-button>
+      <template slot="footer">
+        <a-button type="primary" :disabled="detail.runningStatus == 2"
+          >确认</a-button
+        >
+        <a-button @click="rollbackVisible = false">取消</a-button>
       </template>
     </a-modal>
   </div>
@@ -56,6 +73,13 @@ export default {
   components: {
     CreateSnapshoot
   },
+  props: {
+    // 实例详情
+    detail: {
+      type: Object,
+      default: () => {}
+    }
+  },
   data() {
     return {
       listQuery: {
@@ -67,6 +91,7 @@ export default {
         total: 0
       },
       data: [],
+      multipleSelection: [],
       columns: [
         {
           title: "快照ID/名称",
@@ -203,8 +228,11 @@ export default {
       this.getList();
     },
     // 表格多选
-    onSelectChange(selectedRowKeys) {
+    onSelectChange(selectedRowKeys, record) {
       this.selectedRowKeys = selectedRowKeys;
+      this.multipleSelection = record.map((item) => {
+        return item.id;
+      });
     },
     //点击创建快照
     toAdd() {
@@ -213,14 +241,20 @@ export default {
     // 点击回滚磁盘
     toRollback(record) {
       this.modalDetail = record;
-      this.rollbackText = `对于云盘YP2022022800001将进行回滚操作，回滚至2022年3月29日 16：03快照数据，您是否确定操作？`;
-      //  this.rollbackText = `只有已停止的实例才可以回滚云盘，当前实例 i-bp1aowywz67oqml38nek 的状态未停止。`
+      this.rollbackVisible = true;
+      if (this.detail.runningStatus == 2) {
+        this.rollbackText = `只有已停止的实例才可以回滚云盘，当前实例 i-bp1aowywz67oqml38nek 的状态未停止。`;
+      } else {
+        this.rollbackText = `对于云盘YP2022022800001将进行回滚操作，回滚至2022年3月29日 16：03快照数据，您是否确定操作？`;
+      }
     },
     // 点击删除快照
     handleDel(record) {
       this.modalDetail = record;
       this.delVisible = true;
-    }
+    },
+    //确认删除
+    toDel() {}
   }
 };
 </script>
