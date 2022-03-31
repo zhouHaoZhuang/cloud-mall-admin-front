@@ -111,7 +111,12 @@
       <div class="public-box">
         <div class="top-title">域名流量排行</div>
         <div class="content">
-          <a-table :pagination='false' rowKey="id" :columns="columns" :data-source="data">
+          <a-table
+            :pagination="false"
+            :rowKey="(record, index) => index"
+            :columns="columns"
+            :data-source="data"
+          >
             <div slot="domainTotalTraf" slot-scope="text">{{ text }}GB</div>
           </a-table>
         </div>
