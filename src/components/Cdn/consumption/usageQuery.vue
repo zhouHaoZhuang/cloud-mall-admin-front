@@ -14,7 +14,7 @@
             <a-select-option value="all"> 以上全部区域 </a-select-option>
           </a-select>
           <a-select
-            style="width: 150px"
+            style="width: 120px"
             allowClear
             v-model="listQuery.field"
             placeholder="请选择"
@@ -28,7 +28,7 @@
             v-model="listQuery.domainName"
             placeholder="请选择域名"
           >
-            <a-select-option value=""> 全部域名 </a-select-option>
+            <!-- <a-select-option value=""> 全部域名 </a-select-option> -->
             <a-select-option
               :value="item.domain"
               v-for="item in domainList"
@@ -48,6 +48,7 @@
             <a-radio-button value="nearlyMonth"> 近30日 </a-radio-button>
           </a-radio-group>
           <a-range-picker
+            style="width: 280px"
             :show-time="{
               hideDisabledOptions: true,
               defaultValue: [
@@ -73,7 +74,22 @@
     /> -->
     <div class="Echarts">
       <div id="main" style="height: 400px"></div>
+      <div class="export-icon" v-show="data.length > 0">
+        <ExportTable
+          :btnDisabled="data.length <= 0"
+          :columns="columns"
+          :tableList="data"
+        >
+          <div slot="view">
+            <img
+              src="@/assets/img/cdn/download.png"
+              alt=""
+            />
+          </div>
+        </ExportTable>
+      </div>
     </div>
+
     <div class="title">明细</div>
     <div v-if="data.length > 0">
       <a-table
@@ -95,9 +111,10 @@
 </template>
 
 <script>
-// import CdnEcharts from "@/components/Cdn/cdnEcharts/index";
+import ExportTable from "@/components/ExportTable/xlsx.vue";
 import * as echarts from "echarts";
 import moment from "moment";
+
 export default {
   props: {
     tabsKey: {
@@ -105,9 +122,9 @@ export default {
       default: 1
     }
   },
-  // components: {
-  //   CdnEcharts
-  // },
+  components: {
+    ExportTable
+  },
   data() {
     return {
       moment,
@@ -118,7 +135,7 @@ export default {
         startTime: "",
         interval: "3600",
         endTime: "",
-        domainName: ""
+        domainName: undefined
       },
       domainList: [],
       columns: [
@@ -135,7 +152,7 @@ export default {
         }
       ],
       date: "toDay",
-      data: [{}],
+      data: [],
       option: {
         title: {
           text: "流量"
@@ -277,6 +294,11 @@ export default {
     // 搜索
     handleSearch() {
       console.log(this.listQuery, "listQuery");
+      let start = new Date(this.listQuery.startTime).getTime();
+      let end = new Date(this.listQuery.endTime).getTime();
+      if (end - start > 86399000) {
+        this.listQuery.interval = "86400";
+      }
       this.getData();
     },
     handleRadioChange(e) {
@@ -334,7 +356,7 @@ export default {
           let dateList = [];
           let flowList = [];
           this.data.forEach((item) => {
-            if (this.date === "aWeek" || this.date === "nearlyMonth") {
+            if (this.listQuery.interval === "86400") {
               dateList.push(item.timeStamp.substring(5, 11));
             } else {
               dateList.push(item.timeStamp.substring(11, 16));
@@ -382,6 +404,17 @@ export default {
 
 <style lang="less" scoped>
 .cdn-query-container {
+  .Echarts {
+    position: relative;
+    #main {
+      margin-right: 10px;
+    }
+    .export-icon {
+      position: absolute;
+      top: 0;
+      right: 50px;
+    }
+  }
   .top-search {
     display: flex;
     margin-bottom: 20px;
@@ -395,7 +428,6 @@ export default {
   }
   .total {
     display: flex;
-    width: 71%;
     justify-content: space-between;
   }
 }
