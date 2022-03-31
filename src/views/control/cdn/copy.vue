@@ -183,13 +183,10 @@ export default {
       selectedRowKeys: [],
       loading: false,
       listQuery: {
-        key: undefined,
-        search: "",
-        startTime: undefined,
-        endTime: undefined,
         currentPage: 1,
-        pageSize: 10,
-        total: 0
+        pageSize: 99,
+        total: 0,
+        'qp-cdnStatus-eq':1
       },
       defaultConfigId: "",
       submitObj: {
