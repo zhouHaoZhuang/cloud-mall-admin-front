@@ -81,10 +81,7 @@
           :tableList="data"
         >
           <div slot="view">
-            <img
-              src="@/assets/img/cdn/download.png"
-              alt=""
-            />
+            <img src="@/assets/img/cdn/download.png" alt="" />
           </div>
         </ExportTable>
       </div>
