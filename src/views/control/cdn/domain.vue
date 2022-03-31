@@ -155,14 +155,7 @@
             >
               停用
             </a-button>
-            <a-button
-              type="link"
-              @click="handleDel([record.id])"
-              :disabled="
-                record.corporationLockStatus == 0 ||
-                record.systemLockStatus == 0
-              "
-            >
+            <a-button type="link" @click="handleDel([record.id])">
               删除
             </a-button>
           </a-space>
