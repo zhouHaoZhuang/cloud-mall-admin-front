@@ -407,10 +407,7 @@ export default {
       this.$store
         .dispatch("income/getOne", this.$route.query.id)
         .then((res) => {
-          if (res.data.tradeStatus !== 5) {
-            this.orderInfo = { ...res.data };
-            clearInterval(this.payTime);
-          }
+          this.orderInfo = { ...res.data };
         });
     },
     // 开启轮询查询订单详情
