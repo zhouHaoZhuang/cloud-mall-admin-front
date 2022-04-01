@@ -346,48 +346,55 @@ export default {
       };
     },
     // 获取表格数据
-    getData(data) {
-      this.$store
-        .dispatch("cdndashboard/getUsage", {
+    getData() {
+      let data = {};
+      if (this.listQuery.field === "acc") {
+        data = {
+          ...this.listQuery,
+          dataProtocol: "https"
+        };
+      } else {
+        data = {
           ...this.listQuery
-        })
-        .then((res) => {
-          console.log(res, "---------");
-          this.data = res.data.usageDataPerInterval.dataModule;
-          let dateList = [];
-          let flowList = [];
-          this.data.forEach((item) => {
-            if (this.listQuery.interval === "86400") {
-              dateList.push(item.timeStamp.substring(5, 11));
-            } else {
-              dateList.push(item.timeStamp.substring(11, 16));
-            }
-            flowList.push(item.value);
-          });
-          this.totalFlow = res.data.switchTotalUseData;
-          this.$set(this.option, "xAxis", {
-            type: "category",
-            data: dateList
-          });
-          this.$set(this.option, "series", [
-            {
-              name: this.listQuery.field === "traf" ? "流量" : "HTTPS请求数",
-              type: "line",
-              data: flowList
-            }
-          ]);
-          this.option.title.text =
-            this.listQuery.field === "traf" ? "流量" : "HTTPS请求数";
-          this.option.legend.data = [
-            this.listQuery.field === "traf" ? "流量" : "HTTPS请求数"
-          ];
-          this.columns[1].title =
-            this.listQuery.field === "traf" ? "流量" : "HTTPS请求数";
-          var myChart = this.echarts.init(document.getElementById("main"));
-          //配置图表
-          myChart.setOption(this.option, true);
-          console.log(this.option.xAxis.data, flowList, "---------");
+        };
+      }
+      this.$store.dispatch("cdndashboard/getUsage", data).then((res) => {
+        console.log(res, "---------");
+        this.data = res.data.usageDataPerInterval.dataModule;
+        let dateList = [];
+        let flowList = [];
+        this.data.forEach((item) => {
+          if (this.listQuery.interval === "86400") {
+            dateList.push(item.timeStamp.substring(5, 11));
+          } else {
+            dateList.push(item.timeStamp.substring(11, 16));
+          }
+          flowList.push(item.value);
         });
+        this.totalFlow = res.data.switchTotalUseData;
+        this.$set(this.option, "xAxis", {
+          type: "category",
+          data: dateList
+        });
+        this.$set(this.option, "series", [
+          {
+            name: this.listQuery.field === "traf" ? "流量" : "HTTPS请求数",
+            type: "line",
+            data: flowList
+          }
+        ]);
+        this.option.title.text =
+          this.listQuery.field === "traf" ? "流量" : "HTTPS请求数";
+        this.option.legend.data = [
+          this.listQuery.field === "traf" ? "流量" : "HTTPS请求数"
+        ];
+        this.columns[1].title =
+          this.listQuery.field === "traf" ? "流量" : "HTTPS请求数";
+        var myChart = this.echarts.init(document.getElementById("main"));
+        //配置图表
+        myChart.setOption(this.option, true);
+        console.log(this.option.xAxis.data, flowList, "---------");
+      });
     },
     // 获取域名列表
     getDomainList() {
