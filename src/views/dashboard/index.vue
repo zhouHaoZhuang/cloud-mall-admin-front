@@ -92,10 +92,13 @@
             <!-- <div class="jump">查看></div> -->
           </div>
           <div id="echarts" class="echarts-pie-content"></div>
-          <!-- <div class="consumption text-overflow">
-            本月消费：￥{{ trendOut }}
-          </div> -->
-          <!-- <div class="income text-overflow">本月收入：￥{{ trendIn }}</div> -->
+          <div class="consumption text-overflow">
+            本月消费：<span class="font-bold">{{ trendOut }}</span>
+          </div>
+          <div class="income text-overflow">
+            本月收入：
+            <span class="font-bold">{{ trendIn }}</span>
+          </div>
         </div>
         <!-- 待办事项 -->
         <div class="public-box todolist">
@@ -186,7 +189,7 @@ export default {
       outMoney: [],
       inMoney: [],
       monthData: [],
-
+      allDays: [],
       // 账户余额信息
       overviewData: {
         balance: {},
@@ -230,6 +233,7 @@ export default {
   created() {
     this.getDashboardData();
     this.getOrderAndRenewCount();
+    this.getAlllMonth();
   },
   mounted() {
     window.addEventListener("resize", () => {
@@ -238,8 +242,29 @@ export default {
     //获取每一天的日期
   },
   methods: {
+    //获取当月所有消费和收入总和
+    getAlllMonth() {
+      this.$store.dispatch("dashboard/trendData").then((res) => {
+        if (res.data && res.data.length > 0) {
+          const I = res.data.find((ele) => ele.type === "I");
+          const O = res.data.find((ele) => ele.type === "O");
+          const newIDealAmount = (I && I.dealAmount) || 0;
+          const newODealAmount = (O && O.dealAmount) || 0;
+          this.trendIn = newIDealAmount;
+          this.trendOut = newODealAmount;
+        }
+      });
+    },
+    //获取当前月的每一天
+    getAllDays() {
+      return new Promise((resolve, reject) => {
+        this.$store.dispatch("dashboard/getAllDay").then((res) => {
+          resolve(res.data);
+        });
+      });
+    },
     // 获取数据
-    getDashboardData() {
+    async getDashboardData() {
       this.$store.dispatch("dashboard/getBalanceAndCoupon").then((res) => {
         const newData = {
           balance: {},
@@ -257,62 +282,31 @@ export default {
         });
         this.overviewData = { ...newData };
       });
+      this.allDays = await this.getAllDays();
       //获取每一天的消费记录
       this.$store.dispatch("dashboard/newTrendData").then((res) => {
         let data = res.data;
-        if (data.O && data.O.length > 0) {
-          data.O.map((ele) => {
-            this.outMoney.push(ele.dealAmount);
-          });
-        }
-        if (data.I && data.I.length > 0) {
-          data.I.map((ele) => {
-            this.inMoney.push(ele.dealAmount);
-          });
-        }
-        let first = moment().startOf("month").format("MM-DD"); // 本月第一天
-        let last = moment().endOf("month").format("MM-DD"); // 本月最后一天
-        // let middleDay =   parseInt((last.substring(last.length-2) - first.substring(first.length-2))/2)
-       
+        //消费记录
+        this.outMoney = this.allDays.map((ele) => {
+          const newObj = data.O.find((item) => item.time === ele);
+          return {
+            dealAmount: newObj !== undefined ? newObj.dealAmount : 0
+          };
+        });
+        this.outMoney = this.outMoney.map((ele) => {
+          return ele.dealAmount;
+        });
 
-        this.monthData.push(first);
-        this.monthData.push(last);
-        // monthData
-        // let newData = [];
-        // if (res.data && res.data.length > 0) {
-        //   const I = res.data.find((ele) => ele.type === "I");
-        //   const O = res.data.find((ele) => ele.type === "O");
-        //   const newIDealAmount = (I && I.dealAmount) || 0;
-        //   const newODealAmount = (O && O.dealAmount) || 0;
-        //   this.trendIn = newIDealAmount;
-        //   this.trendOut = newODealAmount;
-        //   newData = [
-        //     {
-        //       type: "I",
-        //       value: newIDealAmount,
-        //       name: "收入记录"
-        //     },
-        //     {
-        //       type: "O",
-        //       value: newODealAmount,
-        //       name: "消费记录"
-        //     }
-        //   ];
-        // } else {
-        //   newData = [
-        //     {
-        //       type: "I",
-        //       value: 0,
-        //       name: "收入记录"
-        //     },
-        //     {
-        //       type: "O",
-        //       value: 0,
-        //       name: "消费记录"
-        //     }
-        //   ];
-        // }
-        // this.trendData.data = [...newData];
+        //收入记录
+        this.inMoney = this.allDays.map((ele) => {
+          const newObj = data.I.find((item) => item.time === ele);
+          return {
+            dealAmount: newObj !== undefined ? newObj.dealAmount : 0
+          };
+        });
+        this.inMoney = this.inMoney.map((ele) => {
+          return ele.dealAmount;
+        });
         this.initEcharts();
       });
       // 获取服务器数量
@@ -362,7 +356,7 @@ export default {
         xAxis: {
           type: "category",
           boundaryGap: false,
-          data: this.monthData,
+          data: this.allDays,
           axisTick: {
             show: false
           }
@@ -454,6 +448,7 @@ export default {
   .public-box {
     padding: 0 24px;
     background: #fff;
+    position: relative;
     .public-top {
       display: flex;
       justify-content: space-between;
@@ -583,15 +578,15 @@ export default {
       .trend {
         .consumption,
         .income {
-          max-width: 140px;
+          // max-width: 140px;
           position: absolute;
-          left: 200px;
+          left: 582px;
         }
         .consumption {
-          top: 127px;
+          top: 126px;
         }
         .income {
-          top: 185px;
+          top: 164px;
         }
       }
       .todolist {
@@ -681,5 +676,9 @@ export default {
       }
     }
   }
+}
+.font-bold {
+  font-weight: 600;
+  font-size: 18px;
 }
 </style>

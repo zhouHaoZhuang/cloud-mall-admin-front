@@ -9,7 +9,7 @@
         <p>3、如充值后款项没有到账，请联系在线客服帮助处理，或提交工单</p>
       </div>
       <h1>
-        <span>账户余额：</span
+        <span class="balanceAccount">账户余额：</span
         ><span class="price-one"
           >{{ balanceData.userAmount }} <span class="price-two">元</span>
         </span>
@@ -246,6 +246,7 @@ export default {
 }
 h1 {
   margin: 20px 0 10px 0;
+  
   > span {
     display: inline-block;
     font-size: 14px;
@@ -257,7 +258,7 @@ h1 {
   > span:last-child {
     font-size: 16px;
     font-weight: bold;
-    font-size: 25px;
+    font-size: 28px;
     color: #999999;
   }
 }
@@ -266,14 +267,14 @@ h1 {
 }
 .price-two {
   color: #999 !important;
-  font-size: 20px;
+  font-size: 18px;
 }
 .price-one {
   color: #3b77e3 !important;
 }
-.recharge-amount {
-  margin-left: 20px;
-}
+// .recharge-amount {
+//   margin-left: 20px;
+// }
 .ant-radio-wrapper {
   width: 170px;
   height: 50px;
@@ -284,5 +285,10 @@ h1 {
 }
 ::v-deep .ant-radio-inner {
   display: none !important;
+}
+.balanceAccount{
+  font-weight: 600;
+  font-size: 18px;
+  margin:  0 0 20px 0;
 }
 </style>

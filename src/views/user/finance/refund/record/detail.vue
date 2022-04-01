@@ -55,10 +55,6 @@
           :pagination="false"
         >
           <a slot="name" slot-scope="text">{{ text }}</a>
-          <div slot="chargingType" slot-scope="text">
-            <span v-if="text === 'Beforepay'">预付费</span>
-            <span v-if="text === 'AfterPay'">后付费</span>
-          </div>
           <div slot="tradeType" slot-scope="text">
             {{ tradeTypeEnum[text] }}
           </div>
@@ -210,8 +206,7 @@ export default {
         },
         {
           title: "计费方式",
-          dataIndex: "chargingType",
-          scopedSlots: { customRender: "chargingType" }
+          dataIndex: "chargingType"
         },
         {
           title: "原价",

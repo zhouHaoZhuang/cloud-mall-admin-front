@@ -99,7 +99,7 @@ export default {
       width: 100%;
       height: 56px;
       // background-color: @primary-color;
-      background: url("../assets/img/menu/new_logo.png") no-repeat center;
+      // background: url("../assets/img/menu/new_logo.png") no-repeat center;
       background-color: #3B77E3;
       text-indent: -99999px;
       overflow: hidden;
