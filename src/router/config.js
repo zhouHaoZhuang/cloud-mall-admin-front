@@ -147,7 +147,7 @@ export const asyncRoute = [
             component: RouteView,
             meta: {
               icon: "icon-cdn",
-              perm: "control-cloud"
+              perm: "control-cdn"
             },
             children: [
               {
@@ -155,7 +155,7 @@ export const asyncRoute = [
                 name: "概览",
                 component: () => import("@/views/control/cdn/dashboard"),
                 meta: {
-                  perm: "control-cloud-manage"
+                  perm: "control-cdn-dashboard"
                 }
               },
               {
@@ -163,7 +163,7 @@ export const asyncRoute = [
                 name: "域名管理",
                 component: () => import("@/views/control/cdn/domain"),
                 meta: {
-                  perm: "control-cloud-manage"
+                  perm: "control-cdn-domain"
                 }
               },
               {
@@ -172,7 +172,7 @@ export const asyncRoute = [
                 component: () => import("@/views/control/cdn/createDomain"),
                 meta: {
                   hiddenMenu: true,
-                  perm: "control-cloud-manage"
+                  perm: "control-cdn-domain"
                 }
               },
               {
@@ -181,7 +181,7 @@ export const asyncRoute = [
                 component: () => import("@/views/control/cdn/manageDomain"),
                 meta: {
                   hiddenMenu: true,
-                  perm: "control-cloud-manage"
+                  perm: "control-cdn-domain"
                 }
               },
               {
@@ -190,7 +190,7 @@ export const asyncRoute = [
                 component: () => import("@/views/control/cdn/copy"),
                 meta: {
                   hiddenMenu: true,
-                  perm: "control-cloud-manage"
+                  perm: "control-cdn-domain"
                 }
               },
               {
@@ -198,7 +198,7 @@ export const asyncRoute = [
                 name: "用量查询",
                 component: () => import("@/views/control/cdn/consumption"),
                 meta: {
-                  perm: "control-cloud-manage"
+                  perm: "control-cdn-consumption"
                 }
               }
             ]
@@ -308,18 +308,16 @@ export const asyncRoute = [
                 name: "提现申请",
                 component: () => import("@/views/user/finance/withdraw"),
                 meta: {
-                  perm: "user-finance-refund-record"
+                  perm: "user-finance-withdraw"
                 }
               },
               {
                 path: "manageadress",
                 name: "常用地址管理",
                 component: () =>
-                  import(
-                    "@/views/user/finance/bill/manageadress/index.vue"
-                  ),
+                  import("@/views/user/finance/bill/manageadress/index.vue"),
                 meta: {
-                  perm: "user-finance-refund"
+                  perm: "user-finance-address"
                 }
               },
               {
@@ -327,7 +325,7 @@ export const asyncRoute = [
                 name: "发票管理",
                 component: RouteView,
                 meta: {
-                  perm: "user-finance-refund"
+                  perm: "user-finance-bill"
                 },
                 children: [
                   {
@@ -337,7 +335,7 @@ export const asyncRoute = [
                       import("@/views/user/finance/bill/Apply/list.vue"),
                     meta: {
                       hiddenMenu: true,
-                      perm: "user-finance-refund"
+                      perm: "user-finance-bill-list"
                     }
                   },
                   {
@@ -346,7 +344,7 @@ export const asyncRoute = [
                     component: () =>
                       import("@/views/user/finance/bill/list/index.vue"),
                     meta: {
-                      perm: "user-finance-refund"
+                      perm: "user-finance-bill-list"
                     }
                   },
                   {
@@ -354,51 +352,59 @@ export const asyncRoute = [
                     name: "发票申请详情",
                     component: () =>
                       import("@/views/user/finance/bill/info/list.vue"),
-                    meta: { perm: "user-finance-refund", hiddenMenu: true }
+                    meta: { perm: "user-finance-bill-list", hiddenMenu: true }
                   },
                   {
                     path: "address",
                     name: "修改地址",
                     component: () =>
                       import("@/views/user/finance/bill/address/index.vue"),
-                    meta: { perm: "user-finance-refund", hiddenMenu: true }
+                    meta: { perm: "user-finance-bill-list", hiddenMenu: true }
                   },
                   {
                     path: "refundlist",
                     name: "退票列表",
                     component: () =>
                       import("@/views/user/finance/bill/refundlist/index.vue"),
-                    meta: { perm: "user-finance-refund" }
+                    meta: { perm: "user-finance-bill-refundlist" }
                   },
                   {
                     path: "refundInfo",
                     name: "退票详情",
                     component: () =>
                       import("@/views/user/finance/bill/refundInfo/info.vue"),
-                    meta: { perm: "user-finance-refund", hiddenMenu: true }
+                    meta: {
+                      perm: "user-finance-bill-refundlist",
+                      hiddenMenu: true
+                    }
                   },
                   {
                     path: "resubmit",
                     name: "重新提交退票申请",
                     component: () =>
                       import("@/views/user/finance/bill/resubmit/info.vue"),
-                    meta: { perm: "user-finance-refund", hiddenMenu: true }
+                    meta: {
+                      perm: "user-finance-bill-refundlist",
+                      hiddenMenu: true
+                    }
                   },
                   {
                     path: "managebill",
                     name: "发票信息管理",
                     component: () =>
                       import("@/views/user/finance/bill/billmanage/index.vue"),
-                    meta: { perm: "user-finance-refund" }
+                    meta: { perm: "user-finance-bill-managebill" }
                   },
                   {
                     path: "addBillInfo",
                     name: "新增发票信息",
                     component: () =>
                       import("@/views/user/finance/bill/addBillInfo/index.vue"),
-                    meta: { perm: "user-finance-refund", hiddenMenu: true }
-                  },
-                  
+                    meta: {
+                      perm: "user-finance-bill-managebill",
+                      hiddenMenu: true
+                    }
+                  }
                 ]
               },
               {
@@ -406,7 +412,7 @@ export const asyncRoute = [
                 name: "账单管理",
                 component: () => import("@/views/user/finance/billmanage"),
                 meta: {
-                  perm: "user-finance-refund-record"
+                  perm: "user-finance-billmanage"
                 }
               }
             ]
@@ -542,22 +548,6 @@ export const asyncRoute = [
                   perm: "user-setting-auth"
                 }
               },
-              // {
-              //   path: "address",
-              //   name: "常用地址管理",
-              //   component: () =>
-              //     import("@/views/user/setting/address/index.vue"),
-              //   meta: {
-              //     perm: "user-setting-auth"
-              //   }
-              // },
-              // {
-              //   path: "message",
-              //   name: "短信通知",
-              //   component: () =>
-              //     import("@/views/user/setting/shortMessage/index.vue"),
-              //   meta: {},
-              // },
               {
                 path: "account",
                 name: "子账号管理",
