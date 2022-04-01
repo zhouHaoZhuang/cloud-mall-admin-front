@@ -44,6 +44,10 @@
             <span>退款状态:</span>
             <span>{{ tradeTypeEnum[orderInfo.tradeType] }} </span>
           </li>
+           <li v-if="orderInfo.tradeStatus === 5">
+            <span>退款时间:</span>
+            <span>{{ payTime }} </span>
+          </li>
         </ul>
       </div>
       <div class="config">
