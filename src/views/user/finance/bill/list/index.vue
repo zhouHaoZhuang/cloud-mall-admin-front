@@ -106,7 +106,7 @@
       <div class="title-right">
         <h1 class="font-weight600" style="margin-left: 0; white-space: nowrap">
           <span>欠票未冲抵总金额：</span>
-          <span style="color: #d9001b">￥{{ dataAmount.negativeAmount }}</span>
+          <span style="color: #d9001b">-￥{{ dataAmount.negativeAmount }}</span>
         </h1>
         <div>
           <p>明细</p>
