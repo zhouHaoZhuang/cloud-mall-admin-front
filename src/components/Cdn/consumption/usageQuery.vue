@@ -160,11 +160,16 @@ export default {
           trigger: "axis",
           formatter: (params) => {
             let value = params[0].data;
+            if (this.listQuery.field === "acc") {
+              return (
+                params[0].axisValue + "<br/>" + "HTTPS请求数：" + value + "次"
+              );
+            }
             if (value / (1024 * 1024 * 1024) > 10) {
               return (
                 params[0].axisValue +
                 "<br/>" +
-                (this.listQuery.field === "traf" ? "流量：" : "HTTPS请求数：") +
+                "流量：" +
                 (value / (1024 * 1024 * 1024)).toFixed(2) +
                 " Gbps"
               );
@@ -172,7 +177,7 @@ export default {
               return (
                 params[0].axisValue +
                 "<br/>" +
-                (this.listQuery.field === "traf" ? "流量：" : "HTTPS请求数：") +
+                "流量：" +
                 (value / (1024 * 1024)).toFixed(2) +
                 " Mbps"
               );
@@ -181,18 +186,12 @@ export default {
                 "时间" +
                 params[0].axisValue +
                 "<br/>" +
-                (this.listQuery.field === "traf" ? "流量：" : "HTTPS请求数：") +
+                "流量：" +
                 (value / 1024).toFixed(2) +
                 " Kbps"
               );
             } else {
-              return (
-                params[0].axisValue +
-                "<br/>" +
-                (this.listQuery.field === "traf" ? "流量：" : "HTTPS请求数：") +
-                value +
-                " bps"
-              );
+              return params[0].axisValue + "<br/>" + "流量：" + value + " bps";
             }
           }
         },
@@ -207,7 +206,10 @@ export default {
         yAxis: {
           type: "value",
           axisLabel: {
-            formatter: function (value) {
+            formatter: (value) => {
+              if (this.listQuery.field === "acc") {
+                return value + "次";
+              }
               if (value / (1024 * 1024 * 1024) > 10) {
                 return (value / (1024 * 1024 * 1024)).toFixed(2) + " Gbps";
               } else if (value / (1024 * 1024) > 10) {
@@ -297,6 +299,7 @@ export default {
       if (end - start > 86399000) {
         this.listQuery.interval = "86400";
       }
+
       this.getData();
     },
     handleRadioChange(e) {
@@ -378,6 +381,8 @@ export default {
           this.option.legend.data = [
             this.listQuery.field === "traf" ? "流量" : "HTTPS请求数"
           ];
+          this.columns[1].title =
+            this.listQuery.field === "traf" ? "流量" : "HTTPS请求数";
           var myChart = this.echarts.init(document.getElementById("main"));
           //配置图表
           myChart.setOption(this.option, true);
@@ -417,7 +422,7 @@ export default {
     display: none;
     font-size: 10px;
   }
-  .icon-download{
+  .icon-download {
     text-align: center;
     width: 30px;
   }
