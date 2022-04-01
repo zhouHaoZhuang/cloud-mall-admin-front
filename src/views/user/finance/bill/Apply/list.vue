@@ -102,7 +102,7 @@
           :pagination="paginationPropsInvoice"
         >
           <div slot="canInvoiceAmount" slot-scope="text, record">
-              {{ record.originalAmountShow }}
+            {{ record.originalAmountShow }}
           </div>
           <div slot="type" slot-scope="text">
             {{ typeMap[text] }}
@@ -336,7 +336,7 @@ export default {
         },
         {
           title: "开票金额",
-          dataIndex: "canInvoiceAmount",
+          dataIndex: "canInvoiceAmount"
         },
         {
           title: "订单创建时间",
@@ -409,11 +409,6 @@ export default {
         search: "",
         currentPage: 1,
         pageSize: 10,
-        total: 0,
-        status: "",
-        startTime: "",
-        endTime: "",
-        accountType: ""
       },
       paginationProps: {
         showQuickJumper: true,
@@ -707,30 +702,31 @@ export default {
     //查询数据表格（获取开票列表）
     getList() {
       this.$getList("billapply/getList", this.listQuery).then((res) => {
-        console.log(res);
         this.data = [...res.data.list];
-        this.paginationProps.total = res.data.totalCount * 1;
+        this.paginationPropsInvoice.total = res.data.totalCount * 1;
       });
     },
     // 获取发票抬头列表
     getListTitle() {
-      this.$store
-        .dispatch("billnews/getList", { currentPage: 1, pageSize: 10 })
-        .then((res) => {
-          console.log(res);
-          this.dataTitle = [...res.data.list];
-          this.selectedRowKeysTitle = [
-            res.data.list.filter((item) => {
-              return item.defaultStatus === 1;
-            })[0].id
-          ];
-          console.log(this.selectedRowKeysTitle);
-          this.paginationProps.total = res.data.totalCount * 1;
-        });
+      this.$store.dispatch("billnews/getList", this.listQuery).then((res) => {
+        console.log(res, "==============");
+        this.dataTitle = [...res.data.list];
+        console.log(this.selectedRowKeysTitle);
+        this.paginationProps.total = res.data.totalCount * 1;
+        console.log(this.paginationProps.total, "this.paginationProps.total");
+        this.selectedRowKeysTitle = [
+          res.data.list.filter((item) => {
+            return item.defaultStatus === 1;
+          })[0].id
+        ];
+      });
     },
     // 获取收货信息列表
     getListAddress() {
-      this.$getList("mangeaddress/getList", this.listQuery).then((res) => {
+      this.$getList("mangeaddress/getList", {
+        currentPage: 1,
+        pageSize: 5
+      }).then((res) => {
         console.log(res);
         this.dataAddress = [...res.data];
         this.selectedRowKeysAddress = [
@@ -739,19 +735,18 @@ export default {
           })[0].id
         ];
         console.log(this.selectedRowKeysAddress, "res.data");
-        this.paginationProps.total = res.data.totalCount * 1;
       });
     },
     //表格分页跳转
     quickJump(currentPage) {
       this.listQuery.currentPage = currentPage;
-      this.getList();
+      this.getListTitle();
     },
     //表格分页切换每页条数
     onShowSizeChange(current, pageSize) {
       this.listQuery.currentPage = current;
       this.listQuery.pageSize = pageSize;
-      this.getList();
+      this.getListTitle();
     }
   }
 };
