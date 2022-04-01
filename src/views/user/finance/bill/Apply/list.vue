@@ -16,7 +16,7 @@
         <a-input
           style="width: 150px; margin-left: 10px"
           placeholder="请输入订单ID"
-          v-model="listQueryInvoice.orderId"
+          v-model="listQueryInvoice.orderNo"
         />
         <a-select
           placeholder="请选择发票类型"
@@ -499,7 +499,7 @@ export default {
         ]
       },
       listQueryInvoice: {
-        orderId: "",
+        orderNo: "",
         currentPage: 1,
         pageSize: 10,
         total: 0,
