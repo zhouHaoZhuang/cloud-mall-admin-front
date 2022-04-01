@@ -18,7 +18,7 @@
                 <div class="title">总流量</div>
                 <div class="info">
                   <span class="strong">{{ baseData.totalTraf }}</span>
-                  {{ baseData.totalTrafUint }}
+                  {{ baseData.totalTrafUnit }}
                 </div>
               </div>
               <div class="line"></div>
