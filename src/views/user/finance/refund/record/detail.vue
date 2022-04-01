@@ -46,7 +46,7 @@
           </li>
            <li v-if="orderInfo.tradeStatus === 5">
             <span>退款时间:</span>
-            <span>{{ payTime }} </span>
+            <span>{{ orderInfo.payTime }} </span>
           </li>
         </ul>
       </div>
