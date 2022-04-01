@@ -137,7 +137,7 @@
               <!-- <a-button type="link" @click="cancelOrder(record)">
                 支付
               </a-button> -->
-              <a-button type="link" @click="cancelOrder(record)" >
+              <a-button type="link" @click="cancelOrder(record)" v-if="record.tradeStatus === 1 || record.tradeStatus === 3">
                 关闭
               </a-button>
               <!-- <a-popconfirm
