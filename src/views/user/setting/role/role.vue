@@ -21,9 +21,7 @@
             />
           </a-form-model-item>
           <a-form-model-item>
-            <a-button type="primary" @click="search">
-              查询
-            </a-button>
+            <a-button type="primary" @click="search"> 查询 </a-button>
           </a-form-model-item>
         </a-form-model>
       </div>
@@ -39,7 +37,11 @@
             {{ roleTypeEnum[text] }}
           </div>
           <div slot="status" slot-scope="text, record">
-            <a-switch :checked="text" @change="handleChangeStatus(record)">
+            <a-switch
+              :checked="text"
+              :disabled="record.type === 0"
+              @change="handleChangeStatus(record)"
+            >
               <a-icon slot="checkedChildren" type="check" />
               <a-icon slot="unCheckedChildren" type="close" />
             </a-switch>
@@ -49,6 +51,7 @@
               <a-button
                 v-permission="'relation'"
                 type="link"
+                :disabled="record.type === 0"
                 @click="handleRelation(record)"
               >
                 关联资源
@@ -56,6 +59,7 @@
               <a-button
                 v-permission="'edit'"
                 type="link"
+                :disabled="record.type === 0"
                 @click="handleEditRole(record)"
               >
                 编辑
@@ -63,6 +67,7 @@
               <a-button
                 v-permission="'del'"
                 type="link"
+                :disabled="record.type === 0"
                 @click="handleDel(record)"
               >
                 移除
@@ -154,8 +159,8 @@ export default {
     getList() {
       this.tableLoading = true;
       this.$getListQp("organization/getRoleList", this.listQuery)
-        .then(res => {
-          this.data = res.data.list.map(ele => {
+        .then((res) => {
+          this.data = res.data.list.map((ele) => {
             return {
               ...ele,
               status: ele.status === 0 ? false : true
@@ -213,7 +218,7 @@ export default {
               id: record.id,
               status: record.status ? 0 : 1
             })
-            .then(res => {
+            .then((res) => {
               this.$message.success(`${statusTxt}成功`);
               this.getList();
             });
@@ -227,7 +232,7 @@ export default {
         onOk: () => {
           this.$store
             .dispatch("organization/delRole", { id: record.id })
-            .then(res => {
+            .then((res) => {
               this.$message.success("移除成功");
               this.getList();
             });
@@ -256,7 +261,7 @@ export default {
   .role-content {
     background: #fff;
   }
-  .public-table-wrap{
+  .public-table-wrap {
     margin-top: 20px;
   }
 }
