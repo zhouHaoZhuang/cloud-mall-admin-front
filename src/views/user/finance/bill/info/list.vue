@@ -28,10 +28,15 @@
           {{ data.createTimeShow }}
         </a-descriptions-item>
         <a-descriptions-item label="反馈时间">
-          {{ data.rejectTimeShow }}
+          {{ data.feedbackTimeShow }}
         </a-descriptions-item>
         <a-descriptions-item label="反馈说明">
-          {{ data.rejectRemark }}
+          <span v-if="data.status === 4">
+            {{ data.rejectRemark }}
+          </span>
+          <span v-if="data.status === 5">
+            {{ data.feedbackRemark }}
+          </span>
         </a-descriptions-item>
       </a-descriptions>
       <a-descriptions style="margin: 20px 0" title="收件人信息">
