@@ -3,17 +3,13 @@
     <div class="role-info">
       <div class="public-title">角色关联资源</div>
       <div class="item">
-        <div class="label">
-          角色名称：
-        </div>
+        <div class="label">角色名称：</div>
         <div class="value">
           {{ detail.name }}
         </div>
       </div>
       <div class="item">
-        <div class="label">
-          角色描述：
-        </div>
+        <div class="label">角色描述：</div>
         <div class="value">
           {{ detail.description }}
         </div>
@@ -41,9 +37,7 @@
         <a-button type="primary" :loading="loading" @click="handleSave">
           保存
         </a-button>
-        <a-button @click="handleCancel">
-          取消
-        </a-button>
+        <a-button @click="handleCancel"> 取消 </a-button>
       </a-space>
     </div>
   </div>
@@ -89,20 +83,21 @@ export default {
     getDetail() {
       this.$store
         .dispatch("organization/getRoleDetail", { id: this.id })
-        .then(res => {
+        .then((res) => {
           this.detail = { ...res.data };
           this.checkedKeys = [...res.data.permissionIdList];
         });
     },
     // 获取权限菜单
     getPermMap() {
-      this.$store.dispatch("organization/getRolePermMap").then(res => {
+      this.$store.dispatch("organization/getRolePermMap").then((res) => {
         this.permMap = [...res.data];
       });
     },
     // 多选框选择
-    onCheck(checkedKeys) {
-      this.checkedKeys = [...checkedKeys];
+    onCheck(checkedKeys, e) {
+      // console.log(checkedKeys, e.halfCheckedKeys);
+      this.checkedKeys = [...checkedKeys, ...e.halfCheckedKeys];
     },
     // 取消
     handleCancel() {
@@ -116,7 +111,7 @@ export default {
           roleId: this.id,
           permissionIdList: this.checkedKeys
         })
-        .then(res => {
+        .then((res) => {
           this.$message.success("角色关联资源成功");
           this.$router.back();
         })
