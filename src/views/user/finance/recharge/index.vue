@@ -51,6 +51,7 @@ export default {
 .income {
   > h1 {
     font-size: 22px;
+    font-weight: 600;
   }
   > ul {
     color: #4d4d4d;
