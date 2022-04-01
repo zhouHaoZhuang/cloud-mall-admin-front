@@ -44,8 +44,9 @@
             type="link"
             v-if="record.status === 7 || record.status === 8"
             @click="$router.push('/user/finance/bill/resubmit?id=' + record.id)"
-            >重新提交</a-button
           >
+            重新提交
+          </a-button>
         </div>
       </a-table>
     </div>
@@ -81,7 +82,7 @@ export default {
         },
         {
           title: "退票申请时间",
-          dataIndex: "refundCreateTimeShow",
+          dataIndex: "refundCreateTimeShow"
         },
         {
           title: "备注",
@@ -89,7 +90,7 @@ export default {
         },
         {
           title: "退票申请反馈时间",
-          dataIndex: "refundFeedbackTimeShow",
+          dataIndex: "refundFeedbackTimeShow"
         },
         {
           title: "退票申请反馈说明",
