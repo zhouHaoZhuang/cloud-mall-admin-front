@@ -61,7 +61,7 @@
           </li>
           <li>
             <span>支付时间:</span>
-            <span>{{ payTime | formatDate }} </span>
+            <span>{{ orderInfo.payTime | formatDate }} </span>
           </li>
         </ul>
       </div>
