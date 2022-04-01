@@ -176,6 +176,28 @@ export const permission = Vue.directive("permission", {
   }
 });
 
+/**
+ * 页面组件根据路由权限控制指令
+ * 可传递单个权限或对个权限-并且必须拥有所传递的权限，如果传递了多个，有一个没满足，还是没权限（全部匹配）
+ * v-permissionRoute=''  或  v-permissionRoute='[]'
+ * 多个权限的话，只需要任意一个权限符合即可正常展示（任一匹配）
+ * v-permissionRoute.or=''  或  v-permissionRoute.or='[]'
+ */
+export const permissionRoute = Vue.directive("permissionRoute", {
+  inserted: function (el, binding) {
+    // 得到指令的绑定值，此值为js计算完成后的值,当前为需要的权限
+    const { value, modifiers } = binding;
+    const perms = store.state.user.perms;
+    const routeIndex = perms.findIndex((ele) => ele.code === value);
+    // console.log("权限指令", perms, routeIndex, value);
+    // 判断当前组件是否存在权限
+    if (routeIndex === -1) {
+      //如果没有权限则直接删除此节点
+      el.parentNode && el.parentNode.removeChild(el);
+    }
+  }
+});
+
 /*
  * filterInput-input 输入框限制只能输入大小写英文字母、数字
  * 在需要控制输入的输入框上使用 v-filterInput-input
