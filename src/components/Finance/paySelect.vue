@@ -46,13 +46,13 @@
         <a-radio value="none">
           <div class="box">不使用第三方支付</div>
         </a-radio>
-        <a-radio v-if="allConfig.online_pay" value="ali">
+        <a-radio v-if="allConfig.online_pay !== '0'" value="ali">
           <div class="box">
             支付宝
             <a-icon class="alipay-icon" type="alipay-circle" />
           </div>
         </a-radio>
-        <a-radio v-if="allConfig.online_pay" value="wechat">
+        <a-radio v-if="allConfig.online_pay !== '0'" value="wechat">
           <div class="box">
             微信
             <a-icon class="wechat-icon" type="wechat" />
