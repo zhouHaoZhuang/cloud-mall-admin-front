@@ -121,7 +121,7 @@
             <span v-else>--</span>
           </div>
           <div slot="tradeStatus" slot-scope="text">
-            {{ orderStatusEnum[text] }}
+            {{ payState[text] }}
           </div>
           <div slot="tradeType" slot-scope="text">
             {{ tradeType[text] }}
@@ -137,7 +137,7 @@
               <!-- <a-button type="link" @click="cancelOrder(record)">
                 支付
               </a-button> -->
-              <a-button type="link" @click="cancelOrder(record)">
+              <a-button type="link" @click="cancelOrder(record)" >
                 关闭
               </a-button>
               <!-- <a-popconfirm
@@ -167,19 +167,17 @@
 <script>
 import { jumpCloudMall } from "@/utils/index";
 import {
-  orderStatusEnum,
+  payState,
   tradeTypeEnum,
   tradeType,
-  payState,
   timeType
 } from "@/utils/enum";
 export default {
   data() {
     return {
-      orderStatusEnum,
+      payState,
       tradeTypeEnum,
       tradeType,
-      payState,
       timeType,
       listQuery: {
         key: "orderNo",
@@ -225,7 +223,7 @@ export default {
           scopedSlots: { customRender: "payTime" }
         },
         {
-          title: "支付状态",
+          title: "订单状态",
           dataIndex: "tradeStatus",
           scopedSlots: { customRender: "tradeStatus" }
         },

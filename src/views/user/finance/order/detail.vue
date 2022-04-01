@@ -25,23 +25,18 @@
           </li>
           <li>
             <span>创建时间:</span>
-            <span>{{ orderInfo.orderCreateTime | formatDate }}</span>
+            <span>{{ orderInfo.createTime | formatDate }}</span>
           </li>
           <li v-if="orderInfo.tradeStatus === 1">
             <span>支付剩余时间:</span>
             <span class="strong">{{ countDownTime }}</span>
           </li>
-          <!-- <li>
-          <span>订单状态:</span>
-          <span
-            :class="{
-              green: orderInfo.tradeStatus === 1,
-              blue: orderInfo.tradeStatus !== 1
-            }"
-          >
-            {{ orderStatusEnum[orderInfo.tradeStatus] }}
-          </span>
-        </li> -->
+          <li>
+            <span>状态:</span>
+            <span>
+              {{ payState[orderInfo.tradeStatus] }}
+            </span>
+          </li>
           <li
             v-if="
               orderInfo.tradeStatus !== 1 &&
@@ -65,8 +60,8 @@
             <span>{{ orderInfo.actualAmount }}</span>
           </li>
           <li>
-            <span>支付状态:</span>
-            <span>{{ payState[orderInfo.payStatus] }} </span>
+            <span>支付时间:</span>
+            <span>{{ payTime | formatDate }} </span>
           </li>
         </ul>
       </div>
@@ -89,7 +84,7 @@
           </span>
           <div slot="productConfig" slot-scope="text, record">
             <div v-if="record.chargingType == '按量付费'">
-              {{productName}}功能开通：按流量计费
+              {{ productName }}功能开通：按流量计费
             </div>
             <div v-else>
               <!-- <div>线路:{{ regionDataEnum[record.regionId] }}</div> -->

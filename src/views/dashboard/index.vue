@@ -189,7 +189,7 @@ export default {
       outMoney: [],
       inMoney: [],
       monthData: [],
-
+      allDays: [],
       // 账户余额信息
       overviewData: {
         balance: {},
@@ -255,8 +255,16 @@ export default {
         }
       });
     },
+    //获取当前月的每一天
+    getAllDays() {
+      return new Promise((resolve, reject) => {
+        this.$store.dispatch("dashboard/getAllDay").then((res) => {
+          resolve(res.data);
+        });
+      });
+    },
     // 获取数据
-    getDashboardData() {
+    async getDashboardData() {
       this.$store.dispatch("dashboard/getBalanceAndCoupon").then((res) => {
         const newData = {
           balance: {},
@@ -274,23 +282,31 @@ export default {
         });
         this.overviewData = { ...newData };
       });
+      this.allDays = await this.getAllDays();
       //获取每一天的消费记录
       this.$store.dispatch("dashboard/newTrendData").then((res) => {
         let data = res.data;
-        if (data.O && data.O.length > 0) {
-          data.O.map((ele) => {
-            this.outMoney.push(ele.dealAmount);
-          });
-        }
-        if (data.I && data.I.length > 0) {
-          data.I.map((ele) => {
-            this.inMoney.push(ele.dealAmount);
-          });
-        }
-        let first = moment().startOf("month").format("MM-DD"); // 本月第一天
-        let last = moment().endOf("month").format("MM-DD"); // 本月最后一天
-        this.monthData.push(first);
-        this.monthData.push(last);
+        //消费记录
+        this.outMoney = this.allDays.map((ele) => {
+          const newObj = data.O.find((item) => item.time === ele);
+          return {
+            dealAmount: newObj !== undefined ? newObj.dealAmount : 0
+          };
+        });
+        this.outMoney = this.outMoney.map((ele) => {
+          return ele.dealAmount;
+        });
+
+        //收入记录
+        this.inMoney = this.allDays.map((ele) => {
+          const newObj = data.I.find((item) => item.time === ele);
+          return {
+            dealAmount: newObj !== undefined ? newObj.dealAmount : 0
+          };
+        });
+        this.inMoney = this.inMoney.map((ele) => {
+          return ele.dealAmount;
+        });
         this.initEcharts();
       });
       // 获取服务器数量
@@ -340,7 +356,7 @@ export default {
         xAxis: {
           type: "category",
           boundaryGap: false,
-          data: this.monthData,
+          data: this.allDays,
           axisTick: {
             show: false
           }

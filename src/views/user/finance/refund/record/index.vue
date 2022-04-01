@@ -120,10 +120,7 @@
         <div slot="createTime" slot-scope="text">
           {{ text | formatDate }}
         </div>
-        <div slot="chargingType" slot-scope="text">
-          <span v-if="text === 'Beforepay'">预付费</span>
-          <span v-if="text === 'AfterPay'">后付费</span>
-        </div>
+      
         <div slot="tradeType" slot-scope="text">
           {{ tradeType[text] }}
         </div>
@@ -188,11 +185,7 @@ export default {
           dataIndex: "payStatus",
           scopedSlots: { customRender: "payStatus" }
         },
-        {
-          title: "计费方式",
-          dataIndex: "chargingType",
-          scopedSlots: { customRender: "chargingType" }
-        },
+       
         {
           title: "创建时间",
           dataIndex: "createTimeStr"
