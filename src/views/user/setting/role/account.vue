@@ -196,7 +196,7 @@ export default {
             .dispatch("organization/editAccountStatus", {
               userCode: record.id,
               status: record.status === 0 ? 1 : 0,
-              typeCode: "COMMON_ADMIN"
+              typeCode: "common_admin"
             })
             .then((res) => {
               this.$message.success("操作成功");
