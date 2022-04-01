@@ -4,11 +4,11 @@
     <!-- 帮助文档 -->
     <!-- <Help /> -->
     <!-- 站内信-->
-    <Message />
+    <Message v-permissionRoute="'message'" />
     <!-- 费用 -->
     <!-- <Price /> -->
     <!-- 工单 -->
-    <WorkOrder />
+    <WorkOrder v-permissionRoute="'user-workOrder'" />
     <!-- 用户 -->
     <User /> 
   </div>

@@ -5,7 +5,7 @@
       <!-- 折叠左侧菜单 -->
       <OpenMenu />
       <!-- 跳转总览 -->
-      <div class="dashboard" @click="goTo('/dashboard')">总览</div>
+      <div v-permissionRoute="'dashboard'" class="dashboard" @click="goTo('/dashboard')">总览</div>
       <!-- 产品与服务 -->
       <!-- <Product /> -->
     </div>

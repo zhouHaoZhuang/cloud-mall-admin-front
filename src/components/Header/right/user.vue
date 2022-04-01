@@ -9,15 +9,15 @@
         <a-icon type="down" />
       </span>
       <a-menu slot="overlay">
-        <a-menu-item>
+        <a-menu-item v-permissionRoute="'user-setting-security'">
           <span @click="$router.push('/user/setting/security')">
             安全设置
           </span>
         </a-menu-item>
-        <a-menu-item>
+        <a-menu-item v-permissionRoute="'user-setting-data'">
           <span @click="$router.push('/user/setting/info')"> 基本信息 </span>
         </a-menu-item>
-        <a-menu-item>
+        <a-menu-item v-permissionRoute="'user-setting-auth'">
           <span @click="$router.push('/user/setting/realname')">
             实名认证
           </span>
