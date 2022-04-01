@@ -215,7 +215,7 @@ export default {
         roleIds: undefined,
         verificationCode: ""
       },
-      pwdReg: /(?=.*[0-9])(?=.*[a-z]).{6,20}/,
+      pwdReg: /(?=.*[0-9])(?=.*[a-zA-Z]).{6,20}/,
       rules: {
         nickname: [
           {
