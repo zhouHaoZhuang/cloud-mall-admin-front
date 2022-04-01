@@ -89,11 +89,11 @@ export default {
         },
         {
           title: "退票申请反馈时间",
-          dataIndex: "feedbackTimeShow",
+          dataIndex: "refundFeedbackTimeShow",
         },
         {
           title: "退票申请反馈说明",
-          dataIndex: "feedbackRemark"
+          dataIndex: "refundFeedbackRemark"
         },
         {
           title: "操作",
