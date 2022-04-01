@@ -83,31 +83,33 @@
             {{ text | formatDate }}
           </div>
           <span slot="action" slot-scope="text, record">
-            <a-button type="link" @click="goDetail(record)"> 详情 </a-button>
-            <a-divider type="vertical" v-if="record.status == 0" />
-            <a-button
-              type="link"
-              @click="goUpdate(record)"
-              v-if="record.status == 0"
-            >
-              编辑
-            </a-button>
-            <a-divider type="vertical" v-if="record.status == 0" />
-            <a-button
-              type="danger"
-              @click="delOrder(record)"
-              v-if="record.status == 0"
-            >
-              删除
-            </a-button>
-            <a-divider type="vertical" />
-            <a-button
-              type="link"
-              @click="cancelOrder(record)"
-              :disabled="record.status !== 2"
-            >
-              取消
-            </a-button>
+            <a-space>
+              <a-button type="link" @click="goDetail(record)"> 详情 </a-button>
+
+              <a-button
+                type="link"
+                @click="goUpdate(record)"
+                v-if="record.status == 0"
+              >
+                编辑
+              </a-button>
+
+              <a-button
+                type="danger"
+                @click="delOrder(record)"
+                v-if="record.status == 0"
+              >
+                删除
+              </a-button>
+
+              <a-button
+                type="link"
+                @click="cancelOrder(record)"
+                :disabled="record.status !== 2"
+              >
+                取消
+              </a-button>
+            </a-space>
           </span>
         </a-table>
       </div>
@@ -148,8 +150,8 @@ export default {
       visible: false, //是否显示新增申请申请
       detailInfo: {}, //详情信息
       detailInfos: {},
-      balance:undefined,
-      overviewData:{},
+      balance: undefined,
+      overviewData: {},
       listQuery: {
         currentPage: 1,
         pageSize: 10,
@@ -213,14 +215,13 @@ export default {
   },
   created() {
     this.getList();
-      this.getDashboardData()
+    this.getDashboardData();
   },
   methods: {
     // 查询
     search() {
       this.listQuery.currentPage = 1;
       this.getList();
-    
     },
     // 查询表格数据
     getList() {
@@ -261,7 +262,7 @@ export default {
           this.visibleDetail = true;
         });
     },
-     getDashboardData() {
+    getDashboardData() {
       this.$store.dispatch("dashboard/getBalanceAndCoupon").then((res) => {
         const newData = {
           balance: {},
@@ -276,7 +277,7 @@ export default {
         });
         this.overviewData = { ...newData };
         this.balance = this.overviewData.balance.balance;
-        console.log(this.balance,'this.balance');
+        console.log(this.balance, "this.balance");
       });
     },
     //编辑

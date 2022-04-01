@@ -41,7 +41,7 @@
     "vuex-persistedstate": "^4.1.0",
     "webpack": "5.0.0",
     "whatwg-fetch": "^3.6.2",
-    "xlsx": "^0.16.0"
+    "xlsx": "^0.16.9"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.5.0",
