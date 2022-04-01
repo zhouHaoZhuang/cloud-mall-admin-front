@@ -31,7 +31,7 @@
           :columns="columns"
           :data-source="data"
           rowKey="id"
-          :pagination="false"
+          :pagination="paginationProps"
         >
           <div slot="type" slot-scope="text">
             {{ roleTypeEnum[text] }}
