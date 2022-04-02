@@ -1,6 +1,6 @@
 <template>
   <div class="record">
-    <div class="search">
+    <!-- <div class="search">
       <a-input-group compact enterButton="true">
         <a-select v-model="listQuery.detailType" style="width: 250px">
           <a-select-option value=""> 充值方式 </a-select-option>
@@ -14,7 +14,7 @@
         </a-select>
         <a-button type="primary" @click="onSearch">查询</a-button>
       </a-input-group>
-    </div>
+    </div> -->
     <div>
       <a-table
         :columns="columns"
@@ -82,7 +82,8 @@ export default {
           key: "finishTime",
           sorter: (a, b) => {
             return (
-              new Date(a.finishTime).getTime() - new Date(b.finishTime).getTime()
+              new Date(a.finishTime).getTime() -
+              new Date(b.finishTime).getTime()
             );
           },
           scopedSlots: {
@@ -110,7 +111,7 @@ export default {
         pageSize: 10,
         total: 0,
         sorter: "",
-        detailType: ""
+        detailType: "1"
       },
       paginationProps: {
         showQuickJumper: true,
