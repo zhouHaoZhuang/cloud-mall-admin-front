@@ -17,7 +17,6 @@
       </div> -->
       <!-- 日历 -->
       <div class="btn2">
-        
         <span class="month-text">账期：</span>
         <a-form-model-item>
           <a-month-picker
@@ -65,48 +64,46 @@ export default {
         search: "",
         currentPage: 1,
         pageSize: 10,
-        total: 0
+        total: 0,
       },
       columns: [
         {
           title: "账期",
-          dataIndex: "billNo"
+          dataIndex: "billNo",
         },
-       
-        
+
         {
           title: "计费项",
-          dataIndex: "billItem"
+          dataIndex: "billItem",
         },
         {
           title: "单价",
-          dataIndex: "unitPrice"
+          dataIndex: "unitPrice",
         },
         {
           title: "单价单位",
-          dataIndex: "unitPricePerUnit"
+          dataIndex: "unitPricePerUnit",
         },
         {
           title: "实际用量",
           dataIndex: "useData",
-          scopedSlots: { customRender: "useData" }
+          scopedSlots: { customRender: "useData" },
         },
         {
           title: "账单金额",
-          dataIndex: "actualAmount"
+          dataIndex: "actualAmount",
         },
 
         {
           title: "实付金额",
           dataIndex: "balancePay",
-          scopedSlots: { customRender: "balancePay" }
+          scopedSlots: { customRender: "balancePay" },
         },
         {
           title: "欠费金额",
           dataIndex: "owe",
-          key: "2"
+          key: "2",
         },
-      
       ],
       data: [],
       loading: false,
@@ -119,8 +116,8 @@ export default {
             total / this.listQuery.pageSize
           )} 页`,
         onChange: this.quickJump,
-        onShowSizeChange: this.onShowSizeChange
-      }
+        onShowSizeChange: this.onShowSizeChange,
+      },
     };
   },
   created() {
@@ -145,7 +142,7 @@ export default {
     getList() {
       this.loading = true;
       this.formatSearch();
-      this.listQuery["qp-billType-eq"] = "month"
+      this.listQuery["qp-billType-eq"] = "month";
 
       this.$getList("billmanage/getList", this.listQuery)
         .then((res) => {
@@ -159,9 +156,7 @@ export default {
     //查询之前转化查询条件格式
     datePickerOnOk(value) {
       if (value.length !== 0) {
-        this.listQuery["qp-billPeriod-eq"] = moment(value[0]).format(
-          "YYYY-MM"
-        );
+        this.listQuery["qp-billPeriod-eq"] = moment(value._d).format("YYYY-MM");
       } else {
         this.listQuery["qp-billPeriod-eq"] = "";
       }
@@ -180,8 +175,8 @@ export default {
       this.listQuery.currentPage = current;
       this.listQuery.pageSize = pageSize;
       this.getList();
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -213,7 +208,7 @@ export default {
       .btn2 {
         margin-top: -4px;
         display: flex;
-        .month-text{
+        .month-text {
           line-height: 36px;
           margin-right: 10px;
         }
