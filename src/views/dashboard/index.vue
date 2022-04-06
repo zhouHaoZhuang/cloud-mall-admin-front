@@ -85,21 +85,6 @@
             </div>
           </div>
         </div>
-        <!-- 消费趋势 -->
-        <div class="public-box trend">
-          <div class="public-top">
-            <div class="public-tit">消费趋势</div>
-            <!-- <div class="jump">查看></div> -->
-          </div>
-          <div id="echarts" class="echarts-pie-content"></div>
-          <div class="consumption text-overflow">
-            本月消费：<span class="font-bold">{{ trendOut }}</span>
-          </div>
-          <div class="income text-overflow">
-            本月收入：
-            <span class="font-bold">{{ trendIn }}</span>
-          </div>
-        </div>
         <!-- 待办事项 -->
         <div class="public-box todolist">
           <div class="public-tit">待办事项</div>
@@ -127,6 +112,29 @@
             </div> -->
           </div>
         </div>
+        <div class="outbox">
+          <h1 style="font-weight: 600; font-size: 18px">专属客服</h1>
+          <img
+            width="140px"
+            class="imgclass"
+            src="@/assets/img/menu/weixinphoto.png"
+          />
+          <ul class="right-box">
+            <li><a-icon type="user" class="left-icon" />客服姓名:</li>
+            <li>
+              <a-icon type="phone" :rotate="90" class="left-icon" />联系方式:
+            </li>
+            <li><a-icon type="qq" class="left-icon" />qq号:</li>
+            <li><a-icon type="wechat" class="left-icon" />微信号:</li>
+          </ul>
+          <ul class="right-box">
+            <li>王大富</li>
+            <li>15201010202</li>
+            <li>11111111</li>
+            <li>wff033001</li>
+          </ul>
+          <span class="bottom-title">客服微信二维码</span>
+        </div>
       </div>
       <!-- 已开通产品 + 新闻公告 -->
       <div class="item">
@@ -146,6 +154,21 @@
                 <div class="info text-overflow">极速稳定高弹性的计算服务</div>
               </div>
             </div>
+          </div>
+        </div>
+        <!-- 消费趋势 -->
+        <div class="public-box trend">
+          <div class="public-top">
+            <div class="public-tit">消费趋势</div>
+            <!-- <div class="jump">查看></div> -->
+          </div>
+          <div id="echarts" class="echarts-pie-content"></div>
+          <div class="consumption text-overflow">
+            本月消费：<span class="font-bold">{{ trendOut }}</span>
+          </div>
+          <div class="income text-overflow">
+            本月收入：
+            <span class="font-bold">{{ trendIn }}</span>
           </div>
         </div>
         <!-- 新闻公告 -->
@@ -172,7 +195,7 @@ export default {
   computed: {
     ...mapState({
       userInfo: (state) => state.user.userInfo,
-      userRealInfo: (state) => state.user.userRealInfo
+      userRealInfo: (state) => state.user.userRealInfo,
     }),
     realName() {
       if (this.userRealInfo && this.userRealInfo.realName) {
@@ -180,7 +203,7 @@ export default {
       } else {
         return this.userRealInfo.phoneNumber;
       }
-    }
+    },
   },
   data() {
     return {
@@ -194,8 +217,8 @@ export default {
       overviewData: {
         balance: {},
         coupon: {
-          balance: "0.00"
-        }
+          balance: "0.00",
+        },
       },
       // 消费趋势折线图数据
       trendData: {
@@ -206,18 +229,18 @@ export default {
         label: {
           show: true,
           position: "center",
-          formatter: "本月统计"
+          formatter: "本月统计",
         },
         emphasis: {
           label: {
             show: true,
-            formatter: "本月统计"
-          }
+            formatter: "本月统计",
+          },
         },
         labelLine: {
-          show: false
+          show: false,
         },
-        data: []
+        data: [],
       },
       trendIn: "0.00",
       trendOut: "0.00",
@@ -226,8 +249,8 @@ export default {
       // 待办事项对象
       todoObj: {
         ecsCount: 0,
-        toPayOrder: 0
-      }
+        toPayOrder: 0,
+      },
     };
   },
   created() {
@@ -236,10 +259,6 @@ export default {
     this.getAlllMonth();
   },
   mounted() {
-    window.addEventListener("resize", () => {
-      this.chartLine.resize(); //刷新画布 监听屏幕大小，来刷新画布
-    });
-    //获取每一天的日期
   },
   methods: {
     //获取当月所有消费和收入总和
@@ -269,8 +288,8 @@ export default {
         const newData = {
           balance: {},
           coupon: {
-            balance: "0.00"
-          }
+            balance: "0.00",
+          },
         };
         res.data.forEach((ele) => {
           if (ele.accountType === 1) {
@@ -290,7 +309,7 @@ export default {
         this.outMoney = this.allDays.map((ele) => {
           const newObj = data.O.find((item) => item.time === ele);
           return {
-            dealAmount: newObj !== undefined ? newObj.dealAmount : 0
+            dealAmount: newObj !== undefined ? newObj.dealAmount : 0,
           };
         });
         this.outMoney = this.outMoney.map((ele) => {
@@ -301,13 +320,16 @@ export default {
         this.inMoney = this.allDays.map((ele) => {
           const newObj = data.I.find((item) => item.time === ele);
           return {
-            dealAmount: newObj !== undefined ? newObj.dealAmount : 0
+            dealAmount: newObj !== undefined ? newObj.dealAmount : 0,
           };
         });
         this.inMoney = this.inMoney.map((ele) => {
           return ele.dealAmount;
         });
         this.initEcharts();
+        window.addEventListener("resize", () => {
+      this.chartLine.resize(); //刷新画布 监听屏幕大小，来刷新画布
+    });
       });
       // 获取服务器数量
       this.$store.dispatch("dashboard/getCloudCount").then((res) => {
@@ -323,7 +345,7 @@ export default {
     // 跳转充值
     goRecharge() {
       this.$router.push({
-        path: "/user/finance/recharge"
+        path: "/user/finance/recharge",
       });
     },
     // 跳转
@@ -334,7 +356,7 @@ export default {
       this.charts = echarts.init(document.getElementById("echarts"));
       const option = {
         tooltip: {
-          trigger: "axis"
+          trigger: "axis",
         },
         color: ["#9ECBFB", "#FECD84"],
         legend: {
@@ -345,27 +367,27 @@ export default {
           data: [
             {
               name: "消费记录(元)",
-              icon: "rect"
+              icon: "rect",
             },
             {
               name: "收入记录(元)",
-              icon: "rect"
-            }
-          ]
+              icon: "rect",
+            },
+          ],
         },
         xAxis: {
           type: "category",
           boundaryGap: false,
           data: this.allDays,
           axisTick: {
-            show: false
-          }
+            show: false,
+          },
         },
         yAxis: {
           type: "value",
           splitLine: {
-            show: false
-          }
+            show: false,
+          },
         },
 
         series: [
@@ -375,7 +397,7 @@ export default {
             smooth: true,
             stack: "Total",
             symbol: "none",
-            data: this.outMoney
+            data: this.outMoney,
           },
           {
             name: "收入记录(元)",
@@ -384,13 +406,13 @@ export default {
             type: "line",
             smooth: true,
             stack: "Total",
-            data: this.inMoney
-          }
-        ]
+            data: this.inMoney,
+          },
+        ],
       };
       this.charts.setOption(option);
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -472,7 +494,7 @@ export default {
       margin-bottom: 24px;
       justify-content: space-between;
       .overview {
-        width: 410px;
+        width: 26%;
         height: 294px;
         position: relative;
         .box-one {
@@ -515,23 +537,53 @@ export default {
         }
       }
       .trend {
-        width: 770px;
+        width: 44%;
         height: 294px;
         position: relative;
       }
       .todolist {
-        width: 460px;
+        width: 44%;
         height: 294px;
         position: relative;
+      }
+      .outbox {
+        width: 28%;
+        height: 294px;
+        background-color: #ffffff;
+        padding: 30px;
+        position: relative;
+        .imgclass {
+          display: inline-block;
+          float: left;
+        }
+        .right-box {
+          margin-top: -10px;
+          float: left;
+          list-style: none;
+          line-height: 40px;
+          font-size: 12px;
+          color: #000000;
+          .left-icon {
+            margin-right: 6px;
+          }
+        }
+        .bottom-title {
+          position: absolute;
+          bottom: 40px;
+          left: 60px;
+          font-size: 12px;
+          color: #000000;
+        }
       }
       .news:hover,
       .overview:hover,
       .trend:hover,
-      .todolist:hover {
+      .todolist:hover,
+      .outbox:hover {
         box-shadow: 0px 0px 13px 7px rgba(189, 192, 253, 0.23);
       }
       .news {
-        width: 460px;
+        width: 28%;
         height: 294px;
         position: relative;
       }
@@ -547,7 +599,7 @@ export default {
         box-shadow: 0px 0px 13px 7px rgba(189, 192, 253, 0.23);
       }
       .open-product {
-        width: 1210px;
+        width: 26%;
         height: 294px;
         position: relative;
       }

@@ -1,5 +1,7 @@
 <template>
   <div class="right-container">
+    <!-- 专属客服 -->
+    <Customer />
     <!-- <icon-font type="iconwuliuguanli" style="font-size: 30px"></icon-font> -->
     <!-- 帮助文档 -->
     <!-- <Help /> -->
@@ -10,7 +12,7 @@
     <!-- 工单 -->
     <WorkOrder v-permissionRoute="'user-workOrder'" />
     <!-- 用户 -->
-    <User /> 
+    <User />
   </div>
 </template>
 
@@ -21,24 +23,27 @@ import Message from "./message";
 import Price from "./price";
 import WorkOrder from "./workOrder";
 import User from "./user";
+import Customer from "./customer";
+
 export default {
   components: {
     // Help,
     Message,
     // Price,
     WorkOrder,
-    User
+    User,
+    Customer,
   },
   computed: {
     ...mapState({
-      menuOpen: (state) => state.setting.menuOpen
-    })
+      menuOpen: (state) => state.setting.menuOpen,
+    }),
   },
   data() {
     return {};
   },
   created() {},
-  methods: {}
+  methods: {},
 };
 </script>
 
