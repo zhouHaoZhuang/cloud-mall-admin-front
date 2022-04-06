@@ -21,7 +21,6 @@
             <a-select v-model="listQuery.key" style="width: 100px">
               <a-select-option value="orderNo2"> 退单编号 </a-select-option>
               <a-select-option value="orderNo"> 订单编号 </a-select-option>
-              <a-select-option value="productName"> 产品 </a-select-option>
             </a-select>
             <a-input-search
               allowClear
@@ -50,7 +49,7 @@
         </a-select>
         <a-select
           class="right-skew"
-          v-model="listQuery.payStatus"
+          v-model="listQuery.tradeStatus"
           placeholder="支付状态"
           allowClear
           style="width: 110px"
