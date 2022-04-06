@@ -85,6 +85,21 @@
             </div>
           </div>
         </div>
+        <!-- 消费趋势 -->
+        <div class="public-box trend">
+          <div class="public-top">
+            <div class="public-tit">消费趋势</div>
+            <!-- <div class="jump">查看></div> -->
+          </div>
+          <div id="echarts" class="echarts-pie-content"></div>
+          <div class="consumption text-overflow">
+            本月消费：<span class="font-bold">{{ trendOut }}</span>
+          </div>
+          <div class="income text-overflow">
+            本月收入：
+            <span class="font-bold">{{ trendIn }}</span>
+          </div>
+        </div>
         <!-- 待办事项 -->
         <div class="public-box todolist">
           <div class="public-tit">待办事项</div>
@@ -112,7 +127,7 @@
             </div> -->
           </div>
         </div>
-        <div class="outbox">
+        <!-- <div class="outbox">
           <h1 style="font-weight: 600; font-size: 18px">专属客服</h1>
           <img
             width="140px"
@@ -134,7 +149,7 @@
             <li>wff033001</li>
           </ul>
           <span class="bottom-title">客服微信二维码</span>
-        </div>
+        </div> -->
       </div>
       <!-- 已开通产品 + 新闻公告 -->
       <div class="item">
@@ -156,21 +171,7 @@
             </div>
           </div>
         </div>
-        <!-- 消费趋势 -->
-        <div class="public-box trend">
-          <div class="public-top">
-            <div class="public-tit">消费趋势</div>
-            <!-- <div class="jump">查看></div> -->
-          </div>
-          <div id="echarts" class="echarts-pie-content"></div>
-          <div class="consumption text-overflow">
-            本月消费：<span class="font-bold">{{ trendOut }}</span>
-          </div>
-          <div class="income text-overflow">
-            本月收入：
-            <span class="font-bold">{{ trendIn }}</span>
-          </div>
-        </div>
+        
         <!-- 新闻公告 -->
         <div class="public-box news">
           <div class="public-top">
@@ -541,7 +542,7 @@ export default {
         position: relative;
       }
       .todolist {
-        width: 44%;
+        width: 28%;
         height: 294px;
         position: relative;
       }
@@ -598,7 +599,7 @@ export default {
         box-shadow: 0px 0px 13px 7px rgba(189, 192, 253, 0.23);
       }
       .open-product {
-        width: 26%;
+        width: 71%;
         height: 294px;
         position: relative;
       }
@@ -631,7 +632,7 @@ export default {
         .income {
           // max-width: 140px;
           position: absolute;
-          left: 582px;
+          left: 542px;
         }
         .consumption {
           top: 126px;
