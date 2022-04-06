@@ -258,7 +258,11 @@ export default {
     this.getOrderAndRenewCount();
     this.getAlllMonth();
   },
-  mounted() {},
+  mounted() {
+    window.addEventListener("resize", () => {
+      this.charts.resize(); //刷新画布 监听屏幕大小，来刷新画布
+    });
+  },
   methods: {
     //获取当月所有消费和收入总和
     getAlllMonth() {
@@ -326,9 +330,6 @@ export default {
           return ele.dealAmount;
         });
         this.initEcharts();
-        window.addEventListener("resize", () => {
-          this.chartLine.resize(); //刷新画布 监听屏幕大小，来刷新画布
-        });
       });
       // 获取服务器数量
       this.$store.dispatch("dashboard/getCloudCount").then((res) => {
