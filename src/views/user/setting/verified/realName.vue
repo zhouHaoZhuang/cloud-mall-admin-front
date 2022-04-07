@@ -1,6 +1,6 @@
 <template>
   <div class="real-name">
-    <h2>实名认证</h2>
+    <h2 class="ny-panel-title">实名认证</h2>
     <p>请选择认证方式</p>
     <div class="real-name-img">
       <div @click="goPersonalRealName">

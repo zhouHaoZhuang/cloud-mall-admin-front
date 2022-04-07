@@ -3,7 +3,7 @@
     <!-- 云服务器管理 -->
     <div class="cloud-top">
       <div class="left">
-        <div class="title">云服务器续费管理</div>
+        <div class="ny-panel-title">云服务器续费管理</div>
       </div>
     </div>
     <!-- 按钮操作 -->

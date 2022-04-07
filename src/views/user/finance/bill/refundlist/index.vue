@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>退票列表</h1>
+    <h1 class="ny-panel-title">退票列表</h1>
     <div style="margin-bottom: 20px">
       <a-input
         v-model="listQuery.invoiceNo"

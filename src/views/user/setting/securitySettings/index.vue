@@ -1,6 +1,6 @@
 <template>
   <div class="security-settings-container">
-    <h2>安全设置</h2>
+    <h2 class="ny-panel-title">安全设置</h2>
     <div class="security-settings-user">
       <div>
         <img src="@/assets/img/user.png" alt="" />

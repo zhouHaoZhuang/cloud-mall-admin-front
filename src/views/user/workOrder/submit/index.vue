@@ -4,7 +4,7 @@
       <div v-show="activeKey === 4" class="icon-wrap" @click="activeKey = 1">
         <a-icon type="left" />
       </div>
-      <span class="back">提交工单</span>
+      <span class="ny-panel-title">提交工单</span>
     </h2>
     <!-- 步骤组件 -->
     <Step :step="activeKey" />

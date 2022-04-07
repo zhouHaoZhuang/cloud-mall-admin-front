@@ -123,7 +123,7 @@
         </div>
       </div>
     </div>
-    <p>开票记录</p>
+    <p class="ny-panel-title">开票记录</p>
     <div style="margin: 20px 0">
       <a-input
         style="width: 200px"

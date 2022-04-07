@@ -378,8 +378,8 @@ export default {
       display: inline-block;
       margin: 0;
       height: 40px;
-      line-height: 40px;
       font-size: 22px;
+    font-weight: 600;
       color: #272829;
     }
     .btns {
