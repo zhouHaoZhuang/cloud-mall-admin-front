@@ -5,14 +5,14 @@ export const runningStatusEnum = {
   2: "已停止",
   3: "已过期",
   4: "停止中",
-  5: "启动中",
+  5: "启动中"
 };
 // 用于下拉选择的渲染
 export const runningStatusSelect = {
   0: "创建中",
   1: "运行中",
   2: "已停止",
-  3: "已过期",
+  3: "已过期"
 };
 // 云服务器-购买时长
 export const regionEnum = {
@@ -27,7 +27,7 @@ export const regionEnum = {
   9: "9个月",
   12: "1年",
   24: "2年",
-  36: "3年",
+  36: "3年"
 };
 // 订单状态
 export const orderStatusEnum = {
@@ -35,7 +35,7 @@ export const orderStatusEnum = {
   "-1": "交易关闭",
   1: "待支付",
   3: "支付中",
-  5: "交易完成",
+  5: "交易完成"
 };
 // 订单来源/用途
 export const tradeTypeEnum = {
@@ -44,7 +44,7 @@ export const tradeTypeEnum = {
   25: "云服务升配",
   35: "云服务降配",
   45: "交易关闭",
-  55: "服务器退订",
+  55: "服务器退订"
 };
 // 创建快照-选择时长-按天
 export const snapshotDayEnum = {
@@ -52,7 +52,7 @@ export const snapshotDayEnum = {
   10: "10天",
   15: "15天",
   20: "20天",
-  30: "30天",
+  30: "30天"
 };
 // 创建快照-选择时长-按月
 export const snapshotMonthEnum = {
@@ -67,14 +67,14 @@ export const snapshotMonthEnum = {
   9: "9个月",
   12: "12个月",
   24: "24个月",
-  36: "36个月",
+  36: "36个月"
 };
 // 线下汇款审核状态
 export const offlineRemittance = {
   0: "待审核",
   1: "待充值",
   2: "未通过审核",
-  9: "通过审核",
+  9: "通过审核"
 };
 // 发票开票记录状态
 export const invoiceStatusEnum = {
@@ -86,14 +86,14 @@ export const invoiceStatusEnum = {
   6: "退票中（退票申请中）",
   7: "退票申请取消",
   8: "退票申请已拒绝",
-  9: "已退票（退票申请确认）",
+  9: "已退票（退票申请确认）"
 };
 // 收支明细
 export const detailsMap = {
   0: "待审核",
   1: "待充值",
   2: "支付失败",
-  9: "支付完成",
+  9: "支付完成"
 };
 // 地域列表map
 export const regionDataEnum = {
@@ -122,13 +122,13 @@ export const regionDataEnum = {
   "us-west-1": "美国（硅谷）",
   "eu-west-1": "英国（伦敦）",
   "me-east-1": "阿联酋（迪拜）",
-  "eu-central-1": "德国（法兰克福）",
+  "eu-central-1": "德国（法兰克福）"
 };
 
 // 验证方式
 export const verifyTypeEnum = {
   0: "支付宝芝麻信用认证",
-  1: "腾讯云认证",
+  1: "腾讯云认证"
   // 2: "e签宝认证"
 };
 // 充值方式map
@@ -139,7 +139,7 @@ export const rechargeTypeMap = {
   4: "退款",
   5: "冻结",
   6: "资金解冻",
-  7: "扣除冻结",
+  7: "扣除冻结"
 };
 
 // 充值状态map数据
@@ -147,19 +147,19 @@ export const detailTypeMapData = {
   0: "待支付",
   1: "已取消",
   2: "支付失败",
-  9: "支付完成",
+  9: "支付完成"
 };
 
 // 工单状态
 export const workOrderStatusEnum = {
   1: "待接单",
   2: "接单处理中",
-  3: "处理完成",
+  3: "处理完成"
 };
 // 角色类型map
 export const roleTypeEnum = {
   0: "系统角色",
-  1: "自建角色",
+  1: "自建角色"
 };
 //提现申请状态
 export const applyStatus = {
@@ -168,7 +168,7 @@ export const applyStatus = {
   2: "已提交",
   3: "已驳回",
   4: "已取消",
-  5: "待处理",
+  5: "待处理"
 };
 // cdn状态map
 export const cdnStatusEnum = {
@@ -316,3 +316,13 @@ export const errorCodeEnum = {
     info: "服务器作为网关或代理无法及时从上游服务器收到请求时返回此代码"
   }
 };
+
+export const snapshotType = {
+  auto: "自动快照",
+  user: "用户快照"
+};
+
+export const sourceDiskType ={
+  system:'系统盘',
+  data:'数据盘'
+}

@@ -20,13 +20,38 @@
         :loading="tableLoading"
         :columns="columns"
         :data-source="data"
-        :scroll="{ x: 800 }"
+        :scroll="{ x: 600 }"
         :pagination="paginationProps"
         :row-selection="{
           selectedRowKeys: selectedRowKeys,
           onChange: onSelectChange
         }"
       >
+        <div slot="instantType" slot-scope="text">
+          {{ text == "true" ? "极速快照" : "普通快照" }}
+        </div>
+        <div slot="snapshotName" slot-scope="text, record">
+          {{ record.snapshotInnerId }} / {{ text }}
+        </div>
+        <div slot="snapshotType" slot-scope="text">
+          {{ snapshotType[text] }}
+        </div>
+        <div slot="instantAccess" slot-scope="text, record">
+          {{ record.instantAccess == "true" ? "已开启" : "未开启" }}
+        </div>
+        <div slot="sourceDiskSize" slot-scope="text">{{ text }}GiB</div>
+        <div slot="encrypted" slot-scope="text">
+          {{ text == "false" ? "未加密" : "已加密" }}
+        </div>
+        <div slot="sourceDiskType" slot-scope="text">
+          {{ sourceDiskType[text] }}
+        </div>
+        <div v-if="text" slot="createTime" slot-scope="text">
+          {{ text | formatDate }}
+        </div>
+        <div v-if="text" slot="retentionDays" slot-scope="text">
+          {{ text | formatDate }}
+        </div>
         <!-- 操作 -->
         <div slot="action" slot-scope="text, record">
           <div>
@@ -38,15 +63,22 @@
       </a-table>
     </div>
     <!-- 创建快照 -->
-    <CreateSnapshoot v-model="addVisible" />
+    <CreateSnapshoot
+      v-model="addVisible"
+      :diskData="diskData"
+      :innerId="innerId"
+      @success="getList"
+    />
     <!-- 删除快照 -->
     <a-modal v-model="delVisible" title="删除快照" @ok="toDel">
       <p>
         您所选的{{ multipleSelection.length }}个快照
         将执行删除快照操作，您是否确定操作？
       </p>
-      <div v-for="(item, index) in multipleSelection" :key="index">
-        <a-input disabled></a-input>
+      <div v-for="(item, index) in snapshotIds" :key="index">
+        <div class="snapshotId">
+          <span>{{ item }}</span>
+        </div>
       </div>
     </a-modal>
     <!-- 回滚磁盘 -->
@@ -57,7 +89,10 @@
     >
       <p>{{ rollbackText }}</p>
       <template slot="footer">
-        <a-button type="primary" :disabled="detail.runningStatus == 2"
+        <a-button
+          type="primary"
+          :disabled="detail.runningStatus !== 2"
+          @click="toResetDisk"
           >确认</a-button
         >
         <a-button @click="rollbackVisible = false">取消</a-button>
@@ -69,6 +104,7 @@
 <script>
 import moment from "moment";
 import CreateSnapshoot from "@/components/Cloud/CloudModal/createSnapshoot.vue";
+import { snapshotType, sourceDiskType } from "@/utils/enum.js";
 export default {
   components: {
     CreateSnapshoot
@@ -82,95 +118,82 @@ export default {
   },
   data() {
     return {
+      snapshotType,
+      sourceDiskType,
       listQuery: {
-        key: "ip",
-        search: "",
-        residueDay: undefined,
         currentPage: 1,
         pageSize: 10,
         total: 0
       },
       data: [],
+      diskData: [], // 云盘数据
       multipleSelection: [],
+      snapshotIds: [],
       columns: [
         {
           title: "快照ID/名称",
-          dataIndex: "instanceName",
-          width: 200,
-          scopedSlots: { customRender: "instanceName" }
+          dataIndex: "snapshotName",
+          scopedSlots: { customRender: "snapshotName" }
         },
         {
           title: "快照类型",
-          dataIndex: "regionId",
-          scopedSlots: { customRender: "regionId" },
-          width: 120
+          dataIndex: "instantAccess",
+          scopedSlots: { customRender: "instantType" }
         },
         {
           title: "快照来源",
-          dataIndex: "ip",
-          width: 150,
-          scopedSlots: { customRender: "ip" }
+          dataIndex: "snapshotType",
+          scopedSlots: { customRender: "snapshotType" }
         },
         {
           title: "快照极速可用",
-          dataIndex: "ips",
-          width: 150,
-          scopedSlots: { customRender: "ips" }
+          dataIndex: "instantAccess1",
+          scopedSlots: { customRender: "instantAccess" }
         },
         {
           title: "云盘ID",
-          dataIndex: "ipa",
-          width: 150,
-          scopedSlots: { customRender: "ipa" }
+          dataIndex: "sourceDiskId"
         },
         {
           title: "云盘容量",
-          dataIndex: "ipas",
-          width: 150,
-          scopedSlots: { customRender: "ipas" }
+          dataIndex: "sourceDiskSize",
+          scopedSlots: { customRender: "sourceDiskSize" }
         },
         {
           title: "云盘属性",
-          dataIndex: "ipasx",
-          width: 150,
-          scopedSlots: { customRender: "ipasx" }
+          dataIndex: "sourceDiskType",
+          scopedSlots: { customRender: "sourceDiskType" }
         },
         {
           title: "已加密/未加密",
-          dataIndex: "password",
-          width: 150,
-          scopedSlots: { customRender: "password" }
+          dataIndex: "encrypted",
+          scopedSlots: { customRender: "encrypted" }
         },
         {
           title: "创建时间",
           dataIndex: "createTime",
-          width: 150,
           sorter: (a, b) => moment(a.createTime) - moment(b.createTime),
           scopedSlots: { customRender: "createTime" }
         },
         {
           title: "保留时间",
-          dataIndex: "endTimeStr",
-          width: 150,
-          sorter: (a, b) => moment(a.endTimeStr) - moment(b.endTimeStr),
-          scopedSlots: { customRender: "endTimeStr" }
+          dataIndex: "retentionDays",
+          sorter: (a, b) => moment(a.retentionDays) - moment(b.retentionDays),
+          scopedSlots: { customRender: "retentionDays" }
         },
         {
           title: "进度",
-          dataIndex: "process",
-          width: 120,
-          scopedSlots: { customRender: "process" }
+          dataIndex: "progress"
         },
         {
           title: "状态",
           dataIndex: "status",
-          width: 130
+          scopedSlots: { customRender: "status" }
         },
         {
           title: "操作",
           dataIndex: "action",
-          width: 170,
-          fixed: "right",
+          // fixed: "right",
           scopedSlots: { customRender: "action" }
         }
       ],
@@ -188,6 +211,7 @@ export default {
       selectedRowKeys: [],
       // 弹窗相关------start
       addVisible: false,
+      innerId: undefined,
       delVisible: false,
       rollbackVisible: false,
       rollbackText: "",
@@ -197,6 +221,7 @@ export default {
   },
   created() {
     this.getList();
+    this.getDescribeDisks();
   },
   activated() {
     this.getList();
@@ -206,9 +231,8 @@ export default {
     getList() {
       this.tableLoading = true;
       this.$store
-        .dispatch("renewcloud/cloudList", {
-          ...this.listQuery,
-          [this.listQuery.key]: this.listQuery.search
+        .dispatch("snapshoot/getList", {
+          ...this.listQuery
         })
         .then((res) => {
           this.data = [...res.data.list];
@@ -216,6 +240,17 @@ export default {
         })
         .finally(() => {
           this.tableLoading = false;
+        });
+    },
+    //查询云盘数据
+    getDescribeDisks() {
+      this.$store
+        .dispatch("snapshoot/getDescribeDisks", {
+          instanceId: this.detail.instanceId,
+          regionId: this.detail.regionId
+        })
+        .then((res) => {
+          this.diskData = res.data.disk;
         });
     },
     quickJump(current) {
@@ -231,21 +266,28 @@ export default {
     onSelectChange(selectedRowKeys, record) {
       this.selectedRowKeys = selectedRowKeys;
       this.multipleSelection = record.map((item) => {
+        console.log(item, "item");
         return item.id;
+      });
+      this.snapshotIds = record.map((item) => {
+        return item.snapshotInnerId;
       });
     },
     //点击创建快照
     toAdd() {
       this.addVisible = true;
+      this.innerId = this.detail.instanceId;
+      console.log(this.detail, "dddddddddd");
     },
     // 点击回滚磁盘
     toRollback(record) {
       this.modalDetail = record;
       this.rollbackVisible = true;
       if (this.detail.runningStatus == 2) {
-        this.rollbackText = `只有已停止的实例才可以回滚云盘，当前实例 i-bp1aowywz67oqml38nek 的状态未停止。`;
+        let newTime = moment(record.createTime).format("YYYY-MM-DD HH:mm:ss");
+        this.rollbackText = `对于云盘${record.sourceDiskId}将进行回滚操作，回滚至${newTime}快照数据，您是否确定操作？`;
       } else {
-        this.rollbackText = `对于云盘YP2022022800001将进行回滚操作，回滚至2022年3月29日 16：03快照数据，您是否确定操作？`;
+        this.rollbackText = `只有已停止的实例才可以回滚云盘，当前实例${this.detail.instanceName} 的状态未停止。`;
       }
     },
     // 点击删除快照
@@ -254,7 +296,28 @@ export default {
       this.delVisible = true;
     },
     //确认删除
-    toDel() {}
+    toDel() {
+      let newStr = "";
+      newStr = this.multipleSelection.toString();
+      this.$store.dispatch("snapshoot/del", newStr).then((res) => {
+        this.$message.success("删除成功");
+        this.getList();
+        this.delVisible = false;
+      });
+    },
+    //确认回滚
+    toResetDisk() {
+      this.$store
+        .dispatch("snapshoot/resetDisk", {
+          diskId: this.modalDetail.sourceDiskId,
+          snapshotId: this.modalDetail.snapshotInnerId
+        })
+        .then((res) => {
+          this.$message.success("操作成功");
+          this.getList();
+          this.rollbackVisible = false;
+        });
+    }
   }
 };
 </script>
@@ -350,5 +413,9 @@ export default {
       }
     }
   }
+}
+.snapshotId {
+  border: 1px solid #ccc;
+  padding: 5px 15px;
 }
 </style>
