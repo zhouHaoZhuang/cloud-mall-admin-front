@@ -316,3 +316,13 @@ export const errorCodeEnum = {
     info: "服务器作为网关或代理无法及时从上游服务器收到请求时返回此代码"
   }
 };
+
+export const snapshotType = {
+  auto: "自动快照",
+  user: "用户快照"
+};
+
+export const sourceDiskType ={
+  system:'系统盘',
+  data:'数据盘'
+}

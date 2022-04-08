@@ -574,7 +574,7 @@ export default {
       this.$router.push({
         path: "/control/server/detail",
         query: {
-          id: record.id
+          id: record.id,
         }
       });
     },
