@@ -395,9 +395,9 @@ export default {
       let performanceLevel = "";
       if (dataDiskLength === 0) {
         newId = -1;
-        category = this.form.systemDisk.category;
+        category = this.detail.systemDisk.category;
         performanceLevel =
-          this.form.systemDisk.performanceLevel === "cloud_essd" ? "PL0" : "";
+          this.detail.systemDisk.performanceLevel === "cloud_essd" ? "PL0" : "";
       } else {
         newId = this.form.dataDisk[0].id - 1;
         category = this.form.dataDisk[0].category;
