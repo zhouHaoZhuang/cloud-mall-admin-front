@@ -135,18 +135,18 @@ export default {
     },
     // 跳转企业实名认证页面
     goEnterpriseRealName(e) {
-      if (this.userRealInfo.certificationStatus !== 2) {
-        if (this.userRealInfo.certificationStatus !== 3) {
-          this.$router.push("/user/setting/enterprise");
-        }
+      if (
+        this.userRealInfo.certificationStatus !== 2 &&
+        this.userRealInfo.certificationStatus !== 3
+      ) {
+        this.$router.push("/user/setting/enterprise");
       }
       if (
-        this.userRealInfo.certificationStatus === 3 ||
-        this.userRealInfo.certificationStatus === 2
+        (this.userRealInfo.certificationStatus === 3 ||
+          this.userRealInfo.certificationStatus === 2) &&
+        e.target.innerText === "查看详情"
       ) {
-        if (e.target.innerText === "查看详情") {
-          this.$router.push("/user/setting/enterprise");
-        }
+        this.$router.push("/user/setting/enterprise");
       }
     }
   }
