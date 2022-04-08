@@ -389,14 +389,24 @@ export default {
       if (this.form.dataDisk.length === 4) {
         return;
       }
-      const newId =
-        this.form.dataDisk.length === 0
-          ? -1
-          : this.form.dataDisk[this.form.dataDisk.length - 1].id - 1;
+      const dataDiskLength = this.form.dataDisk.length;
+      let newId = undefined;
+      let category = "";
+      let performanceLevel = "";
+      if (dataDiskLength === 0) {
+        newId = -1;
+        category = this.form.systemDisk.category;
+        performanceLevel =
+          this.form.systemDisk.performanceLevel === "cloud_essd" ? "PL0" : "";
+      } else {
+        newId = this.form.dataDisk[0].id - 1;
+        category = this.form.dataDisk[0].category;
+        performanceLevel = this.form.dataDisk[0].performanceLevel;
+      }
       this.form.dataDisk.push({
         id: newId,
-        category: "cloud_essd",
-        performanceLevel: "PL0",
+        category,
+        performanceLevel,
         min: 40,
         size: 40,
         old: false
