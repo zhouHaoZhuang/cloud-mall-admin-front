@@ -41,7 +41,6 @@
             userRealInfo.certificationStatus === 3
           "
           type="link"
-          @click="$router.push('/user/setting/personalRealname')"
         >
           查看详情
         </a-button>
@@ -92,7 +91,7 @@ import { mapState } from "vuex";
 export default {
   data() {
     return {
-      realNameStatus: 0
+      realNameStatus: 0,
     };
   },
   computed: {
@@ -116,30 +115,38 @@ export default {
     },
     // 跳转个人实名认证页面
     goPersonalRealName(e) {
-      if (e.target.innerText === "查看详情") {
+      if (
+        (this.userRealInfo.certificationStatus === 1 ||
+          this.userRealInfo.certificationStatus === 3) &&
+        e.target.innerText === "查看详情"
+      ) {
         this.$router.push("/user/setting/personalRealname");
         return;
-      }
-      if (
-        this.userRealInfo.certificationStatus === 2 &&
-        this.userRealInfo.certificationStatus === 0
+      } else if (
+        this.userRealInfo.certificationStatus !== 1 &&
+        this.userRealInfo.certificationStatus !== 3
       ) {
-        this.$message.warning("您已完成企业认证，无需个人认证");
-        return;
+        if (this.userRealInfo.certificationStatus === 2) {
+          this.$message.warning("您已完成企业认证，无需个人认证");
+          return;
+        }
+        this.$router.push("/user/setting/personalRealname");
       }
-      this.$router.push("/user/setting/personalRealname");
     },
     // 跳转企业实名认证页面
     goEnterpriseRealName(e) {
-      if (this.userRealInfo.certificationStatus !== 2 || 3) {
-        this.$router.push("/user/setting/enterprise");
+      if (this.userRealInfo.certificationStatus !== 2) {
+        if (this.userRealInfo.certificationStatus !== 3) {
+          this.$router.push("/user/setting/enterprise");
+        }
       }
       if (
-        (this.userRealInfo.certificationStatus === 3 ||
-          this.userRealInfo.certificationStatus === 2) &&
-        e.target.innerText === "查看详情"
+        this.userRealInfo.certificationStatus === 3 ||
+        this.userRealInfo.certificationStatus === 2
       ) {
-        this.$router.push("/user/setting/enterprise");
+        if (e.target.innerText === "查看详情") {
+          this.$router.push("/user/setting/enterprise");
+        }
       }
     }
   }
