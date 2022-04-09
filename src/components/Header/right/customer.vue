@@ -33,13 +33,22 @@ export default {
   computed: {
     ...mapState({
       menuOpen: (state) => state.setting.menuOpen,
+      customerInfo:(state) => state.dashboard.customerInfo
     }),
   },
+  
   data() {
     return {};
   },
   created() {},
-  methods: {},
+  methods: {
+    //获取专属客服二维码信息
+    getCustomerInfo() {
+      this.$store.dispatch("dashboard/getCustomerInfo").then((res) => {
+        console.log(res,"客服信息")
+      });
+    },
+  },
 };
 </script>
 

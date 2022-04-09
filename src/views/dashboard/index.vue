@@ -196,6 +196,7 @@ export default {
     ...mapState({
       userInfo: (state) => state.user.userInfo,
       userRealInfo: (state) => state.user.userRealInfo,
+      customerInfo:(state) => state.dashboard.customerInfo,
     }),
     realName() {
       if (this.userRealInfo && this.userRealInfo.realName) {
@@ -220,6 +221,7 @@ export default {
           balance: "0.00",
         },
       },
+      customerInfo:undefined,
       // 消费趋势折线图数据
       trendData: {
         name: "消费趋势",
