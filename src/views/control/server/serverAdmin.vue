@@ -3,7 +3,7 @@
     <!-- 云服务器管理 -->
     <div class="cloud-top">
       <div class="left">
-        <div class="title">云服务器管理</div>
+        <div class="ny-panel-title">云服务器管理</div>
         <a-select
           v-model="listQuery.regionId"
           class="select"
@@ -66,7 +66,7 @@
         :pagination="paginationProps"
         :row-selection="{
           selectedRowKeys: selectedRowKeys,
-          onChange: onSelectChange
+          onChange: onSelectChange,
         }"
       >
         <!-- 自定义表格头部状态字段 -->
@@ -267,7 +267,7 @@ import { jumpCloudMall } from "@/utils/index";
 import {
   runningStatusEnum,
   runningStatusSelect,
-  regionDataEnum
+  regionDataEnum,
 } from "@/utils/enum";
 import UpdateNameModal from "@/components/Cloud/CloudModal/updateNameModal";
 import RenewModal from "@/components/Cloud/CloudModal/renewModal";
@@ -281,7 +281,7 @@ export default {
     RenewModal,
     AutoRenewModal,
     CloudActionModal,
-    CustomColumnsModal
+    CustomColumnsModal,
   },
   computed: {
     // 按钮是否禁用
@@ -355,7 +355,7 @@ export default {
           return "年";
         }
       };
-    }
+    },
   },
   data() {
     return {
@@ -369,7 +369,7 @@ export default {
         createTimeSort: "desc",
         currentPage: 1,
         pageSize: 10,
-        total: 0
+        total: 0,
       },
       data: [],
       columns: [
@@ -378,28 +378,28 @@ export default {
           dataIndex: "instanceName",
           width: 180,
           scopedSlots: { customRender: "instanceName" },
-          select: true
+          select: true,
         },
         {
           title: "监控",
           dataIndex: "monitor",
           width: 60,
           scopedSlots: { customRender: "monitor" },
-          select: true
+          select: true,
         },
         {
           title: "地域",
           dataIndex: "regionId",
           width: 120,
           scopedSlots: { customRender: "regionId" },
-          select: true
+          select: true,
         },
         {
           title: "IP地址",
           dataIndex: "ip",
           width: 150,
           scopedSlots: { customRender: "ip" },
-          select: true
+          select: true,
         },
         // 状态，头部在上边自定义的
         {
@@ -407,22 +407,22 @@ export default {
           width: 110,
           scopedSlots: {
             title: "statusTitle",
-            customRender: "runningStatus"
+            customRender: "runningStatus",
           },
-          select: true
+          select: true,
         },
         {
           title: "分类",
           dataIndex: "instanceTypeFamily",
           width: 90,
-          select: true
+          select: true,
         },
         {
           title: "配置",
           dataIndex: "setting",
           width: 120,
           scopedSlots: { customRender: "setting" },
-          select: true
+          select: true,
         },
         {
           title: "类型/到期日期",
@@ -430,7 +430,7 @@ export default {
           width: 150,
           sorter: (a, b) => moment(a.endTimeStr) - moment(b.endTimeStr),
           scopedSlots: { customRender: "endTimeStr" },
-          select: true
+          select: true,
         },
         {
           title: "自动续费/周期",
@@ -438,7 +438,7 @@ export default {
           width: 130,
           sorter: (a, b) => a.renewPeriod - b.renewPeriod,
           scopedSlots: { customRender: "autoRenew" },
-          select: true
+          select: true,
         },
         {
           title: "操作",
@@ -446,8 +446,8 @@ export default {
           width: 170,
           fixed: "right",
           scopedSlots: { customRender: "action" },
-          select: true
-        }
+          select: true,
+        },
       ],
       newColumns: [],
       columnsStatusTxt: "全部",
@@ -459,7 +459,7 @@ export default {
             total / this.listQuery.pageSize
           )} 页`,
         onChange: this.quickJump,
-        onShowSizeChange: this.onShowSizeChange
+        onShowSizeChange: this.onShowSizeChange,
       },
       tableLoading: false,
       selectedRowKeys: [],
@@ -479,7 +479,7 @@ export default {
       // 自定义名称弹窗
       customColumnsVisible: false,
       // 弹窗相关------end
-      addressList: []
+      addressList: [],
     };
   },
   created() {
@@ -504,7 +504,7 @@ export default {
       this.$store
         .dispatch("cloud/cloudList", {
           ...this.listQuery,
-          [this.listQuery.key]: this.listQuery.search
+          [this.listQuery.key]: this.listQuery.search,
         })
         .then((res) => {
           let newData = [];
@@ -524,7 +524,7 @@ export default {
               actionsLoading: false,
               actionsBtnDisable: false,
               actionsTime: null,
-              actionsTimeStep: 3 // 单位：秒
+              actionsTimeStep: 3, // 单位：秒
               // 服务器操作后回调所需数据----------end
             };
           });
@@ -565,8 +565,8 @@ export default {
         path: "/control/server/detail",
         query: {
           id: record.id,
-          monitor: true
-        }
+          monitor: true,
+        },
       });
     },
     // 跳转服务器实例详情管理
@@ -575,7 +575,7 @@ export default {
         path: "/control/server/detail",
         query: {
           id: record.id,
-        }
+        },
       });
     },
     // 弹窗相关------start
@@ -620,12 +620,12 @@ export default {
             const newList = [{ ...record }].map((ele) => {
               return {
                 instanceId: ele.instanceId,
-                regionId: ele.regionId
+                regionId: ele.regionId,
               };
             });
             const data = {
               instanceQueryReqDtoList: [...newList],
-              type: "start"
+              type: "start",
             };
             this.$store
               .dispatch("cloud/cloudActions", data)
@@ -638,7 +638,7 @@ export default {
                 record.startLoading = false;
               });
           });
-        }
+        },
       });
     },
     // 点击自定义列表项
@@ -653,7 +653,7 @@ export default {
         );
         this.columns.splice(index, 1, {
           ...this.columns[index],
-          select: item.select
+          select: item.select,
         });
       });
       this.newColumns = this.columns.filter((ele) => ele.select);
@@ -686,7 +686,7 @@ export default {
     getCloudRunStatus(record) {
       const data = {
         instanceId: record.instanceId,
-        regionId: record.regionId
+        regionId: record.regionId,
       };
       this.$store.dispatch("cloud/getCloudRunStatus", data).then((res) => {
         record.runningStatus = res.data.code * 1;
@@ -745,11 +745,11 @@ export default {
         path: "/control/server/upgrade",
         query: {
           id: record.id,
-          type
-        }
+          type,
+        },
       });
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -761,6 +761,11 @@ export default {
     align-items: center;
     justify-content: space-between;
     .left {
+      .ny-panel-title {
+        display: inline-block;
+        margin-right: 30px;
+
+      }
       .title {
         display: inline-block;
         height: 40px;

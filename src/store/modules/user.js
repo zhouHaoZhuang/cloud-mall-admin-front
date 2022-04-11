@@ -94,6 +94,14 @@ const user = {
         data,
       });
     },
+       // 找回密码
+       findPassword({ commit, state }, data) {
+        return request({
+          url: "/user/findPassword",
+          method: "post",
+          data,
+        });
+      },
     // 向邮箱发送验证码
     sendEmail({ commit, state }, data) {
       return request({

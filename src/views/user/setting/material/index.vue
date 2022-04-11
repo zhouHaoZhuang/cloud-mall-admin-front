@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h2>基本资料</h2>
+    <h2 class="ny-panel-title">基本资料</h2>
     <div class="alert-warn">
       <span>请完善以下信息，方便我们更好的为您服务！</span>
     </div>

@@ -68,6 +68,8 @@ const permsGuard = async (to, from, next, options) => {
     store.dispatch("dashboard/getWebInfo");
     // 获取公司信息
     store.dispatch("dashboard/getCompanyInfo");
+    //获取二维码信息
+    store.dispatch("dashboard/getCustomerInfo");
     // 获取其他全局配置
     store.dispatch("user/getAllConfig");
     // 获取产品列表
