@@ -171,7 +171,7 @@
             </div>
           </div>
         </div>
-        
+
         <!-- 新闻公告 -->
         <div class="public-box news">
           <div class="public-top">
@@ -196,15 +196,20 @@ export default {
   computed: {
     ...mapState({
       userInfo: (state) => state.user.userInfo,
-      userRealInfo: (state) => state.user.userRealInfo,
+      userRealInfo: (state) => state.user.userRealInfo
     }),
     realName() {
-      if (this.userRealInfo && this.userRealInfo.realName) {
-        return "*" + this.userRealInfo.realName.slice(1);
-      } else {
-        return this.userRealInfo.phoneNumber;
+      if (!this.userRealInfo) {
+        return "";
       }
-    },
+      if (this.userRealInfo.typeCode === "common") {
+        return this.userRealInfo.realName;
+      }
+      if (this.userRealInfo.typeCode === "common_admin") {
+        return this.userRealInfo.nickName;
+      }
+      return this.userRealInfo.phoneNumber;
+    }
   },
   data() {
     return {
@@ -218,8 +223,8 @@ export default {
       overviewData: {
         balance: {},
         coupon: {
-          balance: "0.00",
-        },
+          balance: "0.00"
+        }
       },
       // 消费趋势折线图数据
       trendData: {
@@ -230,18 +235,18 @@ export default {
         label: {
           show: true,
           position: "center",
-          formatter: "本月统计",
+          formatter: "本月统计"
         },
         emphasis: {
           label: {
             show: true,
-            formatter: "本月统计",
-          },
+            formatter: "本月统计"
+          }
         },
         labelLine: {
-          show: false,
+          show: false
         },
-        data: [],
+        data: []
       },
       trendIn: "0.00",
       trendOut: "0.00",
@@ -250,8 +255,8 @@ export default {
       // 待办事项对象
       todoObj: {
         ecsCount: 0,
-        toPayOrder: 0,
-      },
+        toPayOrder: 0
+      }
     };
   },
   created() {
@@ -288,8 +293,8 @@ export default {
         const newData = {
           balance: {},
           coupon: {
-            balance: "0.00",
-          },
+            balance: "0.00"
+          }
         };
         res.data.forEach((ele) => {
           if (ele.accountType === 1) {
@@ -309,7 +314,7 @@ export default {
         this.outMoney = this.allDays.map((ele) => {
           const newObj = data.O.find((item) => item.time === ele);
           return {
-            dealAmount: newObj !== undefined ? newObj.dealAmount : 0,
+            dealAmount: newObj !== undefined ? newObj.dealAmount : 0
           };
         });
         this.outMoney = this.outMoney.map((ele) => {
@@ -320,7 +325,7 @@ export default {
         this.inMoney = this.allDays.map((ele) => {
           const newObj = data.I.find((item) => item.time === ele);
           return {
-            dealAmount: newObj !== undefined ? newObj.dealAmount : 0,
+            dealAmount: newObj !== undefined ? newObj.dealAmount : 0
           };
         });
         this.inMoney = this.inMoney.map((ele) => {
@@ -345,7 +350,7 @@ export default {
     // 跳转充值
     goRecharge() {
       this.$router.push({
-        path: "/user/finance/recharge",
+        path: "/user/finance/recharge"
       });
     },
     // 跳转
@@ -356,7 +361,7 @@ export default {
       this.charts = echarts.init(document.getElementById("echarts"));
       const option = {
         tooltip: {
-          trigger: "axis",
+          trigger: "axis"
         },
         color: ["#9ECBFB", "#FECD84"],
         legend: {
@@ -367,27 +372,27 @@ export default {
           data: [
             {
               name: "消费记录(元)",
-              icon: "rect",
+              icon: "rect"
             },
             {
               name: "收入记录(元)",
-              icon: "rect",
-            },
-          ],
+              icon: "rect"
+            }
+          ]
         },
         xAxis: {
           type: "category",
           boundaryGap: false,
           data: this.allDays,
           axisTick: {
-            show: false,
-          },
+            show: false
+          }
         },
         yAxis: {
           type: "value",
           splitLine: {
-            show: false,
-          },
+            show: false
+          }
         },
 
         series: [
@@ -397,7 +402,7 @@ export default {
             smooth: true,
             stack: "Total",
             symbol: "none",
-            data: this.outMoney,
+            data: this.outMoney
           },
           {
             name: "收入记录(元)",
@@ -406,13 +411,13 @@ export default {
             type: "line",
             smooth: true,
             stack: "Total",
-            data: this.inMoney,
-          },
-        ],
+            data: this.inMoney
+          }
+        ]
       };
       this.charts.setOption(option);
-    },
-  },
+    }
+  }
 };
 </script>
 
