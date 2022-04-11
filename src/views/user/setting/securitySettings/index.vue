@@ -83,7 +83,7 @@
       </span>
       <a-button class="settings-change settings-start"> 立即启用 </a-button>
     </div>
-    <div class="settings-info">
+    <div class="settings-info" v-show="userRealInfo.typeCode === 'common'">
       <img
         v-if="realName.length > 1"
         src="@/assets/img/icon-identity-success.png"
@@ -123,7 +123,7 @@ export default {
     }),
     realName() {
       if (this.userRealInfo && this.userRealInfo.realName) {
-        return "*" + this.userRealInfo.realName.slice(1);
+        return this.userRealInfo.realName;
       } else {
         return "";
       }
