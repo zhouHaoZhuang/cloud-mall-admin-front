@@ -14,7 +14,7 @@
           <span class="user-key">注册日期：</span>
           <span>{{ createTime | formatDate }}</span>
         </p>
-        <p>
+        <p v-show="userRealInfo.typeCode === 'common'">
           <span class="user-key">安全级别：</span>
           <a-rate v-model="reatNum" allow-half disabled :count="4" />
           <span class="Security-level">
@@ -45,11 +45,7 @@
           phoneNumber
         }}。绑定认证后可用于手机找回密码、接收手机动态验证码等，保障您的账户安全。
       </span>
-      <a-button
-        class="settings-change"
-        type="link"
-        @click="phoneBinding"
-      >
+      <a-button class="settings-change" type="link" @click="phoneBinding">
         修改
       </a-button>
     </div>
@@ -83,7 +79,7 @@
       </span>
       <a-button class="settings-change settings-start"> 立即启用 </a-button>
     </div>
-    <div class="settings-info">
+    <div class="settings-info" v-show="userRealInfo.typeCode === 'common'">
       <img
         v-if="realName.length > 1"
         src="@/assets/img/icon-identity-success.png"
@@ -123,7 +119,7 @@ export default {
     }),
     realName() {
       if (this.userRealInfo && this.userRealInfo.realName) {
-        return "*" + this.userRealInfo.realName.slice(1);
+        return this.userRealInfo.realName;
       } else {
         return "";
       }
@@ -197,7 +193,7 @@ export default {
           phoneNumber: this.phoneNumber
         }
       });
-    },
+    }
   }
 };
 </script>
