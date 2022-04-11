@@ -128,7 +128,10 @@
               <div>
                 <span class="modal-details-key">汇款凭证:</span>
                 <p class="img-url">
-                  <img :src="dataInfo.voucher" alt="" />
+                  <Upload
+                    :size="5"
+                    :defaultFile="dataInfo.voucher"
+                  />
                 </p>
               </div>
             </div>
@@ -141,7 +144,11 @@
 
 <script>
 import { offlineRemittance } from "@/utils/enum";
+import Upload from "@/components/Upload/previewimg.vue";
 export default {
+   components: {
+    Upload
+  },
   data() {
     return {
       isinfo: false,
