@@ -4,7 +4,7 @@
       <a-button style="margin-right: 20px" @click="$router.back()">
         <a-icon type="left" />
       </a-button>
-      <span>修改密码</span>
+      <span class="ny-panel-title">修改密码</span>
     </h2>
     <div class="alert-warn">
       注意账户安全，请尽量避免采用手机号、电话号码、生日、学号、身份证等个人信息设置密码

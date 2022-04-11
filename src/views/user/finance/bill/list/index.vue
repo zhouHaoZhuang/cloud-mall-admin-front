@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1 class="font-weight600">发票列表</h1>
+    <h1 class="ny-panel-title">发票列表</h1>
     <div class="title-info">
       <div class="title-left">
         <a-row :gutter="16">
@@ -351,10 +351,6 @@ export default {
 </script>
 
 <style lang="less" scoped>
-h1 {
-  margin: 20px;
-  margin-top: 0;
-}
 .calculate {
   margin-top: 15px;
 }

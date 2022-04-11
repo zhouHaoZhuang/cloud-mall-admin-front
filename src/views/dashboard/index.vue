@@ -440,7 +440,7 @@ export default {
   bottom: 0;
   padding: 24px 40px;
   .echarts-pie-content {
-    width: 570px;
+    width: 90%;
     height: 270px;
     // position: absolute;
     // left: -65px;
@@ -647,7 +647,7 @@ export default {
         .income {
           // max-width: 140px;
           position: absolute;
-          left: 542px;
+          left: 80%;
         }
         .consumption {
           top: 126px;

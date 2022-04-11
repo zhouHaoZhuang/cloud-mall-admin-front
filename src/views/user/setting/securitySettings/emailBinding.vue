@@ -4,7 +4,7 @@
       <a-button style="margin-right: 20px" @click="$router.back()">
         <a-icon type="left" />
       </a-button>
-      <span>绑定邮箱</span>
+      <span class="ny-panel-title">绑定邮箱</span>
     </h2>
     <div>
       <a-form-model
