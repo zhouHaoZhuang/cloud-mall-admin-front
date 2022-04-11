@@ -59,11 +59,16 @@ export default {
       userRealInfo: (state) => state.user.userRealInfo
     }),
     realName() {
-      if (this.userRealInfo && this.userRealInfo.realName) {
-        return "*" + this.userRealInfo.realName.slice(1);
-      } else {
-        return "----";
+      if (!this.userRealInfo) {
+        return "";
       }
+      if (this.userRealInfo.typeCode === "common") {
+        return this.userRealInfo.realName;
+      }
+      if (this.userRealInfo.typeCode === "common_admin") {
+        return this.userRealInfo.nickName;
+      }
+      return "未实名认证";
     },
     corporationCode() {
       if (this.userRealInfo && this.userRealInfo.corporationCode) {
