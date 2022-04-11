@@ -64,6 +64,7 @@
           </p>
           <a-table
             :row-selection="{
+              columnTitle: ' ',
               selectedRowKeys: arrearsselectedRowKeys,
               onChange: arrearsonSelectChange,
               getCheckboxProps: (record) => ({
@@ -408,7 +409,7 @@ export default {
         key: "",
         search: "",
         currentPage: 1,
-        pageSize: 10,
+        pageSize: 10
       },
       paginationProps: {
         showQuickJumper: true,

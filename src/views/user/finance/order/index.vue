@@ -259,7 +259,7 @@ export default {
             .dispatch("income/cancelOrder", { id: record.id })
             .then((res) => {
               this.$message.success("取消订单成功");
-              this.getDetail();
+              this.getList();
             });
         }
       });

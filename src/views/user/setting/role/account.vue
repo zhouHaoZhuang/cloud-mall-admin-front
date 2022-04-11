@@ -52,6 +52,9 @@
             >
               编辑
             </a-button>
+            <a-button type="link" @click="handleReset(record)">
+              重置密码
+            </a-button>
           </a-space>
         </span>
       </a-table>
@@ -62,14 +65,22 @@
       :detail="modalDetail"
       @success="modalSuccess"
     />
+    <!-- 重置密码弹框 -->
+    <ResetPasswordModel
+      v-model="visibleReset"
+      :detail="modalDetail"
+      @success="modalSuccess"
+    />
   </div>
 </template>
 
 <script>
 import UpdateAccountModal from "./components/updateAccountModal";
+import ResetPasswordModel from "./components/resetPasswordModel.vue";
 export default {
   components: {
-    UpdateAccountModal
+    UpdateAccountModal,
+    ResetPasswordModel
   },
   data() {
     return {
@@ -127,7 +138,8 @@ export default {
       tableLoading: false,
       // 弹窗相关数据
       visible: false,
-      modalDetail: {}
+      modalDetail: {},
+      visibleReset: false
     };
   },
   created() {
@@ -177,6 +189,16 @@ export default {
         oldRoleIds: newRoleIds
       };
       this.visible = true;
+    },
+    //重置密码
+    handleReset(record) {
+      const newRoleIds = record.roleIds.split(",");
+      this.modalDetail = {
+        ...record,
+        roleIds: newRoleIds,
+        oldRoleIds: newRoleIds
+      };
+      this.visibleReset = true;
     },
     // 添加/编辑弹窗事件成功的回调
     modalSuccess() {
