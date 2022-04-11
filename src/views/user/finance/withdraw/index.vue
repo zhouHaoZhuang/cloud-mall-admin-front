@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="channel-list-container">
-      <h2>提现申请</h2>
+      <h2 class="ny-panel-title">提现申请</h2>
 
       <div class="public-header-wrap">
         <a-form-model layout="inline" :model="listQuery">
@@ -347,7 +347,6 @@ export default {
 <style lang="less" scoped>
 .channel-list-container {
   background: #fff;
-  padding: 24px;
   .public-table-wrap {
     .status {
       display: flex;

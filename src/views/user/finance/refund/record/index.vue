@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>退订记录</h1>
+    <h1 class="ny-panel-title">退订记录</h1>
     <!-- <div class="top-menu">
       <span
         :class="{ 'top-menu-item': true, cutover: item.key == cutover }"

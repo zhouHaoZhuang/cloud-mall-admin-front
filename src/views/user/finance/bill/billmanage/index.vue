@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h3>发票信息管理</h3>
+    <h3 class="ny-panel-title">发票信息管理</h3>
     <div>
       <a-button
         @click="$router.push('/user/finance/bill/addBillInfo')"

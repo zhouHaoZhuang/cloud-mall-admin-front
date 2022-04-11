@@ -21,6 +21,7 @@
         <a-form-model-item>
           <a-month-picker
             format="YYYY-MM"
+            valueFormat="YYYY-MM"
             placeholder="请选择月份"
             @change="datePickerOnOk"
           >
@@ -55,6 +56,7 @@
 
 <script>
 import moment from "moment";
+import { log } from 'mathjs';
 export default {
   data() {
     return {
@@ -143,7 +145,6 @@ export default {
       this.loading = true;
       this.formatSearch();
       this.listQuery["qp-billType-eq"] = "month";
-
       this.$getList("billmanage/getList", this.listQuery)
         .then((res) => {
           this.data = [...res.data.list];
@@ -155,8 +156,8 @@ export default {
     },
     //查询之前转化查询条件格式
     datePickerOnOk(value) {
-      if (value.length !== 0) {
-        this.listQuery["qp-billPeriod-eq"] = moment(value._d).format("YYYY-MM");
+      if (value !== null) {
+        this.listQuery["qp-billPeriod-eq"] = value
       } else {
         this.listQuery["qp-billPeriod-eq"] = "";
       }

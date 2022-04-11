@@ -6,7 +6,9 @@ const cloud = {
     // 网站信息
     webInfo: {},
     // 公司信息
-    companyInfo: {}
+    companyInfo: {},
+    //专属客服信息
+    customerInfo:{}
   },
 
   mutations: {
@@ -17,6 +19,10 @@ const cloud = {
     // 保存公司信息
     saveCompanyInfo(state, payload) {
       state.companyInfo = { ...payload };
+    },
+    //获取专属客服二维码信息
+    saveCustomerInfo(state, payload) {
+      state.customerInfo = payload;
     }
   },
 
@@ -100,6 +106,23 @@ const cloud = {
         })
           .then((res) => {
             commit("saveCompanyInfo", res.data.list[0]);
+            resolve();
+          })
+          .catch((error) => {
+            reject(error);
+          });
+      });
+    },
+    //获取专属客服信息
+    getCustomerInfo({ commit, state }) {
+      return new Promise((resolve, reject) => {
+        request({
+          url: "/customerAdvocate/getOne",
+          method: "get"
+        })
+          .then((res) => {
+            const data = res.data
+            commit("saveCustomerInfo", data);
             resolve();
           })
           .catch((error) => {

@@ -1,6 +1,6 @@
 <template>
   <div class="domain-container">
-    <div class="top-title">域名管理</div>
+    <div class="ny-panel-title">域名管理</div>
     <div class="btn-head">
       <a-space>
         <a-button
