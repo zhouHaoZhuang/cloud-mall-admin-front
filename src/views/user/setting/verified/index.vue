@@ -5,7 +5,7 @@
         <a-button style="margin-right: 20px" @click="$router.back()">
           <a-icon type="left" />
         </a-button>
-        <span>实名认证</span>
+        <span class="ny-panel-title">实名认证</span>
       </h2>
       <div class="verified-top-nav" v-if="choose != 3">
         <span :class="{ chooseClick: choose == 1 }">①填写认证资料</span>
