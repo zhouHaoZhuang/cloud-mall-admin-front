@@ -22,7 +22,7 @@ const cloud = {
     },
     //获取专属客服二维码信息
     saveCustomerInfo(state, payload) {
-      state.customerInfo = { ...payload };
+      state.customerInfo = payload;
     }
   },
 
@@ -121,8 +121,8 @@ const cloud = {
           method: "get"
         })
           .then((res) => {
-            console.log(res,"获取客服二维码信息")
-            commit("saveCustomerInfo", res.data.list[0]);
+            const data = res.data
+            commit("saveCustomerInfo", data);
             resolve();
           })
           .catch((error) => {

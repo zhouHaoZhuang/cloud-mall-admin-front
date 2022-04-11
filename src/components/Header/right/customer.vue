@@ -5,11 +5,7 @@
 
     <div class="outbox">
       <h1 style="font-weight: 600; font-size: 18px">专属客服</h1>
-      <img
-        width="140px"
-        class="imgclass"
-        src="@/assets/img/menu/weixinphoto.png"
-      />
+      <img width="140px" class="imgclass" :src="customerInfo.wechatUrl" />
       <ul class="right-box">
         <li><a-icon type="user" class="left-icon" />客服姓名:</li>
         <li><a-icon type="phone" :rotate="90" class="left-icon" />联系方式:</li>
@@ -17,10 +13,10 @@
         <li><a-icon type="wechat" class="left-icon" />微信号:</li>
       </ul>
       <ul class="right-box">
-        <li>王大富</li>
-        <li>15201010202</li>
-        <li>11111111</li>
-        <li>wff033001</li>
+        <li>{{ customerInfo.name }}</li>
+        <li>{{ customerInfo.phone }}</li>
+        <li>{{ customerInfo.qq }}</li>
+        <li>{{ customerInfo.wechat }}</li>
       </ul>
       <span class="bottom-title">客服微信二维码</span>
     </div>
@@ -33,10 +29,10 @@ export default {
   computed: {
     ...mapState({
       menuOpen: (state) => state.setting.menuOpen,
-      customerInfo:(state) => state.dashboard.customerInfo
+      customerInfo: (state) => state.dashboard.customerInfo,
     }),
   },
-  
+
   data() {
     return {};
   },
@@ -45,7 +41,7 @@ export default {
     //获取专属客服二维码信息
     getCustomerInfo() {
       this.$store.dispatch("dashboard/getCustomerInfo").then((res) => {
-        console.log(res,"客服信息")
+        console.log(res, "客服信息");
       });
     },
   },
@@ -69,6 +65,8 @@ export default {
     .imgclass {
       display: inline-block;
       float: left;
+      width: 140px;
+      height: 140px;
     }
     .right-box {
       margin-top: -10px;

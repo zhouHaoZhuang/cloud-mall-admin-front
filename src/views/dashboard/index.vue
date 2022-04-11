@@ -117,7 +117,7 @@
           <img
             width="140px"
             class="imgclass"
-            src="@/assets/img/menu/weixinphoto.png"
+            :src="customerInfo.wechatUrl"
           />
           <ul class="right-box">
             <li><a-icon type="user" class="left-icon" />客服姓名:</li>
@@ -128,10 +128,10 @@
             <li><a-icon type="wechat" class="left-icon" />微信号:</li>
           </ul>
           <ul class="right-box">
-            <li>王大富</li>
-            <li>15201010202</li>
-            <li>11111111</li>
-            <li>wff033001</li>
+            <li>{{ customerInfo.name }}</li>
+            <li>{{ customerInfo.phone }}</li>
+            <li>{{ customerInfo.qq }}</li>
+            <li>{{ customerInfo.wechat }}</li>
           </ul>
           <span class="bottom-title">客服微信二维码</span>
         </div>
@@ -196,7 +196,7 @@ export default {
     ...mapState({
       userInfo: (state) => state.user.userInfo,
       userRealInfo: (state) => state.user.userRealInfo,
-      customerInfo:(state) => state.dashboard.customerInfo,
+      customerInfo: (state) => state.dashboard.customerInfo,
     }),
     realName() {
       if (this.userRealInfo && this.userRealInfo.realName) {
@@ -221,7 +221,6 @@ export default {
           balance: "0.00",
         },
       },
-      customerInfo:undefined,
       // 消费趋势折线图数据
       trendData: {
         name: "消费趋势",
@@ -557,6 +556,8 @@ export default {
         .imgclass {
           display: inline-block;
           float: left;
+          width: 140px;
+          height: 140px;
         }
         .right-box {
           margin-top: -10px;
