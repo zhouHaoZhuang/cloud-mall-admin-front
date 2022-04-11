@@ -1,7 +1,6 @@
 <template>
   <div class="right-container">
     <!-- 专属客服 -->
-    <Customer />
     <!-- <icon-font type="iconwuliuguanli" style="font-size: 30px"></icon-font> -->
     <!-- 帮助文档 -->
     <!-- <Help /> -->
@@ -23,7 +22,6 @@ import Message from "./message";
 import Price from "./price";
 import WorkOrder from "./workOrder";
 import User from "./user";
-import Customer from "./customer";
 
 export default {
   components: {
@@ -32,7 +30,6 @@ export default {
     // Price,
     WorkOrder,
     User,
-    Customer,
   },
   computed: {
     ...mapState({
