@@ -71,7 +71,7 @@ export default {
       columns: [
         {
           title: "账期",
-          dataIndex: "billNo",
+          dataIndex: "billPeriod",
         },
 
         {

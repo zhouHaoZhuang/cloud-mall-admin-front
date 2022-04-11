@@ -115,7 +115,7 @@
         </div>
         <div class="outbox">
           <h1 style="font-weight: 600; font-size: 18px">专属客服</h1>
-          <div v-if="customerInfo.name != undefined">
+          <div v-if="customerInfo != undefined">
           
           <img
             width="140px"
