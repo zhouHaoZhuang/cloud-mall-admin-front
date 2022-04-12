@@ -432,6 +432,10 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
+    #main {
+      line-height: 400px;
+      font-size: 17px;
+    }
   }
   .download-text {
     display: none;
