@@ -113,7 +113,8 @@
               @click="handleManage(record)"
               :disabled="
                 record.corporationLockStatus == 0 ||
-                record.systemLockStatus == 0
+                record.systemLockStatus == 0 ||
+                record.cdnStatus == 5
               "
             >
               管理
@@ -128,7 +129,8 @@
               @click="handleCopy(record)"
               :disabled="
                 record.corporationLockStatus == 0 ||
-                record.systemLockStatus == 0
+                record.systemLockStatus == 0 ||
+                record.cdnStatus == 5
               "
             >
               复制配置
@@ -155,7 +157,11 @@
             >
               停用
             </a-button>
-            <a-button type="link" @click="handleDel([record.id])">
+            <a-button
+              type="link"
+              @click="handleDel([record.id])"
+              :disabled="record.cdnStatus == 5"
+            >
               删除
             </a-button>
           </a-space>
