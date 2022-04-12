@@ -198,6 +198,7 @@
     <!-- 新增源站信息弹窗 -->
     <UpdateSourceStationModal
       v-model="visible"
+      :sourceList="form.sourceInfo.sourceModel"
       :detail="modalDetail"
       @success="modalSuccess"
     />

@@ -87,6 +87,11 @@ export default {
     detail: {
       type: Object,
       default: () => {}
+    },
+    // 获取本地的添加数据列表
+    sourceList: {
+      type: Array,
+      default: () => []
     }
   },
   computed: {
@@ -142,6 +147,20 @@ export default {
           {
             required: true,
             message: "请输入",
+            trigger: ["blur", "change"]
+          },
+          {
+            validator: (rule, value, callback) => {
+              if (this.type === "add") {
+                if (this.sourceList.some(item => item.content === value)) {
+                  callback(new Error("不能为空或重复"));
+                } else {
+                  callback();
+                }
+              } else {
+                callback();
+              }
+            },
             trigger: ["blur", "change"]
           }
         ],
