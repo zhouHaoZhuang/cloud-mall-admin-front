@@ -47,10 +47,10 @@ export default {
       if (!this.userRealInfo) {
         return "";
       }
-      if (this.userRealInfo.typeCode === "common") {
+      if (this.userRealInfo.isMain === 0) {
         return this.userRealInfo.realName;
       }
-      if (this.userRealInfo.typeCode === "common_admin") {
+      if (this.userRealInfo.isMain === 1) {
         return this.userRealInfo.nickName;
       }
       return '未实名认证';

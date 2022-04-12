@@ -70,7 +70,9 @@
               <div class="box">
                 <a-button
                   type="link"
-                  @click="handleJump('/control/cdn/consumption')"
+                  @click="
+                    handleJump('/control/cdn/consumption', { tabsKey: 2 })
+                  "
                 >
                   用量汇总查询
                 </a-button>
@@ -194,7 +196,15 @@ export default {
       jumpCloudMall("/price-detail", true);
     },
     // 控制台跳转
-    handleJump(path) {
+    handleJump(path, params) {
+      console.log(path, params);
+      if (params) {
+        this.$router.push({
+          name: '用量查询',
+          params
+        });
+        return;
+      }
       this.$router.push(path);
     },
     //获取时间 (今日，昨日,当月，上月)

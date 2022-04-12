@@ -14,7 +14,7 @@
           <span class="user-key">注册日期：</span>
           <span>{{ createTime | formatDate }}</span>
         </p>
-        <p v-show="userRealInfo.typeCode === 'common'">
+        <p v-show="userRealInfo.isMain === 0">
           <span class="user-key">安全级别：</span>
           <a-rate v-model="reatNum" allow-half disabled :count="4" />
           <span class="Security-level">
@@ -79,7 +79,7 @@
       </span>
       <a-button class="settings-change settings-start"> 立即启用 </a-button>
     </div>
-    <div class="settings-info" v-show="userRealInfo.typeCode === 'common'">
+    <div class="settings-info" v-show="userRealInfo.isMain === 0">
       <img
         v-if="realName.length > 1"
         src="@/assets/img/icon-identity-success.png"
