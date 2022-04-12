@@ -316,6 +316,7 @@ export default {
       newStr = this.multipleSelection.toString();
       this.$store.dispatch("snapshoot/del", newStr).then((res) => {
         this.$message.success("删除成功");
+        this.multipleSelection = []
         this.getList();
         this.delVisible = false;
       });
