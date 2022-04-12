@@ -49,8 +49,9 @@
         <div v-if="text" slot="createTime" slot-scope="text">
           {{ text | formatDate }}
         </div>
-        <div v-if="text" slot="retentionDays" slot-scope="text">
-          {{ text | formatDate }}
+        <div slot="retentionDays" slot-scope="text">
+          <div v-if="text">{{ text | formatDate }}</div>
+          <div v-else>{{ "持续保留" }}</div>
         </div>
         <!-- 操作 -->
         <div slot="action" slot-scope="text, record">
@@ -133,68 +134,81 @@ export default {
         {
           title: "快照ID/名称",
           dataIndex: "snapshotName",
-          scopedSlots: { customRender: "snapshotName" }
+          scopedSlots: { customRender: "snapshotName" },
+          width:160
         },
         {
           title: "快照类型",
           dataIndex: "instantAccess",
-          scopedSlots: { customRender: "instantType" }
+          scopedSlots: { customRender: "instantType" },
+          width:100
         },
         {
           title: "快照来源",
           dataIndex: "snapshotType",
-          scopedSlots: { customRender: "snapshotType" }
+          scopedSlots: { customRender: "snapshotType" },
+          width:100
         },
         {
           title: "快照极速可用",
           dataIndex: "instantAccess1",
-          scopedSlots: { customRender: "instantAccess" }
+          scopedSlots: { customRender: "instantAccess" },
+          width:120
         },
         {
           title: "云盘ID",
-          dataIndex: "sourceDiskId"
+          dataIndex: "sourceDiskId",
+           width:150
         },
         {
           title: "云盘容量",
           dataIndex: "sourceDiskSize",
-          scopedSlots: { customRender: "sourceDiskSize" }
+          scopedSlots: { customRender: "sourceDiskSize" },
+           width:100
         },
         {
           title: "云盘属性",
           dataIndex: "sourceDiskType",
-          scopedSlots: { customRender: "sourceDiskType" }
+          scopedSlots: { customRender: "sourceDiskType" },
+          width:100
         },
         {
           title: "已加密/未加密",
           dataIndex: "encrypted",
-          scopedSlots: { customRender: "encrypted" }
+          scopedSlots: { customRender: "encrypted" },
+          width:100
         },
         {
           title: "创建时间",
           dataIndex: "createTime",
           sorter: (a, b) => moment(a.createTime) - moment(b.createTime),
-          scopedSlots: { customRender: "createTime" }
+          scopedSlots: { customRender: "createTime" },
+          width:120
         },
         {
           title: "保留时间",
           dataIndex: "retentionDays",
           sorter: (a, b) => moment(a.retentionDays) - moment(b.retentionDays),
-          scopedSlots: { customRender: "retentionDays" }
+          scopedSlots: { customRender: "retentionDays" },
+          width:120
         },
         {
           title: "进度",
-          dataIndex: "progress"
+          dataIndex: "progress",
+          width:60
         },
         {
           title: "状态",
           dataIndex: "status",
-          scopedSlots: { customRender: "status" }
+          scopedSlots: { customRender: "status" },
+          width:60
         },
         {
           title: "操作",
           dataIndex: "action",
-          // fixed: "right",
-          scopedSlots: { customRender: "action" }
+          fixed: "right",
+          scopedSlots: { customRender: "action" },
+          width:80
         }
       ],
       paginationProps: {
@@ -232,7 +246,8 @@ export default {
       this.tableLoading = true;
       this.$store
         .dispatch("snapshoot/getList", {
-          ...this.listQuery
+          ...this.listQuery,
+          "qp-innerInstanceId-eq": this.detail.instanceId
         })
         .then((res) => {
           this.data = [...res.data.list];
