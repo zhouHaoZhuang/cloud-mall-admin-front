@@ -62,10 +62,10 @@ export default {
       if (!this.userRealInfo) {
         return "";
       }
-      if (this.userRealInfo.typeCode === "common") {
+      if (this.userRealInfo.isMain === 0) {
         return this.userRealInfo.realName;
       }
-      if (this.userRealInfo.typeCode === "common_admin") {
+      if (this.userRealInfo.isMain === 1) {
         return this.userRealInfo.nickName;
       }
       return "未实名认证";
@@ -87,7 +87,7 @@ export default {
       this.$refs.ruleForm.validate((valid) => {
         if (valid) {
           this.form.id = this.userRealInfo.id;
-          this.$store.dispatch("user/updateQQ", this.form).then((res) => {
+          this.$store.dispatch("user/updateQQ", this.form).then((res) => {  
             this.$message.success("保存成功");
             this.$store.dispatch("user/getUserActualName");
           });

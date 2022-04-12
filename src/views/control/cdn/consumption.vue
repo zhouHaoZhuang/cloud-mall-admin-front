@@ -22,8 +22,14 @@ export default {
       tabsKey: 1
     };
   },
-  created() {},
-  methods: {}
+  created() {
+    if(this.$route?.params?.tabsKey){
+      this.tabsKey = this.$route.params.tabsKey;
+    }
+  },
+  methods: {
+
+  }
 };
 </script>
 

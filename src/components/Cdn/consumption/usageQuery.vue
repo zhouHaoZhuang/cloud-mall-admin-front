@@ -72,7 +72,7 @@
       :tabsKey="tabsKey"
       :listQuery="listQuery"
     /> -->
-    <div class="Echarts">
+    <div class="Echarts" v-show="data.length > 0">
       <div id="main" style="height: 400px"></div>
       <div class="export-icon" v-show="data.length > 0">
         <ExportTable
@@ -87,9 +87,11 @@
         </ExportTable>
       </div>
     </div>
-
+    <div class="Echarts-text" v-show="data.length <= 0">
+      <div id="main" style="height: 400px">暂无数据</div>
+    </div>
     <div class="title">明细</div>
-    <div v-if="data.length > 0">
+    <div>
       <a-table
         style="margin-top: 20px"
         :columns="columns"
@@ -424,6 +426,12 @@ export default {
       top: 0;
       right: 50px;
     }
+  }
+  .Echarts-text {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
   .download-text {
     display: none;
