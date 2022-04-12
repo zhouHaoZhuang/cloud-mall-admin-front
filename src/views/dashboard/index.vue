@@ -197,16 +197,16 @@ export default {
     ...mapState({
       userInfo: (state) => state.user.userInfo,
       userRealInfo: (state) => state.user.userRealInfo,
-      customerInfo: (state) => state.dashboard.customerInfo,
+      customerInfo: (state) => state.dashboard.customerInfo
     }),
     realName() {
       if (!this.userRealInfo) {
         return "";
       }
-      if (this.userRealInfo.typeCode === "common") {
+      if (this.userRealInfo.isMain === 0) {
         return this.userRealInfo.realName;
       }
-      if (this.userRealInfo.typeCode === "common_admin") {
+      if (this.userRealInfo.isMain === 1) {
         return this.userRealInfo.nickName;
       }
       return this.userRealInfo.phoneNumber;
