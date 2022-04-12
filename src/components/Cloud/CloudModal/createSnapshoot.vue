@@ -1,6 +1,7 @@
 <template>
   <a-modal
     :visible="value"
+    v-if="value"
     width="630px"
     centered
     title="创建快照"
@@ -80,7 +81,7 @@ export default {
         snapshotName: "",
         sourceDiskId: ""
       },
-      sidkModel:{}
+      sidkModel: {}
     };
   },
   watch: {
@@ -93,7 +94,13 @@ export default {
     // }
   },
   activated() {
-    this.form = {}
+    this.form = {
+      snapshotName: "",
+      sourceDiskId: ""
+    };
+  },
+  created() {
+    this.form = {};
   },
   methods: {
     // 处理询价和提交续费的参数
@@ -107,6 +114,7 @@ export default {
     // 关闭弹窗
     handleCancel() {
       this.$emit("changeVisible", false);
+       this.form = {}
     },
     // 弹窗提交
     handleOk() {
@@ -115,11 +123,13 @@ export default {
         .dispatch("snapshoot/add", this.getRequestData())
         .then((res) => {
           this.$message.success("创建成功");
-          this.$emit('success')
+          this.$emit("success");
           this.handleCancel();
+          this.form = {}
         })
         .finally(() => {
           this.loading = false;
+          //  this.form = {}
         });
     },
     //选择云盘id触发
@@ -127,8 +137,8 @@ export default {
       this.diskData.forEach((ele) => {
         if (val === ele.diskId) {
           console.log(ele);
-          this.sidkModel.sourceDiskSize = ele.size
-          this.sidkModel.sourceDiskType = ele.type
+          this.sidkModel.sourceDiskSize = ele.size;
+          this.sidkModel.sourceDiskType = ele.type;
         }
       });
     }
