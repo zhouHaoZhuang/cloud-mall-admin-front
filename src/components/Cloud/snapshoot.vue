@@ -20,12 +20,12 @@
         :loading="tableLoading"
         :columns="columns"
         :data-source="data"
-        :scroll="{ x: 600 }"
         :pagination="paginationProps"
         :row-selection="{
           selectedRowKeys: selectedRowKeys,
           onChange: onSelectChange
         }"
+        :scroll="{ x:500}"
       >
         <div slot="instantType" slot-scope="text">
           {{ text == "true" ? "极速快照" : "普通快照" }}
@@ -135,80 +135,80 @@ export default {
           title: "快照ID/名称",
           dataIndex: "snapshotName",
           scopedSlots: { customRender: "snapshotName" },
-          width:160
+          // width:160
         },
         {
           title: "快照类型",
           dataIndex: "instantAccess",
           scopedSlots: { customRender: "instantType" },
-          width:100
+          // width:100
         },
         {
           title: "快照来源",
           dataIndex: "snapshotType",
           scopedSlots: { customRender: "snapshotType" },
-          width:100
+          // width:100
         },
         {
           title: "快照极速可用",
           dataIndex: "instantAccess1",
           scopedSlots: { customRender: "instantAccess" },
-          width:120
+          // width:120
         },
         {
           title: "云盘ID",
           dataIndex: "sourceDiskId",
-           width:150
+          //  width:150
         },
         {
           title: "云盘容量",
           dataIndex: "sourceDiskSize",
           scopedSlots: { customRender: "sourceDiskSize" },
-           width:100
+          //  width:100
         },
         {
           title: "云盘属性",
           dataIndex: "sourceDiskType",
           scopedSlots: { customRender: "sourceDiskType" },
-          width:100
+          // width:100
         },
         {
           title: "已加密/未加密",
           dataIndex: "encrypted",
           scopedSlots: { customRender: "encrypted" },
-          width:100
+          // width:100
         },
         {
           title: "创建时间",
           dataIndex: "createTime",
           sorter: (a, b) => moment(a.createTime) - moment(b.createTime),
           scopedSlots: { customRender: "createTime" },
-          width:120
+          // width:120
         },
         {
           title: "保留时间",
           dataIndex: "retentionDays",
-          sorter: (a, b) => moment(a.retentionDays) - moment(b.retentionDays),
+          // sorter: (a, b) => moment(a.retentionDays) - moment(b.retentionDays),
           scopedSlots: { customRender: "retentionDays" },
-          width:120
+          // width:120
         },
         {
           title: "进度",
           dataIndex: "progress",
-          width:60
+          // width:60
         },
         {
           title: "状态",
           dataIndex: "status",
           scopedSlots: { customRender: "status" },
-          width:60
+          // width:60
         },
         {
           title: "操作",
           dataIndex: "action",
-          fixed: "right",
+          // fixed: "right",
           scopedSlots: { customRender: "action" },
-          width:80
+          // width:80
         }
       ],
       paginationProps: {
@@ -316,6 +316,7 @@ export default {
       newStr = this.multipleSelection.toString();
       this.$store.dispatch("snapshoot/del", newStr).then((res) => {
         this.$message.success("删除成功");
+        this.multipleSelection = []
         this.getList();
         this.delVisible = false;
       });
@@ -340,6 +341,8 @@ export default {
 <style lang="less" scoped>
 .cloud-container {
   background-color: #fff;
+  width: 100px;
+  margin: 0;
   .cloud-top {
     display: flex;
     align-items: center;
@@ -386,6 +389,7 @@ export default {
     }
   }
   .table {
+    width: 1100px;
     color: #4d4d4d;
     .copy-icon {
       color: #00aaff;
