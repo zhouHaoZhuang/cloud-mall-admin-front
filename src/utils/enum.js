@@ -245,7 +245,7 @@ export const tradeType = {
   25: "升配",
   35: "esc实例降低配置",
   55: "退订",
-  65: "cdn流量"
+  65: "后付费产品"
 };
 //支付状态枚举
 export const payState = {
