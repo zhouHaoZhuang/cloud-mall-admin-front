@@ -2,7 +2,7 @@
   <div class="right-container">
     <!-- 专属客服 -->
     <!-- <icon-font type="iconwuliuguanli" style="font-size: 30px"></icon-font> -->
-    <Customer v-if="customerInfo.name != undefined" />
+    <Customer v-if="customerInfo != undefined" />
     <!-- 帮助文档 -->
     <!-- <Help /> -->
     <!-- 站内信-->
