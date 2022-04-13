@@ -22,8 +22,14 @@
         快照创建完成后，您可通过系统事件获取通知。
       </div>
     </div>
-    <a-form-model :model="form" :label-col="labelCol" :wrapper-col="wrapperCol">
-      <a-form-model-item label="云盘ID">
+    <a-form-model
+      :model="form"
+      :label-col="labelCol"
+      :wrapper-col="wrapperCol"
+      ref="ruleForm"
+      :rules="rules"
+    >
+      <a-form-model-item label="云盘ID" prop="sourceDiskId">
         <a-select
           v-model="form.sourceDiskId"
           placeholder="请选择需要创建快照的云盘"
@@ -38,7 +44,7 @@
           </a-select-option>
         </a-select>
       </a-form-model-item>
-      <a-form-model-item label="快照名称">
+      <a-form-model-item label="快照名称" prop="snapshotName">
         <a-input v-model="form.snapshotName"></a-input>
         <span style="color: #ccc"
           >快照名称为2-128个字符，快照名不能以auto开头</span
@@ -81,6 +87,22 @@ export default {
         snapshotName: "",
         sourceDiskId: ""
       },
+      rules: {
+        sourceDiskId: [
+          {
+            required: true,
+            message: "未选择需要创建快照的云盘",
+            trigger: ["blur", "change"]
+          }
+        ],
+        snapshotName: [
+          {
+            required: true,
+            message: "未填写快照名称",
+            trigger: ["blur", "change"]
+          }
+        ],
+      },
       sidkModel: {}
     };
   },
@@ -114,24 +136,29 @@ export default {
     // 关闭弹窗
     handleCancel() {
       this.$emit("changeVisible", false);
-       this.form = {}
+      this.form = {};
     },
     // 弹窗提交
     handleOk() {
-      this.loading = true;
-      this.$store
-        .dispatch("snapshoot/add", this.getRequestData())
-        .then((res) => {
-          this.$message.success("创建成功");
-          this.$emit("success");
-          this.handleCancel();
-          this.form = {}
-        })
-        .finally(() => {
-          this.loading = false;
-          //  this.form = {}
-        });
+      this.$refs.ruleForm.validate((valid) => {
+        if (valid) {
+          this.loading = true;
+          this.$store
+            .dispatch("snapshoot/add", this.getRequestData())
+            .then((res) => {
+              this.$message.success("创建成功");
+              this.$emit("success");
+              this.handleCancel();
+              this.form = {};
+            })
+            .finally(() => {
+              this.loading = false;
+              //  this.form = {}
+            });
+        }
+      });
     },
+
     //选择云盘id触发
     selectDisk(val) {
       this.diskData.forEach((ele) => {
