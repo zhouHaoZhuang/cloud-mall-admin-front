@@ -22,7 +22,9 @@ import * as Filters from "@/utils/filters/index";
 Vue.config.productionTip = false;
 //公共样式
 import "@/assets/public.less";
-
+import ElementUI from 'element-ui';
+import 'element-ui/lib/theme-chalk/index.css';
+Vue.use(ElementUI);
 
 // ui组件
 Vue.use(Antd);
