@@ -13,12 +13,12 @@
           <a-select-option value="month"> 按月查询 </a-select-option>
         </a-select>
         <a-date-picker
-          v-show="listQuery.granularity !== 'day'"
+          v-show="listQuery.granularity == 'day'"
           @change="onChange"
           v-model="billingDate"
         />
         <a-month-picker
-          v-show="listQuery.granularity !== 'month'"
+          v-show="listQuery.granularity == 'month'"
           @change="onChange"
           v-model="billingCycle"
         />
