@@ -27,7 +27,7 @@
         <a-form-model-item label="验证手机号" prop="phone">
           <a-input v-number-evolution v-model="form.phone"></a-input>
         </a-form-model-item>
-        <a-form-model-item label="图形验证码" prop="verificationCode">
+        <!-- <a-form-model-item label="图形验证码" prop="verificationCode">
           <a-input
             v-model="form.verificationCode"
             placeholder="请输入图形验证码"
@@ -39,7 +39,7 @@
           <div @click="refreshCode()" class="code" title="点击切换验证码">
             <Identify :identifyCode="identifyCode" />
           </div>
-        </a-form-model-item>
+        </a-form-model-item> -->
         <a-form-model-item label="验证码" prop="code">
           <a-input
             v-model="form.code"
@@ -73,12 +73,12 @@
 
 <script>
 import CodeBtn from "@/components/CodeBtn/index";
-import Identify from "@/components/Identify";
+// import Identify from "@/components/Identify";
 import { jumpCloudMall, getRandomCode } from "@/utils/index";
 import { mapState } from "vuex";
 
 export default {
-  components: { CodeBtn, Identify },
+  components: { CodeBtn },
   data() {
     const validatePass = (rule, value, callback) => {
       if (value === "") {

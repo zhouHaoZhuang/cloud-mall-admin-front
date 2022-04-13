@@ -23,7 +23,7 @@
         <a-form-model-item label="新手机号" prop="phone">
           <a-input v-model="form.phone" style="width: 250px" />
         </a-form-model-item>
-        <a-form-model-item label="图形验证码" prop="verificationCode">
+        <!-- <a-form-model-item label="图形验证码" prop="verificationCode">
           <a-input
             v-model="form.verificationCode"
             placeholder="请输入图形验证码"
@@ -35,7 +35,7 @@
           <div @click="refreshCode()" class="code" title="点击切换验证码">
             <Identify :identifyCode="identifyCode" />
           </div>
-        </a-form-model-item>
+        </a-form-model-item> -->
         <a-form-model-item label="手机验证码" prop="code">
           <a-input
             v-model="form.code"
@@ -63,11 +63,11 @@
 
 <script>
 import CodeBtn from "@/components/CodeBtn/index";
-import Identify from "@/components/Identify";
+// import Identify from "@/components/Identify";
 import { getRandomCode } from "@/utils/index";
 
 export default {
-  components: { CodeBtn, Identify },
+  components: { CodeBtn },
   data() {
     return {
       form: {
