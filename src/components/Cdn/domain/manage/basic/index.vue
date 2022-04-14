@@ -64,6 +64,7 @@
     <!-- 新增源站信息弹窗 -->
     <UpdateSourceStationModal
       v-model="visible"
+      :isLocal="false"
       :detail="modalDetail"
       @success="modalSuccess"
     />

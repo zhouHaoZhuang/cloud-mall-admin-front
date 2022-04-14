@@ -212,7 +212,6 @@ export default {
     handleOk() {
       this.$refs.ruleForm.validate((valid) => {
         if (valid) {
-          console.log(this.isLocal,'isLocal');
           if (this.isLocal) {
             this.$message.success(this.modalTitle + "成功");
             this.$emit("success", this.type, this.form);
@@ -221,7 +220,7 @@ export default {
           }
           this.loading = true;
           this.$store
-            .dispatch("domain/add", this.form)
+            .dispatch("cdn/updateSourceInfo", this.form)
             .then((res) => {
               this.$message.success(this.modalTitle + "成功");
               this.$emit("success");
