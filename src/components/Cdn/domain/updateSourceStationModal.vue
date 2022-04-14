@@ -152,7 +152,7 @@ export default {
           {
             validator: (rule, value, callback) => {
               if (this.type === "add") {
-                if (this.sourceList.some(item => item.content === value)) {
+                if (this.sourceList.some((item) => item.content === value)) {
                   callback(new Error("不能为空或重复"));
                 } else {
                   callback();
@@ -205,8 +205,12 @@ export default {
       };
     },
     //切换单选框
-    toChange(){
-      this.form.content = ''
+    toChange(e) {
+      if (e.target.value !== this.detail.type) {
+        this.form.content = "";
+      }else{
+        this.form.content = this.detail.content
+      }
     },
     // 弹窗提交
     handleOk() {
