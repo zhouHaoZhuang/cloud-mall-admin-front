@@ -348,6 +348,7 @@ export default {
 .channel-list-container {
   background: #fff;
   .public-table-wrap {
+    margin-top: 20px;
     .status {
       display: flex;
       align-items: center;
