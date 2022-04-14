@@ -108,7 +108,7 @@ export default {
             this.resetForm();
           });
         } else {
-          // this.getDomainHttps();
+          this.getDomainHttps();
         }
       }
     }

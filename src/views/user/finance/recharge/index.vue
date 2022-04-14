@@ -52,6 +52,7 @@ export default {
   > h1 {
     font-size: 22px;
     font-weight: 600;
+    margin-bottom: 20px;
   }
   > ul {
     color: #4d4d4d;
