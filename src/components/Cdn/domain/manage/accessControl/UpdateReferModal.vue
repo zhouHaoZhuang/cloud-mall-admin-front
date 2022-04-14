@@ -178,23 +178,23 @@ export default {
           } else {
             tempForm.refer_domain_allow_list = this.form.list;
           }
-          console.log(tempForm,'newFunctionName');
+          console.log(tempForm, "newFunctionName");
           const newForm = {
             ...getParameter(tempForm, newFunctionName, this.domain)
           };
           this.loading = true;
-          // newForm.functions.forEach(element => {
-             
-          //     element.functionArgs.forEach(ele => {
-          //        console.log( typeof ele.argValue,'e');
-          //          let a = ele.argValue
-          //          var reg = /[\n]/g;
-                
-          //            a=a.replace(reg,',')
-          //            console.log(a,'aaaaaa');
-                   
-          //     });
-          // });
+
+          // if(data.functions[0].functionArgs[1].argValue){
+          //   newStr =  data.functions[0].functionArgs[1].argValue
+          //   var reg = /[\n]/g;
+          //   data.functions[0].functionArgs[1].argValue=data.functions[0].functionArgs[1].argValue.replace(reg,',')
+          // }
+          newForm.functions.forEach((element) => {
+            element.functionArgs.forEach((ele) => {
+              var reg = /[\n]/g;
+              ele.argValue = ele.argValue.replace(reg, ",");
+            });
+          });
           this.$store
             .dispatch("cdn/saveConfig", newForm)
             .then((res) => {
