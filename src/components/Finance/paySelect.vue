@@ -1,6 +1,7 @@
 <template>
   <div class="pay-select-container">
-    <!-- <div
+    <div v-show="tradeStatus === 1">
+      <!-- <div
       class="item-select"
       :style="`border-bottom:${pannelOpen ? '' : 'none'}`"
       @click="handlePanelChange"
@@ -15,94 +16,107 @@
         元
       </div>
     </div> -->
-    <!-- 选择优惠 -->
-    <div :class="pannelOpen ? 'tabs' : 'tabs-height'"></div>
-    <!-- 账户余额 -->
-    <div class="item-select">
-      <div class="left">
-        <a-checkbox v-model="balanceForm.useBalance" @change="checkOnChange" />
-        <span class="txt">账户余额</span>
-        <div class="price">
-          <span class="price-txt">
-            可用余额：{{ balanceData.userAmount }}元
-          </span>
-          <div class="btn" @click="handleJump">充值</div>
-        </div>
-      </div>
-      <div class="right">
-        余额支付
-        <span class="strong">{{ balanceData.userAmount }}</span>
-        元
-      </div>
-    </div>
-    <!-- 其他方式支付 -->
-    <div class="others">
-      <div class="title">其他方式支付</div>
-      <a-radio-group
-        v-model="balanceForm.payType"
-        style="margin-left: 24px"
-        @change="radioOnChange"
-      >
-        <a-radio value="none">
-          <div class="box">不使用第三方支付</div>
-        </a-radio>
-        <a-radio v-if="allConfig.online_pay !== '0'" value="ali">
-          <div class="box">
-            支付宝
-            <a-icon class="alipay-icon" type="alipay-circle" />
+      <!-- 选择优惠 -->
+      <div :class="pannelOpen ? 'tabs' : 'tabs-height'"></div>
+      <!-- 账户余额 -->
+      <div class="item-select">
+        <div class="left">
+          <a-checkbox
+            v-model="balanceForm.useBalance"
+            @change="checkOnChange"
+          />
+          <span class="txt">账户余额</span>
+          <div class="price">
+            <span class="price-txt">
+              可用余额：{{ balanceData.userAmount }}元
+            </span>
+            <div class="btn" @click="handleJump">充值</div>
           </div>
-        </a-radio>
-        <a-radio v-if="allConfig.online_pay !== '0'" value="wechat">
-          <div class="box">
-            微信
-            <a-icon class="wechat-icon" type="wechat" />
-          </div>
-        </a-radio>
-      </a-radio-group>
-    </div>
-    <!-- 服务协议 -->
-    <div class="agreement">
-      <a-checkbox v-model="agreeFlag" />
-      <div class="txt">本人已同意</div>
-      <a-button type="link" size="small" @click="handleJumpService"
-        >《{{ companyInfo.companyName }}产品服务协议》</a-button
-      >
-    </div>
-    <!-- 支付按钮 -->
-    <div class="pay-btn">
-      <div
-        v-if="!getTotalAmountIsPay && balanceForm.payType === 'none'"
-        class="txt"
-      >
-        余额不足，无法支付该订单，请先
-        <a-button type="link" size="small" @click="handleJump">充值</a-button>
-      </div>
-      <div class="txt-box">
-        <div v-if="balanceData.balanceAmonut" class="once">
-          余额支付：
-          <span class="strong">
-            {{ balanceData.balanceAmonut }}
-          </span>
-          元
         </div>
-        <div v-if="balanceData.onlineAmount" class="once">
-          第三方支付：
-          <span class="strong">
-            {{ balanceData.onlineAmount }}
-          </span>
+        <div class="right">
+          余额支付
+          <span class="strong">{{ balanceData.userAmount }}</span>
           元
         </div>
       </div>
-      <a-button
-        class="btn"
-        type="primary"
-        :loading="loading"
-        :disabled="!agreeFlag"
-        @click="handlePay"
-      >
-        确定支付
-      </a-button>
+      <!-- 其他方式支付 -->
+      <div class="others">
+        <div class="title">其他方式支付</div>
+        <a-radio-group
+          v-model="balanceForm.payType"
+          style="margin-left: 24px"
+          @change="radioOnChange"
+        >
+          <a-radio value="none">
+            <div class="box">不使用第三方支付</div>
+          </a-radio>
+          <a-radio v-if="allConfig.online_pay !== '0'" value="ali">
+            <div class="box">
+              支付宝
+              <a-icon class="alipay-icon" type="alipay-circle" />
+            </div>
+          </a-radio>
+          <a-radio v-if="allConfig.online_pay !== '0'" value="wechat">
+            <div class="box">
+              微信
+              <a-icon class="wechat-icon" type="wechat" />
+            </div>
+          </a-radio>
+        </a-radio-group>
+      </div>
+      <!-- 服务协议 -->
+      <div class="agreement">
+        <a-checkbox v-model="agreeFlag" />
+        <div class="txt">本人已同意</div>
+        <a-button type="link" size="small" @click="handleJumpService"
+          >《{{ companyInfo.companyName }}产品服务协议》</a-button
+        >
+      </div>
+      <!-- 支付按钮 -->
+      <div class="pay-btn">
+        <div
+          v-if="!getTotalAmountIsPay && balanceForm.payType === 'none'"
+          class="txt"
+        >
+          余额不足，无法支付该订单，请先
+          <a-button type="link" size="small" @click="handleJump">充值</a-button>
+        </div>
+        <div class="txt-box">
+          <div v-if="balanceData.balanceAmonut" class="once">
+            余额支付：
+            <span class="strong">
+              {{ balanceData.balanceAmonut }}
+            </span>
+            元
+          </div>
+          <div v-if="balanceData.onlineAmount" class="once">
+            第三方支付：
+            <span class="strong">
+              {{ balanceData.onlineAmount }}
+            </span>
+            元
+          </div>
+        </div>
+        <a-button
+          class="btn"
+          type="primary"
+          :loading="loading"
+          :disabled="!agreeFlag"
+          @click="handlePay"
+        >
+          确定支付
+        </a-button>
+      </div>
     </div>
+    <a-button
+    v-show="tradeStatus === 3 && btnflag"
+      class="continue"
+      type="primary"
+      :loading="loading"
+      @click="handlePayTwo"
+    >
+      继续支付
+    </a-button>
   </div>
 </template>
 
@@ -114,11 +128,15 @@ export default {
     // 订单详情
     detail: {
       type: Object,
-      default: () => {}
+      default: () => {},
     },
     // 微信支付url
     WeChatPop: {
-      type: Function
+      type: Function,
+    },
+    tradeStatus: {
+      type: Number,
+      default: () => {},
     }
   },
   data() {
@@ -126,6 +144,7 @@ export default {
       loading: false,
       pannelOpen: false,
       agreeFlag: false,
+      btnflag:true,
       // 查询余额相关所需参数
       balanceForm: {
         payType: "none",
@@ -133,31 +152,34 @@ export default {
         useAliPay: false,
         useBalance: true,
         useVoucher: false,
-        useWechatPay: false
+        useWechatPay: false,
       },
       balanceData: {},
       // 支付所需参数
-      payForm: {}
+      payForm: {},
     };
+  },
+  mounted(){
+    console.log("订单状态",this.tradeStatus)
   },
   watch: {
     detail: {
       handler(newVal) {
         this.getUserBalance();
       },
-      immediate: true
-    }
+      immediate: true,
+    },
   },
   computed: {
     ...mapState({
       companyInfo: (state) => state.dashboard.companyInfo,
-      allConfig: (state) => state.user.allConfig
+      allConfig: (state) => state.user.allConfig,
     }),
     // 判断账户余额是否足够支付当前订单
     getTotalAmountIsPay() {
       console.log(this.balanceData.userAmount, this.detail.discountAmount);
       return this.balanceData.userAmount >= this.detail.discountAmount;
-    }
+    },
   },
   created() {
     getAliPayCallBack();
@@ -197,7 +219,7 @@ export default {
       this.$store
         .dispatch("finance/getUserBalance", {
           ...this.balanceForm,
-          totalAmount: this.detail.discountAmount
+          totalAmount: this.detail.discountAmount,
         })
         .then((res) => {
           this.balanceData = { ...res.data };
@@ -210,6 +232,57 @@ export default {
     // 支付方式选择
     radioOnChange() {
       this.getUserBalance();
+    },
+    handlePayTwo() {
+      if (
+        !this.balanceForm.useBalance &&
+        !this.balanceForm.payType === "none"
+      ) {
+        this.$message.warning("请选择支付方式");
+        return;
+      }
+      if (!this.getTotalAmountIsPay && this.balanceForm.payType === "none") {
+        this.$message.warning("余额不足，请充值或组合第三方支付");
+        return;
+      }
+      this.loading = true;
+      const data = {
+        tcMergeOrderReqDto: {
+          ...this.balanceData,
+          mergeOrderNo: this.detail.mergeOrderNo,
+          returnUrl: getAliPayCallBack(this.detail.orderNo), // 页面重定向地址
+          requestFromUrl: getAliPayCallBack(this.detail.orderNo), // 用户取消支付会回退改地址
+        },
+        tcOrderReqDtoList: [
+          {
+            orderNo: this.detail.orderNo,
+          },
+        ],
+      };
+      data.tcMergeOrderReqDto.useAliPay = true
+      data.tcMergeOrderReqDto.useBalance = false
+      data.tcMergeOrderReqDto.useVoucher = false
+      data.tcMergeOrderReqDto.useWechatPay = false
+      this.$store
+        .dispatch("finance/aliPay", data)
+        .then((res) => {
+          console.log(res);
+          if (res.data.aliPayResult) {
+            // 打开支付宝支付
+            openAlipayPay(res.data.aliPayResult);
+          }
+          if (res.data.wechatCode) {
+            // 打开微信支付
+            this.WeChatPop(res.data.wechatCode);
+          } else {
+            this.$message.success("余额支付成功");
+          }
+          this.btnflag = false
+          this.$emit("success");
+        })
+        .finally(() => {
+          this.loading = false;
+        });
     },
     // 确认支付
     handlePay() {
@@ -230,13 +303,13 @@ export default {
           ...this.balanceData,
           mergeOrderNo: this.detail.mergeOrderNo,
           returnUrl: getAliPayCallBack(this.detail.orderNo), // 页面重定向地址
-          requestFromUrl: getAliPayCallBack(this.detail.orderNo) // 用户取消支付会回退改地址
+          requestFromUrl: getAliPayCallBack(this.detail.orderNo), // 用户取消支付会回退改地址
         },
         tcOrderReqDtoList: [
           {
-            orderNo: this.detail.orderNo
-          }
-        ]
+            orderNo: this.detail.orderNo,
+          },
+        ],
       };
       this.$store
         .dispatch("finance/aliPay", data)
@@ -257,8 +330,8 @@ export default {
         .finally(() => {
           this.loading = false;
         });
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -267,6 +340,7 @@ export default {
   font-size: 12px;
   color: #262829;
   padding-bottom: 60px;
+  position: relative;
   .item-select {
     height: 55px;
     line-height: 55px;
@@ -383,5 +457,10 @@ export default {
       width: 130px;
     }
   }
+}
+.continue {
+  position: absolute !important;
+  right: 0 !important;
+  bottom: 0 !important;
 }
 </style>

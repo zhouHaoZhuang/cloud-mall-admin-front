@@ -219,14 +219,14 @@ export default {
       color: #272829;
     }
     .btns {
-      padding-top: 15px;
+      padding-top: 2px;
       display: flex;
       // justify-content: space-between;
       .btn1 {
         padding-right: 20px;
       }
       .btn3 {
-        width: 400px;
+        width: 380px;
         .ant-select {
           margin-right: 10px;
         }
@@ -248,7 +248,7 @@ export default {
         padding-left: 20px;
       }
       .btn6 {
-        padding-left: 20px;
+        padding-left: 10px;
       }
     }
     .table {

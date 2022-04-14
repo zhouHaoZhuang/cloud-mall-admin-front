@@ -2,7 +2,7 @@
   <div class="order-container">
     <div class="content">
       <div>
-        <div class="ny-panel-title">订单管理</div>
+        <span class="ny-panel-title">订单管理</span>
       </div>
       <div class="prompt-message">
         <p>
@@ -114,6 +114,7 @@
           :data-source="data"
           :pagination="paginationProps"
           @change="handleChange"
+          :scroll="{y:400}"
         >
           <div slot="payTime" slot-scope="text, record">
             <span v-if="record.tradeStatus === 5">{{ text | formatDate }}</span>
@@ -373,24 +374,24 @@ export default {
       height: 60px;
       line-height: 60px;
       background-color: #f2f2f2;
+      margin-bottom: 20px;
     }
     .ny-panel-title {
       display: inline-block;
       margin: 0;
-      height: 40px;
       font-size: 22px;
+      margin-bottom: 20px;
     font-weight: 600;
       color: #272829;
     }
     .btns {
-      padding-top: 15px;
       display: flex;
       // justify-content: space-between;
       .btn1 {
         padding-right: 20px;
       }
       .btn3 {
-        width: 380px;
+        width: 370px;
       }
       .btn2 {
         display: flex;
@@ -408,10 +409,10 @@ export default {
         padding-left: 20px;
       }
       .btn6 {
-        padding-left: 20px;
+        padding-left: 10px;
       }
       .right-skew {
-        margin-right: 20px;
+        margin-right: 10px;
       }
     }
     .table {
