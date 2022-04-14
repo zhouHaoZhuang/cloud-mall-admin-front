@@ -314,7 +314,6 @@ export const getParameter = (
   skipFilter = [],
   configId = undefined
 ) => {
-  console.log("dasdasd", configId);
   let data = {
     functions: [
       {
@@ -342,6 +341,16 @@ export const getParameter = (
           : form[ele]
     };
   });
+  let newStr;
+  console.log(data.functions[0].functionArgs[1]);
+  if (data.functions[0].functionArgs[1]?.argValue) {
+    newStr = data.functions[0].functionArgs[1].argValue;
+    var reg = /[\n]/g;
+    if (data.functions[0].functionArgs[1].argValue.toString().includes("\n")) {
+      data.functions[0].functionArgs[1].argValue =
+        data.functions[0].functionArgs[1].argValue.toString().replace(reg, ",");
+    }
+  }
   return data;
 };
 // cdn管理页面根据接口返回数据处理前端所需格式form

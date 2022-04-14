@@ -13,12 +13,12 @@
           <a-select-option value="month"> 按月查询 </a-select-option>
         </a-select>
         <a-date-picker
-          v-show="listQuery.granularity !== 'day'"
+          v-show="listQuery.granularity == 'day'"
           @change="onChange"
           v-model="billingDate"
         />
         <a-month-picker
-          v-show="listQuery.granularity !== 'month'"
+          v-show="listQuery.granularity == 'month'"
           @change="onChange"
           v-model="billingCycle"
         />
@@ -109,7 +109,7 @@ export default {
         //   dataIndex: "cnameStatus"
         // }
       ],
-      data: [{}],
+      data: [],
       plusColumns: [
         {
           title: "时间",
@@ -123,13 +123,13 @@ export default {
           }
         }
       ],
-      plusData: [{}],
+      plusData: [],
       billingCycle: null,
       billingDate: null
     };
   },
   created() {
-    this.listQuery.billingDate = moment(this.listQuery.billingDate).format(
+    this.listQuery.billingDate = moment(this.listQuery.billingDate).add(-1, 'days').format(
       "YYYY-MM-DD"
     );
     this.billingDate = this.listQuery.billingDate;
@@ -138,6 +138,8 @@ export default {
   methods: {
     // 切换时间类型
     changeDate() {
+      this.plusData = [];
+      this.data = [];
       if (this.listQuery.granularity === "day") {
         this.listQuery.billingCycle = "";
         this.billingCycle = null;

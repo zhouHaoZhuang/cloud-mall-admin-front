@@ -28,6 +28,11 @@ export default {
     btnDisabled: {
       type: Boolean,
       default: false
+    },
+    // fileName导出数据的文件名
+    fileName: {
+      type: String,
+      default: "导出表格"
     }
   },
   methods: {
@@ -65,7 +70,7 @@ export default {
       // 将 工作表 添加到 workbook
       XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
       // 将 workbook 写入文件
-      XLSX.writeFile(wb, "table.xlsx");
+      XLSX.writeFile(wb, `${this.fileName}.xlsx`);
     }
   }
 };

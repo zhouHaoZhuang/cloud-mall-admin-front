@@ -168,9 +168,7 @@
           <a-space>
             <a-button
               type="primary"
-              :disabled="
-                !form.domain || form.sourceInfo.sourceModel.length === 0
-              "
+              :disabled="isNext || form.sourceInfo.sourceModel.length === 0"
               :loading="loading"
               @click="handleNext"
             >
@@ -200,6 +198,7 @@
     <!-- 新增源站信息弹窗 -->
     <UpdateSourceStationModal
       v-model="visible"
+      :sourceList="form.sourceInfo.sourceModel"
       :detail="modalDetail"
       @success="modalSuccess"
     />
@@ -278,13 +277,13 @@ export default {
       verifyStatus: "wait",
       // 如何设置解析弹窗
       courseVisible: false,
-      step: 1
+      step: 1,
+      isNext: true // 是否可以点击下一步
     };
   },
   computed: {
     ...mapGetters(["productCode"])
   },
-  created() {},
   methods: {
     // 域名输入框change
     handleInputChange() {
@@ -301,12 +300,15 @@ export default {
           productCode: this.productCode
         })
         .then((res) => {
+          console.log(res, "域名解析");
           // 如果校验不通过的话
           if (res.data !== "success") {
             this.isShowCheck = true;
+            this.isNext = true;
             this.verifyCode = res.data;
           } else {
             this.isShowCheck = false;
+            this.isNext = false;
             this.verifyCode = "";
             this.$message.success("域名归属权校验成功");
           }

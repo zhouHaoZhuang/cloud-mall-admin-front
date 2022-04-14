@@ -1,5 +1,5 @@
 <template>
-  <div class="cloud-container">
+  <div class="channel-list-container">
     <!-- 按钮操作 -->
     <div class="btns">
       <div class="left">
@@ -14,7 +14,7 @@
         </a-space>
       </div>
     </div>
-    <div class="table">
+    <div class="public-table-wrap">
       <a-table
         rowKey="id"
         :loading="tableLoading"
@@ -25,7 +25,7 @@
           selectedRowKeys: selectedRowKeys,
           onChange: onSelectChange
         }"
-        :scroll="{ x:500}"
+        :scroll="{ x: 200 }"
       >
         <div slot="instantType" slot-scope="text">
           {{ text == "true" ? "极速快照" : "普通快照" }}
@@ -63,6 +63,7 @@
         </div>
       </a-table>
     </div>
+
     <!-- 创建快照 -->
     <CreateSnapshoot
       v-model="addVisible"
@@ -134,80 +135,80 @@ export default {
         {
           title: "快照ID/名称",
           dataIndex: "snapshotName",
-          scopedSlots: { customRender: "snapshotName" },
+          scopedSlots: { customRender: "snapshotName" }
           // width:160
         },
         {
           title: "快照类型",
           dataIndex: "instantAccess",
-          scopedSlots: { customRender: "instantType" },
+          scopedSlots: { customRender: "instantType" }
           // width:100
         },
         {
           title: "快照来源",
           dataIndex: "snapshotType",
-          scopedSlots: { customRender: "snapshotType" },
+          scopedSlots: { customRender: "snapshotType" }
           // width:100
         },
         {
           title: "快照极速可用",
           dataIndex: "instantAccess1",
-          scopedSlots: { customRender: "instantAccess" },
+          scopedSlots: { customRender: "instantAccess" }
           // width:120
         },
         {
           title: "云盘ID",
-          dataIndex: "sourceDiskId",
+          dataIndex: "sourceDiskId"
           //  width:150
         },
         {
           title: "云盘容量",
           dataIndex: "sourceDiskSize",
-          scopedSlots: { customRender: "sourceDiskSize" },
+          scopedSlots: { customRender: "sourceDiskSize" }
           //  width:100
         },
         {
           title: "云盘属性",
           dataIndex: "sourceDiskType",
-          scopedSlots: { customRender: "sourceDiskType" },
+          scopedSlots: { customRender: "sourceDiskType" }
           // width:100
         },
         {
           title: "已加密/未加密",
           dataIndex: "encrypted",
-          scopedSlots: { customRender: "encrypted" },
+          scopedSlots: { customRender: "encrypted" }
           // width:100
         },
         {
           title: "创建时间",
           dataIndex: "createTime",
           sorter: (a, b) => moment(a.createTime) - moment(b.createTime),
-          scopedSlots: { customRender: "createTime" },
+          scopedSlots: { customRender: "createTime" }
           // width:120
         },
         {
           title: "保留时间",
           dataIndex: "retentionDays",
           // sorter: (a, b) => moment(a.retentionDays) - moment(b.retentionDays),
-          scopedSlots: { customRender: "retentionDays" },
+          scopedSlots: { customRender: "retentionDays" }
           // width:120
         },
         {
           title: "进度",
-          dataIndex: "progress",
+          dataIndex: "progress"
           // width:60
         },
         {
           title: "状态",
           dataIndex: "status",
-          scopedSlots: { customRender: "status" },
+          scopedSlots: { customRender: "status" }
           // width:60
         },
         {
           title: "操作",
           dataIndex: "action",
           // fixed: "right",
-          scopedSlots: { customRender: "action" },
+          scopedSlots: { customRender: "action" }
           // width:80
         }
       ],
@@ -316,7 +317,7 @@ export default {
       newStr = this.multipleSelection.toString();
       this.$store.dispatch("snapshoot/del", newStr).then((res) => {
         this.$message.success("删除成功");
-        this.multipleSelection = []
+        this.multipleSelection = [];
         this.getList();
         this.delVisible = false;
       });
@@ -339,102 +340,33 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.cloud-container {
-  background-color: #fff;
-  width: 100px;
-  margin: 0;
-  .cloud-top {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    .left {
-      .title {
-        display: inline-block;
-        height: 40px;
-        line-height: 40px;
-        font-size: 22px;
-        color: #272829;
-        margin-right: 30px;
-      }
-    }
-    .help {
-      color: #40a9ff;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      .icon {
-        margin-right: 8px;
-        font-size: 18px;
-      }
-    }
-  }
+.channel-list-container {
+  background: #fff;
   .btns {
     margin: 20px 0;
     display: flex;
     justify-content: space-between;
-    .right {
-      color: #4d4d4d;
-      font-size: 18px;
-      display: flex;
-      .icon-btn {
-        width: 32px;
-        height: 32px;
-        border: 1px solid #ddd;
-        margin: 0 4px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-      }
-    }
   }
-  .table {
-    width: 1100px;
-    color: #4d4d4d;
-    .copy-icon {
-      color: #00aaff;
-      cursor: pointer;
-    }
+  .public-table-wrap {
     .status {
-      color: #29cc7a;
       display: flex;
       align-items: center;
       .dot {
-        width: 14px;
-        height: 14px;
+        width: 8px;
+        height: 8px;
         border-radius: 50%;
-        background: #29cc7a;
+        background: green;
         margin-right: 5px;
       }
-    }
-    .start {
-      color: #29cc7a;
-      .dot {
-        background: #29cc7a;
-      }
-    }
-    .stop {
-      color: red;
-      .dot {
+      .dot-err {
         background: red;
       }
     }
-    .hole {
-      color: #000;
-      .dot {
-        background: #000;
-      }
-    }
-    .overdue {
-      color: #666;
-      .dot {
-        background: #666;
-      }
-    }
   }
-}
-.snapshotId {
-  border: 1px solid #ccc;
-  padding: 5px 15px;
+
+  .snapshotId {
+    border: 1px solid #ccc;
+    padding: 5px 15px;
+  }
 }
 </style>

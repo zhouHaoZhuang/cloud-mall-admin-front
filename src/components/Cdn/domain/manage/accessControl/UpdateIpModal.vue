@@ -76,6 +76,7 @@ export default {
       wrapperCol: { span: 15 },
       loading: false,
       ipType: 1,
+      getParameter,
       form: {
         ip_list: ""
       },
@@ -149,11 +150,15 @@ export default {
         if (valid) {
           const newFunctionName =
             this.ipType === 1 ? "ip_black_list_set" : "ip_allow_list_set";
+          if(this.form.ip_list.includes("\n")){
+            this.form.ip_list = this.form.ip_list.replace(/\n/g, ",");
+          }
           let tempForm = { ...this.form };
           const newForm = {
-            ...getParameter(tempForm, newFunctionName, this.domain)
+            ...this.getParameter(tempForm, newFunctionName, this.domain)
           };
           this.loading = true;
+          console.log(newForm, 'newFunctionName----------');
           this.$store
             .dispatch("cdn/saveConfig", newForm)
             .then((res) => {

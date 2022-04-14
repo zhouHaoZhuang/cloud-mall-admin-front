@@ -56,6 +56,7 @@
                 moment('11:59:59', 'HH:mm:ss')
               ]
             }"
+            :disabled-date="disabledDate"
             format="YYYY-MM-DD HH:mm:ss"
             :placeholder="['开始时间', '结束时间']"
             @change="datePickerOnOk"
@@ -72,13 +73,22 @@
       :tabsKey="tabsKey"
       :listQuery="listQuery"
     /> -->
-    <div class="Echarts" v-show="data.length > 0">
-      <div id="main" style="height: 400px"></div>
-      <div class="export-icon" v-show="data.length > 0">
+    <div class="Echarts">
+      <div id="main" style="height: 400px">
+        <div
+          class="Echarts-text"
+          style="height: 400px"
+          v-if="data.length === 0"
+        >
+          暂无数据
+        </div>
+      </div>
+      <div class="export-icon" v-show="data.length !== 0">
         <ExportTable
-          :btnDisabled="data.length <= 0"
+          :btnDisabled="data.length == 0"
           :columns="columns"
           :tableList="data"
+          :fileName="fileName"
         >
           <div slot="view" class="icon-download">
             <img src="@/assets/img/cdn/download.png" alt="" />
@@ -86,9 +96,6 @@
           </div>
         </ExportTable>
       </div>
-    </div>
-    <div class="Echarts-text" v-show="data.length <= 0">
-      <div id="main" style="height: 400px">暂无数据</div>
     </div>
     <div class="title">明细</div>
     <div>
@@ -263,14 +270,25 @@ export default {
           }
         ]
       },
-      totalFlow: ""
+      totalFlow: "",
+      disabledDate: (current) => {
+        return current && current.valueOf() > Date.now();
+      }
     };
   },
+
   created() {
     console.log(this.getDate());
     this.getDomainList();
     this.listQuery.startTime = this.getDate()[this.date].startTime;
     this.listQuery.endTime = this.getDate()[this.date].endTime;
+  },
+  computed: {
+    fileName() {
+      return `${this.listQuery.field === "traf" ? "流量" : "HTTPS请求数"}(${
+        this.listQuery.startTime
+      }-${this.listQuery.endTime})`;
+    }
   },
   methods: {
     myEcharts() {
@@ -432,10 +450,8 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
-    #main {
-      line-height: 400px;
-      font-size: 17px;
-    }
+    line-height: 400px;
+    font-size: 17px;
   }
   .download-text {
     display: none;

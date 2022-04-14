@@ -126,6 +126,14 @@ const cdn = {
         data
       });
     },
+    // 删除控制访问配置
+    delDomainConfig({ commit, state }, data) {
+      return request({
+        url: "/aliyun/cdn/deleteSpecificConfig",
+        method: "post",
+        data
+      });
+    },
     // 复制配置
     copyConfig({ commit, state }, data) {
       return request({

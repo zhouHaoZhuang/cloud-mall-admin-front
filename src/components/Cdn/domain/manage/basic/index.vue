@@ -14,7 +14,11 @@
     </a-descriptions>
     <a-descriptions title="源站信息">
       <a-descriptions-item>
-        <a-button type="primary" :disabled="form.sourceModels.sourceModel.length === 20" @click="handleAddSource">
+        <a-button
+          type="primary"
+          :disabled="form.sourceModels.sourceModel.length === 20"
+          @click="handleAddSource"
+        >
           新增源站信息
         </a-button>
         <a-table
@@ -60,6 +64,7 @@
     <!-- 新增源站信息弹窗 -->
     <UpdateSourceStationModal
       v-model="visible"
+      :isLocal="false"
       :detail="modalDetail"
       @success="modalSuccess"
     />

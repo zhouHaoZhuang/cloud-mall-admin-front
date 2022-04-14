@@ -18,7 +18,7 @@
       :wrapper-col="wrapperCol"
     >
       <a-form-model-item label="源站信息" prop="type">
-        <a-radio-group v-model="form.type">
+        <a-radio-group v-model="form.type" @change="toChange">
           <a-radio v-for="(val, key) in cdnTypeEnum" :key="key" :value="key">
             {{ val }}
           </a-radio>
@@ -87,6 +87,11 @@ export default {
     detail: {
       type: Object,
       default: () => {}
+    },
+    // 获取本地的添加数据列表
+    sourceList: {
+      type: Array,
+      default: () => []
     }
   },
   computed: {
@@ -143,6 +148,20 @@ export default {
             required: true,
             message: "请输入",
             trigger: ["blur", "change"]
+          },
+          {
+            validator: (rule, value, callback) => {
+              if (this.type === "add") {
+                if (this.sourceList.some((item) => item.content === value)) {
+                  callback(new Error("不能为空或重复"));
+                } else {
+                  callback();
+                }
+              } else {
+                callback();
+              }
+            },
+            trigger: ["blur", "change"]
           }
         ],
         priority: [
@@ -185,6 +204,14 @@ export default {
         port: ""
       };
     },
+    //切换单选框
+    toChange(e) {
+      if (e.target.value !== this.detail.type) {
+        this.form.content = "";
+      }else{
+        this.form.content = this.detail.content
+      }
+    },
     // 弹窗提交
     handleOk() {
       this.$refs.ruleForm.validate((valid) => {
@@ -197,7 +224,7 @@ export default {
           }
           this.loading = true;
           this.$store
-            .dispatch("domain/add", this.form)
+            .dispatch("cdn/updateSourceInfo", this.form)
             .then((res) => {
               this.$message.success(this.modalTitle + "成功");
               this.$emit("success");

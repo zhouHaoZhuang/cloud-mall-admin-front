@@ -85,6 +85,7 @@
         rowKey="id"
         :pagination="paginationProps"
         :row-selection="rowSelection"
+        :scroll="{ x: 800 }"
       >
         <div class="status" slot="cdnStatus" slot-scope="text">
           <a-badge :status="cdnStatusEnum[text].dot" />
@@ -113,7 +114,8 @@
               @click="handleManage(record)"
               :disabled="
                 record.corporationLockStatus == 0 ||
-                record.systemLockStatus == 0
+                record.systemLockStatus == 0 ||
+                record.cdnStatus == 5
               "
             >
               管理
@@ -128,7 +130,8 @@
               @click="handleCopy(record)"
               :disabled="
                 record.corporationLockStatus == 0 ||
-                record.systemLockStatus == 0
+                record.systemLockStatus == 0 ||
+                record.cdnStatus == 5
               "
             >
               复制配置
@@ -155,7 +158,11 @@
             >
               停用
             </a-button>
-            <a-button type="link" @click="handleDel([record.id])">
+            <a-button
+              type="link"
+              @click="handleDel([record.id])"
+              :disabled="record.cdnStatus == 5"
+            >
               删除
             </a-button>
           </a-space>
@@ -186,31 +193,37 @@ export default {
       columns: [
         {
           title: "域名",
-          dataIndex: "domain"
+          dataIndex: "domain",
+          width: 180
         },
         {
           title: "CNAME",
-          dataIndex: "cnameValue"
+          dataIndex: "cnameValue",
+          width: 270
         },
         {
           title: "状态",
           dataIndex: "cdnStatus",
-          scopedSlots: { customRender: "cdnStatus" }
+          scopedSlots: { customRender: "cdnStatus" },
+          width: 100
         },
         {
           title: "HTTPS",
           dataIndex: "httpsStatus",
-          scopedSlots: { customRender: "httpsStatus" }
+          scopedSlots: { customRender: "httpsStatus" },
+          width: 100
         },
         {
           title: "源站信息",
           dataIndex: "sourceInfo",
-          scopedSlots: { customRender: "sourceInfo" }
+          scopedSlots: { customRender: "sourceInfo" },
+          width: 260
         },
         {
           title: "创建时间",
           dataIndex: "createTime",
-          scopedSlots: { customRender: "createTime" }
+          scopedSlots: { customRender: "createTime" },
+          width: 180
         },
         {
           title: "操作",
@@ -396,6 +409,8 @@ export default {
 
 <style lang="less" scoped>
 .domain-container {
+  padding: 0 !important;
+  overflow: hidden;
   .top-title {
     height: 40px;
     line-height: 40px;
@@ -403,16 +418,24 @@ export default {
     color: #272829;
     margin-bottom: 10px;
   }
+  .ny-panel-title {
+    margin: 20px;
+  }
   .btn-head {
     display: flex;
     margin-bottom: 15px;
+    margin-left: 20px;
   }
   .public-header-wrap {
     margin-bottom: 20px;
+    margin-left: 20px;
   }
   .table-content {
+    width: calc(100% - 20px);
+    position: relative;
+    left: 20px;
     .txt-btn {
-      padding: 0;
+      padding: 20px 20px;
       display: inline-block;
     }
   }
