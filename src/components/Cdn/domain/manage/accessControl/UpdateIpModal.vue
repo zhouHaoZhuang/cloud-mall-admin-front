@@ -149,6 +149,9 @@ export default {
         if (valid) {
           const newFunctionName =
             this.ipType === 1 ? "ip_black_list_set" : "ip_allow_list_set";
+          if(this.form.ip_list.includes("\n")){
+            this.form.ip_list = this.form.ip_list.replace(/\n/g, ",");
+          }
           let tempForm = { ...this.form };
           const newForm = {
             ...getParameter(tempForm, newFunctionName, this.domain)
