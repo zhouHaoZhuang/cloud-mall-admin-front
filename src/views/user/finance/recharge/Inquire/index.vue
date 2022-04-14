@@ -269,6 +269,7 @@ export default {
   margin-right: 8px;
 }
 .record-content {
+  margin-top: 20px;
   .record-title {
     padding: 7px 22px 5px 37px;
     background: #fff3eb url(../../../../../assets/img/pay/ExclamationMark.png)
@@ -276,6 +277,7 @@ export default {
     min-height: 32px;
     border: 1px solid #ffda95;
     border-radius: 2px;
+    margin-bottom: 20px;
     color: #ff6600;
     font-size: 12px;
   }
