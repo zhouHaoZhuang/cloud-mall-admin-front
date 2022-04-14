@@ -341,11 +341,15 @@ export const getParameter = (
           : form[ele]
     };
   });
-  let newStr
-  if(data.functions[0].functionArgs[1].argValue){
-    newStr =  data.functions[0].functionArgs[1].argValue
+  let newStr;
+  console.log(data.functions[0].functionArgs[1]);
+  if (data.functions[0].functionArgs[1]?.argValue) {
+    newStr = data.functions[0].functionArgs[1].argValue;
     var reg = /[\n]/g;
-    data.functions[0].functionArgs[1].argValue=data.functions[0].functionArgs[1].argValue.replace(reg,',')
+    if (data.functions[0].functionArgs[1].argValue.toString().includes("\n")) {
+      data.functions[0].functionArgs[1].argValue =
+        data.functions[0].functionArgs[1].argValue.toString().replace(reg, ",");
+    }
   }
   return data;
 };
