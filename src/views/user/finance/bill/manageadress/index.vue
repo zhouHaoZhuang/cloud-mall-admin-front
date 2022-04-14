@@ -337,7 +337,7 @@ export default {
   background-color: #e6f7ff;
   border: 1px solid #91d5ff;
   border-radius: 3px;
-  margin-bottom: 30px;
+  margin-bottom: 20px;
 }
 .save-btn {
   width: 100px;
