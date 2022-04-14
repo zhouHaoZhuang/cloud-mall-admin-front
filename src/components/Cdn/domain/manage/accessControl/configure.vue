@@ -89,6 +89,24 @@
           </div>
         </div>
       </div>
+      <div class="content-row">
+        <div class="label">黑名单/白名单</div>
+        <div class="value">
+          <span v-for="item in referForm.list"> {{ item }}<br /> </span>
+        </div>
+      </div>
+      <div class="content-row">
+        <div class="label"></div>
+        <div class="value">
+          <a-button
+            :disabled="referForm.list.length === 0"
+            type="link"
+            @click="delRefer(referForm.configId)"
+          >
+            删除设置
+          </a-button>
+        </div>
+      </div>
     </div>
     <div class="public-manage-box">
       <div class="head-box">
@@ -101,7 +119,30 @@
       </div>
       <div class="content-row">
         <div class="label">IP黑/白名单类型</div>
-        <div class="value">{{ ipForm.typeName }}</div>
+        <div class="value">
+          {{ ipForm.typeName }}
+          <div class="txt">
+            通过黑/白名单来对用户的身份进行识别和过滤，支持IPv4和IPv6地址。
+          </div>
+        </div>
+      </div>
+      <div class="content-row">
+        <div class="label">IP黑/白名单</div>
+        <div class="value">
+          <span v-for="item in ipForm.list"> {{ item }}<br /> </span>
+        </div>
+      </div>
+      <div class="content-row">
+        <div class="label"></div>
+        <div class="value">
+          <a-button
+            :disabled="ipForm.list.length === 0"
+            type="link"
+            @click="delRefer(ipForm.configId)"
+          >
+            删除设置
+          </a-button>
+        </div>
       </div>
     </div>
     <div class="public-manage-box">
@@ -119,6 +160,27 @@
           <span v-if="!uaForm.type">未设置</span>
           <span v-if="uaForm.type === 'black'">黑名单</span>
           <span v-if="uaForm.type === 'white'">白名单</span>
+          <div class="txt">
+            通过UserAgent字段设置黑/白名单对访问者进行访问控制。
+          </div>
+        </div>
+      </div>
+      <div class="content-row">
+        <div class="label">IP黑/白名单</div>
+        <div class="value">
+          <span v-for="item in uaForm.list"> {{ item }}<br /> </span>
+        </div>
+      </div>
+      <div class="content-row">
+        <div class="label"></div>
+        <div class="value">
+          <a-button
+            :disabled="uaForm.list.length === 0"
+            type="link"
+            @click="delRefer(uaForm.configId)"
+          >
+            删除设置
+          </a-button>
         </div>
       </div>
     </div>
@@ -222,14 +284,20 @@ export default {
         enable: false
       },
       referForm: {
-        typeName: "未设置"
+        typeName: "未设置",
+        list: [],
+        configId: ""
       },
       ipForm: {
-        typeName: "未设置"
+        typeName: "未设置",
+        list: [],
+        configId: ""
       },
       uaForm: {
         ua: "",
-        type: ""
+        type: "",
+        list: [],
+        configId: ""
       }
     };
   },
@@ -238,6 +306,24 @@ export default {
     getBatchConfig() {
       Object.keys(this.modalMap).forEach((ele, index) => {
         this.getConfig(index + 1);
+      });
+    },
+    // 删除设置
+    delRefer(configId) {
+      this.$confirm({
+        title: `确定要删除该配置吗？`,
+        centered: true,
+        onOk: () => {
+          this.$store
+            .dispatch("cdn/delDomainConfig", {
+              configId,
+              domainName: this.domain
+            })
+            .then((res) => {
+              this.$message.success("删除成功");
+              this.getBatchConfig();
+            });
+        }
       });
     },
     // 查询配置信息
@@ -252,6 +338,8 @@ export default {
           if (data.length > 0) {
             const newForm = { ...this.modalMap[type].form };
             if (type === 1) {
+              // 鉴权url
+              console.log(data, "鉴权url");
               this.aliauthForm = {
                 enable:
                   getForm(data[0], newForm).auth_type === "no_auth"
@@ -260,24 +348,54 @@ export default {
               };
             }
             if (type === 2) {
+              // 防盗链
+              console.log(data, "防盗链");
+              let list = data[0].functionArgs.functionArg
+                .filter((item) => {
+                  if (data[0].functionNameCn === "配置Referer白名单") {
+                    return item.argName === "refer_domain_allow_list";
+                  }
+                  return item.argName === "refer_domain_deny_list";
+                })[0]
+                .argValue.split(",");
               this.referForm = {
                 typeName:
                   data[0].functionName === "referer_black_list_set"
                     ? "黑名单"
-                    : "白名单"
+                    : "白名单",
+                configId: data[0].configId,
+                list
               };
             }
             if (type === 3) {
+              // ip 黑白名单
+              console.log(data, "ip 黑白名单");
+              let list = data[0].functionArgs.functionArg
+                .filter((item) => {
+                  return item.argName === "ip_list";
+                })[0]
+                .argValue.split(",");
               this.ipForm = {
                 typeName:
                   data[0].functionName === "ip_black_list_set"
                     ? "黑名单"
-                    : "白名单"
+                    : "白名单",
+                configId: data[0].configId,
+                list
               };
             }
             if (type === 4) {
+              // ua
+              console.log(data, "ua");
+              let list = data[0].functionArgs.functionArg
+                .filter((item) => {
+                  return item.argName === "ua";
+                })[0]
+                .argValue.split(",");
               this.uaForm = {
-                ...getForm(data[0], newForm)
+                ...getForm(data[0], newForm),
+                configId: data[0].configId,
+                list
               };
             }
           }

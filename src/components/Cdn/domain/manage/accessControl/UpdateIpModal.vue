@@ -76,6 +76,7 @@ export default {
       wrapperCol: { span: 15 },
       loading: false,
       ipType: 1,
+      getParameter,
       form: {
         ip_list: ""
       },
@@ -154,9 +155,10 @@ export default {
           }
           let tempForm = { ...this.form };
           const newForm = {
-            ...getParameter(tempForm, newFunctionName, this.domain)
+            ...this.getParameter(tempForm, newFunctionName, this.domain)
           };
           this.loading = true;
+          console.log(newForm, 'newFunctionName----------');
           this.$store
             .dispatch("cdn/saveConfig", newForm)
             .then((res) => {
