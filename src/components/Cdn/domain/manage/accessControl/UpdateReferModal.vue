@@ -30,7 +30,7 @@
       <a-form-model-item label="规则" prop="list">
         <a-textarea v-model="form.list" :rows="5" />
         <div class="info-txt">
-          使用回车符分隔多个Refer名单，支持通配符，如a.*b.com可以匹配到a.yisu.b.com或a.img.b.com等。
+          使用回车符分隔多个Refer名单，支持通配符，如a.*b.com可以匹配到a.slayun.b.com或a.img.b.com等。
         </div>
       </a-form-model-item>
       <a-form-model-item :wrapper-col="{ span: 15, offset: 6 }">
@@ -178,10 +178,23 @@ export default {
           } else {
             tempForm.refer_domain_allow_list = this.form.list;
           }
+          console.log(tempForm,'newFunctionName');
           const newForm = {
             ...getParameter(tempForm, newFunctionName, this.domain)
           };
           this.loading = true;
+          // newForm.functions.forEach(element => {
+             
+          //     element.functionArgs.forEach(ele => {
+          //        console.log( typeof ele.argValue,'e');
+          //          let a = ele.argValue
+          //          var reg = /[\n]/g;
+                
+          //            a=a.replace(reg,',')
+          //            console.log(a,'aaaaaa');
+                   
+          //     });
+          // });
           this.$store
             .dispatch("cdn/saveConfig", newForm)
             .then((res) => {

@@ -38,7 +38,7 @@
           :max-length="32"
           :disabled="!form.enable"
         />
-        <div class="info-txt">16~32个字符支持大写字母、小写字母、数字。</div>
+        <div class="info-txt">6~32个字符支持大写字母、小写字母、数字。</div>
       </a-form-model-item>
       <a-form-model-item label="备KEY" prop="auth_key2">
         <a-input
@@ -47,7 +47,7 @@
           :max-length="32"
           :disabled="!form.enable"
         />
-        <div class="info-txt">16~32个字符支持大写字母、小写字母、数字。</div>
+        <div class="info-txt">6~32个字符支持大写字母、小写字母、数字。</div>
       </a-form-model-item>
     </a-form-model>
   </a-modal>
@@ -110,8 +110,8 @@ export default {
             trigger: ["blur", "change"]
           },
           {
-            min: 16,
-            message: "请至少输入16位字符",
+            min: 6,
+            message: "请至少输入6位字符",
             trigger: ["blur", "change"]
           }
         ],
@@ -122,8 +122,8 @@ export default {
             trigger: ["blur", "change"]
           },
           {
-            min: 16,
-            message: "请至少输入16位字符",
+            min: 6,
+            message: "请至少输入6位字符",
             trigger: ["blur", "change"]
           }
         ]
