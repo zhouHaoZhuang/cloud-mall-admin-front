@@ -18,7 +18,7 @@
       :wrapper-col="wrapperCol"
     >
       <a-form-model-item label="源站信息" prop="type">
-        <a-radio-group v-model="form.type">
+        <a-radio-group v-model="form.type" @change="toChange">
           <a-radio v-for="(val, key) in cdnTypeEnum" :key="key" :value="key">
             {{ val }}
           </a-radio>
@@ -184,6 +184,10 @@ export default {
         weight: "",
         port: ""
       };
+    },
+    //切换单选框
+    toChange(){
+      this.form.content = ''
     },
     // 弹窗提交
     handleOk() {
