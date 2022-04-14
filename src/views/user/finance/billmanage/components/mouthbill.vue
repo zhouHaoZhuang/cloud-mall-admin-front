@@ -194,7 +194,7 @@ export default {
       color: #272829;
     }
     .btns {
-      padding-top: 15px;
+      padding-top: 2px;
       display: flex;
       // justify-content: space-between;
       .btn1 {
@@ -211,7 +211,6 @@ export default {
         display: flex;
         .month-text {
           line-height: 36px;
-          margin-right: 10px;
         }
         .btn4 {
           width: 170px;
@@ -227,7 +226,7 @@ export default {
         padding-left: 20px;
       }
       .btn6 {
-        padding-left: 20px;
+        padding-left: 10px;
       }
     }
     .table {

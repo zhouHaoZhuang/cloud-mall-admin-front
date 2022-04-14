@@ -37,7 +37,7 @@
               {{ payState[orderInfo.tradeStatus] }}
             </span>
           </li>
-          <li
+          <!-- <li
             v-if="
               orderInfo.tradeStatus !== 1 &&
               orderInfo.tradeStatus !== 3 &&
@@ -46,7 +46,7 @@
           >
             <span>支付时间:</span>
             <span>{{ orderInfo.payTime | formatDate }}</span>
-          </li>
+          </li> -->
           <li v-if="orderInfo.tradeStatus === 1" class="cancelOrder-btn">
             <a-button @click="cancelOrder">取消订单</a-button>
           </li>
@@ -59,9 +59,13 @@
             <span>支付金额:</span>
             <span>{{ orderInfo.actualAmount }}</span>
           </li>
-          <li>
+          <li v-if="
+              orderInfo.tradeStatus !== 1 &&
+              orderInfo.tradeStatus !== 3 &&
+              orderInfo.tradeStatus !== -1
+            ">
             <span>支付时间:</span>
-            <span>{{ orderInfo.payTime | formatDate }} </span>
+            <span>{{ disPayTime | formatDate }} </span>
           </li>
         </ul>
       </div>
@@ -186,10 +190,11 @@
     </div> -->
     <!-- 订单支付模块 -->
     <PaySelect
-      v-if="orderInfo.tradeStatus === 1"
+      v-if="orderInfo.tradeStatus === 1 || orderInfo.tradeStatus === 3"
       :detail="orderInfo"
       @success="startTime"
       :WeChatPop="WeChatPop"
+      :tradeStatus="tradeStatus"
     />
     <a-modal
       title="请扫描下方二维码完成支付"
@@ -298,7 +303,9 @@ export default {
       payTime: null,
       endTime: "",
       price: 0,
-      priceFlag: false
+      priceFlag: false,
+      disPayTime:undefined,
+      tradeStatus:undefined
       // actualAmount
     };
   },
@@ -352,6 +359,7 @@ export default {
         .dispatch("income/getOne", this.$route.query.id)
         .then((res) => {
           this.orderInfo = { ...res.data };
+          this.disPayTime =  this.orderInfo.payTime
           this.price = this.orderInfo.actualAmount;
           //判断是否有小数点
           let isnan = this.price.toString().split("").indexOf(".");
@@ -361,6 +369,7 @@ export default {
             this.priceFlag = true;
           }
           this.data = [{ ...res.data }];
+          this.tradeStatus = this.data[0].tradeStatus
           if (res.data.tradeStatus === 1) {
             this.startCountDown(res.data.orderCreateTime);
           }

@@ -19,7 +19,7 @@
       :wrapper-col="wrapperCol"
     >
       <a-form-model-item label="过滤参数" prop="type">
-        <a-switch v-model="form.disable">
+        <a-switch v-model="form.disable" @change="checkParams">
           <a-icon slot="checkedChildren" type="check" />
           <a-icon slot="unCheckedChildren" type="close" />
         </a-switch>
@@ -36,7 +36,18 @@
         <a-input v-model="form.hashkey_args" :disabled="!form.disable" />
         <div class="info-txt">最多10个, 使用英文逗号做分隔符。</div>
       </a-form-model-item>
-      <a-form-model-item v-else label="忽略参数" prop="ali_remove_args">
+      <a-form-model-item
+        v-if="this.type !== 1 && form.disable !== true"
+        label="忽略参数"
+      >
+        <a-input v-model="form.ali_remove_args" :disabled="!form.disable" />
+        <div class="info-txt">请使用空格分隔。</div>
+      </a-form-model-item>
+      <a-form-model-item
+        v-if="this.type !== 1 && form.disable === true"
+        label="忽略参数"
+        prop="ali_remove_args"
+      >
         <a-input v-model="form.ali_remove_args" :disabled="!form.disable" />
         <div class="info-txt">请使用空格分隔。</div>
       </a-form-model-item>
@@ -59,22 +70,22 @@ export default {
   // 双向绑定
   model: {
     event: "changeVisible",
-    prop: "value"
+    prop: "value",
   },
   props: {
     // 组件传递的值
     value: {
       type: Boolean,
-      default: false
+      default: false,
     },
     type: {
       type: Number,
-      default: 1
+      default: 1,
     },
     modalMap: {
       type: Object,
-      default: () => {}
-    }
+      default: () => {},
+    },
   },
   computed: {
     functionName() {
@@ -82,7 +93,7 @@ export default {
     },
     domain() {
       return this.$route.query.domain;
-    }
+    },
   },
   watch: {
     value: {
@@ -90,8 +101,8 @@ export default {
         if (newVal) {
           this.getConfig();
         }
-      }
-    }
+      },
+    },
   },
   data() {
     return {
@@ -104,33 +115,38 @@ export default {
           {
             required: true,
             message: "请输入参数",
-            trigger: "change"
-          }
+            trigger: "change",
+          },
         ],
         ali_remove_args: [
           {
             required: true,
             message: "请输入参数",
-            trigger: "change"
-          }
-        ]
-      }
+            trigger: "change",
+          },
+        ],
+      },
     };
   },
   methods: {
+    checkParams() {
+      if (this.form.disable === false) {
+        this.form.ali_remove_args = "";
+      }
+    },
     // 获取配置详情
     getConfig() {
       this.$store
         .dispatch("cdn/getDomainConfig", {
           functionNames: this.functionName,
-          domainName: this.domain
+          domainName: this.domain,
         })
         .then((res) => {
           const data = res.data.domainConfigs.domainConfig;
           if (data.length > 0) {
             const newForm = { ...this.modalMap[this.type].form };
             this.form = {
-              ...getForm(data[0], newForm)
+              ...getForm(data[0], newForm),
             };
             if (this.type === 2) {
               this.form.disable = true;
@@ -152,7 +168,7 @@ export default {
       this.$store
         .dispatch("cdn/delAloneConfig", {
           functionNames: newFunctionName,
-          domainName: this.domain
+          domainName: this.domain,
         })
         .catch(() => {
           this.loading = false;
@@ -162,14 +178,24 @@ export default {
     handleOk() {
       this.$refs.ruleForm.validate(async (valid) => {
         if (valid) {
-          await this.removeSubmit();
+          // await this.removeSubmit();
           let tempForm = { ...this.form };
           if (this.type === 2) {
             delete tempForm.disable;
           }
-          const newForm = {
-            ...getParameter(tempForm, this.functionName, this.domain)
+          let newForm = {
+            ...getParameter(tempForm, this.functionName, this.domain),
           };
+          //保留参数时候的判断
+          if (this.type === 1) {
+            let splice = newForm.functions[0].functionArgs.filter(
+              (ele, index) => {
+                return ele.argName !== "ali_remove_args";
+              }
+            );
+            newForm.functions[0].functionArgs = splice;
+          }
+
           this.$store
             .dispatch("cdn/saveConfig", newForm)
             .then((res) => {
@@ -182,8 +208,8 @@ export default {
             });
         }
       });
-    }
-  }
+    },
+  },
 };
 </script>
 <style lang="less" scoped>

@@ -288,6 +288,9 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.ny-panel-title{
+  margin-bottom: 0;
+}
 .top-menu {
   margin-bottom: 25px;
   background-color: #f0f3f5;
@@ -331,10 +334,10 @@ export default {
     padding-left: 20px;
   }
   .btn6 {
-    padding-left: 20px;
+    padding-left: 10px;
   }
   .right-skew {
-    margin-right: 20px;
+    margin-right: 10px;
   }
 }
 .table {
