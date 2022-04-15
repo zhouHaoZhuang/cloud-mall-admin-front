@@ -141,7 +141,6 @@ export default {
 
 <style lang="less" scoped>
 .verified-title {
-  margin-bottom: 20px;
   height: 40px;
   line-height: 40px;
   font-size: 22px;
@@ -163,9 +162,14 @@ export default {
     vertical-align: middle;
   }
 }
-
+.ny-panel-title{
+  margin-bottom: 0;
+}
+.verified-title{
+  margin-bottom: 0;
+}
 .basic-information {
-  margin: 36px 0 20px 0;
+  margin: 20px 0 10px 0;
   color: #0af;
   font-weight: 700;
 }
@@ -184,8 +188,7 @@ export default {
   height: 120px;
   border: 1px solid #ccc;
   padding: 0 20px;
-  margin-right: 3%;
-  margin-bottom: 20px;
+  margin-right: 20px;
   cursor: pointer;
   .left {
     width: 56px;
@@ -215,7 +218,7 @@ export default {
     }
   }
   &:nth-child(3n) {
-    margin: 0 0 20px 0;
+    // margin: 0 0 20px 0;
   }
 }
 </style>

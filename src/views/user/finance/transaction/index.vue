@@ -190,13 +190,13 @@ export default {
     .ny-panel-title {
       display: inline-block;
       margin: 0;
-      height: 40px;
+      // height: 40px;
       font-size: 22px;
-    font-weight: 600;
+      font-weight: 600;
       color: #272829;
     }
     .btns {
-      padding-top: 15px;
+      padding-top: 20px;
       display: flex;
       width: 100%;
       position: relative;

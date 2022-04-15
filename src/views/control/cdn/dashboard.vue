@@ -271,12 +271,12 @@ export default {
       }
     }
     .content {
-      padding: 24px;
+      padding: 20px;
     }
   }
   .left {
     flex: 1;
-    margin-right: 40px;
+    margin-right: 20px;
     .top-box {
       .content {
         padding-bottom: 13px;
@@ -326,11 +326,14 @@ export default {
       }
     }
     .bottom-box {
-      margin-top: 24px;
+      margin-top: 20px;
       display: flex;
       justify-content: space-between;
+      .type{
+        margin-right: 20px;
+      }
       .public-box {
-        width: 45%;
+        flex: 1;
         .item {
           display: flex;
           margin-bottom: 10px;
@@ -359,7 +362,7 @@ export default {
       min-height: 455px;
     }
     .content {
-      padding: 24px 10px;
+      padding: 20px 10px;
     }
   }
 }
