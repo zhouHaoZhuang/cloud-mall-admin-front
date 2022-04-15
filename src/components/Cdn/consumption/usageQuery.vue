@@ -4,7 +4,7 @@
       <div class="left">
         <a-space>
           <a-select
-            style="width: 100px"
+            style="width: 100px; margin-right: 2px"
             allowClear
             v-model="listQuery.area"
             placeholder="请选择"
@@ -14,7 +14,7 @@
             <a-select-option value="all"> 以上全部区域 </a-select-option>
           </a-select>
           <a-select
-            style="width: 120px"
+            style="margin-right: 2px"
             allowClear
             v-model="listQuery.field"
             placeholder="请选择"
@@ -41,7 +41,10 @@
       </div>
       <div class="right">
         <a-space>
-          <a-radio-group v-model="date" @change="handleRadioChange">
+          <a-radio-group
+            v-model="date"
+            @change="handleRadioChange"
+          >
             <a-radio-button value="toDay"> 今天 </a-radio-button>
             <a-radio-button value="yesterday"> 昨天 </a-radio-button>
             <a-radio-button value="aWeek"> 近7日 </a-radio-button>

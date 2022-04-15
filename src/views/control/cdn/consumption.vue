@@ -23,18 +23,19 @@ export default {
     };
   },
   created() {
-    if(this.$route?.params?.tabsKey){
+    if (this.$route?.params?.tabsKey) {
       this.tabsKey = this.$route.params.tabsKey;
     }
   },
-  methods: {
-
-  }
+  methods: {}
 };
 </script>
 
 <style lang="less" scoped>
 .cdn-consumption-container {
   width: 100%;
+}
+.ant-tabs-bar {
+  margin-bottom: 20px!important;
 }
 </style>
