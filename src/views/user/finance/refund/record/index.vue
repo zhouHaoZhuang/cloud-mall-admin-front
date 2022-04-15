@@ -55,6 +55,7 @@
         v-model="listQuery.payStatus"
         placeholder="支付状态"
         allowClear
+        disabled
         style="width: 110px"
       >
         <a-select-option
@@ -81,28 +82,19 @@
         </a-select-option>
       </a-select> -->
       <!-- 日历 -->
+       
       <div class="btn2">
-        <div class="btn4">
-          <a-date-picker
-            style="width: 170px"
-            :disabled-date="disabledStartDate"
-            show-time
-            format="YYYY-MM-DD HH:mm:ss"
-            placeholder="开始时间"
-            @change="startDateChange"
-          />
-        </div>
-        <span class="zhi">至</span>
-        <div class="btn4">
-          <a-date-picker
-            style="width: 170px"
-            :disabled-date="disabledEndDate"
-            show-time
-            format="YYYY-MM-DD HH:mm:ss"
-            placeholder="结束时间"
-            @change="endDateChange"
-          />
-        </div>
+        <a-form-model-item>
+            <a-range-picker
+              :show-time="{
+                hideDisabledOptions: true,
+              }"
+              format="YYYY-MM-DD HH:mm:ss"
+              value-format="YYYY-MM-DD HH:mm:ss"
+              :placeholder="['创建开始时间', '创建结束时间']"
+              @change="datePickerOnOk"
+            />
+          </a-form-model-item>
       </div>
       <div class="btn6">
         <a-button type="primary" @click="handleSearch">确定查询</a-button>
@@ -208,7 +200,8 @@ export default {
         currentPage: 1,
         pageSize: 10,
         total: 0,
-        tradeType: "55"
+        tradeType: "55",
+        payStatus:"5"
       },
       paginationProps: {
         showQuickJumper: true,
@@ -227,6 +220,10 @@ export default {
     this.getList();
   },
   methods: {
+    datePickerOnOk(time){
+      this.listQuery.startTime = time[0]
+      this.listQuery.endTime = time[1]
+    },
     //查询数据表格
     getList() {
       this.loading = true;
@@ -320,6 +317,7 @@ export default {
   }
   .btn2 {
     display: flex;
+    margin-top: -3px;
     .btn4 {
       width: 170px;
       > span {
