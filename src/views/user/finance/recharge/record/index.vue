@@ -173,6 +173,7 @@ export default {
   margin-right: 8px;
 }
 .record {
+  margin-top: 20px;
   .search {
     margin-bottom: 20px;
   }

@@ -13,13 +13,13 @@
         :label-col="labelCol"
         :wrapper-col="wrapperCol"
       >
-        <a-form-model-item label="会员ID">
+        <a-form-model-item label="会员ID  ">
           <span>{{ corporationCode }}</span>
         </a-form-model-item>
         <a-form-model-item label="真实姓名">
           <span>{{ realName }}</span>
         </a-form-model-item>
-        <a-form-model-item label="QQ号码" prop="qq">
+        <a-form-model-item label="QQ号码 " prop="qq">
           <a-input v-model="form.qq" />
         </a-form-model-item>
         <a-form-model-item :wrapper-col="{ span: 14, offset: 2 }">
@@ -114,7 +114,7 @@ export default {
   margin-top: 20px;
 }
 .basic-information {
-  margin: 36px 0;
+  margin: 30px 0;
   color: #0af;
   font-weight: 700;
 }

@@ -90,7 +90,7 @@
         </div>
       </div>
       <div class="content-row">
-        <div class="label">黑名单/白名单</div>
+        <div class="label">{{ referForm.typeName }}</div>
         <div class="value">
           <span v-for="item in referForm.list"> {{ item }}<br /> </span>
         </div>
@@ -99,7 +99,7 @@
         <div class="label"></div>
         <div class="value">
           <a-button
-            :disabled="referForm.list.length === 0"
+            v-show="referForm.list.length > 0"
             type="link"
             @click="delRefer(referForm.configId, 2)"
           >
@@ -127,7 +127,7 @@
         </div>
       </div>
       <div class="content-row">
-        <div class="label">IP黑/白名单</div>
+        <div class="label">{{ ipForm.typeName }}</div>
         <div class="value">
           <span v-for="item in ipForm.list"> {{ item }}<br /> </span>
         </div>
@@ -136,9 +136,9 @@
         <div class="label"></div>
         <div class="value">
           <a-button
-            :disabled="ipForm.list.length === 0"
+            v-show="ipForm.list.length > 0"
             type="link"
-            @click="delRefer(ipForm.configId,3)"
+            @click="delRefer(ipForm.configId, 3)"
           >
             删除设置
           </a-button>
@@ -166,7 +166,11 @@
         </div>
       </div>
       <div class="content-row">
-        <div class="label">IP黑/白名单</div>
+        <div class="label">
+          <span v-if="!uaForm.type">未设置</span>
+          <span v-if="uaForm.type === 'black'">黑名单</span>
+          <span v-if="uaForm.type === 'white'">白名单</span>
+        </div>
         <div class="value">
           <span v-for="item in uaForm.list"> {{ item }}<br /> </span>
         </div>
@@ -175,9 +179,9 @@
         <div class="label"></div>
         <div class="value">
           <a-button
-            :disabled="uaForm.list.length === 0"
+            v-show="uaForm.list.length > 0"
             type="link"
-            @click="delRefer(uaForm.configId,4)"
+            @click="delRefer(uaForm.configId, 4)"
           >
             删除设置
           </a-button>

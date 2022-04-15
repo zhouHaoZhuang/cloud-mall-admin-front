@@ -33,7 +33,7 @@
           <a-button type="primary" @click="handleJumpCloudPay">+新建</a-button>
           <!-- <a-button :disabled="disabledBtn">批量续费</a-button> -->
           <a-input-group style="width: 400px" compact>
-            <a-select v-model="listQuery.key" style="width: 100px">
+            <a-select v-model="listQuery.key" style="width: 100px;margin-left:2px">
               <a-select-option value="ip"> IP地址 </a-select-option>
               <a-select-option value="instanceName"> 实例名称 </a-select-option>
             </a-select>

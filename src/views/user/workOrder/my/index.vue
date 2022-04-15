@@ -14,7 +14,7 @@
           <a-button type="primary" @click="handleJumpWorkOrder" icon="plus">
             提交工单
           </a-button>
-          <a-input-group style="width: 400px" compact>
+          <a-input-group style="width: 400px; margin-left: 2px" compact>
             <a-select v-model="listQuery.key" style="width: 100px">
               <a-select-option value="workOrderNo"> 工单编号 </a-select-option>
               <a-select-option value="title"> 问题标题 </a-select-option>
@@ -228,6 +228,9 @@ export default {
       font-size: 22px;
       color: #272829;
     }
+  }
+  .ny-panel-title {
+    line-height: 1;
   }
   .btns {
     margin: 20px 0;

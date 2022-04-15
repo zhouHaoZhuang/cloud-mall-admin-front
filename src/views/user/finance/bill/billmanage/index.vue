@@ -170,6 +170,9 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.ny-panel-title {
+  line-height: 1;
+}
 .default {
   margin-left: 10px;
   color: #fff;

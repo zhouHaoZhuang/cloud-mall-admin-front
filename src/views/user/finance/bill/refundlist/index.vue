@@ -9,9 +9,9 @@
         allowClear
       >
       </a-input>
-      <a-button style="margin-left: 10px" type="primary" @click="getList()"
-        >查询</a-button
-      >
+      <a-button style="margin-left: 10px" type="primary" @click="getList()">
+        查询
+      </a-button>
     </div>
     <div>
       <a-table
@@ -165,6 +165,10 @@ export default {
 </script>
 
 <style>
+.ny-panel-title{
+  line-height: 1;
+  margin-bottom: 20px;
+}
 .del-red {
   color: #d9001b;
 }
