@@ -40,7 +40,11 @@
               <a-button type="link" @click="handleEditSource(record)">
                 编辑
               </a-button>
-              <a-button type="link" @click="handleDelSource(record)">
+              <a-button
+                v-show="form.sourceModels.sourceModel.length > 1"
+                type="link"
+                @click="handleDelSource(record)"
+              >
                 删除
               </a-button>
             </a-space>

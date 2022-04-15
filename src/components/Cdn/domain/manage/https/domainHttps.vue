@@ -214,7 +214,7 @@ export default {
       this.form.sslPub = "";
       this.form.sslPri = "";
       if (val === 2) {
-        this.getDomainHttps();
+        // this.getDomainHttps();
       }
     },
     // 填充示例代码
