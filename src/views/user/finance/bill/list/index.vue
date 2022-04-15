@@ -1,103 +1,118 @@
 <template>
-  <div>
+  <div class="list">
     <h1 class="ny-panel-title">发票列表</h1>
     <div class="title-info">
       <div class="title-left">
-        <a-row :gutter="16">
-          <a-col :span="4">
-            <a-statistic
-              :value="dataAmount.canInvoiceAmount"
-              style="margin-right: 50px"
-              class="font-weight600"
-              :value-style="{ color: '#02A7F0', 'white-space': 'nowrap' }"
-              groupSeparator=""
-            >
-              <div style="white-space: nowrap" slot="title">可开票金额</div>
-              <template #prefix> ￥ </template>
-            </a-statistic>
-          </a-col>
-          <a-col :span="2"> <div class="calculate">=</div> </a-col>
-          <a-col :span="4">
-            <a-statistic
-              :value="dataAmount.totalAmount"
-              class="demo-class font-weight600"
-            >
-              <div style="white-space: nowrap" slot="title">总计消费可开票</div>
-              <template #prefix> ￥ </template>
-            </a-statistic>
-          </a-col>
-          <a-col :span="2">
-            <div class="calculate">-</div>
-          </a-col>
-          <a-col :span="4">
-            <a-statistic
-              title="历史已开票"
-              :value="dataAmount.invoiceAmount"
-              class="demo-class font-weight600"
-            >
-              <template #prefix> ￥ </template>
-            </a-statistic>
-          </a-col>
-          <a-col :span="2"> <div class="calculate">-</div> </a-col>
-          <a-col :span="4">
-            <a-statistic
-              title="本月不可开"
-              :value="dataAmount.invisibleAmount"
-              class="demo-class font-weight600"
-            >
-              <template #prefix> ￥ </template>
-            </a-statistic>
-          </a-col>
-        </a-row>
-        <a-button
-          @click="$router.push('/user/finance/bill/apply')"
-          type="primary"
-          style="margin: 20px 0"
-          >申请开票</a-button
-        >
+        <div class="title-lefttop">
+          <a-row class="title-topleft" :gutter="16">
+            <a-col :span="4">
+              <a-statistic
+                :value="dataAmount.totalAmount"
+                class="demo-class font-weight600"
+              >
+                <div style="white-space: nowrap" slot="title">
+                  总计消费可开票
+                </div>
+                <template #prefix> ￥ </template>
+              </a-statistic>
+            </a-col>
+            <a-col :span="2">
+              <div class="calculate" style="color: #3b77e3">减</div>
+            </a-col>
+            <a-col :span="4">
+              <a-statistic
+                title="历史已开票"
+                :value="dataAmount.invoiceAmount"
+                class="demo-class font-weight600"
+              >
+                <template #prefix> ￥ </template>
+              </a-statistic>
+            </a-col>
+            <a-col :span="2">
+              <div class="calculate" style="color: #3b77e3">减</div>
+            </a-col>
+            <a-col :span="4">
+              <a-statistic
+                title="本月不可开"
+                :value="dataAmount.invisibleAmount"
+                class="demo-class font-weight600"
+              >
+                <template #prefix> ￥ </template>
+              </a-statistic>
+            </a-col>
+            <a-col :span="2">
+              <div class="calculate" style="color: #3b77e3">等于</div>
+            </a-col>
+            <a-col :span="4">
+              <a-statistic
+                :value="dataAmount.canInvoiceAmount"
+                style="margin-right: 50px"
+                class="font-weight600"
+                :value-style="{ color: '#3B77E3', 'white-space': 'nowrap' }"
+                groupSeparator=""
+              >
+                <div style="white-space: nowrap" slot="title">可开票金额</div>
+                <template #prefix> ￥ </template>
+              </a-statistic>
+            </a-col>
+          </a-row>
+          <a-button
+            @click="$router.push('/user/finance/bill/apply')"
+            type="primary"
+            style="margin: 20px"
+          >
+            申请开票
+          </a-button>
+        </div>
         <div class="bill-info">
           <div>
-            <a-descriptions title="默认发票信息" :column="2">
+            <a-descriptions title="默认发票信息" :column="1">
               <a-descriptions-item label="开票类型">
-                {{ issueTypeMap[invoiceInfo.issueType] }}
+                <a>{{ issueTypeMap[invoiceInfo.issueType] }}</a>
               </a-descriptions-item>
               <a-descriptions-item label="发票类型">
-                {{ invoiceTypeMap[invoiceInfo.invoiceType] }}
+                <a>{{ invoiceTypeMap[invoiceInfo.invoiceType] }}</a>
               </a-descriptions-item>
               <a-descriptions-item label="发票抬头">
-                {{ invoiceInfo.invoiceTitle }}
+                <a>{{ invoiceInfo.invoiceTitle }}</a>
               </a-descriptions-item>
               <a-descriptions-item label="税务登记号">
-                {{ invoiceInfo.registerNo }}
+                <a>{{ invoiceInfo.registerNo }}</a>
               </a-descriptions-item>
-              <a-descriptions-item label=""> </a-descriptions-item>
               <a-descriptions-item label="">
-                <a @click="$router.push('/user/finance/bill/managebill')">
-                  管理发票信息→
-                </a>
+                <a-button
+                  @click="$router.push('/user/finance/bill/managebill')"
+                  type="primary"
+                >
+                  管理发票信息
+                </a-button>
               </a-descriptions-item>
             </a-descriptions>
           </div>
           <div>
-            <a-descriptions title="默认地址信息" :column="2">
+            <a-descriptions title="默认地址信息" :column="1">
               <a-descriptions-item label="收件人">
-                {{ addressInfo.addressee }}
+                <a>{{ addressInfo.addressee }}</a>
               </a-descriptions-item>
               <a-descriptions-item label="联系电话">
-                {{ addressInfo.concatPhone }}
+                <a>{{ addressInfo.concatPhone }}</a>
               </a-descriptions-item>
               <a-descriptions-item label="地址">
-                {{ addressInfo.province }} {{ addressInfo.city }}
-                {{ addressInfo.county }}
+                <a>
+                  {{ addressInfo.province }} {{ addressInfo.city }}
+                  {{ addressInfo.county }}
+                </a>
               </a-descriptions-item>
               <a-descriptions-item label="详细地址">
-                {{ addressInfo.address }}
+                <a>{{ addressInfo.address }}</a>
               </a-descriptions-item>
-              <a-descriptions-item label=""> </a-descriptions-item>
               <a-descriptions-item label="">
-                <a @click="$router.push('/user/finance/manageadress')">
-                  管理常用地址→
-                </a>
+                <a-button
+                  @click="$router.push('/user/finance/manageadress')"
+                  type="primary"
+                >
+                  管理常用地址
+                </a-button>
               </a-descriptions-item>
             </a-descriptions>
           </div>
@@ -109,7 +124,7 @@
           <span style="color: #d9001b">-￥{{ dataAmount.negativeAmount }}</span>
         </h1>
         <div>
-          <p>明细</p>
+          <p>(明细)</p>
           <div>
             <a-table
               :columns="columnsDetails"
@@ -123,65 +138,73 @@
         </div>
       </div>
     </div>
-    <p class="ny-panel-title">开票记录</p>
-    <div style="margin: 20px 0">
-      <a-input
-        style="width: 200px"
-        placeholder="请输入发票ID进行搜索"
-        v-model="listQuery.invoiceNo"
-        allowClear
-      />
-      <a-button style="margin-left: 10px" type="primary" @click="getList()"
-        >查询</a-button
-      >
-    </div>
-    <div>
-      <a-table
-        :columns="columns"
-        :data-source="data"
-        :pagination="paginationProps"
-        rowKey="id"
-        :scroll="{ y: 200 }"
-      >
-        <div slot="companyName" slot-scope="text">{{ text }}</div>
-        <div v-if="text" slot="createTime" slot-scope="text">
-          {{ text | formatDate }}
-        </div>
-        <div v-if="text" slot="feedbackTime" slot-scope="text">
-          {{ text | formatDate }}
-        </div>
-        <div slot="status" slot-scope="text">{{ invoiceStatusEnum[text] }}</div>
-        <div slot="action" slot-scope="text, record">
-          <a-button
-            type="link"
-            @click="$router.push('/user/finance/bill/info?id=' + record.id)"
-            >详情</a-button
-          >
-          <a-button
-            type="link"
-            :disabled="record.status !== 1"
-            @click="$router.push('/user/finance/bill/address?id=' + record.id)"
-          >
-            修改地址
-          </a-button>
-          <a-button
-            type="link"
-            :class="{ 'del-red': record.status === 1 }"
-            :disabled="record.status !== 1"
-            @click="cancelInvoice(record.id)"
-          >
-            取消
-          </a-button>
-          <a-button
-            type="link"
-            style="color: #d9001b"
-            v-show="record.status === 5"
-            @click="$router.push('/user/finance/bill/resubmit?id=' + record.id)"
-          >
-            申请退票
-          </a-button>
-        </div>
-      </a-table>
+    <!-- <p class="ny-panel-title">开票记录</p> -->
+    <div class="bottom-list">
+      <div style="margin: 20px 0; background-color: #fff">
+        <a-input
+          style="width: 200px"
+          placeholder="请输入发票ID进行搜索"
+          v-model="listQuery.invoiceNo"
+          allowClear
+        />
+        <a-button style="margin-left: 10px" type="primary" @click="getList">
+          查询
+        </a-button>
+      </div>
+      <div style="background-color: #fff">
+        <a-table
+          :columns="columns"
+          :data-source="data"
+          :pagination="paginationProps"
+          rowKey="id"
+          :scroll="{ y: 200 }"
+        >
+          <div slot="companyName" slot-scope="text">{{ text }}</div>
+          <div v-if="text" slot="createTime" slot-scope="text">
+            {{ text | formatDate }}
+          </div>
+          <div v-if="text" slot="feedbackTime" slot-scope="text">
+            {{ text | formatDate }}
+          </div>
+          <div slot="status" slot-scope="text">
+            {{ invoiceStatusEnum[text] }}
+          </div>
+          <div slot="action" slot-scope="text, record">
+            <a-button
+              type="link"
+              @click="$router.push('/user/finance/bill/info?id=' + record.id)"
+              >详情</a-button
+            >
+            <a-button
+              type="link"
+              :disabled="record.status !== 1"
+              @click="
+                $router.push('/user/finance/bill/address?id=' + record.id)
+              "
+            >
+              修改地址
+            </a-button>
+            <a-button
+              type="link"
+              :class="{ 'del-red': record.status === 1 }"
+              :disabled="record.status !== 1"
+              @click="cancelInvoice(record.id)"
+            >
+              取消
+            </a-button>
+            <a-button
+              type="link"
+              style="color: #d9001b"
+              v-show="record.status === 5"
+              @click="
+                $router.push('/user/finance/bill/resubmit?id=' + record.id)
+              "
+            >
+              申请退票
+            </a-button>
+          </div>
+        </a-table>
+      </div>
     </div>
   </div>
 </template>
@@ -351,11 +374,14 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.list {
+  background-color: #f5f7fd;
+}
 .calculate {
   margin-top: 15px;
 }
 .font-weight600 {
-  font-weight: 600;
+  font-weight: 400;
 }
 .del-red {
   color: #d9001b;
@@ -364,17 +390,46 @@ export default {
   display: flex;
   .title-left {
     width: 70%;
+    margin-bottom: 20px;
     .bill-info {
       display: flex;
+      height: 300px;
+      > div {
+        padding: 10px;
+        height: 106%;
+        margin-right: 20px;
+        background-color: #fff;
+        box-shadow: 0px 0px 13px 7px #bdc0fd3b;
+      }
+    }
+    .title-lefttop {
+      display: flex;
+      justify-content: space-between;
+      background-color: #fff;
+      box-shadow: 0px 0px 13px 7px #bdc0fd3b;
+      padding: 20px;
+      margin: 0 20px 20px 0;
+      .title-topleft {
+        flex: 1;
+      }
+      .bill-info {
+        width: 100px;
+      }
     }
   }
   .title-right {
     width: 30%;
     padding: 10px;
+    background-color: #fff;
   }
 }
 /deep/.ant-table {
   min-width: 0 !important;
+}
+.bottom-list {
+  margin: 20px 0;
+  padding: 20px;
+  background-color: #fff;
 }
 // ::v-deep .ant-table-tbody{
 //   height: 200px!important;
