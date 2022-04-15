@@ -25,7 +25,11 @@
       <div class="content-row">
         <div class="label">HTTP/2设置</div>
         <div class="value">
-          <a-switch v-model="http2Form.http2" @change="handleChangeHttp2">
+          <a-switch
+            v-model="http2Form.http2"
+            @change="handleChangeHttp2"
+            :disabled="!sslForm.enable"
+          >
             <a-icon slot="checkedChildren" type="check" />
             <a-icon slot="unCheckedChildren" type="close" />
           </a-switch>
@@ -68,7 +72,11 @@
       <div class="content-row">
         <div class="label">TLSv1.0</div>
         <div class="value">
-          <a-switch v-model="tlsForm.tls10" @change="handleChangeTls">
+          <a-switch
+            v-model="tlsForm.tls10"
+            @change="handleChangeTls"
+            :disabled="!sslForm.enable"
+          >
             <a-icon slot="checkedChildren" type="check" />
             <a-icon slot="unCheckedChildren" type="close" />
           </a-switch>
@@ -77,7 +85,11 @@
       <div class="content-row">
         <div class="label">TLSv1.1</div>
         <div class="value">
-          <a-switch v-model="tlsForm.tls11" @change="handleChangeTls">
+          <a-switch
+            v-model="tlsForm.tls11"
+            @change="handleChangeTls"
+            :disabled="!sslForm.enable"
+          >
             <a-icon slot="checkedChildren" type="check" />
             <a-icon slot="unCheckedChildren" type="close" />
           </a-switch>
@@ -86,7 +98,11 @@
       <div class="content-row">
         <div class="label">TLSv1.2</div>
         <div class="value">
-          <a-switch v-model="tlsForm.tls12" @change="handleChangeTls">
+          <a-switch
+            v-model="tlsForm.tls12"
+            @change="handleChangeTls"
+            :disabled="!sslForm.enable"
+          >
             <a-icon slot="checkedChildren" type="check" />
             <a-icon slot="unCheckedChildren" type="close" />
           </a-switch>
@@ -95,7 +111,11 @@
       <div class="content-row">
         <div class="label">TLSv1.3</div>
         <div class="value">
-          <a-switch v-model="tlsForm.tls13" @change="handleChangeTls">
+          <a-switch
+            v-model="tlsForm.tls13"
+            @change="handleChangeTls"
+            :disabled="!sslForm.enable"
+          >
             <a-icon slot="checkedChildren" type="check" />
             <a-icon slot="unCheckedChildren" type="close" />
           </a-switch>

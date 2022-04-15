@@ -101,7 +101,7 @@
           <a-button
             :disabled="referForm.list.length === 0"
             type="link"
-            @click="delRefer(referForm.configId)"
+            @click="delRefer(referForm.configId, 2)"
           >
             删除设置
           </a-button>
@@ -138,7 +138,7 @@
           <a-button
             :disabled="ipForm.list.length === 0"
             type="link"
-            @click="delRefer(ipForm.configId)"
+            @click="delRefer(ipForm.configId,3)"
           >
             删除设置
           </a-button>
@@ -177,7 +177,7 @@
           <a-button
             :disabled="uaForm.list.length === 0"
             type="link"
-            @click="delRefer(uaForm.configId)"
+            @click="delRefer(uaForm.configId,4)"
           >
             删除设置
           </a-button>
@@ -309,7 +309,8 @@ export default {
       });
     },
     // 删除设置
-    delRefer(configId) {
+    delRefer(configId, type) {
+      console.log(configId, type, "======");
       this.$confirm({
         title: `确定要删除该配置吗？`,
         centered: true,
@@ -321,7 +322,7 @@ export default {
             })
             .then((res) => {
               this.$message.success("删除成功");
-              this.getBatchConfig();
+              this.getConfig(type);
             });
         }
       });
@@ -334,6 +335,16 @@ export default {
           domainName: this.domain
         })
         .then((res) => {
+          console.log(res, "======");
+          if (type === 2) {
+            this.referForm.list = res.data.domainConfigs.domainConfig;
+          }
+          if (type === 3) {
+            this.ipForm.list = res.data.domainConfigs.domainConfig;
+          }
+          if (type === 4) {
+            this.uaForm.list = res.data.domainConfigs.domainConfig;
+          }
           const data = res.data.domainConfigs.domainConfig;
           if (data.length > 0) {
             const newForm = { ...this.modalMap[type].form };
