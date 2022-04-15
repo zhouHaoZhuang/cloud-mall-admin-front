@@ -28,7 +28,7 @@
           <a-switch
             v-model="http2Form.http2"
             @change="handleChangeHttp2"
-            :disabled="true"
+            :disabled="!sslForm.enable"
           >
             <a-icon slot="checkedChildren" type="check" />
             <a-icon slot="unCheckedChildren" type="close" />
@@ -75,7 +75,7 @@
           <a-switch
             v-model="tlsForm.tls10"
             @change="handleChangeTls"
-            :disabled="true"
+            :disabled="!sslForm.enable"
           >
             <a-icon slot="checkedChildren" type="check" />
             <a-icon slot="unCheckedChildren" type="close" />
@@ -88,7 +88,7 @@
           <a-switch
             v-model="tlsForm.tls11"
             @change="handleChangeTls"
-            :disabled="true"
+            :disabled="!sslForm.enable"
           >
             <a-icon slot="checkedChildren" type="check" />
             <a-icon slot="unCheckedChildren" type="close" />
@@ -101,7 +101,7 @@
           <a-switch
             v-model="tlsForm.tls12"
             @change="handleChangeTls"
-            :disabled="true"
+            :disabled="!sslForm.enable"
           >
             <a-icon slot="checkedChildren" type="check" />
             <a-icon slot="unCheckedChildren" type="close" />
@@ -114,7 +114,7 @@
           <a-switch
             v-model="tlsForm.tls13"
             @change="handleChangeTls"
-            :disabled="true"
+            :disabled="!sslForm.enable"
           >
             <a-icon slot="checkedChildren" type="check" />
             <a-icon slot="unCheckedChildren" type="close" />
