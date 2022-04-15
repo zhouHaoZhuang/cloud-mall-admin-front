@@ -25,7 +25,7 @@
           </li>
           <li>
             <span>创建时间:</span>
-            <span>{{ orderInfo.createTime | formatDate }}</span>
+            <span>{{ orderInfo.orderCreateTime | formatDate }}</span>
           </li>
           <li v-if="orderInfo.tradeStatus === 1">
             <span>支付剩余时间:</span>
