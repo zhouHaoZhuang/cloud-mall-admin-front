@@ -66,7 +66,7 @@ export default {
         return this.userRealInfo.realName;
       }
       if (this.userRealInfo.isMain === 1) {
-        return this.userRealInfo.nickName;
+        return this.userRealInfo.nickname;
       }
       return "未实名认证";
     },
