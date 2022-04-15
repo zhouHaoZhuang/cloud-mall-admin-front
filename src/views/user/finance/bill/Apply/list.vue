@@ -89,7 +89,7 @@
           <p>
             可开票金额：￥{{ dataAmount.canInvoiceAmount }} 有
             {{ data.length }}
-            个订单可以进行开票，已可开票金额为准
+            个订单可以进行开票，以可开票金额为准
           </p>
         </div>
         <a-table

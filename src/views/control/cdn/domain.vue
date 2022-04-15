@@ -86,7 +86,7 @@
         rowKey="id"
         :pagination="paginationProps"
         :row-selection="rowSelection"
-        :scroll="{ x: 800 }"
+        :scroll="{ x: 700 }"
       >
         <div class="status" slot="cdnStatus" slot-scope="text">
           <a-badge :status="cdnStatusEnum[text].dot" />
@@ -195,6 +195,7 @@ export default {
         {
           title: "域名",
           dataIndex: "domain",
+          fixed: "left",
           width: 180
         },
         {
@@ -218,13 +219,13 @@ export default {
           title: "源站信息",
           dataIndex: "sourceInfo",
           scopedSlots: { customRender: "sourceInfo" },
-          width: 260
+          width: 240
         },
         {
           title: "创建时间",
           dataIndex: "createTime",
           scopedSlots: { customRender: "createTime" },
-          width: 180
+          width: 160
         },
         {
           title: "操作",
