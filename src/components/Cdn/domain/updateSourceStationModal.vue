@@ -188,6 +188,10 @@ export default {
       }
     };
   },
+  created() {
+    let a = 1
+    console.log(a);
+  },
   methods: {
     // 关闭弹窗
     handleCancel() {
